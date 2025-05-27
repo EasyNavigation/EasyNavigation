@@ -5,7 +5,7 @@ var searchData=
   ['get_5ffeedback_2',['get_feedback',['../classeasynav_1_1GoalManagerClient.html#a227df6bbba807c9d97f2df1873f4854c',1,'easynav::GoalManagerClient']]],
   ['get_5fgoals_3',['get_goals',['../classeasynav_1_1GoalManager.html#a359cd66ef7d1c77e72245ad7e592c993',1,'easynav::GoalManager']]],
   ['get_5flast_5fcontrol_4',['get_last_control',['../classeasynav_1_1GoalManagerClient.html#a701a1d40354575d541cdf2ae83c21853',1,'easynav::GoalManagerClient']]],
-  ['get_5fmaps_5',['get_maps',['../classeasynav_1_1DummyMapsManager.html#abc7616b7d4d19734b5c15ade7caa7c58',1,'easynav::DummyMapsManager::get_maps()'],['../classeasynav_1_1MapsManagerNode.html#abc7616b7d4d19734b5c15ade7caa7c58',1,'easynav::MapsManagerNode::get_maps()']]],
+  ['get_5fmaps_5',['get_maps',['../classeasynav_1_1DummyMapsManager.html#a0cb9356fcf60d1e7afa310e36e4fb401',1,'easynav::DummyMapsManager::get_maps()'],['../classeasynav_1_1MapsManagerNode.html#abc7616b7d4d19734b5c15ade7caa7c58',1,'easynav::MapsManagerNode::get_maps()']]],
   ['get_5fodom_6',['get_odom',['../classeasynav_1_1DummyLocalizer.html#a5e4f64b27ae1b006757326b7c7e4b574',1,'easynav::DummyLocalizer::get_odom()'],['../classeasynav_1_1LocalizerNode.html#aaaaa94687f625c2b97202255d2e3cf0d',1,'easynav::LocalizerNode::get_odom()']]],
   ['get_5fpath_7',['get_path',['../classeasynav_1_1DummyPlanner.html#a10e0034ffa7008e6189d2ec96abfe200',1,'easynav::DummyPlanner::get_path()'],['../classeasynav_1_1PlannerNode.html#a618c508c69d8fe9751cc8d659d62f294',1,'easynav::PlannerNode::get_path()']]],
   ['get_5fpc2_5ftest_5f0_8',['get_pc2_test_0',['../sensors__node__tests_8cpp.html#a5cd5e95d54b62a1e74e45478f08c0c02',1,'sensors_node_tests.cpp']]],

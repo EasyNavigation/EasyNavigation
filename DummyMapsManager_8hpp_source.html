@@ -116,45 +116,44 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &lt;expected&gt;</span></div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &quot;nav_msgs/msg/path.hpp&quot;</span></div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &quot;easynav_core/MapsManagerBase.hpp&quot;</span></div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#include &quot;<a class="code" href="MapTypeBase_8hpp.html">easynav_common/types/MapTypeBase.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceeasynav.html">easynav</a></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>{</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span></div>
-<div class="foldopen" id="foldopen00041" data-start="{" data-end="};">
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="classeasynav_1_1DummyMapsManager.html">   41</a></span><span class="keyword">class </span><a class="code hl_function" href="classeasynav_1_1DummyMapsManager.html#aa974061e7e030e8053c4b30c3096c37e">DummyMapsManager</a> : <span class="keyword">public</span> easynav::MapsManagerBase</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>{</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="classeasynav_1_1DummyMapsManager.html#aa974061e7e030e8053c4b30c3096c37e">   45</a></span>  <a class="code hl_function" href="classeasynav_1_1DummyMapsManager.html#aa974061e7e030e8053c4b30c3096c37e">DummyMapsManager</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span></div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno"><a class="line" href="classeasynav_1_1DummyMapsManager.html#afb92f43dcb73f37d273fc0abb9b74ed0">   48</a></span>  <a class="code hl_function" href="classeasynav_1_1DummyMapsManager.html#afb92f43dcb73f37d273fc0abb9b74ed0">~DummyMapsManager</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span></div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>  <span class="keyword">virtual</span> std::expected&lt;void, std::string&gt; <a class="code hl_function" href="classeasynav_1_1DummyMapsManager.html#aa09f4316ce265b452c96e6d74101cd76">on_initialize</a>() <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span></div>
-<div class="foldopen" id="foldopen00060" data-start="{" data-end="}">
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno"><a class="line" href="classeasynav_1_1DummyMapsManager.html#abc7616b7d4d19734b5c15ade7caa7c58">   60</a></span>  std::map&lt;std::string, std::shared_ptr&lt;MapsTypeBase&gt;&gt; <a class="code hl_function" href="classeasynav_1_1DummyMapsManager.html#abc7616b7d4d19734b5c15ade7caa7c58">get_maps</a>()</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>  {</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <span class="keywordflow">return</span> std::map&lt;std::string, std::shared_ptr&lt;MapsTypeBase&gt;&gt;();</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>  }</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &quot;easynav_core/MapsManagerBase.hpp&quot;</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &quot;<a class="code" href="MapTypeBase_8hpp.html">easynav_common/types/MapTypeBase.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceeasynav.html">easynav</a></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>{</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span></div>
+<div class="foldopen" id="foldopen00040" data-start="{" data-end="};">
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="classeasynav_1_1DummyMapsManager.html">   40</a></span><span class="keyword">class </span><a class="code hl_function" href="classeasynav_1_1DummyMapsManager.html#aa974061e7e030e8053c4b30c3096c37e">DummyMapsManager</a> : <span class="keyword">public</span> easynav::MapsManagerBase</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>{</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno"><a class="line" href="classeasynav_1_1DummyMapsManager.html#aa974061e7e030e8053c4b30c3096c37e">   44</a></span>  <a class="code hl_function" href="classeasynav_1_1DummyMapsManager.html#aa974061e7e030e8053c4b30c3096c37e">DummyMapsManager</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno"><a class="line" href="classeasynav_1_1DummyMapsManager.html#afb92f43dcb73f37d273fc0abb9b74ed0">   47</a></span>  <a class="code hl_function" href="classeasynav_1_1DummyMapsManager.html#afb92f43dcb73f37d273fc0abb9b74ed0">~DummyMapsManager</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span></div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  <span class="keyword">virtual</span> std::expected&lt;void, std::string&gt; <a class="code hl_function" href="classeasynav_1_1DummyMapsManager.html#aa09f4316ce265b452c96e6d74101cd76">on_initialize</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span></div>
+<div class="foldopen" id="foldopen00059" data-start="{" data-end="}">
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno"><a class="line" href="classeasynav_1_1DummyMapsManager.html#a0cb9356fcf60d1e7afa310e36e4fb401">   59</a></span>  std::map&lt;std::string, std::shared_ptr&lt;MapsTypeBase&gt;&gt; <a class="code hl_function" href="classeasynav_1_1DummyMapsManager.html#a0cb9356fcf60d1e7afa310e36e4fb401">get_maps</a>()<span class="keyword"> override</span></div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="keyword">  </span>{</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="keywordflow">return</span> std::map&lt;std::string, std::shared_ptr&lt;MapsTypeBase&gt;&gt;();</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>  }</div>
 </div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span></div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classeasynav_1_1DummyMapsManager.html#adbea5f6d7a91b4a1f7fa21d5a46c18aa">update</a>(<span class="keyword">const</span> <a class="code hl_struct" href="structeasynav_1_1NavState.html">NavState</a> &amp; nav_state) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>  <span class="keywordtype">double</span> cycle_time_rt_;</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>  <span class="keywordtype">double</span> cycle_time_nort_;</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>};</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span></div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classeasynav_1_1DummyMapsManager.html#adbea5f6d7a91b4a1f7fa21d5a46c18aa">update</a>(<span class="keyword">const</span> <a class="code hl_struct" href="structeasynav_1_1NavState.html">NavState</a> &amp; nav_state) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>  <span class="keywordtype">double</span> cycle_time_rt_;</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>  <span class="keywordtype">double</span> cycle_time_nort_;</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>};</div>
 </div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>}  <span class="comment">// namespace easynav</span></div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="preprocessor">#endif  </span><span class="comment">// EASYNAV_PLANNER__DUMMYMAPMANAGER_HPP_</span></div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>}  <span class="comment">// namespace easynav</span></div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span><span class="preprocessor">#endif  </span><span class="comment">// EASYNAV_PLANNER__DUMMYMAPMANAGER_HPP_</span></div>
 <div class="ttc" id="aMapTypeBase_8hpp_html"><div class="ttname"><a href="MapTypeBase_8hpp.html">MapTypeBase.hpp</a></div><div class="ttdoc">Declaration of the MapsTypeBase template class, an abstract interface to represent map types.</div></div>
+<div class="ttc" id="aclasseasynav_1_1DummyMapsManager_html_a0cb9356fcf60d1e7afa310e36e4fb401"><div class="ttname"><a href="classeasynav_1_1DummyMapsManager.html#a0cb9356fcf60d1e7afa310e36e4fb401">easynav::DummyMapsManager::get_maps</a></div><div class="ttdeci">std::map&lt; std::string, std::shared_ptr&lt; MapsTypeBase &gt; &gt; get_maps() override</div><div class="ttdoc">Return the current maps.</div><div class="ttdef"><b>Definition</b> DummyMapsManager.hpp:59</div></div>
 <div class="ttc" id="aclasseasynav_1_1DummyMapsManager_html_aa09f4316ce265b452c96e6d74101cd76"><div class="ttname"><a href="classeasynav_1_1DummyMapsManager.html#aa09f4316ce265b452c96e6d74101cd76">easynav::DummyMapsManager::on_initialize</a></div><div class="ttdeci">virtual std::expected&lt; void, std::string &gt; on_initialize() override</div><div class="ttdoc">Initialize the plugin.</div><div class="ttdef"><b>Definition</b> DummyMapsManager.cpp:30</div></div>
 <div class="ttc" id="aclasseasynav_1_1DummyMapsManager_html_aa974061e7e030e8053c4b30c3096c37e"><div class="ttname"><a href="classeasynav_1_1DummyMapsManager.html#aa974061e7e030e8053c4b30c3096c37e">easynav::DummyMapsManager::DummyMapsManager</a></div><div class="ttdeci">DummyMapsManager()=default</div><div class="ttdoc">Default constructor.</div></div>
-<div class="ttc" id="aclasseasynav_1_1DummyMapsManager_html_abc7616b7d4d19734b5c15ade7caa7c58"><div class="ttname"><a href="classeasynav_1_1DummyMapsManager.html#abc7616b7d4d19734b5c15ade7caa7c58">easynav::DummyMapsManager::get_maps</a></div><div class="ttdeci">std::map&lt; std::string, std::shared_ptr&lt; MapsTypeBase &gt; &gt; get_maps()</div><div class="ttdoc">Return the current maps.</div><div class="ttdef"><b>Definition</b> DummyMapsManager.hpp:60</div></div>
 <div class="ttc" id="aclasseasynav_1_1DummyMapsManager_html_adbea5f6d7a91b4a1f7fa21d5a46c18aa"><div class="ttname"><a href="classeasynav_1_1DummyMapsManager.html#adbea5f6d7a91b4a1f7fa21d5a46c18aa">easynav::DummyMapsManager::update</a></div><div class="ttdeci">virtual void update(const NavState &amp;nav_state) override</div><div class="ttdoc">Dummy update method.</div><div class="ttdef"><b>Definition</b> DummyMapsManager.cpp:44</div></div>
 <div class="ttc" id="aclasseasynav_1_1DummyMapsManager_html_afb92f43dcb73f37d273fc0abb9b74ed0"><div class="ttname"><a href="classeasynav_1_1DummyMapsManager.html#afb92f43dcb73f37d273fc0abb9b74ed0">easynav::DummyMapsManager::~DummyMapsManager</a></div><div class="ttdeci">~DummyMapsManager()=default</div><div class="ttdoc">Default destructor.</div></div>
 <div class="ttc" id="anamespaceeasynav_html"><div class="ttname"><a href="namespaceeasynav.html">easynav</a></div><div class="ttdef"><b>Definition</b> RTTFBuffer.hpp:30</div></div>
