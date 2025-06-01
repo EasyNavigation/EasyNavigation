@@ -140,12 +140,12 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classeasynav_1_1DummyLocalizer.html#adbea5f6d7a91b4a1f7fa21d5a46c18aa">update</a>(<span class="keyword">const</span> <a class="code hl_struct" href="structeasynav_1_1NavState.html">NavState</a> &amp; nav_state) <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>  nav_msgs::msg::Odometry odom_ {};</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>  nav_msgs::msg::Odometry odom_;</div>
 <div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>  std::unique_ptr&lt;tf2_ros::TransformBroadcaster&gt; tf_broadcaster_;</div>
 <div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span> </div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>  <span class="keywordtype">double</span> cycle_time_rt_;</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>  <span class="keywordtype">double</span> cycle_time_nort_;</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>  <span class="keywordtype">double</span> cycle_time_rt_ {0.0};</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>  <span class="keywordtype">double</span> cycle_time_nort_ {0.0};</div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>};</div>
 </div>
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span> </div>
