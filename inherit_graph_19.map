@@ -1,3 +1,9 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classstatic_01std_1_1unique__ptr_3_01RTTFBuffer_01_4.html" title=" " alt="" coords="5,5,176,31"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,55,53,80"/>
+<area shape="rect" id="Node000001" href="$classGoalManagerTestCase.html" title=" " alt="" coords="102,5,256,31"/>
+<area shape="poly" id="edge15_Node000000_Node000001" title=" " alt="" coords="66,51,100,40,133,29,134,34,102,45,68,56"/>
+<area shape="rect" id="Node000002" href="$classPerceptionsOpsTest.html" title=" " alt="" coords="109,55,249,80"/>
+<area shape="poly" id="edge16_Node000000_Node000002" title=" " alt="" coords="69,65,108,65,108,70,69,70"/>
+<area shape="rect" id="Node000003" href="$classSensorsNodeTestCase.html" title=" " alt="" coords="101,104,257,130"/>
+<area shape="poly" id="edge17_Node000000_Node000003" title=" " alt="" coords="68,79,102,90,134,101,133,106,100,95,66,84"/>
 </map>

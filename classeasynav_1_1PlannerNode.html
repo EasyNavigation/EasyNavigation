@@ -128,9 +128,9 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a2b3c13c546cbcb92bdf965736235e7fb" id="r_a2b3c13c546cbcb92bdf965736235e7fb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2b3c13c546cbcb92bdf965736235e7fb">cycle</a> ()</td></tr>
-<tr class="memdesc:a2b3c13c546cbcb92bdf965736235e7fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute a non-real-time cycle.  <br /></td></tr>
-<tr class="separator:a2b3c13c546cbcb92bdf965736235e7fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa393561172069c8d7e8b21d3912a3a1a" id="r_aa393561172069c8d7e8b21d3912a3a1a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa393561172069c8d7e8b21d3912a3a1a">cycle</a> (std::shared_ptr&lt; const <a class="el" href="structeasynav_1_1NavState.html">NavState</a> &gt; nav_state)</td></tr>
+<tr class="memdesc:aa393561172069c8d7e8b21d3912a3a1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute a non-real-time cycle.  <br /></td></tr>
+<tr class="separator:aa393561172069c8d7e8b21d3912a3a1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a618c508c69d8fe9751cc8d659d62f294" id="r_a618c508c69d8fe9751cc8d659d62f294"><td class="memItemLeft" align="right" valign="top">nav_msgs::msg::Path&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a618c508c69d8fe9751cc8d659d62f294">get_path</a> () const</td></tr>
 <tr class="memdesc:a618c508c69d8fe9751cc8d659d62f294"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current planned path.  <br /></td></tr>
 <tr class="separator:a618c508c69d8fe9751cc8d659d62f294"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -152,9 +152,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a38b74771f6ab23805f990786e4d6f806" id="r_a38b74771f6ab23805f990786e4d6f806"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#ad09d90f1fe35c9e2f2fd7fc1902312f4">CallbackReturnT</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a38b74771f6ab23805f990786e4d6f806">on_shutdown</a> (const rclcpp_lifecycle::State &amp;state)</td></tr>
 <tr class="memdesc:a38b74771f6ab23805f990786e4d6f806"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shutdown the node.  <br /></td></tr>
 <tr class="separator:a38b74771f6ab23805f990786e4d6f806"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9e015dea1576fa524a7f470a04592b6b" id="r_a9e015dea1576fa524a7f470a04592b6b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9e015dea1576fa524a7f470a04592b6b">PlannerNode</a> (const std::shared_ptr&lt; const <a class="el" href="structeasynav_1_1NavState.html">NavState</a> &gt; &amp;nav_state, const rclcpp::NodeOptions &amp;options=rclcpp::NodeOptions())</td></tr>
-<tr class="memdesc:a9e015dea1576fa524a7f470a04592b6b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <br /></td></tr>
-<tr class="separator:a9e015dea1576fa524a7f470a04592b6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af704ae61f2177a980bf10e15c267159d" id="r_af704ae61f2177a980bf10e15c267159d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af704ae61f2177a980bf10e15c267159d">PlannerNode</a> (const rclcpp::NodeOptions &amp;options=rclcpp::NodeOptions())</td></tr>
+<tr class="memdesc:af704ae61f2177a980bf10e15c267159d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <br /></td></tr>
+<tr class="separator:af704ae61f2177a980bf10e15c267159d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a10ae20b189dd786b467a8441316e13d7" id="r_a10ae20b189dd786b467a8441316e13d7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a10ae20b189dd786b467a8441316e13d7">~PlannerNode</a> ()</td></tr>
 <tr class="memdesc:a10ae20b189dd786b467a8441316e13d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor.  <br /></td></tr>
 <tr class="separator:a10ae20b189dd786b467a8441316e13d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -178,8 +178,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a9e015dea1576fa524a7f470a04592b6b" name="a9e015dea1576fa524a7f470a04592b6b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9e015dea1576fa524a7f470a04592b6b">&#9670;&#160;</a></span>PlannerNode()</h2>
+<a id="af704ae61f2177a980bf10e15c267159d" name="af704ae61f2177a980bf10e15c267159d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af704ae61f2177a980bf10e15c267159d">&#9670;&#160;</a></span>PlannerNode()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -190,12 +190,8 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname"><a class="el" href="classeasynav_1_1PlannerNode.html">PlannerNode</a> </td>
           <td>(</td>
-          <td class="paramtype">const std::shared_ptr&lt; const <a class="el" href="structeasynav_1_1NavState.html">NavState</a> &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>nav_state</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype">const rclcpp::NodeOptions &amp;</td>          <td class="paramname"><span class="paramname"><em>options</em></span><span class="paramdefsep"> = </span><span class="paramdefval">rclcpp::NodeOptions()</span></td><td>)</td>
           <td></td>
-          <td class="paramtype">const rclcpp::NodeOptions &amp;</td>          <td class="paramname"><span class="paramname"><em>options</em></span><span class="paramdefsep"> = </span><span class="paramdefval">rclcpp::NodeOptions()</span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -208,7 +204,6 @@ Public Member Functions</h2></td></tr>
 <p>Constructor. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">nav_state</td><td>Shared pointer to the navigation state. </td></tr>
     <tr><td class="paramname">options</td><td>Optional node configuration. </td></tr>
   </table>
   </dd>
@@ -236,8 +231,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a2b3c13c546cbcb92bdf965736235e7fb" name="a2b3c13c546cbcb92bdf965736235e7fb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2b3c13c546cbcb92bdf965736235e7fb">&#9670;&#160;</a></span>cycle()</h2>
+<a id="aa393561172069c8d7e8b21d3912a3a1a" name="aa393561172069c8d7e8b21d3912a3a1a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa393561172069c8d7e8b21d3912a3a1a">&#9670;&#160;</a></span>cycle()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -245,13 +240,19 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void cycle </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td class="paramtype">std::shared_ptr&lt; const <a class="el" href="structeasynav_1_1NavState.html">NavState</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>nav_state</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Execute a non-real-time cycle. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">nav_state</td><td>Shared pointer to the navigation state structure. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

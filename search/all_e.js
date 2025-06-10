@@ -23,7 +23,7 @@ var searchData=
   ['stamp_20',['stamp',['../structeasynav_1_1Perception.html#a3ace6024cedb403facddccc6842dce24',1,'easynav::Perception']]],
   ['state_21',['State',['../classeasynav_1_1GoalManager.html#a5d74787dedbc4e11c1ab15bf487e61f8',1,'easynav::GoalManager::State'],['../classeasynav_1_1GoalManagerClient.html#a5d74787dedbc4e11c1ab15bf487e61f8',1,'easynav::GoalManagerClient::State']]],
   ['std_22',['std',['../namespacestd.html',1,'']]],
-  ['subscription_23',['subscription',['../structeasynav_1_1Perception.html#a809515a5f8c318880eb15f1d6be6f2a3',1,'easynav::Perception']]],
+  ['subscription_23',['subscription',['../structeasynav_1_1PerceptionPtr.html#a809515a5f8c318880eb15f1d6be6f2a3',1,'easynav::PerceptionPtr']]],
   ['system_5fcycle_24',['system_cycle',['../classeasynav_1_1SystemNode.html#acca79767d43dedc09e182e9125a847f3',1,'easynav::SystemNode']]],
   ['system_5fcycle_5frt_25',['system_cycle_rt',['../classeasynav_1_1SystemNode.html#acd948c2ed9cfe6512e5b610caaa25961',1,'easynav::SystemNode']]],
   ['system_5fmain_2ecpp_26',['system_main.cpp',['../system__main_8cpp.html',1,'']]],
