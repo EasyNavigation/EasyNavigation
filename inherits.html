@@ -118,7 +118,7 @@ $(function(){ initResizable(false); });
 </td></tr>
 <tr><td><img src="inherit_graph_4.png" border="0" usemap="#ahash_3_01std_1_1tuple_3_01int_00_01int_00_01int_01_4_01_4" alt=""/>
 <map name="ahash_3_01std_1_1tuple_3_01int_00_01int_00_01int_01_4_01_4" id="ahash_3_01std_1_1tuple_3_01int_00_01int_00_01int_01_4_01_4">
-<area shape="rect" href="structstd_1_1hash_3_01std_1_1tuple_3_01int_00_01int_00_01int_01_4_01_4.html" title=" " alt="" coords="5,5,147,46"/>
+<area shape="rect" href="structstd_1_1hash_3_01std_1_1tuple_3_01int_00_01int_00_01int_01_4_01_4.html" title="Custom std::hash specialization for std::tuple&lt;int, int, int&gt;." alt="" coords="5,5,147,46"/>
 </map>
 </td></tr>
 <tr><td><img src="inherit_graph_5.png" border="0" usemap="#aLifecycleNode" alt=""/>
@@ -152,46 +152,58 @@ $(function(){ initResizable(false); });
 <area shape="poly" title=" " alt="" coords="155,16,186,16,186,21,155,21"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_8.png" border="0" usemap="#aMapsTypeBase" alt=""/>
-<map name="aMapsTypeBase" id="aMapsTypeBase">
-<area shape="rect" href="classeasynav_1_1MapsTypeBase.html" title="Abstract base class for managing map data in Easy Navigation." alt="" coords="5,5,117,31"/>
-</map>
-</td></tr>
-<tr><td><img src="inherit_graph_9.png" border="0" usemap="#aNavState" alt=""/>
+<tr><td><img src="inherit_graph_8.png" border="0" usemap="#aNavState" alt=""/>
 <map name="aNavState" id="aNavState">
-<area shape="rect" href="structeasynav_1_1NavState.html" title="Represents the state of the navigation system." alt="" coords="5,5,82,31"/>
+<area shape="rect" href="classeasynav_1_1NavState.html" title="A generic, type&#45;safe, lock&#45;free blackboard to hold runtime state." alt="" coords="5,5,82,31"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_10.png" border="0" usemap="#aPerception" alt=""/>
-<map name="aPerception" id="aPerception">
-<area shape="rect" href="structeasynav_1_1Perception.html" title="Represents a single sensor perception used for mapping and localization." alt="" coords="5,5,89,31"/>
+<tr><td><img src="inherit_graph_9.png" border="0" usemap="#aPerceptionBase" alt=""/>
+<map name="aPerceptionBase" id="aPerceptionBase">
+<area shape="rect" href="classeasynav_1_1PerceptionBase.html" title="Abstract base class for representing a single sensor perception." alt="" coords="5,55,119,80"/>
+<area shape="rect" href="classDummyPerception.html" title=" " alt="" coords="167,5,294,31"/>
+<area shape="poly" title=" " alt="" coords="122,47,183,29,185,34,124,52"/>
+<area shape="rect" href="classeasynav_1_1ImagePerception.html" title="Represents a single image perception from a sensor." alt="" coords="171,55,290,80"/>
+<area shape="poly" title=" " alt="" coords="134,65,170,65,170,70,134,70"/>
+<area shape="rect" href="classeasynav_1_1PointPerception.html" title="Concrete perception class for 3D point cloud data." alt="" coords="174,104,287,130"/>
+<area shape="poly" title=" " alt="" coords="124,83,185,101,183,106,122,88"/>
+</map>
+</td></tr>
+<tr><td><img src="inherit_graph_10.png" border="0" usemap="#aPerceptionHandler" alt=""/>
+<map name="aPerceptionHandler" id="aPerceptionHandler">
+<area shape="rect" href="classeasynav_1_1PerceptionHandler.html" title="Abstract base interface for group&#45;specific perception handlers." alt="" coords="5,55,134,80"/>
+<area shape="rect" href="classDummyHandler.html" title=" " alt="" coords="209,5,319,31"/>
+<area shape="poly" title=" " alt="" coords="137,48,210,29,211,34,139,53"/>
+<area shape="rect" href="classeasynav_1_1ImagePerceptionHandler.html" title="Handles the creation and updating of ImagePerception instances from sensor_msgs::msg::Image messages." alt="" coords="182,55,346,80"/>
+<area shape="poly" title=" " alt="" coords="149,65,181,65,181,70,149,70"/>
+<area shape="rect" href="classeasynav_1_1PointPerceptionHandler.html" title="PerceptionHandler implementation for sensors producing point&#45;based data." alt="" coords="185,104,343,130"/>
+<area shape="poly" title=" " alt="" coords="139,82,211,101,210,106,137,87"/>
 </map>
 </td></tr>
 <tr><td><img src="inherit_graph_11.png" border="0" usemap="#aPerceptionPtr" alt=""/>
 <map name="aPerceptionPtr" id="aPerceptionPtr">
-<area shape="rect" href="structeasynav_1_1PerceptionPtr.html" title=" " alt="" coords="5,5,106,31"/>
+<area shape="rect" href="structeasynav_1_1PerceptionPtr.html" title="Represents a perception entry with its state and ROS subscription." alt="" coords="5,5,106,31"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_12.png" border="0" usemap="#aPerceptionsOpsView" alt=""/>
-<map name="aPerceptionsOpsView" id="aPerceptionsOpsView">
-<area shape="rect" href="classeasynav_1_1PerceptionsOpsView.html" title="Provides efficient, non&#45;destructive, chainable operations over a set of sensor perceptions." alt="" coords="5,5,149,31"/>
-</map>
-</td></tr>
-<tr><td><img src="inherit_graph_13.png" border="0" usemap="#aPerceptionsOpsView_1_1VoxelKey" alt=""/>
-<map name="aPerceptionsOpsView_1_1VoxelKey" id="aPerceptionsOpsView_1_1VoxelKey">
-<area shape="rect" href="structeasynav_1_1PerceptionsOpsView_1_1VoxelKey.html" title=" " alt="" coords="5,5,149,46"/>
-</map>
-</td></tr>
-<tr><td><img src="inherit_graph_14.png" border="0" usemap="#aPerceptionsOpsView_1_1VoxelKeyHash" alt=""/>
-<map name="aPerceptionsOpsView_1_1VoxelKeyHash" id="aPerceptionsOpsView_1_1VoxelKeyHash">
-<area shape="rect" href="structeasynav_1_1PerceptionsOpsView_1_1VoxelKeyHash.html" title=" " alt="" coords="5,5,149,46"/>
-</map>
-</td></tr>
-<tr><td><img src="inherit_graph_15.png" border="0" usemap="#aPlannerMethodBase" alt=""/>
+<tr><td><img src="inherit_graph_12.png" border="0" usemap="#aPlannerMethodBase" alt=""/>
 <map name="aPlannerMethodBase" id="aPlannerMethodBase">
 <area shape="rect" title=" " alt="" coords="5,5,144,31"/>
 <area shape="rect" href="classeasynav_1_1DummyPlanner.html" title="A default &quot;do&#45;nothing&quot; implementation of PlannerMethodBase." alt="" coords="192,5,301,31"/>
 <area shape="poly" title=" " alt="" coords="159,16,192,16,192,21,159,21"/>
+</map>
+</td></tr>
+<tr><td><img src="inherit_graph_13.png" border="0" usemap="#aPointPerceptionsOpsView" alt=""/>
+<map name="aPointPerceptionsOpsView" id="aPointPerceptionsOpsView">
+<area shape="rect" href="classeasynav_1_1PointPerceptionsOpsView.html" title="Provides efficient, non&#45;destructive, chainable operations over a set of point&#45;based perceptions." alt="" coords="5,5,179,31"/>
+</map>
+</td></tr>
+<tr><td><img src="inherit_graph_14.png" border="0" usemap="#aPointPerceptionsOpsView_1_1VoxelKey" alt=""/>
+<map name="aPointPerceptionsOpsView_1_1VoxelKey" id="aPointPerceptionsOpsView_1_1VoxelKey">
+<area shape="rect" href="structeasynav_1_1PointPerceptionsOpsView_1_1VoxelKey.html" title="Represents a discrete 3D voxel index for downsampling." alt="" coords="5,5,179,46"/>
+</map>
+</td></tr>
+<tr><td><img src="inherit_graph_15.png" border="0" usemap="#aPointPerceptionsOpsView_1_1VoxelKeyHash" alt=""/>
+<map name="aPointPerceptionsOpsView_1_1VoxelKeyHash" id="aPointPerceptionsOpsView_1_1VoxelKeyHash">
+<area shape="rect" href="structeasynav_1_1PointPerceptionsOpsView_1_1VoxelKeyHash.html" title="Hash function for VoxelKey." alt="" coords="5,5,179,46"/>
 </map>
 </td></tr>
 <tr><td><img src="inherit_graph_16.png" border="0" usemap="#aSingleton_3_01C_01_4" alt=""/>
@@ -215,13 +227,17 @@ $(function(){ initResizable(false); });
 </td></tr>
 <tr><td><img src="inherit_graph_19.png" border="0" usemap="#aTest" alt=""/>
 <map name="aTest" id="aTest">
-<area shape="rect" title=" " alt="" coords="5,55,53,80"/>
+<area shape="rect" title=" " alt="" coords="5,104,53,130"/>
 <area shape="rect" href="classGoalManagerTestCase.html" title=" " alt="" coords="102,5,256,31"/>
-<area shape="poly" title=" " alt="" coords="66,51,100,40,133,29,134,34,102,45,68,56"/>
-<area shape="rect" href="classPerceptionsOpsTest.html" title=" " alt="" coords="109,55,249,80"/>
-<area shape="poly" title=" " alt="" coords="69,65,108,65,108,70,69,70"/>
-<area shape="rect" href="classSensorsNodeTestCase.html" title=" " alt="" coords="101,104,257,130"/>
-<area shape="poly" title=" " alt="" coords="68,79,102,90,134,101,133,106,100,95,66,84"/>
+<area shape="poly" title=" " alt="" coords="46,90,70,64,99,40,121,29,123,34,102,44,73,68,50,94"/>
+<area shape="rect" href="classNavStateTest.html" title=" " alt="" coords="128,55,230,80"/>
+<area shape="poly" title=" " alt="" coords="66,101,100,89,133,78,134,83,102,94,68,106"/>
+<area shape="rect" href="classPerceptionsOpsTest.html" title=" " alt="" coords="109,104,249,130"/>
+<area shape="poly" title=" " alt="" coords="69,114,108,114,108,120,69,120"/>
+<area shape="rect" href="classPerceptionsTestCase.html" title=" " alt="" coords="106,153,252,179"/>
+<area shape="poly" title=" " alt="" coords="68,128,102,140,134,150,133,155,100,145,66,133"/>
+<area shape="rect" href="classSensorsNodeTestCase.html" title=" " alt="" coords="101,203,257,228"/>
+<area shape="poly" title=" " alt="" coords="50,140,73,166,102,189,123,200,121,204,99,194,70,170,46,144"/>
 </map>
 </td></tr>
 <tr><td><img src="inherit_graph_20.png" border="0" usemap="#aunique__ptr_3_01RTTFBuffer_01_4" alt=""/>

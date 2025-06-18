@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['mapsmanagernode_2ecpp_0',['MapsManagerNode.cpp',['../MapsManagerNode_8cpp.html',1,'']]],
-  ['mapsmanagernode_2ehpp_1',['MapsManagerNode.hpp',['../MapsManagerNode_8hpp.html',1,'']]],
-  ['maptypebase_2ehpp_2',['MapTypeBase.hpp',['../MapTypeBase_8hpp.html',1,'']]]
+  ['localizernode_2ecpp_0',['LocalizerNode.cpp',['../LocalizerNode_8cpp.html',1,'']]],
+  ['localizernode_2ehpp_1',['LocalizerNode.hpp',['../LocalizerNode_8hpp.html',1,'']]]
 ];

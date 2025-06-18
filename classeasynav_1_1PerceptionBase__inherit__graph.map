@@ -1,0 +1,9 @@
+<map id="PerceptionBase" name="PerceptionBase">
+<area shape="rect" id="Node000001" title="Abstract base class for representing a single sensor perception." alt="" coords="160,5,274,31"/>
+<area shape="rect" id="Node000002" href="$classDummyPerception.html" title=" " alt="" coords="5,79,133,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="179,41,95,81,93,76,177,36"/>
+<area shape="rect" id="Node000003" href="$classeasynav_1_1ImagePerception.html" title="Represents a single image perception from a sensor." alt="" coords="157,79,277,105"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="220,46,220,79,214,79,214,46"/>
+<area shape="rect" id="Node000004" href="$classeasynav_1_1PointPerception.html" title="Concrete perception class for 3D point cloud data." alt="" coords="300,79,414,105"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="255,36,334,76,332,81,253,41"/>
+</map>

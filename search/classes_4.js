@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['localizernode_0',['LocalizerNode',['../classeasynav_1_1LocalizerNode.html',1,'easynav']]]
+  ['imageperception_0',['ImagePerception',['../classeasynav_1_1ImagePerception.html',1,'easynav']]],
+  ['imageperceptionhandler_1',['ImagePerceptionHandler',['../classeasynav_1_1ImagePerceptionHandler.html',1,'easynav']]]
 ];

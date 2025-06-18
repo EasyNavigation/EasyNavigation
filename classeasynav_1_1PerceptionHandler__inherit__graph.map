@@ -1,0 +1,9 @@
+<map id="PerceptionHandler" name="PerceptionHandler">
+<area shape="rect" id="Node000001" title="Abstract base interface for group&#45;specific perception handlers." alt="" coords="158,5,286,31"/>
+<area shape="rect" id="Node000002" href="$classDummyHandler.html" title=" " alt="" coords="5,79,116,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="182,40,89,81,87,76,180,35"/>
+<area shape="rect" id="Node000003" href="$classeasynav_1_1ImagePerceptionHandler.html" title="Handles the creation and updating of ImagePerception instances from sensor_msgs::msg::Image messages." alt="" coords="140,79,304,105"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="224,46,224,79,219,79,219,46"/>
+<area shape="rect" id="Node000004" href="$classeasynav_1_1PointPerceptionHandler.html" title="PerceptionHandler implementation for sensors producing point&#45;based data." alt="" coords="328,79,486,105"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="268,34,377,76,375,81,266,39"/>
+</map>

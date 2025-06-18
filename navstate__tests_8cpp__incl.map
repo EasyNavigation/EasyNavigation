@@ -1,0 +1,39 @@
+<map id="easynav_common/tests/navstate_tests.cpp" name="easynav_common/tests/navstate_tests.cpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="202,5,362,46"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,102,63,127"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="214,49,75,96,73,97,71,93,73,92,212,44"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="86,102,147,127"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="246,49,155,96,152,92,243,44"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="171,102,228,127"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="265,48,223,92,219,89,261,45"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="252,102,312,127"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="285,47,285,86,279,86,279,47"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="337,102,430,127"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="307,44,360,90,356,94,303,49"/>
+<area shape="rect" id="Node000007" href="$NavState_8hpp.html" title="A blackboard&#45;like structure to hold the current state of the navigation system." alt="" coords="455,94,616,135"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="340,44,464,86,463,91,339,49"/>
+<area shape="rect" id="Node000019" title=" " alt="" coords="640,102,838,127"/>
+<area shape="poly" id="edge18_Node000001_Node000019" title=" " alt="" coords="363,39,660,95,659,101,362,45"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="17,183,70,208"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="455,135,442,137,343,151,265,159,186,167,86,185,85,180,185,162,264,153,343,146,442,132,454,130"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="94,183,204,208"/>
+<area shape="poly" id="edge8_Node000007_Node000009" title=" " alt="" coords="455,135,443,137,220,182,219,177,441,132,454,130"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="228,183,296,208"/>
+<area shape="poly" id="edge9_Node000007_Node000010" title=" " alt="" coords="468,138,311,183,310,178,466,133"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="319,183,376,208"/>
+<area shape="poly" id="edge10_Node000007_Node000011" title=" " alt="" coords="489,138,391,179,389,174,487,133"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="399,183,477,208"/>
+<area shape="poly" id="edge11_Node000007_Node000012" title=" " alt="" coords="513,137,466,175,463,171,510,133"/>
+<area shape="rect" id="Node000013" title=" " alt="" coords="501,183,570,208"/>
+<area shape="poly" id="edge12_Node000007_Node000013" title=" " alt="" coords="538,135,538,167,533,167,533,135"/>
+<area shape="rect" id="Node000014" title=" " alt="" coords="593,183,675,208"/>
+<area shape="poly" id="edge13_Node000007_Node000014" title=" " alt="" coords="561,133,609,170,605,175,558,137"/>
+<area shape="rect" id="Node000015" title=" " alt="" coords="698,183,770,208"/>
+<area shape="poly" id="edge14_Node000007_Node000015" title=" " alt="" coords="586,133,691,174,689,179,584,138"/>
+<area shape="rect" id="Node000016" title=" " alt="" coords="794,183,871,208"/>
+<area shape="poly" id="edge15_Node000007_Node000016" title=" " alt="" coords="610,133,780,177,778,183,609,138"/>
+<area shape="rect" id="Node000017" title=" " alt="" coords="896,183,975,208"/>
+<area shape="poly" id="edge16_Node000007_Node000017" title=" " alt="" coords="617,130,629,132,881,179,880,185,628,137,616,135"/>
+<area shape="rect" id="Node000018" title=" " alt="" coords="1000,183,1066,208"/>
+<area shape="poly" id="edge17_Node000007_Node000018" title=" " alt="" coords="617,130,629,132,727,146,805,154,884,163,984,180,984,185,883,169,805,160,727,152,628,137,616,135"/>
+</map>

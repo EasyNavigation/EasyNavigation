@@ -1,6 +1,6 @@
 <map id="easynav_common/include/easynav_common/YTSession.hpp" name="easynav_common/include/easynav_common/YTSession.hpp">
 <area shape="rect" id="Node000001" title=" " alt="" coords="566,5,788,46"/>
-<area shape="rect" id="Node000002" href="$Perceptions_8cpp.html" title="Definition of the Perception struct and the Perceptions container used for sensor data input." alt="" coords="5,94,171,150"/>
+<area shape="rect" id="Node000002" href="$PointPerception_8cpp.html" title=" " alt="" coords="5,94,171,150"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="551,42,376,64,183,97,172,99,170,94,182,91,375,58,550,37"/>
 <area shape="rect" id="Node000003" href="$ControllerNode_8cpp.html" title="Implementation of the ControllerNode class." alt="" coords="194,94,350,150"/>
 <area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="560,52,362,97,351,100,349,94,361,91,559,47"/>

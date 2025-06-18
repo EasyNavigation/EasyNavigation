@@ -120,9 +120,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ab9991f968ed0004142db909407daf154" id="r_ab9991f968ed0004142db909407daf154"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a5d74787dedbc4e11c1ab15bf487e61f8">State</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab9991f968ed0004142db909407daf154">get_state</a> () const</td></tr>
 <tr class="memdesc:ab9991f968ed0004142db909407daf154"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get current internal goal state.  <br /></td></tr>
 <tr class="separator:ab9991f968ed0004142db909407daf154"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6dc52a57197df6228977fdf46e655b59" id="r_a6dc52a57197df6228977fdf46e655b59"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6dc52a57197df6228977fdf46e655b59">GoalManager</a> (const std::shared_ptr&lt; const <a class="el" href="structeasynav_1_1NavState.html">NavState</a> &gt; &amp;nav_state, rclcpp_lifecycle::LifecycleNode::SharedPtr parent_node)</td></tr>
-<tr class="memdesc:a6dc52a57197df6228977fdf46e655b59"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <br /></td></tr>
-<tr class="separator:a6dc52a57197df6228977fdf46e655b59"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a431494d38c4bec253ced0cfbe66960d5" id="r_a431494d38c4bec253ced0cfbe66960d5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a431494d38c4bec253ced0cfbe66960d5">GoalManager</a> (<a class="el" href="classeasynav_1_1NavState.html">NavState</a> &amp;nav_state, rclcpp_lifecycle::LifecycleNode::SharedPtr parent_node)</td></tr>
+<tr class="memdesc:a431494d38c4bec253ced0cfbe66960d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <br /></td></tr>
+<tr class="separator:a431494d38c4bec253ced0cfbe66960d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a80f7c2db5701e01e05b2cedd201475ca" id="r_a80f7c2db5701e01e05b2cedd201475ca"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a80f7c2db5701e01e05b2cedd201475ca">set_error</a> (const std::string &amp;reason)</td></tr>
 <tr class="memdesc:a80f7c2db5701e01e05b2cedd201475ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mark the system as in error state.  <br /></td></tr>
 <tr class="separator:a80f7c2db5701e01e05b2cedd201475ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -132,9 +132,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a4401bd0ec06534a826ad07b558390774" id="r_a4401bd0ec06534a826ad07b558390774"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4401bd0ec06534a826ad07b558390774">set_finished</a> ()</td></tr>
 <tr class="memdesc:a4401bd0ec06534a826ad07b558390774"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mark the current goal as successfully completed.  <br /></td></tr>
 <tr class="separator:a4401bd0ec06534a826ad07b558390774"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac5c54df7ed3b930268c8d7752c101725" id="r_ac5c54df7ed3b930268c8d7752c101725"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac5c54df7ed3b930268c8d7752c101725">update</a> ()</td></tr>
-<tr class="memdesc:ac5c54df7ed3b930268c8d7752c101725"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update internal logic, including preemption and timeout checks.  <br /></td></tr>
-<tr class="separator:ac5c54df7ed3b930268c8d7752c101725"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ca06ddb77a58406986fb74980981fc5" id="r_a2ca06ddb77a58406986fb74980981fc5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2ca06ddb77a58406986fb74980981fc5">update</a> (<a class="el" href="classeasynav_1_1NavState.html">NavState</a> &amp;nav_state)</td></tr>
+<tr class="memdesc:a2ca06ddb77a58406986fb74980981fc5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update internal logic, including preemption and timeout checks.  <br /></td></tr>
+<tr class="separator:a2ca06ddb77a58406986fb74980981fc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Handles navigation goals, their lifecycle, and command interface. </p>
@@ -171,8 +171,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a6dc52a57197df6228977fdf46e655b59" name="a6dc52a57197df6228977fdf46e655b59"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6dc52a57197df6228977fdf46e655b59">&#9670;&#160;</a></span>GoalManager()</h2>
+<a id="a431494d38c4bec253ced0cfbe66960d5" name="a431494d38c4bec253ced0cfbe66960d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a431494d38c4bec253ced0cfbe66960d5">&#9670;&#160;</a></span>GoalManager()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -180,7 +180,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname"><a class="el" href="classeasynav_1_1GoalManager.html">GoalManager</a> </td>
           <td>(</td>
-          <td class="paramtype">const std::shared_ptr&lt; const <a class="el" href="structeasynav_1_1NavState.html">NavState</a> &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>nav_state</em></span>, </td>
+          <td class="paramtype"><a class="el" href="classeasynav_1_1NavState.html">NavState</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>nav_state</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -364,8 +364,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ac5c54df7ed3b930268c8d7752c101725" name="ac5c54df7ed3b930268c8d7752c101725"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac5c54df7ed3b930268c8d7752c101725">&#9670;&#160;</a></span>update()</h2>
+<a id="a2ca06ddb77a58406986fb74980981fc5" name="a2ca06ddb77a58406986fb74980981fc5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2ca06ddb77a58406986fb74980981fc5">&#9670;&#160;</a></span>update()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -373,7 +373,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void update </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="classeasynav_1_1NavState.html">NavState</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>nav_state</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>

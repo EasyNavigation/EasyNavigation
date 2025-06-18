@@ -1,0 +1,5 @@
+<map id="ImagePerception" name="ImagePerception">
+<area shape="rect" id="Node000001" title="Represents a single image perception from a sensor." alt="" coords="5,79,125,105"/>
+<area shape="rect" id="Node000002" href="$classeasynav_1_1PerceptionBase.html" title="Abstract base class for representing a single sensor perception." alt="" coords="8,5,122,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="68,46,68,79,62,79,62,46"/>
+</map>

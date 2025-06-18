@@ -131,12 +131,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a6eabdf043c65e5df971001021c63a06f" id="r_a6eabdf043c65e5df971001021c63a06f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6eabdf043c65e5df971001021c63a06f">ControllerNode</a> (const rclcpp::NodeOptions &amp;options=rclcpp::NodeOptions())</td></tr>
 <tr class="memdesc:a6eabdf043c65e5df971001021c63a06f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="classeasynav_1_1ControllerNode.html" title="ROS 2 lifecycle node that manages calculating speeds for the Easy Navigation system.">ControllerNode</a> lifecycle node with the specified options.  <br /></td></tr>
 <tr class="separator:a6eabdf043c65e5df971001021c63a06f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6f944ee0c62343272428c0fb3215bd95" id="r_a6f944ee0c62343272428c0fb3215bd95"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6f944ee0c62343272428c0fb3215bd95">cycle_rt</a> (std::shared_ptr&lt; const <a class="el" href="structeasynav_1_1NavState.html">NavState</a> &gt; nav_state, bool trigger=false)</td></tr>
-<tr class="memdesc:a6f944ee0c62343272428c0fb3215bd95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Executes one cycle of real-time controller logic.  <br /></td></tr>
-<tr class="separator:a6f944ee0c62343272428c0fb3215bd95"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab79dfcb229f8c4ca24fe39060aaf0507" id="r_ab79dfcb229f8c4ca24fe39060aaf0507"><td class="memItemLeft" align="right" valign="top">geometry_msgs::msg::TwistStamped&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab79dfcb229f8c4ca24fe39060aaf0507">get_cmd_vel</a> () const</td></tr>
-<tr class="memdesc:ab79dfcb229f8c4ca24fe39060aaf0507"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current control command.  <br /></td></tr>
-<tr class="separator:ab79dfcb229f8c4ca24fe39060aaf0507"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a797c6abce8a6f9cef19ffade9f2b6137" id="r_a797c6abce8a6f9cef19ffade9f2b6137"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a797c6abce8a6f9cef19ffade9f2b6137">cycle_rt</a> (std::shared_ptr&lt; <a class="el" href="classeasynav_1_1NavState.html">NavState</a> &gt; nav_state, bool trigger=false)</td></tr>
+<tr class="memdesc:a797c6abce8a6f9cef19ffade9f2b6137"><td class="mdescLeft">&#160;</td><td class="mdescRight">Executes one cycle of real-time controller logic.  <br /></td></tr>
+<tr class="separator:a797c6abce8a6f9cef19ffade9f2b6137"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8366fef9515c0b0cd47949fbfc018641" id="r_a8366fef9515c0b0cd47949fbfc018641"><td class="memItemLeft" align="right" valign="top">rclcpp::CallbackGroup::SharedPtr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8366fef9515c0b0cd47949fbfc018641">get_real_time_cbg</a> ()</td></tr>
 <tr class="memdesc:a8366fef9515c0b0cd47949fbfc018641"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the real-time callback group.  <br /></td></tr>
 <tr class="separator:a8366fef9515c0b0cd47949fbfc018641"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -234,8 +231,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a6f944ee0c62343272428c0fb3215bd95" name="a6f944ee0c62343272428c0fb3215bd95"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6f944ee0c62343272428c0fb3215bd95">&#9670;&#160;</a></span>cycle_rt()</h2>
+<a id="a797c6abce8a6f9cef19ffade9f2b6137" name="a797c6abce8a6f9cef19ffade9f2b6137"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a797c6abce8a6f9cef19ffade9f2b6137">&#9670;&#160;</a></span>cycle_rt()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -243,7 +240,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">bool cycle_rt </td>
           <td>(</td>
-          <td class="paramtype">std::shared_ptr&lt; const <a class="el" href="structeasynav_1_1NavState.html">NavState</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>nav_state</em></span>, </td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classeasynav_1_1NavState.html">NavState</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>nav_state</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -261,34 +258,6 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Bool value to indicate if trigger subsequent processes </dd></dl>
-
-</div>
-</div>
-<a id="ab79dfcb229f8c4ca24fe39060aaf0507" name="ab79dfcb229f8c4ca24fe39060aaf0507"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab79dfcb229f8c4ca24fe39060aaf0507">&#9670;&#160;</a></span>get_cmd_vel()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">geometry_msgs::msg::TwistStamped get_cmd_vel </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Get the current control command. </p>
-<dl class="section return"><dt>Returns</dt><dd>An Odometry message representing the current control command. </dd></dl>
 
 </div>
 </div>

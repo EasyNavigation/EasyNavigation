@@ -1,3 +1,9 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$structeasynav_1_1NavState.html" title="Represents the state of the navigation system." alt="" coords="5,5,82,31"/>
+<area shape="rect" id="Node000000" href="$classeasynav_1_1PerceptionBase.html" title="Abstract base class for representing a single sensor perception." alt="" coords="5,55,119,80"/>
+<area shape="rect" id="Node000001" href="$classDummyPerception.html" title=" " alt="" coords="167,5,294,31"/>
+<area shape="poly" id="edge12_Node000000_Node000001" title=" " alt="" coords="122,47,183,29,185,34,124,52"/>
+<area shape="rect" id="Node000002" href="$classeasynav_1_1ImagePerception.html" title="Represents a single image perception from a sensor." alt="" coords="171,55,290,80"/>
+<area shape="poly" id="edge13_Node000000_Node000002" title=" " alt="" coords="134,65,170,65,170,70,134,70"/>
+<area shape="rect" id="Node000003" href="$classeasynav_1_1PointPerception.html" title="Concrete perception class for 3D point cloud data." alt="" coords="174,104,287,130"/>
+<area shape="poly" id="edge14_Node000000_Node000003" title=" " alt="" coords="124,83,185,101,183,106,122,88"/>
 </map>

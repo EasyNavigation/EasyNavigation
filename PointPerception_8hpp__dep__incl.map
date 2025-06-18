@@ -1,0 +1,15 @@
+<map id="easynav_common/include/easynav_common/types/PointPerception.hpp" name="easynav_common/include/easynav_common/types/PointPerception.hpp">
+<area shape="rect" id="Node000001" title="Defines data structures and utilities for representing and processing sensor perceptions." alt="" coords="482,5,654,61"/>
+<area shape="rect" id="Node000002" href="$PointPerception_8cpp.html" title=" " alt="" coords="5,109,171,165"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="468,54,332,80,183,112,172,114,170,109,182,106,331,74,467,49"/>
+<area shape="rect" id="Node000003" href="$perceptions__tests_8cpp.html" title=" " alt="" coords="195,116,354,157"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="476,69,332,118,331,113,474,64"/>
+<area shape="rect" id="Node000004" href="$pointperceptionsops__tests_8cpp.html" title=" " alt="" coords="379,109,538,165"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="529,74,490,110,486,106,526,70"/>
+<area shape="rect" id="Node000005" href="$SensorsNode_8cpp.html" title="Implementation of the SensorsNode class." alt="" coords="562,116,795,157"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="611,70,659,114,656,118,607,74"/>
+<area shape="rect" id="Node000006" href="$sensors__node__tests_8cpp.html" title=" " alt="" coords="820,116,986,157"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="669,62,839,113,837,119,668,67"/>
+<area shape="rect" id="Node000007" href="$SystemNode_8cpp.html" title="Implementation of the SystemNode class." alt="" coords="1010,116,1235,157"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="669,48,998,106,1032,113,1031,118,997,112,668,54"/>
+</map>

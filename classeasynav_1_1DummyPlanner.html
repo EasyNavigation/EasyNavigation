@@ -125,15 +125,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a17e0443632add3355bdb6e8e8c81cf68" id="r_a17e0443632add3355bdb6e8e8c81cf68"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a17e0443632add3355bdb6e8e8c81cf68">DummyPlanner</a> ()=default</td></tr>
 <tr class="memdesc:a17e0443632add3355bdb6e8e8c81cf68"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor.  <br /></td></tr>
 <tr class="separator:a17e0443632add3355bdb6e8e8c81cf68"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a10e0034ffa7008e6189d2ec96abfe200" id="r_a10e0034ffa7008e6189d2ec96abfe200"><td class="memItemLeft" align="right" valign="top">virtual nav_msgs::msg::Path&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a10e0034ffa7008e6189d2ec96abfe200">get_path</a> () override</td></tr>
-<tr class="memdesc:a10e0034ffa7008e6189d2ec96abfe200"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current path.  <br /></td></tr>
-<tr class="separator:a10e0034ffa7008e6189d2ec96abfe200"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa09f4316ce265b452c96e6d74101cd76" id="r_aa09f4316ce265b452c96e6d74101cd76"><td class="memItemLeft" align="right" valign="top">virtual std::expected&lt; void, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa09f4316ce265b452c96e6d74101cd76">on_initialize</a> () override</td></tr>
 <tr class="memdesc:aa09f4316ce265b452c96e6d74101cd76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialization hook.  <br /></td></tr>
 <tr class="separator:aa09f4316ce265b452c96e6d74101cd76"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adbea5f6d7a91b4a1f7fa21d5a46c18aa" id="r_adbea5f6d7a91b4a1f7fa21d5a46c18aa"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adbea5f6d7a91b4a1f7fa21d5a46c18aa">update</a> (const <a class="el" href="structeasynav_1_1NavState.html">NavState</a> &amp;nav_state) override</td></tr>
-<tr class="memdesc:adbea5f6d7a91b4a1f7fa21d5a46c18aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dummy update method.  <br /></td></tr>
-<tr class="separator:adbea5f6d7a91b4a1f7fa21d5a46c18aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a24ddfd2eba3d3d6a90d492e8d25ff0da" id="r_a24ddfd2eba3d3d6a90d492e8d25ff0da"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a24ddfd2eba3d3d6a90d492e8d25ff0da">update</a> (<a class="el" href="classeasynav_1_1NavState.html">NavState</a> &amp;nav_state) override</td></tr>
+<tr class="memdesc:a24ddfd2eba3d3d6a90d492e8d25ff0da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dummy update method.  <br /></td></tr>
+<tr class="separator:a24ddfd2eba3d3d6a90d492e8d25ff0da"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae5b7a07c0a2137e5faef603bf7f707ef" id="r_ae5b7a07c0a2137e5faef603bf7f707ef"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae5b7a07c0a2137e5faef603bf7f707ef">~DummyPlanner</a> ()=default</td></tr>
 <tr class="memdesc:ae5b7a07c0a2137e5faef603bf7f707ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor.  <br /></td></tr>
 <tr class="separator:ae5b7a07c0a2137e5faef603bf7f707ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -197,34 +194,6 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a10e0034ffa7008e6189d2ec96abfe200" name="a10e0034ffa7008e6189d2ec96abfe200"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a10e0034ffa7008e6189d2ec96abfe200">&#9670;&#160;</a></span>get_path()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">nav_msgs::msg::Path get_path </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Get the current path. </p>
-<dl class="section return"><dt>Returns</dt><dd>Stored (empty) path. </dd></dl>
-
-</div>
-</div>
 <a id="aa09f4316ce265b452c96e6d74101cd76" name="aa09f4316ce265b452c96e6d74101cd76"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa09f4316ce265b452c96e6d74101cd76">&#9670;&#160;</a></span>on_initialize()</h2>
 
@@ -253,8 +222,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="adbea5f6d7a91b4a1f7fa21d5a46c18aa" name="adbea5f6d7a91b4a1f7fa21d5a46c18aa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adbea5f6d7a91b4a1f7fa21d5a46c18aa">&#9670;&#160;</a></span>update()</h2>
+<a id="a24ddfd2eba3d3d6a90d492e8d25ff0da" name="a24ddfd2eba3d3d6a90d492e8d25ff0da"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a24ddfd2eba3d3d6a90d492e8d25ff0da">&#9670;&#160;</a></span>update()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -265,7 +234,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void update </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structeasynav_1_1NavState.html">NavState</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>nav_state</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="classeasynav_1_1NavState.html">NavState</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>nav_state</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
