@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.20)
 project(easynav_common)
 
+cmake_policy(SET CMP0144 NEW)
+
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
@@ -33,17 +35,21 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   $<INSTALL_INTERFACE:include/${PROJECT_NAME}>
   ${PCL_INCLUDE_DIRS}
 )
-target_link_libraries(${PROJECT_NAME} PUBLIC
-  rclcpp::rclcpp
-  rclcpp_lifecycle::rclcpp_lifecycle
-  pcl_conversions::pcl_conversions
-  tf2_ros::tf2_ros
-  tf2_geometry_msgs::tf2_geometry_msgs
-  cv_bridge::cv_bridge
-  ${geometry_msgs_TARGETS}
-  ${sensor_msgs_TARGETS}
-  ${nav_msgs_TARGETS}
-  yaets::yaets
+
+ament_target_dependencies(${PROJECT_NAME}
+  "rclcpp"
+  "rclcpp_lifecycle"
+  "pcl_conversions"
+  "tf2_ros"
+  "tf2_geometry_msgs"
+  "cv_bridge"
+  "geometry_msgs"
+  "sensor_msgs"
+  "nav_msgs"
+  "yaets"
+)
+
+target_link_libraries(${PROJECT_NAME}
   ${PCL_LIBRARIES}
 )
 
