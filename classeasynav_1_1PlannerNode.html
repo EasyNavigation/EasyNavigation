@@ -128,9 +128,13 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a31755333606c97996aff73c54fb34ac3" id="r_a31755333606c97996aff73c54fb34ac3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a31755333606c97996aff73c54fb34ac3">cycle</a> (std::shared_ptr&lt; <a class="el" href="classeasynav_1_1NavState.html">NavState</a> &gt; nav_state)</td></tr>
-<tr class="memdesc:a31755333606c97996aff73c54fb34ac3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute a non-real-time cycle.  <br /></td></tr>
-<tr class="separator:a31755333606c97996aff73c54fb34ac3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ae86f0d6d786388f4c6e08c1856f5d2" id="r_a0ae86f0d6d786388f4c6e08c1856f5d2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0ae86f0d6d786388f4c6e08c1856f5d2">cycle</a> (std::shared_ptr&lt; <a class="el" href="classeasynav_1_1NavState.html">NavState</a> &gt; nav_state, bool trigger=false)</td></tr>
+<tr class="memdesc:a0ae86f0d6d786388f4c6e08c1856f5d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute a non-real-time cycle.  <br /></td></tr>
+<tr class="separator:a0ae86f0d6d786388f4c6e08c1856f5d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a40753e7612c12ba577d70c73204d4eb4" id="r_a40753e7612c12ba577d70c73204d4eb4"><td class="memItemLeft" align="right" valign="top">const rclcpp::Time&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a40753e7612c12ba577d70c73204d4eb4">get_last_execution_ts</a> () const</td></tr>
+<tr class="separator:a40753e7612c12ba577d70c73204d4eb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a623ecc87e5095173c1143cc5eea77ba9" id="r_a623ecc87e5095173c1143cc5eea77ba9"><td class="memItemLeft" align="right" valign="top">const rclcpp::Time&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a623ecc87e5095173c1143cc5eea77ba9">get_last_rt_execution_ts</a> () const</td></tr>
+<tr class="separator:a623ecc87e5095173c1143cc5eea77ba9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a618c508c69d8fe9751cc8d659d62f294" id="r_a618c508c69d8fe9751cc8d659d62f294"><td class="memItemLeft" align="right" valign="top">nav_msgs::msg::Path&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a618c508c69d8fe9751cc8d659d62f294">get_path</a> () const</td></tr>
 <tr class="memdesc:a618c508c69d8fe9751cc8d659d62f294"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current planned path.  <br /></td></tr>
 <tr class="separator:a618c508c69d8fe9751cc8d659d62f294"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -231,8 +235,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a31755333606c97996aff73c54fb34ac3" name="a31755333606c97996aff73c54fb34ac3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a31755333606c97996aff73c54fb34ac3">&#9670;&#160;</a></span>cycle()</h2>
+<a id="a0ae86f0d6d786388f4c6e08c1856f5d2" name="a0ae86f0d6d786388f4c6e08c1856f5d2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0ae86f0d6d786388f4c6e08c1856f5d2">&#9670;&#160;</a></span>cycle()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -240,8 +244,12 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void cycle </td>
           <td>(</td>
-          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classeasynav_1_1NavState.html">NavState</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>nav_state</em></span></td><td>)</td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classeasynav_1_1NavState.html">NavState</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>nav_state</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>trigger</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -250,9 +258,44 @@ Public Member Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">nav_state</td><td>Shared pointer to the navigation state structure. </td></tr>
+    <tr><td class="paramname">trigger</td><td>If tru, a cycle is executed independently of the frequency set </td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a40753e7612c12ba577d70c73204d4eb4" name="a40753e7612c12ba577d70c73204d4eb4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a40753e7612c12ba577d70c73204d4eb4">&#9670;&#160;</a></span>get_last_execution_ts()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const rclcpp::Time get_last_execution_ts </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a623ecc87e5095173c1143cc5eea77ba9" name="a623ecc87e5095173c1143cc5eea77ba9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a623ecc87e5095173c1143cc5eea77ba9">&#9670;&#160;</a></span>get_last_rt_execution_ts()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const rclcpp::Time get_last_rt_execution_ts </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
