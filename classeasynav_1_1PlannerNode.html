@@ -132,8 +132,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a0ae86f0d6d786388f4c6e08c1856f5d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute a non-real-time cycle.  <br /></td></tr>
 <tr class="separator:a0ae86f0d6d786388f4c6e08c1856f5d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a40753e7612c12ba577d70c73204d4eb4" id="r_a40753e7612c12ba577d70c73204d4eb4"><td class="memItemLeft" align="right" valign="top">const rclcpp::Time&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a40753e7612c12ba577d70c73204d4eb4">get_last_execution_ts</a> () const</td></tr>
+<tr class="memdesc:a40753e7612c12ba577d70c73204d4eb4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the timestamp of the last non-RT execution.  <br /></td></tr>
 <tr class="separator:a40753e7612c12ba577d70c73204d4eb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a623ecc87e5095173c1143cc5eea77ba9" id="r_a623ecc87e5095173c1143cc5eea77ba9"><td class="memItemLeft" align="right" valign="top">const rclcpp::Time&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a623ecc87e5095173c1143cc5eea77ba9">get_last_rt_execution_ts</a> () const</td></tr>
+<tr class="memdesc:a623ecc87e5095173c1143cc5eea77ba9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the timestamp of the last real-time execution.  <br /></td></tr>
 <tr class="separator:a623ecc87e5095173c1143cc5eea77ba9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a618c508c69d8fe9751cc8d659d62f294" id="r_a618c508c69d8fe9751cc8d659d62f294"><td class="memItemLeft" align="right" valign="top">nav_msgs::msg::Path&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a618c508c69d8fe9751cc8d659d62f294">get_path</a> () const</td></tr>
 <tr class="memdesc:a618c508c69d8fe9751cc8d659d62f294"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current planned path.  <br /></td></tr>
@@ -280,6 +282,9 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Get the timestamp of the last non-RT execution. </p>
+<dl class="section return"><dt>Returns</dt><dd>Timestamp of the last execution. </dd></dl>
+
 </div>
 </div>
 <a id="a623ecc87e5095173c1143cc5eea77ba9" name="a623ecc87e5095173c1143cc5eea77ba9"></a>
@@ -296,6 +301,9 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Get the timestamp of the last real-time execution. </p>
+<dl class="section return"><dt>Returns</dt><dd>Timestamp of the last RT execution. </dd></dl>
 
 </div>
 </div>
