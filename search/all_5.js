@@ -26,10 +26,11 @@ var searchData=
   ['goalmanager_23',['GoalManager',['../classeasynav_1_1GoalManager.html',1,'GoalManager'],['../classeasynav_1_1GoalManager.html#a431494d38c4bec253ced0cfbe66960d5',1,'easynav::GoalManager::GoalManager()']]],
   ['goalmanager_2ecpp_24',['GoalManager.cpp',['../GoalManager_8cpp.html',1,'']]],
   ['goalmanager_2ehpp_25',['GoalManager.hpp',['../GoalManager_8hpp.html',1,'']]],
-  ['goalmanager_5ftests_2ecpp_26',['goalmanager_tests.cpp',['../goalmanager__tests_8cpp.html',1,'']]],
-  ['goalmanagerclient_27',['GoalManagerClient',['../classeasynav_1_1GoalManagerClient.html',1,'GoalManagerClient'],['../classeasynav_1_1GoalManagerClient.html#aa39a4f81674fe9666d93c1768fb87311',1,'easynav::GoalManagerClient::GoalManagerClient()']]],
-  ['goalmanagerclient_2ecpp_28',['GoalManagerClient.cpp',['../GoalManagerClient_8cpp.html',1,'']]],
-  ['goalmanagerclient_2ehpp_29',['GoalManagerClient.hpp',['../GoalManagerClient_8hpp.html',1,'']]],
-  ['goalmanagertestcase_30',['GoalManagerTestCase',['../classGoalManagerTestCase.html',1,'']]],
-  ['group_31',['group',['../classeasynav_1_1ImagePerceptionHandler.html#a4dcf237e516e7aa43aff18fffd22a9a2',1,'easynav::ImagePerceptionHandler::group()'],['../classeasynav_1_1PerceptionHandler.html#ad71c317c86661d3d0459590ea07b3880',1,'easynav::PerceptionHandler::group()'],['../classeasynav_1_1PointPerceptionHandler.html#a4dcf237e516e7aa43aff18fffd22a9a2',1,'easynav::PointPerceptionHandler::group()'],['../classDummyHandler.html#a4dcf237e516e7aa43aff18fffd22a9a2',1,'DummyHandler::group()']]]
+  ['goalmanager_5ftest_5fmain_2ecpp_26',['goalmanager_test_main.cpp',['../goalmanager__test__main_8cpp.html',1,'']]],
+  ['goalmanager_5ftests_2ecpp_27',['goalmanager_tests.cpp',['../goalmanager__tests_8cpp.html',1,'']]],
+  ['goalmanagerclient_28',['GoalManagerClient',['../classeasynav_1_1GoalManagerClient.html',1,'GoalManagerClient'],['../classeasynav_1_1GoalManagerClient.html#aa39a4f81674fe9666d93c1768fb87311',1,'easynav::GoalManagerClient::GoalManagerClient()']]],
+  ['goalmanagerclient_2ecpp_29',['GoalManagerClient.cpp',['../GoalManagerClient_8cpp.html',1,'']]],
+  ['goalmanagerclient_2ehpp_30',['GoalManagerClient.hpp',['../GoalManagerClient_8hpp.html',1,'']]],
+  ['goalmanagertestcase_31',['GoalManagerTestCase',['../classGoalManagerTestCase.html',1,'']]],
+  ['group_32',['group',['../classeasynav_1_1ImagePerceptionHandler.html#a4dcf237e516e7aa43aff18fffd22a9a2',1,'easynav::ImagePerceptionHandler::group()'],['../classeasynav_1_1PerceptionHandler.html#ad71c317c86661d3d0459590ea07b3880',1,'easynav::PerceptionHandler::group()'],['../classeasynav_1_1PointPerceptionHandler.html#a4dcf237e516e7aa43aff18fffd22a9a2',1,'easynav::PointPerceptionHandler::group()'],['../classDummyHandler.html#a4dcf237e516e7aa43aff18fffd22a9a2',1,'DummyHandler::group()']]]
 ];
