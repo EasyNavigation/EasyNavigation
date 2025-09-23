@@ -112,6 +112,9 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:afca194fc92002fa9a7c5102e153f750b" id="r_afca194fc92002fa9a7c5102e153f750b"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classeasynav_1_1PointPerceptionsOpsView.html">PointPerceptionsOpsView</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afca194fc92002fa9a7c5102e153f750b">add</a> (const pcl::PointCloud&lt; pcl::PointXYZ &gt; points, const std::string &amp;frame, rclcpp::Time stamp) const</td></tr>
+<tr class="memdesc:afca194fc92002fa9a7c5102e153f750b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a new Perception from points.  <br /></td></tr>
+<tr class="separator:afca194fc92002fa9a7c5102e153f750b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a805d236592ccedb4d00c893bbf797bcd" id="r_a805d236592ccedb4d00c893bbf797bcd"><td class="memItemLeft" align="right" valign="top">pcl::PointCloud&lt; pcl::PointXYZ &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a805d236592ccedb4d00c893bbf797bcd">as_points</a> () const</td></tr>
 <tr class="memdesc:a805d236592ccedb4d00c893bbf797bcd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves all selected points as a single cloud.  <br /></td></tr>
 <tr class="separator:a805d236592ccedb4d00c893bbf797bcd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -211,6 +214,43 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="afca194fc92002fa9a7c5102e153f750b" name="afca194fc92002fa9a7c5102e153f750b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afca194fc92002fa9a7c5102e153f750b">&#9670;&#160;</a></span>add()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classeasynav_1_1PointPerceptionsOpsView.html">PointPerceptionsOpsView</a> &gt; add </td>
+          <td>(</td>
+          <td class="paramtype">const pcl::PointCloud&lt; pcl::PointXYZ &gt;</td>          <td class="paramname"><span class="paramname"><em>points</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>frame</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">rclcpp::Time</td>          <td class="paramname"><span class="paramname"><em>stamp</em></span>&#160;) const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Add a new Perception from points. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">points</td><td>new points to include. </td></tr>
+    <tr><td class="paramname">frame</td><td>Frame ID of the points to add. </td></tr>
+    <tr><td class="paramname">stamp</td><td>Time stamp of the points to add. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>New <a class="el" href="classeasynav_1_1PointPerceptionsOpsView.html" title="Provides efficient, non-destructive, chainable operations over a set of point-based perceptions.">PointPerceptionsOpsView</a>. </dd></dl>
+
+</div>
+</div>
 <a id="a805d236592ccedb4d00c893bbf797bcd" name="a805d236592ccedb4d00c893bbf797bcd"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a805d236592ccedb4d00c893bbf797bcd">&#9670;&#160;</a></span>as_points() <span class="overload">[1/2]</span></h2>
 
