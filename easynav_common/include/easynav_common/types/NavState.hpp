@@ -100,6 +100,36 @@ public:
     }
   }
 
+  /// \brief Stores a value of type T associated with the given key.
+  ///
+  /// If the key does not exist, the new shared_ptr<T> is stored.
+  /// If the key already exists, the stored shared_ptr<T> is updated.
+  ///
+  /// The value is internally managed through a shared_ptr<T>.
+  ///
+  /// \tparam T The type of the value to store. Must be copy-assignable.
+  /// \param key The key associated with the value.
+  /// \param value_ptr A shared_ptr of the value to store.
+  /// \throws std::runtime_error if there is a type mismatch with an existing key.
+  template<typename T>
+  void set(const std::string & key, const std::shared_ptr<T> value_ptr)
+  {
+    std::lock_guard<std::mutex> lock(mutex_);
+    auto it = values_.find(key);
+
+    if (it == values_.end()) {
+      values_[key] = std::shared_ptr<T>(value_ptr);
+      types_[key] = typeid(T).hash_code();
+    } else {
+      if (types_[key] != typeid(T).hash_code()) {
+        throw std::runtime_error("Type mismatch in set for key: " + key);
+      }
+
+      auto ptr = std::static_pointer_cast<T>(it->second);
+      ptr = std::shared_ptr<T>(value_ptr);
+    }
+  }
+
   /// \brief Retrieves a const reference to the value of type T associated with the given key.
   ///
   /// The reference points to the value managed internally through a shared_ptr<T>.

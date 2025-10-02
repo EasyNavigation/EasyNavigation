@@ -195,7 +195,7 @@ SensorsNode::cycle(std::shared_ptr<NavState> nav_state)
         p.perception->valid = false;
       }
     }
-    nav_state->set(group_perceptions.first, get_point_perceptions(group_perceptions.second));
+    nav_state->set(group_perceptions.first, get_perceptions(group_perceptions.second));
   }
 
   if (percept_pub_->get_subscription_count() > 0) {
