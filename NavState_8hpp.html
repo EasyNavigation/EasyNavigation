@@ -90,7 +90,8 @@ $(function(){ initResizable(false); });
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a>  </div>
+<a href="#namespaces">Namespaces</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">NavState.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
@@ -108,34 +109,37 @@ $(function(){ initResizable(false); });
 <code>#include &lt;functional&gt;</code><br />
 <code>#include &lt;execinfo.h&gt;</code><br />
 <code>#include &lt;typeinfo&gt;</code><br />
+<code>#include &lt;cxxabi.h&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for NavState.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="NavState_8hpp__incl.png" border="0" usemap="#aeasynav__common_2include_2easynav__common_2types_2NavState_8hpp" alt=""/></div>
 <map name="aeasynav__common_2include_2easynav__common_2types_2NavState_8hpp" id="aeasynav__common_2include_2easynav__common_2types_2NavState_8hpp">
-<area shape="rect" title="A blackboard&#45;like structure to hold the current state of the navigation system." alt="" coords="438,5,610,61"/>
+<area shape="rect" title="A blackboard&#45;like structure to hold the current state of the navigation system." alt="" coords="488,5,659,61"/>
 <area shape="rect" title=" " alt="" coords="5,109,59,135"/>
-<area shape="poly" title=" " alt="" coords="438,48,273,73,74,111,73,106,272,67,437,43"/>
+<area shape="poly" title=" " alt="" coords="488,46,301,70,189,89,74,111,73,106,188,83,301,65,487,41"/>
 <area shape="rect" title=" " alt="" coords="82,109,192,135"/>
-<area shape="poly" title=" " alt="" coords="438,56,207,108,206,102,437,51"/>
+<area shape="poly" title=" " alt="" coords="488,54,208,109,207,104,487,49"/>
 <area shape="rect" title=" " alt="" coords="217,109,284,135"/>
-<area shape="poly" title=" " alt="" coords="439,64,300,108,298,103,437,59"/>
+<area shape="poly" title=" " alt="" coords="488,60,300,110,298,105,487,55"/>
 <area shape="rect" title=" " alt="" coords="308,109,364,135"/>
-<area shape="poly" title=" " alt="" coords="466,64,377,105,375,100,464,59"/>
+<area shape="poly" title=" " alt="" coords="500,64,380,108,378,103,498,59"/>
 <area shape="rect" title=" " alt="" coords="388,109,465,135"/>
-<area shape="poly" title=" " alt="" coords="496,63,453,100,450,96,492,59"/>
+<area shape="poly" title=" " alt="" coords="529,64,461,103,459,99,526,59"/>
 <area shape="rect" title=" " alt="" coords="490,109,558,135"/>
-<area shape="poly" title=" " alt="" coords="527,61,527,93,521,93,521,61"/>
+<area shape="poly" title=" " alt="" coords="560,63,541,97,536,94,556,60"/>
 <area shape="rect" title=" " alt="" coords="582,109,663,135"/>
-<area shape="poly" title=" " alt="" coords="556,59,599,96,596,100,553,63"/>
+<area shape="poly" title=" " alt="" coords="591,60,610,94,606,97,586,63"/>
 <area shape="rect" title=" " alt="" coords="687,109,758,135"/>
-<area shape="poly" title=" " alt="" coords="587,59,682,100,680,105,585,64"/>
+<area shape="poly" title=" " alt="" coords="622,59,690,99,687,103,619,64"/>
 <area shape="rect" title=" " alt="" coords="783,109,860,135"/>
-<area shape="poly" title=" " alt="" coords="611,57,768,102,767,107,609,62"/>
+<area shape="poly" title=" " alt="" coords="652,59,773,101,771,106,651,64"/>
 <area shape="rect" title=" " alt="" coords="884,109,964,135"/>
-<area shape="poly" title=" " alt="" coords="611,50,869,106,868,111,610,55"/>
+<area shape="poly" title=" " alt="" coords="660,53,870,105,869,110,659,58"/>
 <area shape="rect" title=" " alt="" coords="988,109,1054,135"/>
-<area shape="poly" title=" " alt="" coords="611,44,775,69,973,106,972,111,774,75,610,49"/>
+<area shape="poly" title=" " alt="" coords="660,46,803,72,973,106,972,111,802,77,659,51"/>
+<area shape="rect" title=" " alt="" coords="1078,109,1146,135"/>
+<area shape="poly" title=" " alt="" coords="660,42,842,68,1064,106,1063,111,841,73,659,48"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -192,17 +196,26 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classeasynav_1_1NavState.html">NavState</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A generic, type-safe, lock-free blackboard to hold runtime state.  <a href="classeasynav_1_1NavState.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A generic, type-safe, thread-safe blackboard to hold runtime state.  <a href="classeasynav_1_1NavState.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
 Namespaces</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceeasynav.html">easynav</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a979982102c0dbd9e9c970d56c96481e3" id="r_a979982102c0dbd9e9c970d56c96481e3"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceeasynav.html#a979982102c0dbd9e9c970d56c96481e3">demangle</a> (const char *name)</td></tr>
+<tr class="memdesc:a979982102c0dbd9e9c970d56c96481e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Demangles a C++ RTTI type name if possible.  <br /></td></tr>
+<tr class="separator:a979982102c0dbd9e9c970d56c96481e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1298c4f34dc2e214c8a59e80e0f8b231" id="r_a1298c4f34dc2e214c8a59e80e0f8b231"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceeasynav.html#a1298c4f34dc2e214c8a59e80e0f8b231">stacktrace</a> (std::size_t skip=1, std::size_t max_frames=64)</td></tr>
+<tr class="memdesc:a1298c4f34dc2e214c8a59e80e0f8b231"><td class="mdescLeft">&#160;</td><td class="mdescRight">Captures a C/C++ stack trace as a string.  <br /></td></tr>
+<tr class="separator:a1298c4f34dc2e214c8a59e80e0f8b231"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A blackboard-like structure to hold the current state of the navigation system. </p>
-<p>This file defines the NavState class, which provides a lock-free key-value store where values can be of any type and stored/retrieved via smart pointers. It is designed for concurrent, type-safe access in robotics applications. </p>
+<p>This file defines the NavState class, which provides a thread-safe key-value store where values can be of any type and stored/retrieved via smart pointers. It is designed for concurrent, type-safe access in robotics applications. </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

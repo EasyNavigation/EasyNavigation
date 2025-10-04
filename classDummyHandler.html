@@ -206,18 +206,18 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Creates a subscription that processes messages into PerceptionBase instances. </p>
-<p>The handler is expected to parse the message received on <code>topic</code> of type <code>type</code> and store the result in the <code>target</code>.</p>
+<p>The handler is expected to parse the message received on <code class="param">topic</code> of type <code class="param">type</code> and store the result in <code class="param">target</code>.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">node</td><td>Reference to the lifecycle node used for creating the subscription. </td></tr>
     <tr><td class="paramname">topic</td><td>Topic name to subscribe to. </td></tr>
-    <tr><td class="paramname">type</td><td>Type name of the ROS message (e.g., "sensor_msgs/msg/LaserScan"). </td></tr>
-    <tr><td class="paramname">target</td><td>Atomic shared pointer where perception results are stored. </td></tr>
+    <tr><td class="paramname">type</td><td>ROS message type name (e.g., <code>"sensor_msgs/msg/LaserScan"</code>). </td></tr>
+    <tr><td class="paramname">target</td><td>Shared pointer where perception results are stored. </td></tr>
     <tr><td class="paramname">cb_group</td><td>Callback group where the subscription callback will be executed. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>The created subscription. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Shared pointer to the created subscription. </dd></dl>
 
 <p>Implements <a class="el" href="classeasynav_1_1PerceptionHandler.html#ad4e23be7dcafea9172fafc36b5ce7793">PerceptionHandler</a>.</p>
 
@@ -247,7 +247,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns the group identifier associated with this handler. </p>
-<p>This identifier is used to match sensors to the appropriate handler. Example: "points", "image", "dummy".</p>
+<p>This identifier is used to match sensors to the appropriate handler. Example: <code>"points"</code>, <code>"image"</code>, <code>"dummy"</code>.</p>
 <dl class="section return"><dt>Returns</dt><dd>String representing the group name. </dd></dl>
 
 <p>Implements <a class="el" href="classeasynav_1_1PerceptionHandler.html#ad71c317c86661d3d0459590ea07b3880">PerceptionHandler</a>.</p>

@@ -104,40 +104,40 @@ Collaboration diagram for PerceptionPtr:</div>
 <div class="dyncontent">
 <div class="center"><img src="structeasynav_1_1PerceptionPtr__coll__graph.png" border="0" usemap="#aPerceptionPtr_coll__map" alt="Collaboration graph"/></div>
 <map name="aPerceptionPtr_coll__map" id="aPerceptionPtr_coll__map">
-<area shape="rect" title="Represents a perception entry with its state and ROS subscription." alt="" coords="92,109,193,135"/>
-<area shape="rect" title=" " alt="" coords="5,5,147,46"/>
-<area shape="poly" title=" " alt="" coords="101,57,137,107,132,110,97,60"/>
-<area shape="rect" title=" " alt="" coords="171,13,250,38"/>
-<area shape="poly" title=" " alt="" coords="202,54,183,87,160,110,156,107,179,83,198,51"/>
+<area shape="rect" title="Represents a perception entry with its state and ROS subscription." alt="" coords="133,94,234,120"/>
+<area shape="rect" title=" " alt="" coords="5,5,202,31"/>
+<area shape="poly" title=" " alt="" coords="127,41,174,92,171,95,123,44"/>
+<area shape="rect" title=" " alt="" coords="225,5,304,31"/>
+<area shape="poly" title=" " alt="" coords="245,44,197,95,193,92,241,41"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:ae69533c9c6fa8658d08a74e5373d7f47" id="r_ae69533c9c6fa8658d08a74e5373d7f47"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classeasynav_1_1PerceptionBase.html">PerceptionBase</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae69533c9c6fa8658d08a74e5373d7f47">perception</a></td></tr>
-<tr class="memdesc:ae69533c9c6fa8658d08a74e5373d7f47"><td class="mdescLeft">&#160;</td><td class="mdescRight">Atomic shared pointer to the current perception object.  <br /></td></tr>
-<tr class="separator:ae69533c9c6fa8658d08a74e5373d7f47"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adbcc140c5deeb62932f1d7d03464ad76" id="r_adbcc140c5deeb62932f1d7d03464ad76"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceeasynav.html#a4d10e036523aceea280b71de936e1c41">PerceptionBasePtr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adbcc140c5deeb62932f1d7d03464ad76">perception</a></td></tr>
+<tr class="memdesc:adbcc140c5deeb62932f1d7d03464ad76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shared pointer to the current perception object.  <br /></td></tr>
+<tr class="separator:adbcc140c5deeb62932f1d7d03464ad76"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a809515a5f8c318880eb15f1d6be6f2a3" id="r_a809515a5f8c318880eb15f1d6be6f2a3"><td class="memItemLeft" align="right" valign="top">rclcpp::SubscriptionBase::SharedPtr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a809515a5f8c318880eb15f1d6be6f2a3">subscription</a></td></tr>
 <tr class="memdesc:a809515a5f8c318880eb15f1d6be6f2a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">ROS 2 subscription to the sensor topic that provides data.  <br /></td></tr>
 <tr class="separator:a809515a5f8c318880eb15f1d6be6f2a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Represents a perception entry with its state and ROS subscription. </p>
-<p>Holds an pointer to a perception object (<code><a class="el" href="classeasynav_1_1PerceptionBase.html" title="Abstract base class for representing a single sensor perception.">PerceptionBase</a></code>) and the associated subscription. Used internally by perception managers to update and access sensor data. </p>
+<p>Holds a pointer to a perception object (<a class="el" href="classeasynav_1_1PerceptionBase.html">PerceptionBase</a>) and the associated subscription. Used internally by perception managers to update and access sensor data. </p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
-<a id="ae69533c9c6fa8658d08a74e5373d7f47" name="ae69533c9c6fa8658d08a74e5373d7f47"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae69533c9c6fa8658d08a74e5373d7f47">&#9670;&#160;</a></span>perception</h2>
+<a id="adbcc140c5deeb62932f1d7d03464ad76" name="adbcc140c5deeb62932f1d7d03464ad76"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adbcc140c5deeb62932f1d7d03464ad76">&#9670;&#160;</a></span>perception</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::shared_ptr&lt;<a class="el" href="classeasynav_1_1PerceptionBase.html">PerceptionBase</a>&gt; perception</td>
+          <td class="memname"><a class="el" href="namespaceeasynav.html#a4d10e036523aceea280b71de936e1c41">PerceptionBasePtr</a> perception</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Atomic shared pointer to the current perception object. </p>
+<p>Shared pointer to the current perception object. </p>
 
 </div>
 </div>

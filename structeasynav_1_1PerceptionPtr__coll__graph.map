@@ -1,7 +1,7 @@
 <map id="PerceptionPtr" name="PerceptionPtr">
-<area shape="rect" id="Node000001" title="Represents a perception entry with its state and ROS subscription." alt="" coords="92,109,193,135"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,147,46"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="101,57,137,107,132,110,97,60"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="171,13,250,38"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="202,54,183,87,160,110,156,107,179,83,198,51"/>
+<area shape="rect" id="Node000001" title="Represents a perception entry with its state and ROS subscription." alt="" coords="133,94,234,120"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,202,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="127,41,174,92,171,95,123,44"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="225,5,304,31"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="245,44,197,95,193,92,241,41"/>
 </map>

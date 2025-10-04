@@ -1,5 +1,5 @@
 <map id="easynav_common/include/easynav_common/types/PointPerception.hpp" name="easynav_common/include/easynav_common/types/PointPerception.hpp">
-<area shape="rect" id="Node000001" title="Defines data structures and utilities for representing and processing sensor perceptions." alt="" coords="596,5,767,61"/>
+<area shape="rect" id="Node000001" title="Defines data structures and utilities for representing and processing point&#45;based sensor perceptions." alt="" coords="596,5,767,61"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,205,59,231"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="596,42,516,50,422,63,322,83,225,112,179,131,134,154,62,198,60,194,132,149,176,126,223,106,321,78,421,58,515,45,595,37"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="745,116,802,142"/>

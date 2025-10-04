@@ -97,7 +97,7 @@ $(function(){ initResizable(false); });
 </div><!--header-->
 <div class="contents">
 
-<p>Defines data structures and utilities for representing and processing sensor perceptions.  
+<p>Defines data structures and utilities for representing and processing point-based sensor perceptions.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;string&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
@@ -118,7 +118,7 @@ Include dependency graph for PointPerception.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="PointPerception_8hpp__incl.png" border="0" usemap="#aeasynav__common_2include_2easynav__common_2types_2PointPerception_8hpp" alt=""/></div>
 <map name="aeasynav__common_2include_2easynav__common_2types_2PointPerception_8hpp" id="aeasynav__common_2include_2easynav__common_2types_2PointPerception_8hpp">
-<area shape="rect" title="Defines data structures and utilities for representing and processing sensor perceptions." alt="" coords="596,5,767,61"/>
+<area shape="rect" title="Defines data structures and utilities for representing and processing point&#45;based sensor perceptions." alt="" coords="596,5,767,61"/>
 <area shape="rect" title=" " alt="" coords="5,205,59,231"/>
 <area shape="poly" title=" " alt="" coords="596,42,516,50,422,63,322,83,225,112,179,131,134,154,62,198,60,194,132,149,176,126,223,106,321,78,421,58,515,45,595,37"/>
 <area shape="rect" title=" " alt="" coords="745,116,802,142"/>
@@ -161,7 +161,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="PointPerception_8hpp__dep__incl.png" border="0" usemap="#aeasynav__common_2include_2easynav__common_2types_2PointPerception_8hppdep" alt=""/></div>
 <map name="aeasynav__common_2include_2easynav__common_2types_2PointPerception_8hppdep" id="aeasynav__common_2include_2easynav__common_2types_2PointPerception_8hppdep">
-<area shape="rect" title="Defines data structures and utilities for representing and processing sensor perceptions." alt="" coords="482,5,654,61"/>
+<area shape="rect" title="Defines data structures and utilities for representing and processing point&#45;based sensor perceptions." alt="" coords="482,5,654,61"/>
 <area shape="rect" href="PointPerception_8cpp.html" title=" " alt="" coords="5,109,171,165"/>
 <area shape="poly" title=" " alt="" coords="468,54,332,80,183,112,172,114,170,109,182,106,331,74,467,49"/>
 <area shape="rect" href="perceptions__tests_8cpp.html" title=" " alt="" coords="195,116,354,157"/>
@@ -182,22 +182,22 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structstd_1_1hash_3_01std_1_1tuple_3_01int_00_01int_00_01int_01_4_01_4.html">hash&lt; std::tuple&lt; int, int, int &gt; &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Custom std::hash specialization for std::tuple&lt;int, int, int&gt;.  <a href="structstd_1_1hash_3_01std_1_1tuple_3_01int_00_01int_00_01int_01_4_01_4.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Custom hash specialization for <code>std::tuple&lt;int,int,int&gt;</code>.  <a href="structstd_1_1hash_3_01std_1_1tuple_3_01int_00_01int_00_01int_01_4_01_4.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classeasynav_1_1PointPerception.html">PointPerception</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Concrete perception class for 3D point cloud data.  <a href="classeasynav_1_1PointPerception.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classeasynav_1_1PointPerceptionHandler.html">PointPerceptionHandler</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classeasynav_1_1PerceptionHandler.html" title="Abstract base interface for group-specific perception handlers.">PerceptionHandler</a> implementation for sensors producing point-based data.  <a href="classeasynav_1_1PointPerceptionHandler.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classeasynav_1_1PerceptionHandler.html">PerceptionHandler</a> implementation for sensors producing point-based data.  <a href="classeasynav_1_1PointPerceptionHandler.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classeasynav_1_1PointPerceptionsOpsView.html">PointPerceptionsOpsView</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides efficient, non-destructive, chainable operations over a set of point-based perceptions.  <a href="classeasynav_1_1PointPerceptionsOpsView.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structeasynav_1_1PointPerceptionsOpsView_1_1VoxelKey.html">PointPerceptionsOpsView::VoxelKey</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a discrete 3D voxel index for downsampling.  <a href="structeasynav_1_1PointPerceptionsOpsView_1_1VoxelKey.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Discrete 3D voxel index used for downsampling.  <a href="structeasynav_1_1PointPerceptionsOpsView_1_1VoxelKey.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structeasynav_1_1PointPerceptionsOpsView_1_1VoxelKeyHash.html">PointPerceptionsOpsView::VoxelKeyHash</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hash function for <a class="el" href="structeasynav_1_1PointPerceptionsOpsView_1_1VoxelKey.html" title="Represents a discrete 3D voxel index for downsampling.">VoxelKey</a>.  <a href="structeasynav_1_1PointPerceptionsOpsView_1_1VoxelKeyHash.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hash functor for <a class="el" href="structeasynav_1_1PointPerceptionsOpsView_1_1VoxelKey.html">VoxelKey</a>.  <a href="structeasynav_1_1PointPerceptionsOpsView_1_1VoxelKeyHash.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
@@ -210,31 +210,30 @@ Namespaces</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:aa872928bf2fa4fde3e32434f0a95fa15" id="r_aa872928bf2fa4fde3e32434f0a95fa15"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceeasynav.html#aa872928bf2fa4fde3e32434f0a95fa15">PointPerceptions</a></td></tr>
-<tr class="memdesc:aa872928bf2fa4fde3e32434f0a95fa15"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alias for a vector of pointers to <a class="el" href="classeasynav_1_1PointPerception.html" title="Concrete perception class for 3D point cloud data.">PointPerception</a> objects.  <br /></td></tr>
+<tr class="memdesc:aa872928bf2fa4fde3e32434f0a95fa15"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alias for a vector of shared pointers to <a class="el" href="classeasynav_1_1PointPerception.html">PointPerception</a> objects.  <br /></td></tr>
 <tr class="separator:aa872928bf2fa4fde3e32434f0a95fa15"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:aa1af512138bf2ac8f6d199ba2761a918" id="r_aa1af512138bf2ac8f6d199ba2761a918"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceeasynav.html#aa1af512138bf2ac8f6d199ba2761a918">convert</a> (const sensor_msgs::msg::LaserScan &amp;scan, pcl::PointCloud&lt; pcl::PointXYZ &gt; &amp;pc)</td></tr>
-<tr class="memdesc:aa1af512138bf2ac8f6d199ba2761a918"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a LaserScan message into a point cloud.  <br /></td></tr>
+<tr class="memdesc:aa1af512138bf2ac8f6d199ba2761a918"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a <code>LaserScan</code> message into a point cloud.  <br /></td></tr>
 <tr class="separator:aa1af512138bf2ac8f6d199ba2761a918"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad88fea01569979532c80883949bee0dd" id="r_ad88fea01569979532c80883949bee0dd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceeasynav.html#aa872928bf2fa4fde3e32434f0a95fa15">PointPerceptions</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceeasynav.html#ad88fea01569979532c80883949bee0dd">get_point_perceptions</a> (std::vector&lt; <a class="el" href="structeasynav_1_1PerceptionPtr.html">PerceptionPtr</a> &gt; &amp;perceptionptr)</td></tr>
+<tr class="memdesc:ad88fea01569979532c80883949bee0dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extracts all <a class="el" href="classeasynav_1_1PointPerception.html">PointPerception</a> objects from a heterogeneous collection.  <br /></td></tr>
 <tr class="separator:ad88fea01569979532c80883949bee0dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9050313b1e39e04002d6e63dfe4dd856" id="r_a9050313b1e39e04002d6e63dfe4dd856"><td class="memItemLeft" align="right" valign="top">sensor_msgs::msg::PointCloud2&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceeasynav.html#a9050313b1e39e04002d6e63dfe4dd856">perception_to_rosmsg</a> (const <a class="el" href="classeasynav_1_1PointPerception.html">PointPerception</a> &amp;perception)</td></tr>
-<tr class="memdesc:a9050313b1e39e04002d6e63dfe4dd856"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a <a class="el" href="classeasynav_1_1PointPerception.html" title="Concrete perception class for 3D point cloud data.">PointPerception</a> to a sensor_msgs::msg::PointCloud2 message.  <br /></td></tr>
+<tr class="memdesc:a9050313b1e39e04002d6e63dfe4dd856"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a <a class="el" href="classeasynav_1_1PointPerception.html">PointPerception</a> into a <code>sensor_msgs::msg::PointCloud2</code> message.  <br /></td></tr>
 <tr class="separator:a9050313b1e39e04002d6e63dfe4dd856"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4adf6aa9d2208b93442fc96f4e732147" id="r_a4adf6aa9d2208b93442fc96f4e732147"><td class="memItemLeft" align="right" valign="top">sensor_msgs::msg::PointCloud2&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceeasynav.html#a4adf6aa9d2208b93442fc96f4e732147">points_to_rosmsg</a> (const pcl::PointCloud&lt; pcl::PointXYZ &gt; &amp;points)</td></tr>
-<tr class="memdesc:a4adf6aa9d2208b93442fc96f4e732147"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a PCL point cloud to a sensor_msgs::msg::PointCloud2 message.  <br /></td></tr>
+<tr class="memdesc:a4adf6aa9d2208b93442fc96f4e732147"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a PCL point cloud into a <code>sensor_msgs::msg::PointCloud2</code> message.  <br /></td></tr>
 <tr class="separator:a4adf6aa9d2208b93442fc96f4e732147"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Defines data structures and utilities for representing and processing sensor perceptions. </p>
-<p>Defines data structures and utilities for representing and processing point-based sensor perceptions.</p>
-<p>Includes conversion between ROS messages and PCL point clouds, fusion of data, and tools for creating filtered views.</p>
-<p>This file includes:</p><ul>
-<li>PointPerception: a concrete class for point cloud data.</li>
-<li>PointPerceptionHandler: a handler for LaserScan and PointCloud2 messages.</li>
-<li>PointPerceptionsOpsView: an efficient view-based operator class for processing multiple perceptions.</li>
+<div class="textblock"><p>Defines data structures and utilities for representing and processing point-based sensor perceptions. </p>
+<p>This header provides:</p><ul>
+<li><code>PointPerception:</code> a concrete class for point cloud data.</li>
+<li><code>PointPerceptionHandler:</code> a handler for <code>sensor_msgs::msg::LaserScan</code> and <code>sensor_msgs::msg::PointCloud2</code> messages.</li>
+<li><code>PointPerceptionsOpsView:</code> an efficient view-based operator class for processing multiple perceptions (filtering, downsampling, fusion, and collapsing) without duplicating memory.</li>
 <li>Conversion utilities between ROS messages and PCL point clouds. </li>
 </ul>
 </div></div><!-- contents -->

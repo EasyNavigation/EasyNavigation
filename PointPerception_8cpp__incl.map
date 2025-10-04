@@ -28,7 +28,7 @@
 <area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="943,61,943,279,938,279,938,61"/>
 <area shape="rect" id="Node000015" title=" " alt="" coords="1020,286,1181,327"/>
 <area shape="poly" id="edge14_Node000001_Node000015" title=" " alt="" coords="1024,44,1151,66,1297,99,1366,119,1426,142,1475,168,1506,196,1530,224,1552,244,1589,268,1608,273,1608,274,1604,272,1570,263,1495,258,1374,264,1197,289,1196,283,1373,259,1495,253,1571,258,1606,267,1613,273,1609,278,1587,272,1549,249,1526,228,1503,200,1472,172,1424,147,1364,124,1295,104,1150,71,1023,49"/>
-<area shape="rect" id="Node000016" href="$PointPerception_8hpp.html" title="Defines data structures and utilities for representing and processing sensor perceptions." alt="" coords="741,109,903,150"/>
+<area shape="rect" id="Node000016" href="$PointPerception_8hpp.html" title="Defines data structures and utilities for representing and processing point&#45;based sensor perceptions." alt="" coords="741,109,903,150"/>
 <area shape="poly" id="edge15_Node000001_Node000016" title=" " alt="" coords="908,64,860,101,857,97,905,59"/>
 <area shape="rect" id="Node000018" href="$YTSession_8hpp.html" title=" " alt="" coords="2143,116,2362,142"/>
 <area shape="poly" id="edge37_Node000001_Node000018" title=" " alt="" coords="1024,34,1495,56,1811,77,2131,106,2167,111,2167,116,2131,112,1810,82,1495,61,1024,40"/>

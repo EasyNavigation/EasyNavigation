@@ -104,48 +104,48 @@ $(function(){ initResizable(false); });
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structeasynav_1_1PointPerceptionsOpsView_1_1VoxelKey.html">VoxelKey</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a discrete 3D voxel index for downsampling.  <a href="structeasynav_1_1PointPerceptionsOpsView_1_1VoxelKey.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Discrete 3D voxel index used for downsampling.  <a href="structeasynav_1_1PointPerceptionsOpsView_1_1VoxelKey.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structeasynav_1_1PointPerceptionsOpsView_1_1VoxelKeyHash.html">VoxelKeyHash</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hash function for <a class="el" href="structeasynav_1_1PointPerceptionsOpsView_1_1VoxelKey.html" title="Represents a discrete 3D voxel index for downsampling.">VoxelKey</a>.  <a href="structeasynav_1_1PointPerceptionsOpsView_1_1VoxelKeyHash.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hash functor for <a class="el" href="structeasynav_1_1PointPerceptionsOpsView_1_1VoxelKey.html">VoxelKey</a>.  <a href="structeasynav_1_1PointPerceptionsOpsView_1_1VoxelKeyHash.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:afca194fc92002fa9a7c5102e153f750b" id="r_afca194fc92002fa9a7c5102e153f750b"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classeasynav_1_1PointPerceptionsOpsView.html">PointPerceptionsOpsView</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afca194fc92002fa9a7c5102e153f750b">add</a> (const pcl::PointCloud&lt; pcl::PointXYZ &gt; points, const std::string &amp;frame, rclcpp::Time stamp) const</td></tr>
-<tr class="memdesc:afca194fc92002fa9a7c5102e153f750b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a new Perception from points.  <br /></td></tr>
+<tr class="memdesc:afca194fc92002fa9a7c5102e153f750b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a new perception from a point cloud and returns an extended view.  <br /></td></tr>
 <tr class="separator:afca194fc92002fa9a7c5102e153f750b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a805d236592ccedb4d00c893bbf797bcd" id="r_a805d236592ccedb4d00c893bbf797bcd"><td class="memItemLeft" align="right" valign="top">pcl::PointCloud&lt; pcl::PointXYZ &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a805d236592ccedb4d00c893bbf797bcd">as_points</a> () const</td></tr>
-<tr class="memdesc:a805d236592ccedb4d00c893bbf797bcd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves all selected points as a single cloud.  <br /></td></tr>
+<tr class="memdesc:a805d236592ccedb4d00c893bbf797bcd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves all selected points across perceptions as a single concatenated cloud.  <br /></td></tr>
 <tr class="separator:a805d236592ccedb4d00c893bbf797bcd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a94c012d5f2d51299d766adc087103ef7" id="r_a94c012d5f2d51299d766adc087103ef7"><td class="memItemLeft" align="right" valign="top">const pcl::PointCloud&lt; pcl::PointXYZ &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a94c012d5f2d51299d766adc087103ef7">as_points</a> (int idx) const</td></tr>
 <tr class="memdesc:a94c012d5f2d51299d766adc087103ef7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the filtered point cloud for a specific perception.  <br /></td></tr>
 <tr class="separator:a94c012d5f2d51299d766adc087103ef7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae192852ecce7234ffbc49981ca25284d" id="r_ae192852ecce7234ffbc49981ca25284d"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classeasynav_1_1PointPerceptionsOpsView.html">PointPerceptionsOpsView</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae192852ecce7234ffbc49981ca25284d">collapse</a> (const std::vector&lt; double &gt; &amp;collapse_dims) const</td></tr>
-<tr class="memdesc:ae192852ecce7234ffbc49981ca25284d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Collapses dimensions to fixed values (e.g., project onto plane).  <br /></td></tr>
+<tr class="memdesc:ae192852ecce7234ffbc49981ca25284d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Collapses dimensions to fixed values (e.g., projection onto a plane).  <br /></td></tr>
 <tr class="separator:ae192852ecce7234ffbc49981ca25284d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1f623939c1f8af3760267fc88ce3e8e6" id="r_a1f623939c1f8af3760267fc88ce3e8e6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classeasynav_1_1PointPerceptionsOpsView.html">PointPerceptionsOpsView</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1f623939c1f8af3760267fc88ce3e8e6">downsample</a> (double resolution)</td></tr>
 <tr class="memdesc:a1f623939c1f8af3760267fc88ce3e8e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Downsamples each perception using a voxel grid.  <br /></td></tr>
 <tr class="separator:a1f623939c1f8af3760267fc88ce3e8e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8eae061f9526d4ec6a1fce5cd728a4e8" id="r_a8eae061f9526d4ec6a1fce5cd728a4e8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classeasynav_1_1PointPerceptionsOpsView.html">PointPerceptionsOpsView</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8eae061f9526d4ec6a1fce5cd728a4e8">filter</a> (const std::vector&lt; double &gt; &amp;min_bounds, const std::vector&lt; double &gt; &amp;max_bounds)</td></tr>
-<tr class="memdesc:a8eae061f9526d4ec6a1fce5cd728a4e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Filters all point clouds by spatial bounds.  <br /></td></tr>
+<tr class="memdesc:a8eae061f9526d4ec6a1fce5cd728a4e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Filters all point clouds by axis-aligned bounds.  <br /></td></tr>
 <tr class="separator:a8eae061f9526d4ec6a1fce5cd728a4e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa9f57c053b76f93b58a5ef14aedbe4bf" id="r_aa9f57c053b76f93b58a5ef14aedbe4bf"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classeasynav_1_1PointPerceptionsOpsView.html">PointPerceptionsOpsView</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa9f57c053b76f93b58a5ef14aedbe4bf">fuse</a> (const std::string &amp;target_frame) const</td></tr>
-<tr class="memdesc:aa9f57c053b76f93b58a5ef14aedbe4bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fuses all perceptions into one, transforming them to a common frame.  <br /></td></tr>
+<tr class="memdesc:aa9f57c053b76f93b58a5ef14aedbe4bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fuses all perceptions into one by transforming them to a common frame.  <br /></td></tr>
 <tr class="separator:aa9f57c053b76f93b58a5ef14aedbe4bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a73c313d785b6b510f8bb620996432a0d" id="r_a73c313d785b6b510f8bb620996432a0d"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="namespaceeasynav.html#aa872928bf2fa4fde3e32434f0a95fa15">PointPerceptions</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a73c313d785b6b510f8bb620996432a0d">get_perceptions</a> () const</td></tr>
-<tr class="memdesc:a73c313d785b6b510f8bb620996432a0d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a reference to the underlying perceptions container.  <br /></td></tr>
+<tr class="memdesc:a73c313d785b6b510f8bb620996432a0d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides a constant reference to the underlying perceptions container.  <br /></td></tr>
 <tr class="separator:a73c313d785b6b510f8bb620996432a0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa7a7f47c3b772956f68daddc01115a40" id="r_aa7a7f47c3b772956f68daddc01115a40"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa7a7f47c3b772956f68daddc01115a40">PointPerceptionsOpsView</a> (const <a class="el" href="namespaceeasynav.html#aa872928bf2fa4fde3e32434f0a95fa15">PointPerceptions</a> &amp;perceptions)</td></tr>
-<tr class="memdesc:aa7a7f47c3b772956f68daddc01115a40"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor using a constant reference to a container of perceptions.  <br /></td></tr>
+<tr class="memdesc:aa7a7f47c3b772956f68daddc01115a40"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a view over an external container of perceptions.  <br /></td></tr>
 <tr class="separator:aa7a7f47c3b772956f68daddc01115a40"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a351aff4e3561e66333402c5e8eb7418e" id="r_a351aff4e3561e66333402c5e8eb7418e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a351aff4e3561e66333402c5e8eb7418e">PointPerceptionsOpsView</a> (<a class="el" href="namespaceeasynav.html#aa872928bf2fa4fde3e32434f0a95fa15">PointPerceptions</a> &amp;&amp;perceptions)</td></tr>
-<tr class="memdesc:a351aff4e3561e66333402c5e8eb7418e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor that takes ownership of the container.  <br /></td></tr>
+<tr class="memdesc:a351aff4e3561e66333402c5e8eb7418e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a view taking ownership of the container.  <br /></td></tr>
 <tr class="separator:a351aff4e3561e66333402c5e8eb7418e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Provides efficient, non-destructive, chainable operations over a set of point-based perceptions. </p>
-<p>This class allows filtering, downsampling, fusion, and collapsing of multiple point clouds without duplicating memory, by using index-based views. </p>
+<p>This view enables filtering, downsampling, fusion, and dimensional collapsing across multiple point clouds without duplicating memory, by keeping index-based selections per perception. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="aa7a7f47c3b772956f68daddc01115a40" name="aa7a7f47c3b772956f68daddc01115a40"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa7a7f47c3b772956f68daddc01115a40">&#9670;&#160;</a></span>PointPerceptionsOpsView() <span class="overload">[1/2]</span></h2>
@@ -170,10 +170,10 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Constructor using a constant reference to a container of perceptions. </p>
+<p>Constructs a view over an external container of perceptions. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">perceptions</td><td>Container of perceptions to view. </td></tr>
+    <tr><td class="paramname">perceptions</td><td>Constant reference to the source container. </td></tr>
   </table>
   </dd>
 </dl>
@@ -203,10 +203,10 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Constructor that takes ownership of the container. </p>
+<p>Constructs a view taking ownership of the container. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">perceptions</td><td>Rvalue container of perceptions. </td></tr>
+    <tr><td class="paramname">perceptions</td><td>Rvalue container of perceptions to be owned by the view. </td></tr>
   </table>
   </dd>
 </dl>
@@ -238,16 +238,16 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Add a new Perception from points. </p>
+<p>Adds a new perception from a point cloud and returns an extended view. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">points</td><td>new points to include. </td></tr>
-    <tr><td class="paramname">frame</td><td>Frame ID of the points to add. </td></tr>
-    <tr><td class="paramname">stamp</td><td>Time stamp of the points to add. </td></tr>
+    <tr><td class="paramname">points</td><td>Point cloud to include. </td></tr>
+    <tr><td class="paramname">frame</td><td>Frame ID associated with <code class="param">points</code>. </td></tr>
+    <tr><td class="paramname">stamp</td><td>Timestamp associated with <code class="param">points</code>. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>New <a class="el" href="classeasynav_1_1PointPerceptionsOpsView.html" title="Provides efficient, non-destructive, chainable operations over a set of point-based perceptions.">PointPerceptionsOpsView</a>. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>New view including the added perception. </dd></dl>
 
 </div>
 </div>
@@ -266,7 +266,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Retrieves all selected points as a single cloud. </p>
+<p>Retrieves all selected points across perceptions as a single concatenated cloud. </p>
 <dl class="section return"><dt>Returns</dt><dd>Concatenated point cloud. </dd></dl>
 
 </div>
@@ -289,7 +289,7 @@ Public Member Functions</h2></td></tr>
 <p>Retrieves the filtered point cloud for a specific perception. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">idx</td><td>Index of the perception. </td></tr>
+    <tr><td class="paramname">idx</td><td>Index of the target perception in the underlying container. </td></tr>
   </table>
   </dd>
 </dl>
@@ -312,14 +312,15 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Collapses dimensions to fixed values (e.g., project onto plane). </p>
+<p>Collapses dimensions to fixed values (e.g., projection onto a plane). </p>
+<p>Components set to <code>NaN</code> in <code class="param">collapse_dims</code> keep the original values.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">collapse_dims</td><td>Fixed values for each axis (use NAN to preserve original values). </td></tr>
+    <tr><td class="paramname">collapse_dims</td><td>Fixed values for each axis (use <code>NaN</code> to preserve original values). </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>New view with collapsed points. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A new view with collapsed points. </dd></dl>
 
 </div>
 </div>
@@ -341,11 +342,11 @@ Public Member Functions</h2></td></tr>
 <p>Downsamples each perception using a voxel grid. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">resolution</td><td>Size of the voxel in meters. </td></tr>
+    <tr><td class="paramname">resolution</td><td>Voxel size in meters. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Reference to self for chaining. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Reference to <code>*this</code> to allow chaining. </dd></dl>
 
 </div>
 </div>
@@ -368,15 +369,16 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Filters all point clouds by spatial bounds. </p>
+<p>Filters all point clouds by axis-aligned bounds. </p>
+<p>Components set to <code>NaN</code> in <code class="param">min_bounds</code> or <code class="param">max_bounds</code> leave the corresponding axis unbounded.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">min_bounds</td><td>Minimum [x, y, z] values (use NAN to disable per axis). </td></tr>
-    <tr><td class="paramname">max_bounds</td><td>Maximum [x, y, z] values (use NAN to disable per axis). </td></tr>
+    <tr><td class="paramname">min_bounds</td><td>Minimum <code></code>[x,y,z] values (use <code>NaN</code> to disable per axis). </td></tr>
+    <tr><td class="paramname">max_bounds</td><td>Maximum <code></code>[x,y,z] values (use <code>NaN</code> to disable per axis). </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Reference to self for chaining. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Reference to <code>*this</code> to allow chaining. </dd></dl>
 
 </div>
 </div>
@@ -395,14 +397,14 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Fuses all perceptions into one, transforming them to a common frame. </p>
+<p>Fuses all perceptions into one by transforming them to a common frame. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">target_frame</td><td>Frame ID to transform all clouds into. </td></tr>
+    <tr><td class="paramname">target_frame</td><td>Frame ID to which all clouds are transformed. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>New fused <a class="el" href="classeasynav_1_1PointPerceptionsOpsView.html" title="Provides efficient, non-destructive, chainable operations over a set of point-based perceptions.">PointPerceptionsOpsView</a>. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>New view containing the fused result. </dd></dl>
 
 </div>
 </div>
@@ -421,8 +423,8 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Gets a reference to the underlying perceptions container. </p>
-<dl class="section return"><dt>Returns</dt><dd>Constant reference to <a class="el" href="namespaceeasynav.html#aa872928bf2fa4fde3e32434f0a95fa15" title="Alias for a vector of pointers to PointPerception objects.">PointPerceptions</a>. </dd></dl>
+<p>Provides a constant reference to the underlying perceptions container. </p>
+<dl class="section return"><dt>Returns</dt><dd>Constant reference to the container. </dd></dl>
 
 </div>
 </div>

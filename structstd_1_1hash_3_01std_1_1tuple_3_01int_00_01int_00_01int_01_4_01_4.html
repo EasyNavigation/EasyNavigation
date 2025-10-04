@@ -95,7 +95,7 @@ $(function(){ initResizable(false); });
 </div><!--header-->
 <div class="contents">
 
-<p>Custom std::hash specialization for std::tuple&lt;int, int, int&gt;.  
+<p>Custom hash specialization for <code>std::tuple&lt;int,int,int&gt;</code>.  
  <a href="#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="PointPerception_8hpp_source.html">PointPerception.hpp</a>&gt;</code></p>
@@ -103,10 +103,11 @@ $(function(){ initResizable(false); });
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:adcfbef2e20ff0811248f110dc5627f52" id="r_adcfbef2e20ff0811248f110dc5627f52"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adcfbef2e20ff0811248f110dc5627f52">operator()</a> (const std::tuple&lt; int, int, int &gt; &amp;key) const</td></tr>
+<tr class="memdesc:adcfbef2e20ff0811248f110dc5627f52"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the hash value.  <br /></td></tr>
 <tr class="separator:adcfbef2e20ff0811248f110dc5627f52"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Custom std::hash specialization for std::tuple&lt;int, int, int&gt;. </p>
+<div class="textblock"><p>Custom hash specialization for <code>std::tuple&lt;int,int,int&gt;</code>. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="adcfbef2e20ff0811248f110dc5627f52" name="adcfbef2e20ff0811248f110dc5627f52"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#adcfbef2e20ff0811248f110dc5627f52">&#9670;&#160;</a></span>operator()()</h2>
@@ -122,6 +123,15 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Computes the hash value. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">key</td><td>Tuple <code></code>(x,y,z). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Hash value for the tuple. </dd></dl>
 
 </div>
 </div>

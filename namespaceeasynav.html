@@ -122,6 +122,12 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classeasynav_1_1ImagePerceptionHandler.html">ImagePerceptionHandler</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles the creation and updating of <a class="el" href="classeasynav_1_1ImagePerception.html" title="Represents a single image perception from a sensor.">ImagePerception</a> instances from sensor_msgs::msg::Image messages.  <a href="classeasynav_1_1ImagePerceptionHandler.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classeasynav_1_1IMUPerception.html">IMUPerception</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a single IMU perception from a sensor.  <a href="classeasynav_1_1IMUPerception.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classeasynav_1_1IMUPerceptionHandler.html">IMUPerceptionHandler</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles the creation and updating of <a class="el" href="classeasynav_1_1IMUPerception.html" title="Represents a single IMU perception from a sensor.">IMUPerception</a> instances from sensor_msgs::msg::Imu messages.  <a href="classeasynav_1_1IMUPerceptionHandler.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classeasynav_1_1LocalizerNode.html">LocalizerNode</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">ROS 2 lifecycle node that manages localization in Easy Navigation.  <a href="classeasynav_1_1LocalizerNode.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -129,7 +135,7 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">ROS 2 lifecycle node that manages map-related plugins in Easy Navigation.  <a href="classeasynav_1_1MapsManagerNode.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classeasynav_1_1NavState.html">NavState</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A generic, type-safe, lock-free blackboard to hold runtime state.  <a href="classeasynav_1_1NavState.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A generic, type-safe, thread-safe blackboard to hold runtime state.  <a href="classeasynav_1_1NavState.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classeasynav_1_1PerceptionBase.html">PerceptionBase</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Abstract base class for representing a single sensor perception.  <a href="classeasynav_1_1PerceptionBase.html#details">More...</a><br /></td></tr>
@@ -147,7 +153,7 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Concrete perception class for 3D point cloud data.  <a href="classeasynav_1_1PointPerception.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classeasynav_1_1PointPerceptionHandler.html">PointPerceptionHandler</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classeasynav_1_1PerceptionHandler.html" title="Abstract base interface for group-specific perception handlers.">PerceptionHandler</a> implementation for sensors producing point-based data.  <a href="classeasynav_1_1PointPerceptionHandler.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classeasynav_1_1PerceptionHandler.html">PerceptionHandler</a> implementation for sensors producing point-based data.  <a href="classeasynav_1_1PointPerceptionHandler.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classeasynav_1_1PointPerceptionsOpsView.html">PointPerceptionsOpsView</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides efficient, non-destructive, chainable operations over a set of point-based perceptions.  <a href="classeasynav_1_1PointPerceptionsOpsView.html#details">More...</a><br /></td></tr>
@@ -177,23 +183,50 @@ Typedefs</h2></td></tr>
 <tr class="memitem:a1551c0f2967fd745b9d74705c0b367d3" id="r_a1551c0f2967fd745b9d74705c0b367d3"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1551c0f2967fd745b9d74705c0b367d3">ImagePerceptions</a></td></tr>
 <tr class="memdesc:a1551c0f2967fd745b9d74705c0b367d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alias for a vector of shared pointers to <a class="el" href="classeasynav_1_1ImagePerception.html" title="Represents a single image perception from a sensor.">ImagePerception</a> objects.  <br /></td></tr>
 <tr class="separator:a1551c0f2967fd745b9d74705c0b367d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a69eec3e3b40d1fd642ff49b3c67bf46d" id="r_a69eec3e3b40d1fd642ff49b3c67bf46d"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a69eec3e3b40d1fd642ff49b3c67bf46d">IMUPerceptions</a></td></tr>
+<tr class="memdesc:a69eec3e3b40d1fd642ff49b3c67bf46d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alias for a vector of shared pointers to <a class="el" href="classeasynav_1_1IMUPerception.html" title="Represents a single IMU perception from a sensor.">IMUPerception</a> objects.  <br /></td></tr>
+<tr class="separator:a69eec3e3b40d1fd642ff49b3c67bf46d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d10e036523aceea280b71de936e1c41" id="r_a4d10e036523aceea280b71de936e1c41"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4d10e036523aceea280b71de936e1c41">PerceptionBasePtr</a> = std::shared_ptr&lt;<a class="el" href="classeasynav_1_1PerceptionBase.html">PerceptionBase</a>&gt;</td></tr>
+<tr class="memdesc:a4d10e036523aceea280b71de936e1c41"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shared pointer alias to <a class="el" href="classeasynav_1_1PerceptionBase.html">PerceptionBase</a>.  <br /></td></tr>
+<tr class="separator:a4d10e036523aceea280b71de936e1c41"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa872928bf2fa4fde3e32434f0a95fa15" id="r_aa872928bf2fa4fde3e32434f0a95fa15"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa872928bf2fa4fde3e32434f0a95fa15">PointPerceptions</a></td></tr>
-<tr class="memdesc:aa872928bf2fa4fde3e32434f0a95fa15"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alias for a vector of pointers to <a class="el" href="classeasynav_1_1PointPerception.html" title="Concrete perception class for 3D point cloud data.">PointPerception</a> objects.  <br /></td></tr>
+<tr class="memdesc:aa872928bf2fa4fde3e32434f0a95fa15"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alias for a vector of shared pointers to <a class="el" href="classeasynav_1_1PointPerception.html">PointPerception</a> objects.  <br /></td></tr>
 <tr class="separator:aa872928bf2fa4fde3e32434f0a95fa15"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1d8ab0a1bd4d1fa128c20df0a5f594e2" id="r_a1d8ab0a1bd4d1fa128c20df0a5f594e2"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1d8ab0a1bd4d1fa128c20df0a5f594e2">Registry</a></td></tr>
+<tr class="separator:a1d8ab0a1bd4d1fa128c20df0a5f594e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:aa1af512138bf2ac8f6d199ba2761a918" id="r_aa1af512138bf2ac8f6d199ba2761a918"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa1af512138bf2ac8f6d199ba2761a918">convert</a> (const sensor_msgs::msg::LaserScan &amp;scan, pcl::PointCloud&lt; pcl::PointXYZ &gt; &amp;pc)</td></tr>
-<tr class="memdesc:aa1af512138bf2ac8f6d199ba2761a918"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a LaserScan message into a point cloud.  <br /></td></tr>
+<tr class="memdesc:aa1af512138bf2ac8f6d199ba2761a918"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a <code>LaserScan</code> message into a point cloud.  <br /></td></tr>
 <tr class="separator:aa1af512138bf2ac8f6d199ba2761a918"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a979982102c0dbd9e9c970d56c96481e3" id="r_a979982102c0dbd9e9c970d56c96481e3"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a979982102c0dbd9e9c970d56c96481e3">demangle</a> (const char *name)</td></tr>
+<tr class="memdesc:a979982102c0dbd9e9c970d56c96481e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Demangles a C++ RTTI type name if possible.  <br /></td></tr>
+<tr class="separator:a979982102c0dbd9e9c970d56c96481e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a843ecd75e7c807bdaf73f409e59d8dc4" id="r_a843ecd75e7c807bdaf73f409e59d8dc4"><td class="memTemplParams" colspan="2">template&lt;typename T = PerceptionBase&gt; </td></tr>
+<tr class="memitem:a843ecd75e7c807bdaf73f409e59d8dc4"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; std::shared_ptr&lt; T &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a843ecd75e7c807bdaf73f409e59d8dc4">get_perceptions</a> (const std::vector&lt; <a class="el" href="structeasynav_1_1PerceptionPtr.html">PerceptionPtr</a> &gt; &amp;src)</td></tr>
+<tr class="memdesc:a843ecd75e7c807bdaf73f409e59d8dc4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extracts a homogeneous collection of perceptions of type <code class="param">T</code> from a heterogeneous vector.  <br /></td></tr>
+<tr class="separator:a843ecd75e7c807bdaf73f409e59d8dc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad88fea01569979532c80883949bee0dd" id="r_ad88fea01569979532c80883949bee0dd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#aa872928bf2fa4fde3e32434f0a95fa15">PointPerceptions</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad88fea01569979532c80883949bee0dd">get_point_perceptions</a> (std::vector&lt; <a class="el" href="structeasynav_1_1PerceptionPtr.html">PerceptionPtr</a> &gt; &amp;perceptionptr)</td></tr>
+<tr class="memdesc:ad88fea01569979532c80883949bee0dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extracts all <a class="el" href="classeasynav_1_1PointPerception.html">PointPerception</a> objects from a heterogeneous collection.  <br /></td></tr>
 <tr class="separator:ad88fea01569979532c80883949bee0dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9050313b1e39e04002d6e63dfe4dd856" id="r_a9050313b1e39e04002d6e63dfe4dd856"><td class="memItemLeft" align="right" valign="top">sensor_msgs::msg::PointCloud2&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9050313b1e39e04002d6e63dfe4dd856">perception_to_rosmsg</a> (const <a class="el" href="classeasynav_1_1PointPerception.html">PointPerception</a> &amp;perception)</td></tr>
-<tr class="memdesc:a9050313b1e39e04002d6e63dfe4dd856"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a <a class="el" href="classeasynav_1_1PointPerception.html" title="Concrete perception class for 3D point cloud data.">PointPerception</a> to a sensor_msgs::msg::PointCloud2 message.  <br /></td></tr>
+<tr class="memdesc:a9050313b1e39e04002d6e63dfe4dd856"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a <a class="el" href="classeasynav_1_1PointPerception.html">PointPerception</a> into a <code>sensor_msgs::msg::PointCloud2</code> message.  <br /></td></tr>
 <tr class="separator:a9050313b1e39e04002d6e63dfe4dd856"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4adf6aa9d2208b93442fc96f4e732147" id="r_a4adf6aa9d2208b93442fc96f4e732147"><td class="memItemLeft" align="right" valign="top">sensor_msgs::msg::PointCloud2&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4adf6aa9d2208b93442fc96f4e732147">points_to_rosmsg</a> (const pcl::PointCloud&lt; pcl::PointXYZ &gt; &amp;points)</td></tr>
-<tr class="memdesc:a4adf6aa9d2208b93442fc96f4e732147"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a PCL point cloud to a sensor_msgs::msg::PointCloud2 message.  <br /></td></tr>
+<tr class="memdesc:a4adf6aa9d2208b93442fc96f4e732147"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a PCL point cloud into a <code>sensor_msgs::msg::PointCloud2</code> message.  <br /></td></tr>
 <tr class="separator:a4adf6aa9d2208b93442fc96f4e732147"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2165934feb1b2db51f50eba96b03a4d9" id="r_a2165934feb1b2db51f50eba96b03a4d9"><td class="memTemplParams" colspan="2">template&lt;std::size_t I = 0&gt; </td></tr>
+<tr class="memitem:a2165934feb1b2db51f50eba96b03a4d9"><td class="memTemplItemLeft" align="right" valign="top">std::string&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a2165934feb1b2db51f50eba96b03a4d9">resolve_group_from_msg</a> (std::string_view msg_type)</td></tr>
+<tr class="separator:a2165934feb1b2db51f50eba96b03a4d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f00c1fcd8e711f2f1451f7441983559" id="r_a6f00c1fcd8e711f2f1451f7441983559"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6f00c1fcd8e711f2f1451f7441983559">resolve_group_from_msg</a> (std::string_view msg_type, std::true_type)</td></tr>
+<tr class="separator:a6f00c1fcd8e711f2f1451f7441983559"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af26944830a84a41d51ba0c20322987f4" id="r_af26944830a84a41d51ba0c20322987f4"><td class="memTemplParams" colspan="2">template&lt;std::size_t I = 0&gt; </td></tr>
+<tr class="memitem:af26944830a84a41d51ba0c20322987f4"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#af26944830a84a41d51ba0c20322987f4">set_by_group</a> (const std::string &amp;group, const std::vector&lt; <a class="el" href="structeasynav_1_1PerceptionPtr.html">easynav::PerceptionPtr</a> &gt; &amp;src, <a class="el" href="classeasynav_1_1NavState.html">::easynav::NavState</a> &amp;ns)</td></tr>
+<tr class="separator:af26944830a84a41d51ba0c20322987f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1298c4f34dc2e214c8a59e80e0f8b231" id="r_a1298c4f34dc2e214c8a59e80e0f8b231"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1298c4f34dc2e214c8a59e80e0f8b231">stacktrace</a> (std::size_t skip=1, std::size_t max_frames=64)</td></tr>
+<tr class="memdesc:a1298c4f34dc2e214c8a59e80e0f8b231"><td class="mdescLeft">&#160;</td><td class="mdescRight">Captures a C/C++ stack trace as a string.  <br /></td></tr>
+<tr class="separator:a1298c4f34dc2e214c8a59e80e0f8b231"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -234,6 +267,42 @@ Variables</h2></td></tr>
 <div class="line">  std::vector&lt;std::shared_ptr&lt;ImagePerception&gt;&gt;</div>
 </div><!-- fragment -->
 <p>Alias for a vector of shared pointers to <a class="el" href="classeasynav_1_1ImagePerception.html" title="Represents a single image perception from a sensor.">ImagePerception</a> objects. </p>
+<p>The container can represent a time-ordered or batched collection, depending on producer logic. </p>
+
+</div>
+</div>
+<a id="a69eec3e3b40d1fd642ff49b3c67bf46d" name="a69eec3e3b40d1fd642ff49b3c67bf46d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a69eec3e3b40d1fd642ff49b3c67bf46d">&#9670;&#160;</a></span>IMUPerceptions</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="#a69eec3e3b40d1fd642ff49b3c67bf46d">IMUPerceptions</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line"> </div>
+<div class="line">  std::vector&lt;std::shared_ptr&lt;IMUPerception&gt;&gt;</div>
+</div><!-- fragment -->
+<p>Alias for a vector of shared pointers to <a class="el" href="classeasynav_1_1IMUPerception.html" title="Represents a single IMU perception from a sensor.">IMUPerception</a> objects. </p>
+<p>The container can represent a time-ordered or batched collection, depending on producer logic. </p>
+
+</div>
+</div>
+<a id="a4d10e036523aceea280b71de936e1c41" name="a4d10e036523aceea280b71de936e1c41"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4d10e036523aceea280b71de936e1c41">&#9670;&#160;</a></span>PerceptionBasePtr</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="#a4d10e036523aceea280b71de936e1c41">PerceptionBasePtr</a> = std::shared_ptr&lt;<a class="el" href="classeasynav_1_1PerceptionBase.html">PerceptionBase</a>&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Shared pointer alias to <a class="el" href="classeasynav_1_1PerceptionBase.html">PerceptionBase</a>. </p>
 
 </div>
 </div>
@@ -251,8 +320,30 @@ Variables</h2></td></tr>
 <b>Initial value:</b><div class="fragment"><div class="line"> </div>
 <div class="line">  std::vector&lt;std::shared_ptr&lt;PointPerception&gt;&gt;</div>
 </div><!-- fragment -->
-<p>Alias for a vector of pointers to <a class="el" href="classeasynav_1_1PointPerception.html" title="Concrete perception class for 3D point cloud data.">PointPerception</a> objects. </p>
+<p>Alias for a vector of shared pointers to <a class="el" href="classeasynav_1_1PointPerception.html">PointPerception</a> objects. </p>
 
+</div>
+</div>
+<a id="a1d8ab0a1bd4d1fa128c20df0a5f594e2" name="a1d8ab0a1bd4d1fa128c20df0a5f594e2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1d8ab0a1bd4d1fa128c20df0a5f594e2">&#9670;&#160;</a></span>Registry</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="#a1d8ab0a1bd4d1fa128c20df0a5f594e2">Registry</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line"> std::tuple&lt;</div>
+<div class="line">  <a class="code hl_class" href="classeasynav_1_1ImagePerception.html">easynav::ImagePerception</a>,</div>
+<div class="line">  <a class="code hl_class" href="classeasynav_1_1IMUPerception.html">easynav::IMUPerception</a>,</div>
+<div class="line">  <a class="code hl_class" href="classeasynav_1_1PointPerception.html">easynav::PointPerception</a></div>
+<div class="line">&gt;</div>
+<div class="ttc" id="aclasseasynav_1_1IMUPerception_html"><div class="ttname"><a href="classeasynav_1_1IMUPerception.html">easynav::IMUPerception</a></div><div class="ttdoc">Represents a single IMU perception from a sensor.</div><div class="ttdef"><b>Definition</b> IMUPerception.hpp:49</div></div>
+<div class="ttc" id="aclasseasynav_1_1ImagePerception_html"><div class="ttname"><a href="classeasynav_1_1ImagePerception.html">easynav::ImagePerception</a></div><div class="ttdoc">Represents a single image perception from a sensor.</div><div class="ttdef"><b>Definition</b> ImagePerception.hpp:50</div></div>
+<div class="ttc" id="aclasseasynav_1_1PointPerception_html"><div class="ttname"><a href="classeasynav_1_1PointPerception.html">easynav::PointPerception</a></div><div class="ttdoc">Concrete perception class for 3D point cloud data.</div><div class="ttdef"><b>Definition</b> PointPerception.hpp:83</div></div>
+</div><!-- fragment -->
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
@@ -275,14 +366,78 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Converts a LaserScan message into a point cloud. </p>
+<p>Converts a <code>LaserScan</code> message into a point cloud. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">scan</td><td>The input laser scan message. </td></tr>
-    <tr><td class="paramname">pc</td><td>Output point cloud (XYZ format). </td></tr>
+    <tr><td class="paramname">scan</td><td>Input laser scan message. </td></tr>
+    <tr><td class="paramname">pc</td><td>Output point cloud (XYZ). </td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a979982102c0dbd9e9c970d56c96481e3" name="a979982102c0dbd9e9c970d56c96481e3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a979982102c0dbd9e9c970d56c96481e3">&#9670;&#160;</a></span>demangle()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string demangle </td>
+          <td>(</td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>name</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Demangles a C++ RTTI type name if possible. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>Mangled type name (from <code>typeid(T)</code>.name()). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Readable (demangled) type name if available; otherwise returns <code class="param">name</code>. </dd></dl>
+
+</div>
+</div>
+<a id="a843ecd75e7c807bdaf73f409e59d8dc4" name="a843ecd75e7c807bdaf73f409e59d8dc4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a843ecd75e7c807bdaf73f409e59d8dc4">&#9670;&#160;</a></span>get_perceptions()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T = PerceptionBase&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; std::shared_ptr&lt; T &gt; &gt; get_perceptions </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="structeasynav_1_1PerceptionPtr.html">PerceptionPtr</a> &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>src</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Extracts a homogeneous collection of perceptions of type <code class="param">T</code> from a heterogeneous vector. </p>
+<p>This helper iterates the input vector of <a class="el" href="structeasynav_1_1PerceptionPtr.html">PerceptionPtr</a> and:</p><ul>
+<li>If <code class="param">T</code> is exactly <a class="el" href="classeasynav_1_1PerceptionBase.html">PerceptionBase</a>, returns all stored pointers without casting (heterogeneous view).</li>
+<li>Otherwise, attempts a <code>std::dynamic_pointer_cast&lt;T&gt;</code> and includes only those perceptions that match (homogeneous view).</li>
+</ul>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>Target perception type. Must inherit from <a class="el" href="classeasynav_1_1PerceptionBase.html">PerceptionBase</a>. Defaults to <a class="el" href="classeasynav_1_1PerceptionBase.html">PerceptionBase</a>. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">src</td><td>Source vector containing heterogeneous perceptions and their subscriptions. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A vector of <code>std::shared_ptr&lt;T&gt;</code> containing the matching perceptions, in the same order as <code class="param">src</code>. </dd></dl>
 
 </div>
 </div>
@@ -301,6 +456,15 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Extracts all <a class="el" href="classeasynav_1_1PointPerception.html">PointPerception</a> objects from a heterogeneous collection. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">perceptionptr</td><td>Vector of <a class="el" href="structeasynav_1_1PerceptionPtr.html">PerceptionPtr</a> entries possibly holding mixed perception types. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A vector with the subset of perceptions that are <a class="el" href="classeasynav_1_1PointPerception.html">PointPerception</a>. </dd></dl>
+
 </div>
 </div>
 <a id="a9050313b1e39e04002d6e63dfe4dd856" name="a9050313b1e39e04002d6e63dfe4dd856"></a>
@@ -318,14 +482,14 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Converts a <a class="el" href="classeasynav_1_1PointPerception.html" title="Concrete perception class for 3D point cloud data.">PointPerception</a> to a sensor_msgs::msg::PointCloud2 message. </p>
+<p>Converts a <a class="el" href="classeasynav_1_1PointPerception.html">PointPerception</a> into a <code>sensor_msgs::msg::PointCloud2</code> message. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">perception</td><td>The perception to convert. </td></tr>
+    <tr><td class="paramname">perception</td><td>Perception to convert. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>The ROS PointCloud2 message. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The resulting ROS <code>PointCloud2</code> message. </dd></dl>
 
 </div>
 </div>
@@ -344,14 +508,113 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Converts a PCL point cloud to a sensor_msgs::msg::PointCloud2 message. </p>
+<p>Converts a PCL point cloud into a <code>sensor_msgs::msg::PointCloud2</code> message. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">points</td><td>The input point cloud. </td></tr>
+    <tr><td class="paramname">points</td><td>Input point cloud. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>The ROS PointCloud2 message. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The resulting ROS <code>PointCloud2</code> message. </dd></dl>
+
+</div>
+</div>
+<a id="a2165934feb1b2db51f50eba96b03a4d9" name="a2165934feb1b2db51f50eba96b03a4d9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2165934feb1b2db51f50eba96b03a4d9">&#9670;&#160;</a></span>resolve_group_from_msg() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;std::size_t I = 0&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string resolve_group_from_msg </td>
+          <td>(</td>
+          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>msg_type</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6f00c1fcd8e711f2f1451f7441983559" name="a6f00c1fcd8e711f2f1451f7441983559"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6f00c1fcd8e711f2f1451f7441983559">&#9670;&#160;</a></span>resolve_group_from_msg() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string resolve_group_from_msg </td>
+          <td>(</td>
+          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>msg_type</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::true_type</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af26944830a84a41d51ba0c20322987f4" name="af26944830a84a41d51ba0c20322987f4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af26944830a84a41d51ba0c20322987f4">&#9670;&#160;</a></span>set_by_group()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;std::size_t I = 0&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">bool set_by_group </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>group</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="structeasynav_1_1PerceptionPtr.html">easynav::PerceptionPtr</a> &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>src</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classeasynav_1_1NavState.html">::easynav::NavState</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ns</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1298c4f34dc2e214c8a59e80e0f8b231" name="a1298c4f34dc2e214c8a59e80e0f8b231"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1298c4f34dc2e214c8a59e80e0f8b231">&#9670;&#160;</a></span>stacktrace()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string stacktrace </td>
+          <td>(</td>
+          <td class="paramtype">std::size_t</td>          <td class="paramname"><span class="paramname"><em>skip</em></span><span class="paramdefsep"> = </span><span class="paramdefval">1</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::size_t</td>          <td class="paramname"><span class="paramname"><em>max_frames</em></span><span class="paramdefsep"> = </span><span class="paramdefval">64</span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Captures a C/C++ stack trace as a string. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">skip</td><td>Number of initial frames to skip (e.g., the <code>stacktrace</code> frame itself). </td></tr>
+    <tr><td class="paramname">max_frames</td><td>Maximum number of frames to capture. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A multi-line string with one frame per line. </dd></dl>
 
 </div>
 </div>
