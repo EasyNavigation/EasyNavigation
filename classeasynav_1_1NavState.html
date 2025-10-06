@@ -117,6 +117,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a2ac95fd847d344d55ed64f7b5d7bcf04"><td class="memTemplItemLeft" align="right" valign="top">const T &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a2ac95fd847d344d55ed64f7b5d7bcf04">get</a> (const std::string &amp;key) const</td></tr>
 <tr class="memdesc:a2ac95fd847d344d55ed64f7b5d7bcf04"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves a const reference to the stored value of type <code class="param">T</code> for <code class="param">key</code>.  <br /></td></tr>
 <tr class="separator:a2ac95fd847d344d55ed64f7b5d7bcf04"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a45a0367ef19cb5935d2ec0e6ac00945e" id="r_a45a0367ef19cb5935d2ec0e6ac00945e"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
+<tr class="memitem:a45a0367ef19cb5935d2ec0e6ac00945e"><td class="memTemplItemLeft" align="right" valign="top">const std::shared_ptr&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a45a0367ef19cb5935d2ec0e6ac00945e">get_ptr</a> (const std::string &amp;key) const</td></tr>
+<tr class="memdesc:a45a0367ef19cb5935d2ec0e6ac00945e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the shared_ptr to the stored value of type <code class="param">T</code> for <code class="param">key</code>.  <br /></td></tr>
+<tr class="separator:a45a0367ef19cb5935d2ec0e6ac00945e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac4d828286f3b46fddda807b5fb79a6af" id="r_ac4d828286f3b46fddda807b5fb79a6af"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac4d828286f3b46fddda807b5fb79a6af">has</a> (const std::string &amp;key) const</td></tr>
 <tr class="memdesc:ac4d828286f3b46fddda807b5fb79a6af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether <code class="param">key</code> exists in the state.  <br /></td></tr>
 <tr class="separator:ac4d828286f3b46fddda807b5fb79a6af"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -275,6 +279,47 @@ template&lt;typename T&gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Const reference to the stored <code class="param">T</code>. </dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">std::runtime_error</td><td>If <code class="param">key</code> is missing or the stored type does not match <code class="param">T</code>. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a45a0367ef19cb5935d2ec0e6ac00945e" name="a45a0367ef19cb5935d2ec0e6ac00945e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a45a0367ef19cb5935d2ec0e6ac00945e">&#9670;&#160;</a></span>get_ptr()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::shared_ptr&lt; T &gt; get_ptr </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>key</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieves the shared_ptr to the stored value of type <code class="param">T</code> for <code class="param">key</code>. </p>
+<p>The pointer refers to the object managed by the internal <code>std::shared_ptr&lt;T&gt;</code>.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>Expected stored type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">key</td><td>Key to retrieve. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>shared_ptr to the stored <code class="param">T</code>. </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
     <tr><td class="paramname">std::runtime_error</td><td>If <code class="param">key</code> is missing or the stored type does not match <code class="param">T</code>. </td></tr>

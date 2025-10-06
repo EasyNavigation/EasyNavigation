@@ -136,6 +136,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a73c313d785b6b510f8bb620996432a0d" id="r_a73c313d785b6b510f8bb620996432a0d"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="namespaceeasynav.html#aa872928bf2fa4fde3e32434f0a95fa15">PointPerceptions</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a73c313d785b6b510f8bb620996432a0d">get_perceptions</a> () const</td></tr>
 <tr class="memdesc:a73c313d785b6b510f8bb620996432a0d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides a constant reference to the underlying perceptions container.  <br /></td></tr>
 <tr class="separator:a73c313d785b6b510f8bb620996432a0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a756c291e2ce0361130ba0e917a699339" id="r_a756c291e2ce0361130ba0e917a699339"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a756c291e2ce0361130ba0e917a699339">PointPerceptionsOpsView</a> (const <a class="el" href="classeasynav_1_1PointPerception.html">PointPerception</a> &amp;perception)</td></tr>
+<tr class="memdesc:a756c291e2ce0361130ba0e917a699339"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a view from a single <a class="el" href="classeasynav_1_1PointPerception.html" title="Concrete perception class for 3D point cloud data.">PointPerception</a> instance.  <br /></td></tr>
+<tr class="separator:a756c291e2ce0361130ba0e917a699339"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa7a7f47c3b772956f68daddc01115a40" id="r_aa7a7f47c3b772956f68daddc01115a40"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa7a7f47c3b772956f68daddc01115a40">PointPerceptionsOpsView</a> (const <a class="el" href="namespaceeasynav.html#aa872928bf2fa4fde3e32434f0a95fa15">PointPerceptions</a> &amp;perceptions)</td></tr>
 <tr class="memdesc:aa7a7f47c3b772956f68daddc01115a40"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a view over an external container of perceptions.  <br /></td></tr>
 <tr class="separator:aa7a7f47c3b772956f68daddc01115a40"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -148,7 +151,7 @@ Public Member Functions</h2></td></tr>
 <p>This view enables filtering, downsampling, fusion, and dimensional collapsing across multiple point clouds without duplicating memory, by keeping index-based selections per perception. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="aa7a7f47c3b772956f68daddc01115a40" name="aa7a7f47c3b772956f68daddc01115a40"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa7a7f47c3b772956f68daddc01115a40">&#9670;&#160;</a></span>PointPerceptionsOpsView() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aa7a7f47c3b772956f68daddc01115a40">&#9670;&#160;</a></span>PointPerceptionsOpsView() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -180,8 +183,42 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a756c291e2ce0361130ba0e917a699339" name="a756c291e2ce0361130ba0e917a699339"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a756c291e2ce0361130ba0e917a699339">&#9670;&#160;</a></span>PointPerceptionsOpsView() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classeasynav_1_1PointPerceptionsOpsView.html">PointPerceptionsOpsView</a> </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classeasynav_1_1PointPerception.html">PointPerception</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>perception</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel explicit">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Constructs a view from a single <a class="el" href="classeasynav_1_1PointPerception.html" title="Concrete perception class for 3D point cloud data.">PointPerception</a> instance. </p>
+<p>Creates an internal container owning the given perception and initializes the index set for all its points.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">perception</td><td>The <a class="el" href="classeasynav_1_1PointPerception.html" title="Concrete perception class for 3D point cloud data.">PointPerception</a> to wrap in the view. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a351aff4e3561e66333402c5e8eb7418e" name="a351aff4e3561e66333402c5e8eb7418e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a351aff4e3561e66333402c5e8eb7418e">&#9670;&#160;</a></span>PointPerceptionsOpsView() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a351aff4e3561e66333402c5e8eb7418e">&#9670;&#160;</a></span>PointPerceptionsOpsView() <span class="overload">[3/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">

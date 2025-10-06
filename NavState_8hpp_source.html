@@ -242,107 +242,127 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>  }</div>
 </div>
 <div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span></div>
-<div class="foldopen" id="foldopen00193" data-start="{" data-end="}">
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno"><a class="line" href="classeasynav_1_1NavState.html#ac4d828286f3b46fddda807b5fb79a6af">  193</a></span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classeasynav_1_1NavState.html#ac4d828286f3b46fddda807b5fb79a6af">has</a>(<span class="keyword">const</span> std::string &amp; key)<span class="keyword"> const</span></div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span><span class="keyword">  </span>{</div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>    <span class="keywordflow">return</span> values_.find(key) != values_.end();</div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>  }</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>  <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="foldopen" id="foldopen00199" data-start="{" data-end="}">
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno"><a class="line" href="classeasynav_1_1NavState.html#a45a0367ef19cb5935d2ec0e6ac00945e">  199</a></span>  <span class="keyword">const</span> std::shared_ptr&lt;T&gt; <a class="code hl_function" href="classeasynav_1_1NavState.html#a45a0367ef19cb5935d2ec0e6ac00945e">get_ptr</a>(<span class="keyword">const</span> std::string &amp; key)<span class="keyword"> const</span></div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span><span class="keyword">  </span>{</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>    std::lock_guard&lt;std::mutex&gt; lock(mutex_);</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>    <span class="keyword">auto</span> it = values_.find(key);</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span> </div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>    <span class="keywordflow">if</span> (it == values_.end()) {</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>      <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;Key not found in get: &quot;</span> + key);</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>    }</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span> </div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>    <span class="keywordflow">if</span> (types_.at(key) != <span class="keyword">typeid</span>(T).hash_code()) {</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>      <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;Type mismatch in get for key: &quot;</span> + key);</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>    }</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span> </div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>    <span class="keywordflow">return</span> std::static_pointer_cast&lt;T&gt;(it-&gt;second);</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>  }</div>
 </div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span></div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno"><a class="line" href="classeasynav_1_1NavState.html#a52b12e0f13d9ca138e7b5099229ebb86">  202</a></span>  <span class="keyword">using </span><a class="code hl_typedef" href="classeasynav_1_1NavState.html#a52b12e0f13d9ca138e7b5099229ebb86">AnyPrinter</a> = std::function&lt;std::string(std::shared_ptr&lt;void&gt;)&gt;;</div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span></div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>  <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="foldopen" id="foldopen00209" data-start="{" data-end="}">
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno"><a class="line" href="classeasynav_1_1NavState.html#ab23ffa81abd5a1e3953e1d8405902cc2">  209</a></span>  <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classeasynav_1_1NavState.html#ab23ffa81abd5a1e3953e1d8405902cc2">register_printer</a>(std::function&lt;std::string(<span class="keyword">const</span> T &amp;)&gt; printer)</div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>  {</div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>    <span class="keyword">auto</span> wrapper = [printer](std::shared_ptr&lt;void&gt; base_ptr) -&gt; std::string {</div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>        <span class="keyword">auto</span> typed_ptr = std::static_pointer_cast&lt;T&gt;(base_ptr);</div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>        <span class="keywordflow">return</span> printer(*typed_ptr);</div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>      };</div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>    type_printers_[<span class="keyword">typeid</span>(T).hash_code()] = wrapper;</div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>  }</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span></div>
+<div class="foldopen" id="foldopen00218" data-start="{" data-end="}">
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno"><a class="line" href="classeasynav_1_1NavState.html#ac4d828286f3b46fddda807b5fb79a6af">  218</a></span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classeasynav_1_1NavState.html#ac4d828286f3b46fddda807b5fb79a6af">has</a>(<span class="keyword">const</span> std::string &amp; key)<span class="keyword"> const</span></div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span><span class="keyword">  </span>{</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>    <span class="keywordflow">return</span> values_.find(key) != values_.end();</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>  }</div>
 </div>
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span></div>
-<div class="foldopen" id="foldopen00223" data-start="{" data-end="}">
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno"><a class="line" href="classeasynav_1_1NavState.html#ae21c3e223fb1aec0439964d01e5e0282">  223</a></span>  std::string <a class="code hl_function" href="classeasynav_1_1NavState.html#ae21c3e223fb1aec0439964d01e5e0282">debug_string</a>()<span class="keyword"> const</span></div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span><span class="keyword">  </span>{</div>
-<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>    std::stringstream ss;</div>
-<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp; kv : values_) {</div>
-<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>      ss &lt;&lt; kv.first &lt;&lt; <span class="stringliteral">&quot; = &quot;</span>;</div>
-<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>      <span class="keyword">auto</span> ptr = kv.second;</div>
-<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>      <span class="keywordflow">if</span> (ptr) {</div>
-<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>        <span class="keyword">auto</span> type_it = types_.find(kv.first);</div>
-<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>        <span class="keywordflow">if</span> (type_it != types_.end()) {</div>
-<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>          <span class="keyword">auto</span> printer_it = type_printers_.find(type_it-&gt;second);</div>
-<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>          <span class="keywordflow">if</span> (printer_it != type_printers_.end()) {</div>
-<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>            ss &lt;&lt; <span class="stringliteral">&quot;[&quot;</span> &lt;&lt; ptr.get() &lt;&lt; <span class="stringliteral">&quot;] : &quot;</span> &lt;&lt; printer_it-&gt;second(ptr);</div>
-<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>          } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>            ss &lt;&lt; <span class="stringliteral">&quot;[&quot;</span> &lt;&lt; ptr.get() &lt;&lt; <span class="stringliteral">&quot;] : &quot;</span> &lt;&lt; type_it-&gt;second &lt;&lt; <span class="stringliteral">&quot;]&quot;</span>;</div>
-<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>          }</div>
-<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>          ss &lt;&lt; <span class="stringliteral">&quot;[&quot;</span> &lt;&lt; ptr.get() &lt;&lt; <span class="stringliteral">&quot;] : unknown]&quot;</span>;</div>
-<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>        }</div>
-<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>      } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>        ss &lt;&lt; <span class="stringliteral">&quot;[null]&quot;</span>;</div>
-<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>      }</div>
-<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>      ss &lt;&lt; std::endl;</div>
-<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>    }</div>
-<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>    <span class="keywordflow">return</span> ss.str();</div>
-<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>  }</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span></div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno"><a class="line" href="classeasynav_1_1NavState.html#a52b12e0f13d9ca138e7b5099229ebb86">  227</a></span>  <span class="keyword">using </span><a class="code hl_typedef" href="classeasynav_1_1NavState.html#a52b12e0f13d9ca138e7b5099229ebb86">AnyPrinter</a> = std::function&lt;std::string(std::shared_ptr&lt;void&gt;)&gt;;</div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span></div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>  <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="foldopen" id="foldopen00234" data-start="{" data-end="}">
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno"><a class="line" href="classeasynav_1_1NavState.html#ab23ffa81abd5a1e3953e1d8405902cc2">  234</a></span>  <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classeasynav_1_1NavState.html#ab23ffa81abd5a1e3953e1d8405902cc2">register_printer</a>(std::function&lt;std::string(<span class="keyword">const</span> T &amp;)&gt; printer)</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>  {</div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>    <span class="keyword">auto</span> wrapper = [printer](std::shared_ptr&lt;void&gt; base_ptr) -&gt; std::string {</div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>        <span class="keyword">auto</span> typed_ptr = std::static_pointer_cast&lt;T&gt;(base_ptr);</div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>        <span class="keywordflow">return</span> printer(*typed_ptr);</div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>      };</div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>    type_printers_[<span class="keyword">typeid</span>(T).hash_code()] = wrapper;</div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>  }</div>
 </div>
-<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span></div>
-<div class="foldopen" id="foldopen00251" data-start="{" data-end="}">
-<div class="line"><a id="l00251" name="l00251"></a><span class="lineno"><a class="line" href="classeasynav_1_1NavState.html#a7fdd1e3b7c0cc5f8ae63d98ef8496f30">  251</a></span>  <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classeasynav_1_1NavState.html#a7fdd1e3b7c0cc5f8ae63d98ef8496f30">print_stacktrace</a>()</div>
-<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>  {</div>
-<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>    <span class="keywordtype">void</span> *array[50];</div>
-<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>    <span class="keywordtype">int</span> size = backtrace(array, 50);</div>
-<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>    <span class="keywordtype">char</span> **strings = backtrace_symbols(array, size);</div>
-<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>    std::cerr &lt;&lt; <span class="stringliteral">&quot;\nStack trace:\n&quot;</span>;</div>
-<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; size; ++i) {</div>
-<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>      std::cerr &lt;&lt; strings[i] &lt;&lt; std::endl;</div>
-<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>    }</div>
-<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>    std::cerr &lt;&lt; std::endl;</div>
-<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>    free(strings);</div>
-<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>  }</div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span></div>
+<div class="foldopen" id="foldopen00248" data-start="{" data-end="}">
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno"><a class="line" href="classeasynav_1_1NavState.html#ae21c3e223fb1aec0439964d01e5e0282">  248</a></span>  std::string <a class="code hl_function" href="classeasynav_1_1NavState.html#ae21c3e223fb1aec0439964d01e5e0282">debug_string</a>()<span class="keyword"> const</span></div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span><span class="keyword">  </span>{</div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>    std::stringstream ss;</div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp; kv : values_) {</div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>      ss &lt;&lt; kv.first &lt;&lt; <span class="stringliteral">&quot; = &quot;</span>;</div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>      <span class="keyword">auto</span> ptr = kv.second;</div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>      <span class="keywordflow">if</span> (ptr) {</div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>        <span class="keyword">auto</span> type_it = types_.find(kv.first);</div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>        <span class="keywordflow">if</span> (type_it != types_.end()) {</div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>          <span class="keyword">auto</span> printer_it = type_printers_.find(type_it-&gt;second);</div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>          <span class="keywordflow">if</span> (printer_it != type_printers_.end()) {</div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>            ss &lt;&lt; <span class="stringliteral">&quot;[&quot;</span> &lt;&lt; ptr.get() &lt;&lt; <span class="stringliteral">&quot;] : &quot;</span> &lt;&lt; printer_it-&gt;second(ptr);</div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>          } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>            ss &lt;&lt; <span class="stringliteral">&quot;[&quot;</span> &lt;&lt; ptr.get() &lt;&lt; <span class="stringliteral">&quot;] : &quot;</span> &lt;&lt; type_it-&gt;second &lt;&lt; <span class="stringliteral">&quot;]&quot;</span>;</div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>          }</div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>          ss &lt;&lt; <span class="stringliteral">&quot;[&quot;</span> &lt;&lt; ptr.get() &lt;&lt; <span class="stringliteral">&quot;] : unknown]&quot;</span>;</div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>        }</div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>      } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>        ss &lt;&lt; <span class="stringliteral">&quot;[null]&quot;</span>;</div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>      }</div>
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>      ss &lt;&lt; std::endl;</div>
+<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>    }</div>
+<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>    <span class="keywordflow">return</span> ss.str();</div>
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>  }</div>
 </div>
-<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span></div>
-<div class="foldopen" id="foldopen00267" data-start="{" data-end="}">
-<div class="line"><a id="l00267" name="l00267"></a><span class="lineno"><a class="line" href="classeasynav_1_1NavState.html#a82a008060cac9685e29238810b65b45d">  267</a></span>  <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classeasynav_1_1NavState.html#a82a008060cac9685e29238810b65b45d">register_basic_printers</a>()</div>
-<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>  {</div>
-<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>    <a class="code hl_function" href="classeasynav_1_1NavState.html#ab23ffa81abd5a1e3953e1d8405902cc2">register_printer&lt;int&gt;</a>([](<span class="keyword">const</span> <span class="keywordtype">int</span> &amp; v) {<span class="keywordflow">return</span> std::to_string(v);});</div>
-<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>    <a class="code hl_function" href="classeasynav_1_1NavState.html#ab23ffa81abd5a1e3953e1d8405902cc2">register_printer&lt;float&gt;</a>([](<span class="keyword">const</span> <span class="keywordtype">float</span> &amp; v) {<span class="keywordflow">return</span> std::to_string(v);});</div>
-<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>    <a class="code hl_function" href="classeasynav_1_1NavState.html#ab23ffa81abd5a1e3953e1d8405902cc2">register_printer&lt;double&gt;</a>([](<span class="keyword">const</span> <span class="keywordtype">double</span> &amp; v) {<span class="keywordflow">return</span> std::to_string(v);});</div>
-<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>    <a class="code hl_function" href="classeasynav_1_1NavState.html#ab23ffa81abd5a1e3953e1d8405902cc2">register_printer&lt;std::string&gt;</a>([](<span class="keyword">const</span> std::string &amp; v) {<span class="keywordflow">return</span> v;});</div>
-<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>    <a class="code hl_function" href="classeasynav_1_1NavState.html#ab23ffa81abd5a1e3953e1d8405902cc2">register_printer&lt;bool&gt;</a>([](<span class="keyword">const</span> <span class="keywordtype">bool</span> &amp; v) {<span class="keywordflow">return</span> v ? <span class="stringliteral">&quot;true&quot;</span> : <span class="stringliteral">&quot;false&quot;</span>;});</div>
-<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>    <a class="code hl_function" href="classeasynav_1_1NavState.html#ab23ffa81abd5a1e3953e1d8405902cc2">register_printer&lt;char&gt;</a>([](<span class="keyword">const</span> <span class="keywordtype">char</span> &amp; v) {<span class="keywordflow">return</span> std::string(1, v);});</div>
-<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>  }</div>
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span></div>
+<div class="foldopen" id="foldopen00276" data-start="{" data-end="}">
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno"><a class="line" href="classeasynav_1_1NavState.html#a7fdd1e3b7c0cc5f8ae63d98ef8496f30">  276</a></span>  <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classeasynav_1_1NavState.html#a7fdd1e3b7c0cc5f8ae63d98ef8496f30">print_stacktrace</a>()</div>
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>  {</div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>    <span class="keywordtype">void</span> *array[50];</div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>    <span class="keywordtype">int</span> size = backtrace(array, 50);</div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>    <span class="keywordtype">char</span> **strings = backtrace_symbols(array, size);</div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>    std::cerr &lt;&lt; <span class="stringliteral">&quot;\nStack trace:\n&quot;</span>;</div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; size; ++i) {</div>
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>      std::cerr &lt;&lt; strings[i] &lt;&lt; std::endl;</div>
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>    }</div>
+<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>    std::cerr &lt;&lt; std::endl;</div>
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>    free(strings);</div>
+<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>  }</div>
 </div>
-<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span> </div>
-<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>  <span class="keyword">mutable</span> std::mutex mutex_;  </div>
-<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span></div>
-<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>  <span class="keyword">mutable</span> std::unordered_map&lt;std::string, std::shared_ptr&lt;void&gt;&gt; values_;</div>
-<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span></div>
-<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>  <span class="keyword">mutable</span> std::unordered_map&lt;std::string, size_t&gt; types_;</div>
-<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span></div>
-<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>  <span class="keyword">static</span> <span class="keyword">inline</span> std::unordered_map&lt;size_t, AnyPrinter&gt; type_printers_;</div>
-<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>};</div>
+<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span></div>
+<div class="foldopen" id="foldopen00292" data-start="{" data-end="}">
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno"><a class="line" href="classeasynav_1_1NavState.html#a82a008060cac9685e29238810b65b45d">  292</a></span>  <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classeasynav_1_1NavState.html#a82a008060cac9685e29238810b65b45d">register_basic_printers</a>()</div>
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>  {</div>
+<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>    <a class="code hl_function" href="classeasynav_1_1NavState.html#ab23ffa81abd5a1e3953e1d8405902cc2">register_printer&lt;int&gt;</a>([](<span class="keyword">const</span> <span class="keywordtype">int</span> &amp; v) {<span class="keywordflow">return</span> std::to_string(v);});</div>
+<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>    <a class="code hl_function" href="classeasynav_1_1NavState.html#ab23ffa81abd5a1e3953e1d8405902cc2">register_printer&lt;float&gt;</a>([](<span class="keyword">const</span> <span class="keywordtype">float</span> &amp; v) {<span class="keywordflow">return</span> std::to_string(v);});</div>
+<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>    <a class="code hl_function" href="classeasynav_1_1NavState.html#ab23ffa81abd5a1e3953e1d8405902cc2">register_printer&lt;double&gt;</a>([](<span class="keyword">const</span> <span class="keywordtype">double</span> &amp; v) {<span class="keywordflow">return</span> std::to_string(v);});</div>
+<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>    <a class="code hl_function" href="classeasynav_1_1NavState.html#ab23ffa81abd5a1e3953e1d8405902cc2">register_printer&lt;std::string&gt;</a>([](<span class="keyword">const</span> std::string &amp; v) {<span class="keywordflow">return</span> v;});</div>
+<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>    <a class="code hl_function" href="classeasynav_1_1NavState.html#ab23ffa81abd5a1e3953e1d8405902cc2">register_printer&lt;bool&gt;</a>([](<span class="keyword">const</span> <span class="keywordtype">bool</span> &amp; v) {<span class="keywordflow">return</span> v ? <span class="stringliteral">&quot;true&quot;</span> : <span class="stringliteral">&quot;false&quot;</span>;});</div>
+<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>    <a class="code hl_function" href="classeasynav_1_1NavState.html#ab23ffa81abd5a1e3953e1d8405902cc2">register_printer&lt;char&gt;</a>([](<span class="keyword">const</span> <span class="keywordtype">char</span> &amp; v) {<span class="keywordflow">return</span> std::string(1, v);});</div>
+<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>  }</div>
 </div>
-<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span> </div>
-<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>}  <span class="comment">// namespace easynav</span></div>
-<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span> </div>
-<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span><span class="preprocessor">#endif  </span><span class="comment">// EASYNAV__TYPES__NAVSTATE_HPP_</span></div>
+<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span> </div>
+<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>  <span class="keyword">mutable</span> std::mutex mutex_;  </div>
+<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span></div>
+<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>  <span class="keyword">mutable</span> std::unordered_map&lt;std::string, std::shared_ptr&lt;void&gt;&gt; values_;</div>
+<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span></div>
+<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>  <span class="keyword">mutable</span> std::unordered_map&lt;std::string, size_t&gt; types_;</div>
+<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span></div>
+<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>  <span class="keyword">static</span> <span class="keyword">inline</span> std::unordered_map&lt;size_t, AnyPrinter&gt; type_printers_;</div>
+<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>};</div>
+</div>
+<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span> </div>
+<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>}  <span class="comment">// namespace easynav</span></div>
+<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span> </div>
+<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span><span class="preprocessor">#endif  </span><span class="comment">// EASYNAV__TYPES__NAVSTATE_HPP_</span></div>
 <div class="ttc" id="aclasseasynav_1_1NavState_html_a2ac95fd847d344d55ed64f7b5d7bcf04"><div class="ttname"><a href="classeasynav_1_1NavState.html#a2ac95fd847d344d55ed64f7b5d7bcf04">easynav::NavState::get</a></div><div class="ttdeci">const T &amp; get(const std::string &amp;key) const</div><div class="ttdoc">Retrieves a const reference to the stored value of type T for key.</div><div class="ttdef"><b>Definition</b> NavState.hpp:173</div></div>
-<div class="ttc" id="aclasseasynav_1_1NavState_html_a52b12e0f13d9ca138e7b5099229ebb86"><div class="ttname"><a href="classeasynav_1_1NavState.html#a52b12e0f13d9ca138e7b5099229ebb86">easynav::NavState::AnyPrinter</a></div><div class="ttdeci">std::function&lt; std::string(std::shared_ptr&lt; void &gt;)&gt; AnyPrinter</div><div class="ttdoc">Type alias for a generic printer functor used by debug_string().</div><div class="ttdef"><b>Definition</b> NavState.hpp:202</div></div>
+<div class="ttc" id="aclasseasynav_1_1NavState_html_a45a0367ef19cb5935d2ec0e6ac00945e"><div class="ttname"><a href="classeasynav_1_1NavState.html#a45a0367ef19cb5935d2ec0e6ac00945e">easynav::NavState::get_ptr</a></div><div class="ttdeci">const std::shared_ptr&lt; T &gt; get_ptr(const std::string &amp;key) const</div><div class="ttdoc">Retrieves the shared_ptr to the stored value of type T for key.</div><div class="ttdef"><b>Definition</b> NavState.hpp:199</div></div>
+<div class="ttc" id="aclasseasynav_1_1NavState_html_a52b12e0f13d9ca138e7b5099229ebb86"><div class="ttname"><a href="classeasynav_1_1NavState.html#a52b12e0f13d9ca138e7b5099229ebb86">easynav::NavState::AnyPrinter</a></div><div class="ttdeci">std::function&lt; std::string(std::shared_ptr&lt; void &gt;)&gt; AnyPrinter</div><div class="ttdoc">Type alias for a generic printer functor used by debug_string().</div><div class="ttdef"><b>Definition</b> NavState.hpp:227</div></div>
 <div class="ttc" id="aclasseasynav_1_1NavState_html_a6f86f8d551a98957b49e502b975ee4d4"><div class="ttname"><a href="classeasynav_1_1NavState.html#a6f86f8d551a98957b49e502b975ee4d4">easynav::NavState::set</a></div><div class="ttdeci">void set(const std::string &amp;key, const std::shared_ptr&lt; T &gt; value_ptr)</div><div class="ttdoc">Stores a value of type T associated with key (by shared pointer).</div><div class="ttdef"><b>Definition</b> NavState.hpp:141</div></div>
-<div class="ttc" id="aclasseasynav_1_1NavState_html_a7fdd1e3b7c0cc5f8ae63d98ef8496f30"><div class="ttname"><a href="classeasynav_1_1NavState.html#a7fdd1e3b7c0cc5f8ae63d98ef8496f30">easynav::NavState::print_stacktrace</a></div><div class="ttdeci">static void print_stacktrace()</div><div class="ttdoc">Prints the current C++ stack trace to std::cerr.</div><div class="ttdef"><b>Definition</b> NavState.hpp:251</div></div>
-<div class="ttc" id="aclasseasynav_1_1NavState_html_a82a008060cac9685e29238810b65b45d"><div class="ttname"><a href="classeasynav_1_1NavState.html#a82a008060cac9685e29238810b65b45d">easynav::NavState::register_basic_printers</a></div><div class="ttdeci">static void register_basic_printers()</div><div class="ttdoc">Registers default printers for common scalar types.</div><div class="ttdef"><b>Definition</b> NavState.hpp:267</div></div>
+<div class="ttc" id="aclasseasynav_1_1NavState_html_a7fdd1e3b7c0cc5f8ae63d98ef8496f30"><div class="ttname"><a href="classeasynav_1_1NavState.html#a7fdd1e3b7c0cc5f8ae63d98ef8496f30">easynav::NavState::print_stacktrace</a></div><div class="ttdeci">static void print_stacktrace()</div><div class="ttdoc">Prints the current C++ stack trace to std::cerr.</div><div class="ttdef"><b>Definition</b> NavState.hpp:276</div></div>
+<div class="ttc" id="aclasseasynav_1_1NavState_html_a82a008060cac9685e29238810b65b45d"><div class="ttname"><a href="classeasynav_1_1NavState.html#a82a008060cac9685e29238810b65b45d">easynav::NavState::register_basic_printers</a></div><div class="ttdeci">static void register_basic_printers()</div><div class="ttdoc">Registers default printers for common scalar types.</div><div class="ttdef"><b>Definition</b> NavState.hpp:292</div></div>
 <div class="ttc" id="aclasseasynav_1_1NavState_html_a9ca0ccc3c82a12e5e58490f9daccdca8"><div class="ttname"><a href="classeasynav_1_1NavState.html#a9ca0ccc3c82a12e5e58490f9daccdca8">easynav::NavState::set</a></div><div class="ttdeci">void set(const std::string &amp;key, const T &amp;value)</div><div class="ttdoc">Stores a value of type T associated with key (by copy).</div><div class="ttdef"><b>Definition</b> NavState.hpp:108</div></div>
-<div class="ttc" id="aclasseasynav_1_1NavState_html_ab23ffa81abd5a1e3953e1d8405902cc2"><div class="ttname"><a href="classeasynav_1_1NavState.html#ab23ffa81abd5a1e3953e1d8405902cc2">easynav::NavState::register_printer</a></div><div class="ttdeci">static void register_printer(std::function&lt; std::string(const T &amp;)&gt; printer)</div><div class="ttdoc">Registers a pretty-printer for type T used by debug_string().</div><div class="ttdef"><b>Definition</b> NavState.hpp:209</div></div>
+<div class="ttc" id="aclasseasynav_1_1NavState_html_ab23ffa81abd5a1e3953e1d8405902cc2"><div class="ttname"><a href="classeasynav_1_1NavState.html#ab23ffa81abd5a1e3953e1d8405902cc2">easynav::NavState::register_printer</a></div><div class="ttdeci">static void register_printer(std::function&lt; std::string(const T &amp;)&gt; printer)</div><div class="ttdoc">Registers a pretty-printer for type T used by debug_string().</div><div class="ttdef"><b>Definition</b> NavState.hpp:234</div></div>
 <div class="ttc" id="aclasseasynav_1_1NavState_html_abd38e1587ce9ba1a3306460dbeb3c49f"><div class="ttname"><a href="classeasynav_1_1NavState.html#abd38e1587ce9ba1a3306460dbeb3c49f">easynav::NavState::NavState</a></div><div class="ttdeci">NavState()</div><div class="ttdoc">Constructs an empty NavState and registers basic type printers.</div><div class="ttdef"><b>Definition</b> NavState.hpp:90</div></div>
 <div class="ttc" id="aclasseasynav_1_1NavState_html_abdc1d18307758986bc40729691de0921"><div class="ttname"><a href="classeasynav_1_1NavState.html#abdc1d18307758986bc40729691de0921">easynav::NavState::~NavState</a></div><div class="ttdeci">virtual ~NavState()=default</div><div class="ttdoc">Destructor.</div></div>
-<div class="ttc" id="aclasseasynav_1_1NavState_html_ac4d828286f3b46fddda807b5fb79a6af"><div class="ttname"><a href="classeasynav_1_1NavState.html#ac4d828286f3b46fddda807b5fb79a6af">easynav::NavState::has</a></div><div class="ttdeci">bool has(const std::string &amp;key) const</div><div class="ttdoc">Checks whether key exists in the state.</div><div class="ttdef"><b>Definition</b> NavState.hpp:193</div></div>
-<div class="ttc" id="aclasseasynav_1_1NavState_html_ae21c3e223fb1aec0439964d01e5e0282"><div class="ttname"><a href="classeasynav_1_1NavState.html#ae21c3e223fb1aec0439964d01e5e0282">easynav::NavState::debug_string</a></div><div class="ttdeci">std::string debug_string() const</div><div class="ttdoc">Generates a human-readable dump of all stored keys and values.</div><div class="ttdef"><b>Definition</b> NavState.hpp:223</div></div>
+<div class="ttc" id="aclasseasynav_1_1NavState_html_ac4d828286f3b46fddda807b5fb79a6af"><div class="ttname"><a href="classeasynav_1_1NavState.html#ac4d828286f3b46fddda807b5fb79a6af">easynav::NavState::has</a></div><div class="ttdeci">bool has(const std::string &amp;key) const</div><div class="ttdoc">Checks whether key exists in the state.</div><div class="ttdef"><b>Definition</b> NavState.hpp:218</div></div>
+<div class="ttc" id="aclasseasynav_1_1NavState_html_ae21c3e223fb1aec0439964d01e5e0282"><div class="ttname"><a href="classeasynav_1_1NavState.html#ae21c3e223fb1aec0439964d01e5e0282">easynav::NavState::debug_string</a></div><div class="ttdeci">std::string debug_string() const</div><div class="ttdoc">Generates a human-readable dump of all stored keys and values.</div><div class="ttdef"><b>Definition</b> NavState.hpp:248</div></div>
 <div class="ttc" id="anamespaceeasynav_html"><div class="ttname"><a href="namespaceeasynav.html">easynav</a></div><div class="ttdef"><b>Definition</b> RTTFBuffer.hpp:30</div></div>
 <div class="ttc" id="anamespaceeasynav_html_a1298c4f34dc2e214c8a59e80e0f8b231"><div class="ttname"><a href="namespaceeasynav.html#a1298c4f34dc2e214c8a59e80e0f8b231">easynav::stacktrace</a></div><div class="ttdeci">std::string stacktrace(std::size_t skip=1, std::size_t max_frames=64)</div><div class="ttdoc">Captures a C/C++ stack trace as a string.</div><div class="ttdef"><b>Definition</b> NavState.hpp:63</div></div>
 <div class="ttc" id="anamespaceeasynav_html_a979982102c0dbd9e9c970d56c96481e3"><div class="ttname"><a href="namespaceeasynav.html#a979982102c0dbd9e9c970d56c96481e3">easynav::demangle</a></div><div class="ttdeci">std::string demangle(const char *name)</div><div class="ttdoc">Demangles a C++ RTTI type name if possible.</div><div class="ttdef"><b>Definition</b> NavState.hpp:50</div></div>
