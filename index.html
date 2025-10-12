@@ -88,8 +88,58 @@ $(function(){ initResizable(false); });
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p><a class="anchor" id="md_README"></a></p>
-<p><a href="https://github.com/EasyNavigation/EasyNavigation/actions/workflows/rolling.yaml"><img src="https://github.com/EasyNavigation/EasyNavigation/actions/workflows/rolling.yaml/badge.svg" alt="rolling" style="pointer-events: none;" class="inline"/></a></p>
-<p>Doxygen documentation: <a href="https://EasyNavigation.github.io/EasyNavigation/">https://EasyNavigation.github.io/EasyNavigation/</a> </p>
+<p><a href="https://github.com/EasyNavigation/EasyNavigation/actions/workflows/rolling.yaml"><img src="https://github.com/EasyNavigation/EasyNavigation/actions/workflows/rolling.yaml/badge.svg" alt="rolling" style="pointer-events: none;" class="inline"/></a> <a href="https://github.com/EasyNavigation/EasyNavigation/actions/workflows/kilted.yaml"><img src="https://github.com/EasyNavigation/EasyNavigation/actions/workflows/kilted.yaml/badge.svg" alt="kilted" style="pointer-events: none;" class="inline"/></a></p>
+<p>Doxygen documentation: <a href="https://EasyNavigation.github.io/EasyNavigation/">https://EasyNavigation.github.io/EasyNavigation/</a></p>
+<p><b>EasyNavigation (EasyNav)</b> is an open-source navigation system for <b>ROS 2</b>, designed to be:</p>
+<p>✅ <b>Representation-agnostic</b>, supporting a wide variety of environment models: 2D costmaps, elevation-aware gridmaps, Octomap-based 3D representations, raw point clouds, or hybrid combinations. <br  />
+ ⚡ <b>Real-time capable</b>, minimizing latency between perception and action. <br  />
+ 🧩 <b>Modular</b>, through a plugin architecture and reusable navigation stacks. <br  />
+ 🚀 <b>Lightweight and simple to deploy</b>, using a single binary and a parameter file for configuration. <br  />
+ 🧪 <b>Simulation-ready</b>, thanks to a rich collection of PlayGrounds with different robots and environments.</p>
+<p>EasyNav is developed by the <b><a href="https://intelligentroboticslab.gsyc.urjc.es/">Intelligent Robotics Lab</a></b> at <b>Universidad Rey Juan Carlos</b>, and aims to be a flexible, extensible, and practical alternative to existing ROS 2 navigation stacks such as <b>Nav2</b>.</p>
+<h1><a class="anchor" id="autotoc_md1"></a>
+📦 Main Repositories</h1>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Repository   </th><th class="markdownTableHeadNone">Description    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a href="https://github.com/EasyNavigation/EasyNavigation"><b>EasyNavigation</b></a>   </td><td class="markdownTableBodyNone">Core of the EasyNav system, providing the navigation core, plugin management, and runtime execution.    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a href="https://github.com/EasyNavigation/easynav_plugins"><b>easynav_plugins</b></a>   </td><td class="markdownTableBodyNone">Collection of plugins implementing various <b>map managers</b>, <b>planners</b>, <b>localizers</b>, and <b>controllers</b>.    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a href="https://github.com/EasyNavigation/NavMap"><b>NavMap</b></a>   </td><td class="markdownTableBodyNone">Surface-based map representation for navigable 3D environments, providing geometric and semantic layers for efficient navigation.    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a href="https://github.com/EasyNavigation/easynav_gridmap_stack"><b>easynav_gridmap_stack</b></a>   </td><td class="markdownTableBodyNone">EasyNav stack built around <b>GridMaps</b> (<a href="https://github.com/ANYbotics/grid_map">ANYbotics/grid_map</a>), integrating gridmap-based planners and controllers.    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a href="https://github.com/EasyNavigation/easynav_playground_kobuki"><b>easynav_playground_kobuki</b></a>   </td><td class="markdownTableBodyNone">PlayGround with the <b>Kobuki</b> mobile robot in indoor simulation environments.    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a href="https://github.com/EasyNavigation/easynav_playground_summit"><b>easynav_playground_summit</b></a>   </td><td class="markdownTableBodyNone">PlayGround featuring the <b>Summit XL</b> robot in outdoor environments.   </td></tr>
+</table>
+<hr  />
+<h1><a class="anchor" id="autotoc_md3"></a>
+👥 Project Maintainers</h1>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Name   </th><th class="markdownTableHeadNone">Organization   </th><th class="markdownTableHeadNone">GitHub   </th><th class="markdownTableHeadNone">Role    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">Francisco Martín Rico   </td><td class="markdownTableBodyNone">Universidad Rey Juan Carlos   </td><td class="markdownTableBodyNone"><a href="https://github.com/fmrico">fmrico</a>   </td><td class="markdownTableBodyNone">Project Lead    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">Francisco Miguel Moreno Olivo   </td><td class="markdownTableBodyNone">Universidad Rey Juan Carlos   </td><td class="markdownTableBodyNone"><a href="https://github.com/butakus">butakus</a>   </td><td class="markdownTableBodyNone">Core Developer    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">José Miguel Guerrero Hernández   </td><td class="markdownTableBodyNone">Universidad Rey Juan Carlos   </td><td class="markdownTableBodyNone"><a href="https://github.com/jmguerreroh">jmguerreroh</a>   </td><td class="markdownTableBodyNone">Developer    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">Juan Sebastián Cely Gutiérrez   </td><td class="markdownTableBodyNone">Universidad Rey Juan Carlos   </td><td class="markdownTableBodyNone"><a href="https://github.com/juanscelyg">juanscelyg</a>   </td><td class="markdownTableBodyNone">Developer    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">Esther Aguado González   </td><td class="markdownTableBodyNone">Universidad Rey Juan Carlos   </td><td class="markdownTableBodyNone"><a href="https://github.com/estherag">estherag</a>   </td><td class="markdownTableBodyNone">Developer    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">Francisco José Romero Ramírez   </td><td class="markdownTableBodyNone">Universidad Rey Juan Carlos   </td><td class="markdownTableBodyNone"><a href="https://github.com/kiko2r">kiko2r</a>   </td><td class="markdownTableBodyNone">Developer    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">Miguel de Miguel Paraiso   </td><td class="markdownTableBodyNone">Universidad Rey Juan Carlos   </td><td class="markdownTableBodyNone"><a href="https://github.com/midemig">midemig</a>   </td><td class="markdownTableBodyNone">Advisor    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">Jorge Beltrán de la Cita   </td><td class="markdownTableBodyNone">Universidad Rey Juan Carlos   </td><td class="markdownTableBodyNone"><a href="https://github.com/beltransen">beltransen</a>   </td><td class="markdownTableBodyNone">Advisor   </td></tr>
+</table>
+<hr  />
+<p><a href="https://intelligentroboticslab.gsyc.urjc.es/"><b>Intelligent Robotics Lab – Universidad Rey Juan Carlos</b> </a> </p>
 </div></div><!-- PageDoc -->
 <a href="doxygen_crawl.html"></a>
 </div><!-- contents -->
