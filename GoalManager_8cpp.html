@@ -89,14 +89,17 @@ $(function(){ initResizable(false); });
 <div id="doc-content">
 <div class="header">
   <div class="summary">
-<a href="#namespaces">Namespaces</a>  </div>
+<a href="#namespaces">Namespaces</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">GoalManager.cpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
 <p>Implementation of the GoalManager class.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;tf2_geometry_msgs/tf2_geometry_msgs.hpp&quot;</code><br />
+<div class="textblock"><code>#include &lt;numbers&gt;</code><br />
+<code>#include &quot;tf2_geometry_msgs/tf2_geometry_msgs.hpp&quot;</code><br />
+<code>#include &quot;tf2/utils.hpp&quot;</code><br />
 <code>#include &quot;<a class="el" href="GoalManager_8hpp_source.html">easynav_system/GoalManager.hpp</a>&quot;</code><br />
 <code>#include &quot;nav_msgs/msg/odometry.hpp&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
@@ -104,13 +107,17 @@ Include dependency graph for GoalManager.cpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="GoalManager_8cpp__incl.png" border="0" usemap="#aeasynav__system_2src_2easynav__system_2GoalManager_8cpp" alt=""/></div>
 <map name="aeasynav__system_2src_2easynav__system_2GoalManager_8cpp" id="aeasynav__system_2src_2easynav__system_2GoalManager_8cpp">
-<area shape="rect" title="Implementation of the GoalManager class." alt="" coords="656,5,884,46"/>
-<area shape="rect" title=" " alt="" coords="480,94,634,135"/>
-<area shape="poly" title=" " alt="" coords="723,49,620,90,618,85,721,44"/>
+<area shape="rect" title="Implementation of the GoalManager class." alt="" coords="476,5,704,46"/>
+<area shape="rect" title=" " alt="" coords="272,102,343,127"/>
+<area shape="poly" title=" " alt="" coords="515,49,356,97,352,98,350,93,355,91,514,44"/>
+<area shape="rect" title=" " alt="" coords="368,94,522,135"/>
+<area shape="poly" title=" " alt="" coords="558,49,492,88,489,84,556,44"/>
+<area shape="rect" title=" " alt="" coords="546,102,634,127"/>
+<area shape="poly" title=" " alt="" coords="593,47,593,86,587,86,587,47"/>
 <area shape="rect" href="GoalManager_8hpp.html" title="Declaration of the GoalManager class." alt="" coords="658,102,882,127"/>
-<area shape="poly" title=" " alt="" coords="773,47,773,86,767,86,767,47"/>
+<area shape="poly" title=" " alt="" coords="632,44,732,92,730,97,630,49"/>
 <area shape="rect" title=" " alt="" coords="906,102,1098,127"/>
-<area shape="poly" title=" " alt="" coords="824,44,956,93,954,98,822,49"/>
+<area shape="poly" title=" " alt="" coords="685,44,930,95,929,100,683,49"/>
 <area shape="rect" title=" " alt="" coords="5,190,79,216"/>
 <area shape="poly" title=" " alt="" coords="696,130,646,137,562,146,489,149,366,151,244,158,174,168,91,185,84,187,82,182,89,180,173,163,244,153,366,146,489,144,561,140,646,132,696,125"/>
 <area shape="rect" title=" " alt="" coords="102,190,256,216"/>
@@ -162,6 +169,18 @@ Include dependency graph for GoalManager.cpp:</div>
 Namespaces</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceeasynav.html">easynav</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a7bb977b8b2c38af1039172c74d9b5024" id="r_a7bb977b8b2c38af1039172c74d9b5024"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceeasynav.html#a7bb977b8b2c38af1039172c74d9b5024">calculate_angle</a> (const geometry_msgs::msg::Pose &amp;pose1, const geometry_msgs::msg::Pose &amp;pose2)</td></tr>
+<tr class="memdesc:a7bb977b8b2c38af1039172c74d9b5024"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the (absolute) yaw angle difference between two poses.  <br /></td></tr>
+<tr class="separator:a7bb977b8b2c38af1039172c74d9b5024"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa7ef56a3832b8bb20cdf38c26c8a2308" id="r_aa7ef56a3832b8bb20cdf38c26c8a2308"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceeasynav.html#aa7ef56a3832b8bb20cdf38c26c8a2308">calculate_distance_xy</a> (const geometry_msgs::msg::Pose &amp;pose1, const geometry_msgs::msg::Pose &amp;pose2)</td></tr>
+<tr class="memdesc:aa7ef56a3832b8bb20cdf38c26c8a2308"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal utility functions.  <br /></td></tr>
+<tr class="separator:aa7ef56a3832b8bb20cdf38c26c8a2308"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf7b2449dfa550dee63301e3d721ab3a" id="r_aaf7b2449dfa550dee63301e3d721ab3a"><td class="memItemLeft" align="right" valign="top">constexpr double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceeasynav.html#aaf7b2449dfa550dee63301e3d721ab3a">norm_angle</a> (const double angle)</td></tr>
+<tr class="memdesc:aaf7b2449dfa550dee63301e3d721ab3a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Angle normalization to [-pi, pi) range (in radians)  <br /></td></tr>
+<tr class="separator:aaf7b2449dfa550dee63301e3d721ab3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implementation of the GoalManager class. </p>

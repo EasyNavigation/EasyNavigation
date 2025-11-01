@@ -1,11 +1,11 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classeasynav_1_1PerceptionHandler.html" title="Abstract base interface for group&#45;specific perception handlers." alt="" coords="5,80,134,106"/>
-<area shape="rect" id="Node000001" href="$classDummyHandler.html" title=" " alt="" coords="209,5,319,31"/>
-<area shape="poly" id="edge16_Node000000_Node000001" title=" " alt="" coords="110,70,181,40,213,29,214,34,183,45,112,75"/>
-<area shape="rect" id="Node000002" href="$classeasynav_1_1IMUPerceptionHandler.html" title="Handles the creation and updating of IMUPerception instances from sensor_msgs::msg::Imu messages." alt="" coords="187,55,340,80"/>
-<area shape="poly" id="edge17_Node000000_Node000002" title=" " alt="" coords="149,80,186,75,187,80,149,85"/>
-<area shape="rect" id="Node000003" href="$classeasynav_1_1ImagePerceptionHandler.html" title="Handles the creation and updating of ImagePerception instances from sensor_msgs::msg::Image messages." alt="" coords="182,104,346,130"/>
-<area shape="poly" id="edge18_Node000000_Node000003" title=" " alt="" coords="150,100,181,104,181,109,149,105"/>
-<area shape="rect" id="Node000004" href="$classeasynav_1_1PointPerceptionHandler.html" title="PerceptionHandler implementation for sensors producing point&#45;based data." alt="" coords="185,153,343,179"/>
-<area shape="poly" id="edge19_Node000000_Node000004" title=" " alt="" coords="113,110,183,140,214,150,213,155,181,145,111,115"/>
+<area shape="rect" id="Node000000" href="$classeasynav_1_1PerceptionBase.html" title="Abstract base class for representing a single sensor perception." alt="" coords="5,80,119,106"/>
+<area shape="rect" id="Node000001" href="$classDummyPerception.html" title=" " alt="" coords="167,5,294,31"/>
+<area shape="poly" id="edge12_Node000000_Node000001" title=" " alt="" coords="101,70,166,40,192,29,194,34,168,45,104,75"/>
+<area shape="rect" id="Node000002" href="$classeasynav_1_1IMUPerception.html" title="Represents a single IMU perception from a sensor." alt="" coords="176,55,284,80"/>
+<area shape="poly" id="edge13_Node000000_Node000002" title=" " alt="" coords="134,79,176,73,176,78,134,85"/>
+<area shape="rect" id="Node000003" href="$classeasynav_1_1ImagePerception.html" title="Represents a single image perception from a sensor." alt="" coords="171,104,290,130"/>
+<area shape="poly" id="edge14_Node000000_Node000003" title=" " alt="" coords="134,100,171,106,170,111,134,106"/>
+<area shape="rect" id="Node000004" href="$classeasynav_1_1PointPerception.html" title="Concrete perception class for 3D point cloud data." alt="" coords="174,153,287,179"/>
+<area shape="poly" id="edge15_Node000000_Node000004" title=" " alt="" coords="105,110,168,140,194,150,192,155,166,145,102,115"/>
 </map>

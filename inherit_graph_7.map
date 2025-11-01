@@ -1,5 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" title=" " alt="" coords="5,5,139,31"/>
-<area shape="rect" id="Node000001" href="$classeasynav_1_1DummyMapsManager.html" title="A default &quot;do&#45;nothing&quot; implementation of MapsManagerBase." alt="" coords="187,5,334,31"/>
-<area shape="poly" id="edge11_Node000000_Node000001" title=" " alt="" coords="155,16,186,16,186,21,155,21"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,5,152,31"/>
+<area shape="rect" id="Node000001" href="$classeasynav_1_1DummyLocalizer.html" title="A default &quot;do&#45;nothing&quot; implementation of LocalizerMethodBase." alt="" coords="200,5,317,31"/>
+<area shape="poly" id="edge10_Node000000_Node000001" title=" " alt="" coords="167,16,199,16,199,21,167,21"/>
 </map>

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['x_0',['x',['../structeasynav_1_1PointPerceptionsOpsView_1_1VoxelKey.html#a6150e0515f7202e2fb518f7206ed97dc',1,'easynav::PointPerceptionsOpsView::VoxelKey']]]
+  ['valid_0',['valid',['../classeasynav_1_1PerceptionBase.html#a28e3c179a86f337095088b3ca02a2b2a',1,'easynav::PerceptionBase']]]
 ];

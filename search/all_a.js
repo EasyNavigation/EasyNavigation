@@ -9,5 +9,6 @@ var searchData=
   ['navstate_5ftests_2ecpp_6',['navstate_tests.cpp',['../navstate__tests_8cpp.html',1,'']]],
   ['navstatetest_7',['NavStateTest',['../classNavStateTest.html',1,'']]],
   ['new_5fdata_8',['new_data',['../classeasynav_1_1PerceptionBase.html#a5a4ba60143c31271df0f72bf0e503876',1,'easynav::PerceptionBase']]],
-  ['node_5fptr_9',['node_ptr',['../structeasynav_1_1SystemNodeInfo.html#a676636486b490302c0c8692b459ad78e',1,'easynav::SystemNodeInfo']]]
+  ['node_5fptr_9',['node_ptr',['../structeasynav_1_1SystemNodeInfo.html#a676636486b490302c0c8692b459ad78e',1,'easynav::SystemNodeInfo']]],
+  ['norm_5fangle_10',['norm_angle',['../namespaceeasynav.html#aaf7b2449dfa550dee63301e3d721ab3a',1,'easynav']]]
 ];

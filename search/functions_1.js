@@ -1,9 +1,9 @@
 var searchData=
 [
-  ['calculate_5fangle_0',['calculate_angle',['../classeasynav_1_1GoalManager.html#a7bb977b8b2c38af1039172c74d9b5024',1,'easynav::GoalManager']]],
-  ['calculate_5fdistance_1',['calculate_distance',['../classeasynav_1_1GoalManager.html#ab313fc7a32718bc893c0999ae0166936',1,'easynav::GoalManager']]],
+  ['calculate_5fangle_0',['calculate_angle',['../namespaceeasynav.html#a7bb977b8b2c38af1039172c74d9b5024',1,'easynav']]],
+  ['calculate_5fdistance_5fxy_1',['calculate_distance_xy',['../namespaceeasynav.html#aa7ef56a3832b8bb20cdf38c26c8a2308',1,'easynav']]],
   ['cancel_2',['cancel',['../classeasynav_1_1GoalManagerClient.html#a02d5fa6b14e221f3012a794b905be166',1,'easynav::GoalManagerClient']]],
-  ['check_5fgoals_3',['check_goals',['../classeasynav_1_1GoalManager.html#a3a63cbc52bbc79133fa4672575ab8429',1,'easynav::GoalManager']]],
+  ['check_5fgoals_3',['check_goals',['../classeasynav_1_1GoalManager.html#a973640b1dd03b7f94e17869bd6fe2716',1,'easynav::GoalManager']]],
   ['collapse_4',['collapse',['../classeasynav_1_1PointPerceptionsOpsView.html#ae192852ecce7234ffbc49981ca25284d',1,'easynav::PointPerceptionsOpsView']]],
   ['controllernode_5',['ControllerNode',['../classeasynav_1_1ControllerNode.html#a6eabdf043c65e5df971001021c63a06f',1,'easynav::ControllerNode']]],
   ['convert_6',['convert',['../namespaceeasynav.html#aa1af512138bf2ac8f6d199ba2761a918',1,'easynav']]],

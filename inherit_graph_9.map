@@ -1,11 +1,3 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classeasynav_1_1PerceptionBase.html" title="Abstract base class for representing a single sensor perception." alt="" coords="5,80,119,106"/>
-<area shape="rect" id="Node000001" href="$classDummyPerception.html" title=" " alt="" coords="167,5,294,31"/>
-<area shape="poly" id="edge12_Node000000_Node000001" title=" " alt="" coords="101,70,166,40,192,29,194,34,168,45,104,75"/>
-<area shape="rect" id="Node000002" href="$classeasynav_1_1IMUPerception.html" title="Represents a single IMU perception from a sensor." alt="" coords="176,55,284,80"/>
-<area shape="poly" id="edge13_Node000000_Node000002" title=" " alt="" coords="134,79,176,73,176,78,134,85"/>
-<area shape="rect" id="Node000003" href="$classeasynav_1_1ImagePerception.html" title="Represents a single image perception from a sensor." alt="" coords="171,104,290,130"/>
-<area shape="poly" id="edge14_Node000000_Node000003" title=" " alt="" coords="134,100,171,106,170,111,134,106"/>
-<area shape="rect" id="Node000004" href="$classeasynav_1_1PointPerception.html" title="Concrete perception class for 3D point cloud data." alt="" coords="174,153,287,179"/>
-<area shape="poly" id="edge15_Node000000_Node000004" title=" " alt="" coords="105,110,168,140,194,150,192,155,166,145,102,115"/>
+<area shape="rect" id="Node000000" href="$classeasynav_1_1NavState.html" title="A generic, type&#45;safe, thread&#45;safe blackboard to hold runtime state." alt="" coords="5,5,82,31"/>
 </map>

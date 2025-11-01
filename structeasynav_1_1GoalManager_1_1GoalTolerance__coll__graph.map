@@ -1,0 +1,5 @@
+<map id="GoalManager::GoalTolerance" name="GoalManager::GoalTolerance">
+<area shape="rect" id="Node000001" title="A structure to represent the goal tolerances." alt="" coords="5,124,194,150"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="70,5,129,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="102,47,102,123,97,123,97,47"/>
+</map>

@@ -197,6 +197,12 @@ Typedefs</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a7bb977b8b2c38af1039172c74d9b5024" id="r_a7bb977b8b2c38af1039172c74d9b5024"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7bb977b8b2c38af1039172c74d9b5024">calculate_angle</a> (const geometry_msgs::msg::Pose &amp;pose1, const geometry_msgs::msg::Pose &amp;pose2)</td></tr>
+<tr class="memdesc:a7bb977b8b2c38af1039172c74d9b5024"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the (absolute) yaw angle difference between two poses.  <br /></td></tr>
+<tr class="separator:a7bb977b8b2c38af1039172c74d9b5024"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa7ef56a3832b8bb20cdf38c26c8a2308" id="r_aa7ef56a3832b8bb20cdf38c26c8a2308"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa7ef56a3832b8bb20cdf38c26c8a2308">calculate_distance_xy</a> (const geometry_msgs::msg::Pose &amp;pose1, const geometry_msgs::msg::Pose &amp;pose2)</td></tr>
+<tr class="memdesc:aa7ef56a3832b8bb20cdf38c26c8a2308"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal utility functions.  <br /></td></tr>
+<tr class="separator:aa7ef56a3832b8bb20cdf38c26c8a2308"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa1af512138bf2ac8f6d199ba2761a918" id="r_aa1af512138bf2ac8f6d199ba2761a918"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa1af512138bf2ac8f6d199ba2761a918">convert</a> (const sensor_msgs::msg::LaserScan &amp;scan, pcl::PointCloud&lt; pcl::PointXYZ &gt; &amp;pc)</td></tr>
 <tr class="memdesc:aa1af512138bf2ac8f6d199ba2761a918"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a <code>LaserScan</code> message into a point cloud.  <br /></td></tr>
 <tr class="separator:aa1af512138bf2ac8f6d199ba2761a918"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -210,6 +216,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ad88fea01569979532c80883949bee0dd" id="r_ad88fea01569979532c80883949bee0dd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#aa872928bf2fa4fde3e32434f0a95fa15">PointPerceptions</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad88fea01569979532c80883949bee0dd">get_point_perceptions</a> (std::vector&lt; <a class="el" href="structeasynav_1_1PerceptionPtr.html">PerceptionPtr</a> &gt; &amp;perceptionptr)</td></tr>
 <tr class="memdesc:ad88fea01569979532c80883949bee0dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extracts all <a class="el" href="classeasynav_1_1PointPerception.html">PointPerception</a> objects from a heterogeneous collection.  <br /></td></tr>
 <tr class="separator:ad88fea01569979532c80883949bee0dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf7b2449dfa550dee63301e3d721ab3a" id="r_aaf7b2449dfa550dee63301e3d721ab3a"><td class="memItemLeft" align="right" valign="top">constexpr double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aaf7b2449dfa550dee63301e3d721ab3a">norm_angle</a> (const double angle)</td></tr>
+<tr class="memdesc:aaf7b2449dfa550dee63301e3d721ab3a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Angle normalization to [-pi, pi) range (in radians)  <br /></td></tr>
+<tr class="separator:aaf7b2449dfa550dee63301e3d721ab3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9050313b1e39e04002d6e63dfe4dd856" id="r_a9050313b1e39e04002d6e63dfe4dd856"><td class="memItemLeft" align="right" valign="top">sensor_msgs::msg::PointCloud2&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9050313b1e39e04002d6e63dfe4dd856">perception_to_rosmsg</a> (const <a class="el" href="classeasynav_1_1PointPerception.html">PointPerception</a> &amp;perception)</td></tr>
 <tr class="memdesc:a9050313b1e39e04002d6e63dfe4dd856"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a <a class="el" href="classeasynav_1_1PointPerception.html">PointPerception</a> into a <code>sensor_msgs::msg::PointCloud2</code> message.  <br /></td></tr>
 <tr class="separator:a9050313b1e39e04002d6e63dfe4dd856"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -347,6 +356,67 @@ Variables</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="a7bb977b8b2c38af1039172c74d9b5024" name="a7bb977b8b2c38af1039172c74d9b5024"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7bb977b8b2c38af1039172c74d9b5024">&#9670;&#160;</a></span>calculate_angle()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double calculate_angle </td>
+          <td>(</td>
+          <td class="paramtype">const geometry_msgs::msg::Pose &amp;</td>          <td class="paramname"><span class="paramname"><em>pose1</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const geometry_msgs::msg::Pose &amp;</td>          <td class="paramname"><span class="paramname"><em>pose2</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the (absolute) yaw angle difference between two poses. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pose1</td><td>First pose </td></tr>
+    <tr><td class="paramname">pose2</td><td>Second pose </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aa7ef56a3832b8bb20cdf38c26c8a2308" name="aa7ef56a3832b8bb20cdf38c26c8a2308"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa7ef56a3832b8bb20cdf38c26c8a2308">&#9670;&#160;</a></span>calculate_distance_xy()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double calculate_distance_xy </td>
+          <td>(</td>
+          <td class="paramtype">const geometry_msgs::msg::Pose &amp;</td>          <td class="paramname"><span class="paramname"><em>pose1</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const geometry_msgs::msg::Pose &amp;</td>          <td class="paramname"><span class="paramname"><em>pose2</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Internal utility functions. </p>
+<p>Get the x/y distance between two poses</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pose1</td><td>First pose </td></tr>
+    <tr><td class="paramname">pose2</td><td>Second pose </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="aa1af512138bf2ac8f6d199ba2761a918" name="aa1af512138bf2ac8f6d199ba2761a918"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa1af512138bf2ac8f6d199ba2761a918">&#9670;&#160;</a></span>convert()</h2>
 
@@ -464,6 +534,33 @@ template&lt;typename T = PerceptionBase&gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A vector with the subset of perceptions that are <a class="el" href="classeasynav_1_1PointPerception.html">PointPerception</a>. </dd></dl>
+
+</div>
+</div>
+<a id="aaf7b2449dfa550dee63301e3d721ab3a" name="aaf7b2449dfa550dee63301e3d721ab3a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaf7b2449dfa550dee63301e3d721ab3a">&#9670;&#160;</a></span>norm_angle()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double norm_angle </td>
+          <td>(</td>
+          <td class="paramtype">const double</td>          <td class="paramname"><span class="paramname"><em>angle</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Angle normalization to [-pi, pi) range (in radians) </p>
 
 </div>
 </div>

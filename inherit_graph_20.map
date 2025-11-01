@@ -1,3 +1,13 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classstatic_01std_1_1unique__ptr_3_01RTTFBuffer_01_4.html" title=" " alt="" coords="5,5,176,31"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,104,53,130"/>
+<area shape="rect" id="Node000001" href="$classGoalManagerTestCase.html" title=" " alt="" coords="102,5,256,31"/>
+<area shape="poly" id="edge23_Node000000_Node000001" title=" " alt="" coords="46,90,70,64,99,40,121,29,123,34,102,44,73,68,50,94"/>
+<area shape="rect" id="Node000002" href="$classNavStateTest.html" title=" " alt="" coords="128,55,230,80"/>
+<area shape="poly" id="edge24_Node000000_Node000002" title=" " alt="" coords="66,101,100,89,133,78,134,83,102,94,68,106"/>
+<area shape="rect" id="Node000003" href="$classPerceptionsOpsTest.html" title=" " alt="" coords="109,104,249,130"/>
+<area shape="poly" id="edge25_Node000000_Node000003" title=" " alt="" coords="69,114,108,114,108,120,69,120"/>
+<area shape="rect" id="Node000004" href="$classPerceptionsTestCase.html" title=" " alt="" coords="106,153,252,179"/>
+<area shape="poly" id="edge26_Node000000_Node000004" title=" " alt="" coords="68,128,102,140,134,150,133,155,100,145,66,133"/>
+<area shape="rect" id="Node000005" href="$classSensorsNodeTestCase.html" title=" " alt="" coords="101,203,257,228"/>
+<area shape="poly" id="edge27_Node000000_Node000005" title=" " alt="" coords="50,140,73,166,102,189,123,200,121,204,99,194,70,170,46,144"/>
 </map>

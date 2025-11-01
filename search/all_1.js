@@ -1,10 +1,10 @@
 var searchData=
 [
-  ['calculate_5fangle_0',['calculate_angle',['../classeasynav_1_1GoalManager.html#a7bb977b8b2c38af1039172c74d9b5024',1,'easynav::GoalManager']]],
-  ['calculate_5fdistance_1',['calculate_distance',['../classeasynav_1_1GoalManager.html#ab313fc7a32718bc893c0999ae0166936',1,'easynav::GoalManager']]],
+  ['calculate_5fangle_0',['calculate_angle',['../namespaceeasynav.html#a7bb977b8b2c38af1039172c74d9b5024',1,'easynav']]],
+  ['calculate_5fdistance_5fxy_1',['calculate_distance_xy',['../namespaceeasynav.html#aa7ef56a3832b8bb20cdf38c26c8a2308',1,'easynav']]],
   ['callbackreturnt_2',['CallbackReturnT',['../classeasynav_1_1ControllerNode.html#ad09d90f1fe35c9e2f2fd7fc1902312f4',1,'easynav::ControllerNode::CallbackReturnT'],['../classeasynav_1_1LocalizerNode.html#ad09d90f1fe35c9e2f2fd7fc1902312f4',1,'easynav::LocalizerNode::CallbackReturnT'],['../classeasynav_1_1MapsManagerNode.html#ad09d90f1fe35c9e2f2fd7fc1902312f4',1,'easynav::MapsManagerNode::CallbackReturnT'],['../classeasynav_1_1PlannerNode.html#ad09d90f1fe35c9e2f2fd7fc1902312f4',1,'easynav::PlannerNode::CallbackReturnT'],['../classeasynav_1_1SensorsNode.html#ad09d90f1fe35c9e2f2fd7fc1902312f4',1,'easynav::SensorsNode::CallbackReturnT'],['../classeasynav_1_1SystemNode.html#ad09d90f1fe35c9e2f2fd7fc1902312f4',1,'easynav::SystemNode::CallbackReturnT'],['../namespaceeasynav.html#ad09d90f1fe35c9e2f2fd7fc1902312f4',1,'easynav::CallbackReturnT']]],
   ['cancel_3',['cancel',['../classeasynav_1_1GoalManagerClient.html#a02d5fa6b14e221f3012a794b905be166',1,'easynav::GoalManagerClient']]],
-  ['check_5fgoals_4',['check_goals',['../classeasynav_1_1GoalManager.html#a3a63cbc52bbc79133fa4672575ab8429',1,'easynav::GoalManager']]],
+  ['check_5fgoals_4',['check_goals',['../classeasynav_1_1GoalManager.html#a973640b1dd03b7f94e17869bd6fe2716',1,'easynav::GoalManager']]],
   ['collapse_5',['collapse',['../classeasynav_1_1PointPerceptionsOpsView.html#ae192852ecce7234ffbc49981ca25284d',1,'easynav::PointPerceptionsOpsView']]],
   ['content_6',['content',['../classDummyPerception.html#acaab7594675ee66e7abbf9eb5f3f37b1',1,'DummyPerception']]],
   ['controllernode_7',['ControllerNode',['../classeasynav_1_1ControllerNode.html',1,'ControllerNode'],['../classeasynav_1_1ControllerNode.html#a6eabdf043c65e5df971001021c63a06f',1,'easynav::ControllerNode::ControllerNode()']]],

@@ -89,6 +89,7 @@ $(function(){ initResizable(false); });
 <div id="doc-content">
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="classeasynav_1_1GoalManager-members.html">List of all members</a>  </div>
@@ -101,6 +102,12 @@ $(function(){ initResizable(false); });
 
 <p><code>#include &lt;<a class="el" href="GoalManager_8hpp_source.html">GoalManager.hpp</a>&gt;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structeasynav_1_1GoalManager_1_1GoalTolerance.html">GoalTolerance</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A structure to represent the goal tolerances.  <a href="structeasynav_1_1GoalManager_1_1GoalTolerance.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
 <tr class="memitem:a5d74787dedbc4e11c1ab15bf487e61f8" id="r_a5d74787dedbc4e11c1ab15bf487e61f8"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5d74787dedbc4e11c1ab15bf487e61f8">State</a> { <a class="el" href="#a5d74787dedbc4e11c1ab15bf487e61f8aa5daf7f2ebbba4975d61dab1c40188c7">IDLE</a>
@@ -111,15 +118,9 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a7bb977b8b2c38af1039172c74d9b5024" id="r_a7bb977b8b2c38af1039172c74d9b5024"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7bb977b8b2c38af1039172c74d9b5024">calculate_angle</a> (const geometry_msgs::msg::Pose &amp;pose1, const geometry_msgs::msg::Pose &amp;pose2)</td></tr>
-<tr class="memdesc:a7bb977b8b2c38af1039172c74d9b5024"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get Distance between two poses.  <br /></td></tr>
-<tr class="separator:a7bb977b8b2c38af1039172c74d9b5024"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab313fc7a32718bc893c0999ae0166936" id="r_ab313fc7a32718bc893c0999ae0166936"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab313fc7a32718bc893c0999ae0166936">calculate_distance</a> (const geometry_msgs::msg::Pose &amp;pose1, const geometry_msgs::msg::Pose &amp;pose2)</td></tr>
-<tr class="memdesc:ab313fc7a32718bc893c0999ae0166936"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get Distance between two poses.  <br /></td></tr>
-<tr class="separator:ab313fc7a32718bc893c0999ae0166936"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3a63cbc52bbc79133fa4672575ab8429" id="r_a3a63cbc52bbc79133fa4672575ab8429"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3a63cbc52bbc79133fa4672575ab8429">check_goals</a> (const geometry_msgs::msg::Pose &amp;current_pose, double position_tolerance, double angle_tolerance)</td></tr>
-<tr class="memdesc:a3a63cbc52bbc79133fa4672575ab8429"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the robot is currently at the first goal.  <br /></td></tr>
-<tr class="separator:a3a63cbc52bbc79133fa4672575ab8429"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a973640b1dd03b7f94e17869bd6fe2716" id="r_a973640b1dd03b7f94e17869bd6fe2716"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a973640b1dd03b7f94e17869bd6fe2716">check_goals</a> (const geometry_msgs::msg::Pose &amp;current_pose, const <a class="el" href="structeasynav_1_1GoalManager_1_1GoalTolerance.html">GoalTolerance</a> &amp;goal_tolerance)</td></tr>
+<tr class="memdesc:a973640b1dd03b7f94e17869bd6fe2716"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the robot is currently at the first goal.  <br /></td></tr>
+<tr class="separator:a973640b1dd03b7f94e17869bd6fe2716"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a359cd66ef7d1c77e72245ad7e592c993" id="r_a359cd66ef7d1c77e72245ad7e592c993"><td class="memItemLeft" align="right" valign="top">nav_msgs::msg::Goals&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a359cd66ef7d1c77e72245ad7e592c993">get_goals</a> () const</td></tr>
 <tr class="memdesc:a359cd66ef7d1c77e72245ad7e592c993"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get current goals.  <br /></td></tr>
 <tr class="separator:a359cd66ef7d1c77e72245ad7e592c993"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -208,68 +209,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a7bb977b8b2c38af1039172c74d9b5024" name="a7bb977b8b2c38af1039172c74d9b5024"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7bb977b8b2c38af1039172c74d9b5024">&#9670;&#160;</a></span>calculate_angle()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">double calculate_angle </td>
-          <td>(</td>
-          <td class="paramtype">const geometry_msgs::msg::Pose &amp;</td>          <td class="paramname"><span class="paramname"><em>pose1</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const geometry_msgs::msg::Pose &amp;</td>          <td class="paramname"><span class="paramname"><em>pose2</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Get Distance between two poses. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">pose1</td><td>First pose </td></tr>
-    <tr><td class="paramname">pose2</td><td>Second pose </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="ab313fc7a32718bc893c0999ae0166936" name="ab313fc7a32718bc893c0999ae0166936"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab313fc7a32718bc893c0999ae0166936">&#9670;&#160;</a></span>calculate_distance()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">double calculate_distance </td>
-          <td>(</td>
-          <td class="paramtype">const geometry_msgs::msg::Pose &amp;</td>          <td class="paramname"><span class="paramname"><em>pose1</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const geometry_msgs::msg::Pose &amp;</td>          <td class="paramname"><span class="paramname"><em>pose2</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Get Distance between two poses. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">pose1</td><td>First pose </td></tr>
-    <tr><td class="paramname">pose2</td><td>Second pose </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a3a63cbc52bbc79133fa4672575ab8429" name="a3a63cbc52bbc79133fa4672575ab8429"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3a63cbc52bbc79133fa4672575ab8429">&#9670;&#160;</a></span>check_goals()</h2>
+<a id="a973640b1dd03b7f94e17869bd6fe2716" name="a973640b1dd03b7f94e17869bd6fe2716"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a973640b1dd03b7f94e17869bd6fe2716">&#9670;&#160;</a></span>check_goals()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -282,12 +223,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">double</td>          <td class="paramname"><span class="paramname"><em>position_tolerance</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double</td>          <td class="paramname"><span class="paramname"><em>angle_tolerance</em></span>&#160;)</td>
+          <td class="paramtype">const <a class="el" href="structeasynav_1_1GoalManager_1_1GoalTolerance.html">GoalTolerance</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>goal_tolerance</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -297,8 +233,7 @@ Public Member Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">current_pose</td><td>Current pose of the robot. </td></tr>
-    <tr><td class="paramname">position_tolerance</td><td>Maximum allowed positional error (meters). </td></tr>
-    <tr><td class="paramname">angle_tolerance</td><td>Maximum allowed angular error (radians). </td></tr>
+    <tr><td class="paramname">goal_tolerance</td><td>Maximum allowed error for the goal position and orientation. </td></tr>
   </table>
   </dd>
 </dl>
