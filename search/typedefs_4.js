@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['registry_0',['Registry',['../namespaceeasynav.html#a1d8ab0a1bd4d1fa128c20df0a5f594e2',1,'easynav']]]
+  ['perceptionbaseptr_0',['PerceptionBasePtr',['../namespaceeasynav.html#a4d10e036523aceea280b71de936e1c41',1,'easynav']]],
+  ['pointperceptions_1',['PointPerceptions',['../namespaceeasynav.html#aa872928bf2fa4fde3e32434f0a95fa15',1,'easynav']]]
 ];

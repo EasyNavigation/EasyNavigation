@@ -1,11 +1,13 @@
 <map id="PerceptionBase" name="PerceptionBase">
-<area shape="rect" id="Node000001" title="Abstract base class for representing a single sensor perception." alt="" coords="222,5,335,31"/>
+<area shape="rect" id="Node000001" title="Abstract base class for representing a single sensor perception." alt="" coords="299,5,412,31"/>
 <area shape="rect" id="Node000002" href="$classDummyPerception.html" title=" " alt="" coords="5,79,133,105"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="229,39,106,81,104,76,228,34"/>
-<area shape="rect" id="Node000003" href="$classeasynav_1_1IMUPerception.html" title="Represents a single IMU perception from a sensor." alt="" coords="156,79,264,105"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="258,44,224,80,220,77,255,40"/>
-<area shape="rect" id="Node000004" href="$classeasynav_1_1ImagePerception.html" title="Represents a single image perception from a sensor." alt="" coords="288,79,407,105"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="302,40,338,77,334,80,298,44"/>
-<area shape="rect" id="Node000005" href="$classeasynav_1_1PointPerception.html" title="Concrete perception class for 3D point cloud data." alt="" coords="431,79,544,105"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="329,34,453,76,451,81,327,39"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="293,38,119,81,117,76,292,33"/>
+<area shape="rect" id="Node000003" href="$classeasynav_1_1GNSSPerception.html" title="Represents a single GNSS perception from a sensor." alt="" coords="156,79,278,105"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="320,41,242,81,239,76,317,36"/>
+<area shape="rect" id="Node000004" href="$classeasynav_1_1IMUPerception.html" title="Represents a single IMU perception from a sensor." alt="" coords="302,79,410,105"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="358,46,358,79,353,79,353,46"/>
+<area shape="rect" id="Node000005" href="$classeasynav_1_1ImagePerception.html" title="Represents a single image perception from a sensor." alt="" coords="433,79,553,105"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="394,36,471,76,468,81,391,41"/>
+<area shape="rect" id="Node000006" href="$classeasynav_1_1PointPerception.html" title="Concrete perception class for 3D point cloud data." alt="" coords="576,79,690,105"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="418,33,586,76,585,81,416,38"/>
 </map>

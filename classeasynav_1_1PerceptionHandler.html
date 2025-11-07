@@ -104,15 +104,17 @@ Inheritance diagram for PerceptionHandler:</div>
 <div class="dyncontent">
 <div class="center"><img src="classeasynav_1_1PerceptionHandler__inherit__graph.png" border="0" usemap="#aPerceptionHandler_inherit__map" alt="Inheritance graph"/></div>
 <map name="aPerceptionHandler_inherit__map" id="aPerceptionHandler_inherit__map">
-<area shape="rect" title="Abstract base interface for group&#45;specific perception handlers." alt="" coords="243,5,371,31"/>
-<area shape="rect" href="classDummyHandler.html" title=" " alt="" coords="5,79,116,105"/>
-<area shape="poly" title=" " alt="" coords="251,38,103,81,102,76,250,33"/>
-<area shape="rect" href="classeasynav_1_1IMUPerceptionHandler.html" title="Handles the creation and updating of IMUPerception instances from sensor_msgs::msg::Imu messages." alt="" coords="140,79,293,105"/>
-<area shape="poly" title=" " alt="" coords="282,43,233,81,230,77,278,39"/>
-<area shape="rect" href="classeasynav_1_1ImagePerceptionHandler.html" title="Handles the creation and updating of ImagePerception instances from sensor_msgs::msg::Image messages." alt="" coords="317,79,481,105"/>
-<area shape="poly" title=" " alt="" coords="336,39,385,77,382,81,333,43"/>
-<area shape="rect" href="classeasynav_1_1PointPerceptionHandler.html" title="PerceptionHandler implementation for sensors producing point&#45;based data." alt="" coords="505,79,664,105"/>
-<area shape="poly" title=" " alt="" coords="369,33,538,76,537,81,368,38"/>
+<area shape="rect" title="Abstract base interface for group&#45;specific perception handlers." alt="" coords="5,104,134,130"/>
+<area shape="rect" href="classDummyHandler.html" title=" " alt="" coords="210,5,320,31"/>
+<area shape="poly" title=" " alt="" coords="98,92,136,65,181,40,208,29,210,34,183,45,139,70,101,96"/>
+<area shape="rect" href="classeasynav_1_1GNSSPerceptionHandler.html" title="Handles the creation and updating of GNSSPerception instances from sensor_msgs::msg::NavSatFix messag..." alt="" coords="182,55,348,80"/>
+<area shape="poly" title=" " alt="" coords="138,97,210,78,212,84,139,102"/>
+<area shape="rect" href="classeasynav_1_1IMUPerceptionHandler.html" title="Handles the creation and updating of IMUPerception instances from sensor_msgs::msg::Imu messages." alt="" coords="188,104,342,130"/>
+<area shape="poly" title=" " alt="" coords="149,114,188,114,188,120,149,120"/>
+<area shape="rect" href="classeasynav_1_1ImagePerceptionHandler.html" title="Handles the creation and updating of ImagePerception instances from sensor_msgs::msg::Image messages." alt="" coords="183,153,347,179"/>
+<area shape="poly" title=" " alt="" coords="139,132,212,150,210,155,138,137"/>
+<area shape="rect" href="classeasynav_1_1PointPerceptionHandler.html" title="PerceptionHandler implementation for sensors producing point&#45;based data." alt="" coords="186,203,344,228"/>
+<area shape="poly" title=" " alt="" coords="101,137,139,164,183,189,210,200,208,205,181,194,136,169,98,142"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -192,7 +194,7 @@ Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Shared pointer to a new instance of a class derived from <a class="el" href="classeasynav_1_1PerceptionBase.html">PerceptionBase</a>. </dd></dl>
 
-<p>Implemented in <a class="el" href="classDummyHandler.html#a80cc0e0ccac058cc66c6894f2e02e207">DummyHandler</a>, <a class="el" href="classeasynav_1_1ImagePerceptionHandler.html#a1801b9e6bdf60e89fdec38476d3718dd">ImagePerceptionHandler</a>, <a class="el" href="classeasynav_1_1IMUPerceptionHandler.html#a1801b9e6bdf60e89fdec38476d3718dd">IMUPerceptionHandler</a>, and <a class="el" href="classeasynav_1_1PointPerceptionHandler.html#a1801b9e6bdf60e89fdec38476d3718dd">PointPerceptionHandler</a>.</p>
+<p>Implemented in <a class="el" href="classDummyHandler.html#a80cc0e0ccac058cc66c6894f2e02e207">DummyHandler</a>, <a class="el" href="classeasynav_1_1GNSSPerceptionHandler.html#a1801b9e6bdf60e89fdec38476d3718dd">GNSSPerceptionHandler</a>, <a class="el" href="classeasynav_1_1ImagePerceptionHandler.html#a1801b9e6bdf60e89fdec38476d3718dd">ImagePerceptionHandler</a>, <a class="el" href="classeasynav_1_1IMUPerceptionHandler.html#a1801b9e6bdf60e89fdec38476d3718dd">IMUPerceptionHandler</a>, and <a class="el" href="classeasynav_1_1PointPerceptionHandler.html#a1801b9e6bdf60e89fdec38476d3718dd">PointPerceptionHandler</a>.</p>
 
 </div>
 </div>
@@ -252,7 +254,7 @@ Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Shared pointer to the created subscription. </dd></dl>
 
-<p>Implemented in <a class="el" href="classDummyHandler.html#a2a93b1965c424a99e3cb03b164a59fb8">DummyHandler</a>, <a class="el" href="classeasynav_1_1ImagePerceptionHandler.html#a891643b72cfcd8643ba35d62faff8cce">ImagePerceptionHandler</a>, <a class="el" href="classeasynav_1_1IMUPerceptionHandler.html#a891643b72cfcd8643ba35d62faff8cce">IMUPerceptionHandler</a>, and <a class="el" href="classeasynav_1_1PointPerceptionHandler.html#a891643b72cfcd8643ba35d62faff8cce">PointPerceptionHandler</a>.</p>
+<p>Implemented in <a class="el" href="classDummyHandler.html#a2a93b1965c424a99e3cb03b164a59fb8">DummyHandler</a>, <a class="el" href="classeasynav_1_1GNSSPerceptionHandler.html#a891643b72cfcd8643ba35d62faff8cce">GNSSPerceptionHandler</a>, <a class="el" href="classeasynav_1_1ImagePerceptionHandler.html#a891643b72cfcd8643ba35d62faff8cce">ImagePerceptionHandler</a>, <a class="el" href="classeasynav_1_1IMUPerceptionHandler.html#a891643b72cfcd8643ba35d62faff8cce">IMUPerceptionHandler</a>, and <a class="el" href="classeasynav_1_1PointPerceptionHandler.html#a891643b72cfcd8643ba35d62faff8cce">PointPerceptionHandler</a>.</p>
 
 </div>
 </div>
@@ -283,7 +285,7 @@ Public Member Functions</h2></td></tr>
 <p>This identifier is used to match sensors to the appropriate handler. Example: <code>"points"</code>, <code>"image"</code>, <code>"dummy"</code>.</p>
 <dl class="section return"><dt>Returns</dt><dd>String representing the group name. </dd></dl>
 
-<p>Implemented in <a class="el" href="classDummyHandler.html#a4dcf237e516e7aa43aff18fffd22a9a2">DummyHandler</a>, <a class="el" href="classeasynav_1_1ImagePerceptionHandler.html#a4dcf237e516e7aa43aff18fffd22a9a2">ImagePerceptionHandler</a>, <a class="el" href="classeasynav_1_1IMUPerceptionHandler.html#a4dcf237e516e7aa43aff18fffd22a9a2">IMUPerceptionHandler</a>, and <a class="el" href="classeasynav_1_1PointPerceptionHandler.html#a4dcf237e516e7aa43aff18fffd22a9a2">PointPerceptionHandler</a>.</p>
+<p>Implemented in <a class="el" href="classDummyHandler.html#a4dcf237e516e7aa43aff18fffd22a9a2">DummyHandler</a>, <a class="el" href="classeasynav_1_1GNSSPerceptionHandler.html#a4dcf237e516e7aa43aff18fffd22a9a2">GNSSPerceptionHandler</a>, <a class="el" href="classeasynav_1_1ImagePerceptionHandler.html#a4dcf237e516e7aa43aff18fffd22a9a2">ImagePerceptionHandler</a>, <a class="el" href="classeasynav_1_1IMUPerceptionHandler.html#a4dcf237e516e7aa43aff18fffd22a9a2">IMUPerceptionHandler</a>, and <a class="el" href="classeasynav_1_1PointPerceptionHandler.html#a4dcf237e516e7aa43aff18fffd22a9a2">PointPerceptionHandler</a>.</p>
 
 </div>
 </div>

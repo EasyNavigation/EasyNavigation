@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['perceptionbaseptr_0',['PerceptionBasePtr',['../namespaceeasynav.html#a4d10e036523aceea280b71de936e1c41',1,'easynav']]],
-  ['pointperceptions_1',['PointPerceptions',['../namespaceeasynav.html#aa872928bf2fa4fde3e32434f0a95fa15',1,'easynav']]]
+  ['imageperceptions_0',['ImagePerceptions',['../namespaceeasynav.html#a1551c0f2967fd745b9d74705c0b367d3',1,'easynav']]],
+  ['imuperceptions_1',['IMUPerceptions',['../namespaceeasynav.html#a69eec3e3b40d1fd642ff49b3c67bf46d',1,'easynav']]]
 ];

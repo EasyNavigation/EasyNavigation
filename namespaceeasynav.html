@@ -110,6 +110,12 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classeasynav_1_1DummyPlanner.html">DummyPlanner</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A default "do-nothing" implementation of PlannerMethodBase.  <a href="classeasynav_1_1DummyPlanner.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classeasynav_1_1GNSSPerception.html">GNSSPerception</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a single GNSS perception from a sensor.  <a href="classeasynav_1_1GNSSPerception.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classeasynav_1_1GNSSPerceptionHandler.html">GNSSPerceptionHandler</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles the creation and updating of <a class="el" href="classeasynav_1_1GNSSPerception.html" title="Represents a single GNSS perception from a sensor.">GNSSPerception</a> instances from sensor_msgs::msg::NavSatFix messages.  <a href="classeasynav_1_1GNSSPerceptionHandler.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classeasynav_1_1GoalManager.html">GoalManager</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles navigation goals, their lifecycle, and command interface.  <a href="classeasynav_1_1GoalManager.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -180,6 +186,9 @@ Classes</h2></td></tr>
 Typedefs</h2></td></tr>
 <tr class="memitem:ad09d90f1fe35c9e2f2fd7fc1902312f4" id="r_ad09d90f1fe35c9e2f2fd7fc1902312f4"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad09d90f1fe35c9e2f2fd7fc1902312f4">CallbackReturnT</a> = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn</td></tr>
 <tr class="separator:ad09d90f1fe35c9e2f2fd7fc1902312f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd2a844526522d80f5d0a387062bfc7e" id="r_abd2a844526522d80f5d0a387062bfc7e"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abd2a844526522d80f5d0a387062bfc7e">GNSSPerceptions</a></td></tr>
+<tr class="memdesc:abd2a844526522d80f5d0a387062bfc7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alias for a vector of shared pointers to <a class="el" href="classeasynav_1_1GNSSPerception.html" title="Represents a single GNSS perception from a sensor.">GNSSPerception</a> objects.  <br /></td></tr>
+<tr class="separator:abd2a844526522d80f5d0a387062bfc7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1551c0f2967fd745b9d74705c0b367d3" id="r_a1551c0f2967fd745b9d74705c0b367d3"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1551c0f2967fd745b9d74705c0b367d3">ImagePerceptions</a></td></tr>
 <tr class="memdesc:a1551c0f2967fd745b9d74705c0b367d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alias for a vector of shared pointers to <a class="el" href="classeasynav_1_1ImagePerception.html" title="Represents a single image perception from a sensor.">ImagePerception</a> objects.  <br /></td></tr>
 <tr class="separator:a1551c0f2967fd745b9d74705c0b367d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -192,8 +201,8 @@ Typedefs</h2></td></tr>
 <tr class="memitem:aa872928bf2fa4fde3e32434f0a95fa15" id="r_aa872928bf2fa4fde3e32434f0a95fa15"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa872928bf2fa4fde3e32434f0a95fa15">PointPerceptions</a></td></tr>
 <tr class="memdesc:aa872928bf2fa4fde3e32434f0a95fa15"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alias for a vector of shared pointers to <a class="el" href="classeasynav_1_1PointPerception.html">PointPerception</a> objects.  <br /></td></tr>
 <tr class="separator:aa872928bf2fa4fde3e32434f0a95fa15"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1d8ab0a1bd4d1fa128c20df0a5f594e2" id="r_a1d8ab0a1bd4d1fa128c20df0a5f594e2"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1d8ab0a1bd4d1fa128c20df0a5f594e2">Registry</a></td></tr>
-<tr class="separator:a1d8ab0a1bd4d1fa128c20df0a5f594e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa8cfa96994d82bf82988d088706e5587" id="r_aa8cfa96994d82bf82988d088706e5587"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa8cfa96994d82bf82988d088706e5587">Registry</a></td></tr>
+<tr class="separator:aa8cfa96994d82bf82988d088706e5587"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
@@ -258,6 +267,25 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="abd2a844526522d80f5d0a387062bfc7e" name="abd2a844526522d80f5d0a387062bfc7e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abd2a844526522d80f5d0a387062bfc7e">&#9670;&#160;</a></span>GNSSPerceptions</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="#abd2a844526522d80f5d0a387062bfc7e">GNSSPerceptions</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line"> </div>
+<div class="line">  std::vector&lt;std::shared_ptr&lt;GNSSPerception&gt;&gt;</div>
+</div><!-- fragment -->
+<p>Alias for a vector of shared pointers to <a class="el" href="classeasynav_1_1GNSSPerception.html" title="Represents a single GNSS perception from a sensor.">GNSSPerception</a> objects. </p>
+<p>The container can represent a time-ordered or batched collection, depending on producer logic. </p>
 
 </div>
 </div>
@@ -333,22 +361,24 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a1d8ab0a1bd4d1fa128c20df0a5f594e2" name="a1d8ab0a1bd4d1fa128c20df0a5f594e2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1d8ab0a1bd4d1fa128c20df0a5f594e2">&#9670;&#160;</a></span>Registry</h2>
+<a id="aa8cfa96994d82bf82988d088706e5587" name="aa8cfa96994d82bf82988d088706e5587"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa8cfa96994d82bf82988d088706e5587">&#9670;&#160;</a></span>Registry</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="#a1d8ab0a1bd4d1fa128c20df0a5f594e2">Registry</a></td>
+          <td class="memname">using <a class="el" href="#aa8cfa96994d82bf82988d088706e5587">Registry</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line"> std::tuple&lt;</div>
 <div class="line">  <a class="code hl_class" href="classeasynav_1_1ImagePerception.html">easynav::ImagePerception</a>,</div>
 <div class="line">  <a class="code hl_class" href="classeasynav_1_1IMUPerception.html">easynav::IMUPerception</a>,</div>
+<div class="line">  <a class="code hl_class" href="classeasynav_1_1GNSSPerception.html">easynav::GNSSPerception</a>,</div>
 <div class="line">  <a class="code hl_class" href="classeasynav_1_1PointPerception.html">easynav::PointPerception</a></div>
 <div class="line">&gt;</div>
+<div class="ttc" id="aclasseasynav_1_1GNSSPerception_html"><div class="ttname"><a href="classeasynav_1_1GNSSPerception.html">easynav::GNSSPerception</a></div><div class="ttdoc">Represents a single GNSS perception from a sensor.</div><div class="ttdef"><b>Definition</b> GNSSPerception.hpp:49</div></div>
 <div class="ttc" id="aclasseasynav_1_1IMUPerception_html"><div class="ttname"><a href="classeasynav_1_1IMUPerception.html">easynav::IMUPerception</a></div><div class="ttdoc">Represents a single IMU perception from a sensor.</div><div class="ttdef"><b>Definition</b> IMUPerception.hpp:49</div></div>
 <div class="ttc" id="aclasseasynav_1_1ImagePerception_html"><div class="ttname"><a href="classeasynav_1_1ImagePerception.html">easynav::ImagePerception</a></div><div class="ttdoc">Represents a single image perception from a sensor.</div><div class="ttdef"><b>Definition</b> ImagePerception.hpp:50</div></div>
 <div class="ttc" id="aclasseasynav_1_1PointPerception_html"><div class="ttname"><a href="classeasynav_1_1PointPerception.html">easynav::PointPerception</a></div><div class="ttdoc">Concrete perception class for 3D point cloud data.</div><div class="ttdef"><b>Definition</b> PointPerception.hpp:83</div></div>
