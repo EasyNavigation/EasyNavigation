@@ -4,7 +4,7 @@ var searchData=
   ['calculate_5fdistance_5fxy_1',['calculate_distance_xy',['../namespaceeasynav.html#aa7ef56a3832b8bb20cdf38c26c8a2308',1,'easynav']]],
   ['cancel_2',['cancel',['../classeasynav_1_1GoalManagerClient.html#a02d5fa6b14e221f3012a794b905be166',1,'easynav::GoalManagerClient']]],
   ['check_5fgoals_3',['check_goals',['../classeasynav_1_1GoalManager.html#a973640b1dd03b7f94e17869bd6fe2716',1,'easynav::GoalManager']]],
-  ['collapse_4',['collapse',['../classeasynav_1_1PointPerceptionsOpsView.html#ae192852ecce7234ffbc49981ca25284d',1,'easynav::PointPerceptionsOpsView']]],
+  ['collapse_4',['collapse',['../classeasynav_1_1PointPerceptionsOpsView.html#ab017857ff9f9d36cc58ca71a32aeaf23',1,'easynav::PointPerceptionsOpsView']]],
   ['controllernode_5',['ControllerNode',['../classeasynav_1_1ControllerNode.html#a6eabdf043c65e5df971001021c63a06f',1,'easynav::ControllerNode']]],
   ['convert_6',['convert',['../namespaceeasynav.html#aa1af512138bf2ac8f6d199ba2761a918',1,'easynav']]],
   ['create_7',['create',['../classeasynav_1_1GNSSPerceptionHandler.html#a1801b9e6bdf60e89fdec38476d3718dd',1,'easynav::GNSSPerceptionHandler::create()'],['../classeasynav_1_1ImagePerceptionHandler.html#a1801b9e6bdf60e89fdec38476d3718dd',1,'easynav::ImagePerceptionHandler::create()'],['../classeasynav_1_1IMUPerceptionHandler.html#a1801b9e6bdf60e89fdec38476d3718dd',1,'easynav::IMUPerceptionHandler::create()'],['../classeasynav_1_1PerceptionHandler.html#a7c0b7d9eb779ed511d322f590120e7ea',1,'easynav::PerceptionHandler::create()'],['../classeasynav_1_1PointPerceptionHandler.html#a1801b9e6bdf60e89fdec38476d3718dd',1,'easynav::PointPerceptionHandler::create()'],['../classDummyHandler.html#a80cc0e0ccac058cc66c6894f2e02e207',1,'DummyHandler::create()']]],

@@ -1,38 +1,42 @@
 <map id="easynav_common/include/easynav_common/types/PointPerception.hpp" name="easynav_common/include/easynav_common/types/PointPerception.hpp">
-<area shape="rect" id="Node000001" title="Defines data structures and utilities for representing and processing point&#45;based sensor perceptions." alt="" coords="596,5,767,61"/>
+<area shape="rect" id="Node000001" title="Defines data structures and utilities for representing and processing point&#45;based sensor perceptions." alt="" coords="654,5,826,61"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,205,59,231"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="596,42,516,50,422,63,322,83,225,112,179,131,134,154,62,198,60,194,132,149,176,126,223,106,321,78,421,58,515,45,595,37"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="654,40,563,47,455,59,339,80,225,112,179,130,134,153,62,198,59,194,131,149,176,126,223,106,337,75,454,54,563,41,654,35"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="745,116,802,142"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="710,60,753,104,750,108,706,63"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="752,61,767,101,762,103,747,62"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="826,116,892,142"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="734,59,824,107,821,111,731,64"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="916,109,1052,150"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="768,59,907,101,905,106,767,64"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="1076,116,1265,142"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="768,48,1093,110,1092,116,767,54"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="1289,116,1458,142"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="768,41,999,67,1278,106,1301,110,1300,116,1277,112,998,73,767,46"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="82,205,200,231"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="595,45,456,67,379,86,305,111,266,131,228,153,168,197,165,193,225,149,263,126,303,107,378,81,455,62,595,39"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="225,205,343,231"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="595,37,535,43,470,56,405,78,374,93,346,111,328,128,313,149,294,192,289,189,309,147,324,125,342,107,371,88,403,73,469,50,535,38,595,32"/>
-<area shape="rect" id="Node000010" title=" " alt="" coords="1482,116,1606,142"/>
-<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="768,36,1078,57,1274,78,1470,106,1487,110,1486,115,1469,112,1273,83,1078,63,767,41"/>
-<area shape="rect" id="Node000011" title=" " alt="" coords="368,198,528,238"/>
-<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="649,63,486,190,483,186,645,59"/>
-<area shape="rect" id="Node000012" title=" " alt="" coords="552,198,712,238"/>
-<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="663,63,650,85,640,110,633,147,632,182,627,182,628,146,635,108,645,83,659,60"/>
-<area shape="rect" id="Node000013" title=" " alt="" coords="736,205,845,231"/>
-<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="679,62,678,105,682,127,690,148,715,176,746,196,743,200,711,180,686,151,677,129,673,105,674,62"/>
-<area shape="rect" id="Node000014" title=" " alt="" coords="870,198,1031,238"/>
-<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="689,61,705,106,718,128,735,148,755,160,784,172,856,193,854,198,782,177,752,164,732,152,714,131,700,108,684,63"/>
-<area shape="rect" id="Node000015" href="$Perceptions_8hpp.html" title="Defines data structures and utilities for representing and processing sensor perceptions." alt="" coords="355,109,517,150"/>
-<area shape="poly" id="edge14_Node000001_Node000015" title=" " alt="" coords="611,64,502,106,500,101,609,59"/>
-<area shape="poly" id="edge15_Node000015_Node000002" title=" " alt="" coords="355,142,221,163,145,179,71,200,69,201,67,196,70,195,144,174,220,157,355,136"/>
-<area shape="poly" id="edge18_Node000015_Node000008" title=" " alt="" coords="370,153,198,203,196,198,368,148"/>
-<area shape="poly" id="edge19_Node000015_Node000009" title=" " alt="" coords="403,153,320,200,317,195,400,148"/>
-<area shape="poly" id="edge16_Node000015_Node000011" title=" " alt="" coords="441,150,446,182,441,183,436,151"/>
-<area shape="poly" id="edge17_Node000015_Node000012" title=" " alt="" coords="482,148,575,189,573,194,479,153"/>
-<area shape="poly" id="edge20_Node000015_Node000013" title=" " alt="" coords="518,146,725,195,736,198,734,203,723,200,516,151"/>
-<area shape="poly" id="edge21_Node000015_Node000014" title=" " alt="" coords="517,140,855,195,854,200,517,145"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="776,59,834,105,830,109,773,64"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="915,116,1037,142"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="809,59,933,108,931,113,807,64"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="1061,116,1254,142"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="827,51,1089,110,1088,115,825,56"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="1278,109,1415,150"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="826,42,1023,67,1264,106,1263,111,1022,72,826,47"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="1439,116,1628,142"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="826,39,1095,66,1427,106,1455,111,1454,116,1426,112,1094,71,826,45"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="1652,116,1820,142"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="826,36,1182,58,1410,79,1640,106,1666,111,1665,116,1640,112,1410,84,1181,64,826,41"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="82,205,200,231"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="654,41,578,49,489,62,396,82,305,111,266,130,228,153,168,197,165,193,225,148,263,125,303,107,394,77,488,57,577,43,654,36"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="225,205,343,231"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="654,45,570,55,480,69,399,88,368,99,346,111,327,128,313,149,294,191,289,189,308,146,323,125,342,107,366,94,398,83,479,64,569,49,654,39"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="1844,116,1969,142"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="826,32,1009,37,1260,48,1545,70,1690,86,1832,106,1850,110,1849,115,1832,112,1690,92,1544,75,1259,53,1009,42,826,38"/>
+<area shape="rect" id="Node000013" title=" " alt="" coords="368,198,528,238"/>
+<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="698,64,493,191,491,187,696,59"/>
+<area shape="rect" id="Node000014" title=" " alt="" coords="552,198,712,238"/>
+<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="716,63,680,110,660,148,646,184,641,182,655,146,675,108,712,60"/>
+<area shape="rect" id="Node000015" title=" " alt="" coords="736,205,845,231"/>
+<area shape="poly" id="edge14_Node000001_Node000015" title=" " alt="" coords="716,63,701,83,690,104,685,127,690,148,714,176,745,196,742,201,711,180,686,151,680,127,685,103,696,80,711,60"/>
+<area shape="rect" id="Node000016" title=" " alt="" coords="870,198,1031,238"/>
+<area shape="poly" id="edge15_Node000001_Node000016" title=" " alt="" coords="732,62,724,106,726,128,735,148,749,157,778,167,857,191,856,196,776,173,747,161,731,151,721,129,719,105,727,61"/>
+<area shape="rect" id="Node000017" href="$Perceptions_8hpp.html" title="Defines data structures and utilities for representing and processing sensor perceptions." alt="" coords="355,109,517,150"/>
+<area shape="poly" id="edge16_Node000001_Node000017" title=" " alt="" coords="654,64,515,106,514,101,653,58"/>
+<area shape="poly" id="edge17_Node000017_Node000002" title=" " alt="" coords="355,142,221,163,145,179,71,200,69,201,67,196,70,195,144,174,220,157,355,136"/>
+<area shape="poly" id="edge20_Node000017_Node000010" title=" " alt="" coords="370,153,198,203,196,198,368,148"/>
+<area shape="poly" id="edge21_Node000017_Node000011" title=" " alt="" coords="403,153,320,200,317,195,400,148"/>
+<area shape="poly" id="edge18_Node000017_Node000013" title=" " alt="" coords="441,150,446,182,441,183,436,151"/>
+<area shape="poly" id="edge19_Node000017_Node000014" title=" " alt="" coords="482,148,575,189,573,194,479,153"/>
+<area shape="poly" id="edge22_Node000017_Node000015" title=" " alt="" coords="518,146,725,195,736,198,734,203,723,200,516,151"/>
+<area shape="poly" id="edge23_Node000017_Node000016" title=" " alt="" coords="517,140,855,195,854,200,517,145"/>
 </map>
