@@ -116,75 +116,74 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="preprocessor">#include &lt;optional&gt;</span></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="preprocessor">#include &quot;cv_bridge/cv_bridge.hpp&quot;</span></div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="preprocessor">#include &quot;rclcpp_lifecycle/lifecycle_node.hpp&quot;</span></div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="preprocessor">#include &quot;<a class="code" href="Perceptions_8hpp.html">easynav_common/types/Perceptions.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceeasynav.html">easynav</a></div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>{</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span></div>
-<div class="foldopen" id="foldopen00047" data-start="{" data-end="};">
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno"><a class="line" href="classeasynav_1_1ImagePerception.html">   47</a></span><span class="keyword">class </span><a class="code hl_class" href="classeasynav_1_1ImagePerception.html">ImagePerception</a> : <span class="keyword">public</span> <a class="code hl_class" href="classeasynav_1_1PerceptionBase.html">PerceptionBase</a></div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>{</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="classeasynav_1_1ImagePerception.html#a6a1aeb48d08927d795eb04f9f9800e49">   51</a></span>  <span class="keyword">static</span> <span class="keyword">constexpr</span> std::string_view <a class="code hl_variable" href="classeasynav_1_1ImagePerception.html#a6a1aeb48d08927d795eb04f9f9800e49">default_group_</a> = <span class="stringliteral">&quot;image&quot;</span>;</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span></div>
-<div class="foldopen" id="foldopen00056" data-start="{" data-end="}">
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno"><a class="line" href="classeasynav_1_1ImagePerception.html#a395ec0562b61d102dc90ab55595ac76e">   56</a></span>  <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classeasynav_1_1ImagePerception.html#a395ec0562b61d102dc90ab55595ac76e">supports_msg_type</a>(std::string_view t)</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>  {</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="keywordflow">return</span> t == <span class="stringliteral">&quot;sensor_msgs/msg/Image&quot;</span>;</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>  }</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="preprocessor">#include &quot;cv_bridge/cv_bridge.hpp&quot;</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="preprocessor">#include &quot;rclcpp_lifecycle/lifecycle_node.hpp&quot;</span></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="preprocessor">#include &quot;<a class="code" href="Perceptions_8hpp.html">easynav_common/types/Perceptions.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceeasynav.html">easynav</a></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>{</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span></div>
+<div class="foldopen" id="foldopen00046" data-start="{" data-end="};">
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="classeasynav_1_1ImagePerception.html">   46</a></span><span class="keyword">class </span><a class="code hl_class" href="classeasynav_1_1ImagePerception.html">ImagePerception</a> : <span class="keyword">public</span> <a class="code hl_class" href="classeasynav_1_1PerceptionBase.html">PerceptionBase</a></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>{</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="classeasynav_1_1ImagePerception.html#a6a1aeb48d08927d795eb04f9f9800e49">   50</a></span>  <span class="keyword">static</span> <span class="keyword">constexpr</span> std::string_view <a class="code hl_variable" href="classeasynav_1_1ImagePerception.html#a6a1aeb48d08927d795eb04f9f9800e49">default_group_</a> = <span class="stringliteral">&quot;image&quot;</span>;</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span></div>
+<div class="foldopen" id="foldopen00055" data-start="{" data-end="}">
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno"><a class="line" href="classeasynav_1_1ImagePerception.html#a395ec0562b61d102dc90ab55595ac76e">   55</a></span>  <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classeasynav_1_1ImagePerception.html#a395ec0562b61d102dc90ab55595ac76e">supports_msg_type</a>(std::string_view t)</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  {</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keywordflow">return</span> t == <span class="stringliteral">&quot;sensor_msgs/msg/Image&quot;</span>;</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>  }</div>
 </div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span></div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno"><a class="line" href="classeasynav_1_1ImagePerception.html#abe65ed70273e2d45240309031209a6b2">   65</a></span>  cv::Mat <a class="code hl_variable" href="classeasynav_1_1ImagePerception.html#abe65ed70273e2d45240309031209a6b2">data</a>;</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>};</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span></div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno"><a class="line" href="classeasynav_1_1ImagePerception.html#abe65ed70273e2d45240309031209a6b2">   64</a></span>  cv::Mat <a class="code hl_variable" href="classeasynav_1_1ImagePerception.html#abe65ed70273e2d45240309031209a6b2">data</a>;</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>};</div>
 </div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span></div>
-<div class="foldopen" id="foldopen00073" data-start="{" data-end="};">
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno"><a class="line" href="classeasynav_1_1ImagePerceptionHandler.html">   73</a></span><span class="keyword">class </span><a class="code hl_class" href="classeasynav_1_1ImagePerceptionHandler.html">ImagePerceptionHandler</a> : <span class="keyword">public</span> <a class="code hl_class" href="classeasynav_1_1PerceptionHandler.html">PerceptionHandler</a></div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>{</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno"><a class="line" href="classeasynav_1_1ImagePerceptionHandler.html#a4dcf237e516e7aa43aff18fffd22a9a2">   78</a></span>  std::string <a class="code hl_function" href="classeasynav_1_1ImagePerceptionHandler.html#a4dcf237e516e7aa43aff18fffd22a9a2">group</a>()<span class="keyword"> const override </span>{<span class="keywordflow">return</span> <span class="stringliteral">&quot;image&quot;</span>;}</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span></div>
-<div class="foldopen" id="foldopen00083" data-start="{" data-end="}">
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno"><a class="line" href="classeasynav_1_1ImagePerceptionHandler.html#a1801b9e6bdf60e89fdec38476d3718dd">   83</a></span>  std::shared_ptr&lt;PerceptionBase&gt; <a class="code hl_function" href="classeasynav_1_1ImagePerceptionHandler.html#a1801b9e6bdf60e89fdec38476d3718dd">create</a>(<span class="keyword">const</span> std::string &amp;)<span class="keyword"> override</span></div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span><span class="keyword">  </span>{</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    <span class="keywordflow">return</span> std::make_shared&lt;ImagePerception&gt;();</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>  }</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span></div>
+<div class="foldopen" id="foldopen00072" data-start="{" data-end="};">
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno"><a class="line" href="classeasynav_1_1ImagePerceptionHandler.html">   72</a></span><span class="keyword">class </span><a class="code hl_class" href="classeasynav_1_1ImagePerceptionHandler.html">ImagePerceptionHandler</a> : <span class="keyword">public</span> <a class="code hl_class" href="classeasynav_1_1PerceptionHandler.html">PerceptionHandler</a></div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>{</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno"><a class="line" href="classeasynav_1_1ImagePerceptionHandler.html#a4dcf237e516e7aa43aff18fffd22a9a2">   77</a></span>  std::string <a class="code hl_function" href="classeasynav_1_1ImagePerceptionHandler.html#a4dcf237e516e7aa43aff18fffd22a9a2">group</a>()<span class="keyword"> const override </span>{<span class="keywordflow">return</span> <span class="stringliteral">&quot;image&quot;</span>;}</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span></div>
+<div class="foldopen" id="foldopen00082" data-start="{" data-end="}">
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno"><a class="line" href="classeasynav_1_1ImagePerceptionHandler.html#a1801b9e6bdf60e89fdec38476d3718dd">   82</a></span>  std::shared_ptr&lt;PerceptionBase&gt; <a class="code hl_function" href="classeasynav_1_1ImagePerceptionHandler.html#a1801b9e6bdf60e89fdec38476d3718dd">create</a>(<span class="keyword">const</span> std::string &amp;)<span class="keyword"> override</span></div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span><span class="keyword">  </span>{</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    <span class="keywordflow">return</span> std::make_shared&lt;ImagePerception&gt;();</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>  }</div>
 </div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span></div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>  rclcpp::SubscriptionBase::SharedPtr <a class="code hl_function" href="classeasynav_1_1ImagePerceptionHandler.html#a891643b72cfcd8643ba35d62faff8cce">create_subscription</a>(</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    rclcpp_lifecycle::LifecycleNode &amp; node,</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    <span class="keyword">const</span> std::string &amp; topic,</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    <span class="keyword">const</span> std::string &amp; type,</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    std::shared_ptr&lt;PerceptionBase&gt; target,</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    rclcpp::CallbackGroup::SharedPtr cb_group) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>};</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span></div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>  rclcpp::SubscriptionBase::SharedPtr <a class="code hl_function" href="classeasynav_1_1ImagePerceptionHandler.html#a891643b72cfcd8643ba35d62faff8cce">create_subscription</a>(</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    rclcpp_lifecycle::LifecycleNode &amp; node,</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    <span class="keyword">const</span> std::string &amp; topic,</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    <span class="keyword">const</span> std::string &amp; type,</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    std::shared_ptr&lt;PerceptionBase&gt; target,</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    rclcpp::CallbackGroup::SharedPtr cb_group) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>};</div>
 </div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span></div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno"><a class="line" href="namespaceeasynav.html#a1551c0f2967fd745b9d74705c0b367d3">  113</a></span><span class="keyword">using </span><a class="code hl_typedef" href="namespaceeasynav.html#a1551c0f2967fd745b9d74705c0b367d3">ImagePerceptions</a> =</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>  std::vector&lt;std::shared_ptr&lt;ImagePerception&gt;&gt;;</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span> </div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>}  <span class="comment">// namespace easynav</span></div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span> </div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span><span class="preprocessor">#endif  </span><span class="comment">// EASYNAV_COMMON_TYPES__IMAGEPERCEPTIONS_HPP_</span></div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span></div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno"><a class="line" href="namespaceeasynav.html#a1551c0f2967fd745b9d74705c0b367d3">  112</a></span><span class="keyword">using </span><a class="code hl_typedef" href="namespaceeasynav.html#a1551c0f2967fd745b9d74705c0b367d3">ImagePerceptions</a> =</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>  std::vector&lt;std::shared_ptr&lt;ImagePerception&gt;&gt;;</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span> </div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>}  <span class="comment">// namespace easynav</span></div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span> </div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span><span class="preprocessor">#endif  </span><span class="comment">// EASYNAV_COMMON_TYPES__IMAGEPERCEPTIONS_HPP_</span></div>
 <div class="ttc" id="aPerceptions_8hpp_html"><div class="ttname"><a href="Perceptions_8hpp.html">Perceptions.hpp</a></div><div class="ttdoc">Defines data structures and utilities for representing and processing sensor perceptions.</div></div>
-<div class="ttc" id="aclasseasynav_1_1ImagePerceptionHandler_html"><div class="ttname"><a href="classeasynav_1_1ImagePerceptionHandler.html">easynav::ImagePerceptionHandler</a></div><div class="ttdoc">Handles the creation and updating of ImagePerception instances from sensor_msgs::msg::Image messages.</div><div class="ttdef"><b>Definition</b> ImagePerception.hpp:74</div></div>
-<div class="ttc" id="aclasseasynav_1_1ImagePerceptionHandler_html_a1801b9e6bdf60e89fdec38476d3718dd"><div class="ttname"><a href="classeasynav_1_1ImagePerceptionHandler.html#a1801b9e6bdf60e89fdec38476d3718dd">easynav::ImagePerceptionHandler::create</a></div><div class="ttdeci">std::shared_ptr&lt; PerceptionBase &gt; create(const std::string &amp;) override</div><div class="ttdoc">Creates a new empty ImagePerception instance.</div><div class="ttdef"><b>Definition</b> ImagePerception.hpp:83</div></div>
-<div class="ttc" id="aclasseasynav_1_1ImagePerceptionHandler_html_a4dcf237e516e7aa43aff18fffd22a9a2"><div class="ttname"><a href="classeasynav_1_1ImagePerceptionHandler.html#a4dcf237e516e7aa43aff18fffd22a9a2">easynav::ImagePerceptionHandler::group</a></div><div class="ttdeci">std::string group() const override</div><div class="ttdoc">Returns the group managed by this handler.</div><div class="ttdef"><b>Definition</b> ImagePerception.hpp:78</div></div>
+<div class="ttc" id="aclasseasynav_1_1ImagePerceptionHandler_html"><div class="ttname"><a href="classeasynav_1_1ImagePerceptionHandler.html">easynav::ImagePerceptionHandler</a></div><div class="ttdoc">Handles the creation and updating of ImagePerception instances from sensor_msgs::msg::Image messages.</div><div class="ttdef"><b>Definition</b> ImagePerception.hpp:73</div></div>
+<div class="ttc" id="aclasseasynav_1_1ImagePerceptionHandler_html_a1801b9e6bdf60e89fdec38476d3718dd"><div class="ttname"><a href="classeasynav_1_1ImagePerceptionHandler.html#a1801b9e6bdf60e89fdec38476d3718dd">easynav::ImagePerceptionHandler::create</a></div><div class="ttdeci">std::shared_ptr&lt; PerceptionBase &gt; create(const std::string &amp;) override</div><div class="ttdoc">Creates a new empty ImagePerception instance.</div><div class="ttdef"><b>Definition</b> ImagePerception.hpp:82</div></div>
+<div class="ttc" id="aclasseasynav_1_1ImagePerceptionHandler_html_a4dcf237e516e7aa43aff18fffd22a9a2"><div class="ttname"><a href="classeasynav_1_1ImagePerceptionHandler.html#a4dcf237e516e7aa43aff18fffd22a9a2">easynav::ImagePerceptionHandler::group</a></div><div class="ttdeci">std::string group() const override</div><div class="ttdoc">Returns the group managed by this handler.</div><div class="ttdef"><b>Definition</b> ImagePerception.hpp:77</div></div>
 <div class="ttc" id="aclasseasynav_1_1ImagePerceptionHandler_html_a891643b72cfcd8643ba35d62faff8cce"><div class="ttname"><a href="classeasynav_1_1ImagePerceptionHandler.html#a891643b72cfcd8643ba35d62faff8cce">easynav::ImagePerceptionHandler::create_subscription</a></div><div class="ttdeci">rclcpp::SubscriptionBase::SharedPtr create_subscription(rclcpp_lifecycle::LifecycleNode &amp;node, const std::string &amp;topic, const std::string &amp;type, std::shared_ptr&lt; PerceptionBase &gt; target, rclcpp::CallbackGroup::SharedPtr cb_group) override</div><div class="ttdoc">Creates a subscription to an image topic that updates a target ImagePerception.</div><div class="ttdef"><b>Definition</b> ImagePerception.cpp:36</div></div>
-<div class="ttc" id="aclasseasynav_1_1ImagePerception_html"><div class="ttname"><a href="classeasynav_1_1ImagePerception.html">easynav::ImagePerception</a></div><div class="ttdoc">Represents a single image perception from a sensor.</div><div class="ttdef"><b>Definition</b> ImagePerception.hpp:48</div></div>
-<div class="ttc" id="aclasseasynav_1_1ImagePerception_html_a395ec0562b61d102dc90ab55595ac76e"><div class="ttname"><a href="classeasynav_1_1ImagePerception.html#a395ec0562b61d102dc90ab55595ac76e">easynav::ImagePerception::supports_msg_type</a></div><div class="ttdeci">static bool supports_msg_type(std::string_view t)</div><div class="ttdoc">Returns whether the given ROS 2 type name is supported by this perception.</div><div class="ttdef"><b>Definition</b> ImagePerception.hpp:56</div></div>
-<div class="ttc" id="aclasseasynav_1_1ImagePerception_html_a6a1aeb48d08927d795eb04f9f9800e49"><div class="ttname"><a href="classeasynav_1_1ImagePerception.html#a6a1aeb48d08927d795eb04f9f9800e49">easynav::ImagePerception::default_group_</a></div><div class="ttdeci">static constexpr std::string_view default_group_</div><div class="ttdoc">Group identifier for image perceptions.</div><div class="ttdef"><b>Definition</b> ImagePerception.hpp:51</div></div>
-<div class="ttc" id="aclasseasynav_1_1ImagePerception_html_abe65ed70273e2d45240309031209a6b2"><div class="ttname"><a href="classeasynav_1_1ImagePerception.html#abe65ed70273e2d45240309031209a6b2">easynav::ImagePerception::data</a></div><div class="ttdeci">cv::Mat data</div><div class="ttdoc">Image data received from the sensor.</div><div class="ttdef"><b>Definition</b> ImagePerception.hpp:65</div></div>
+<div class="ttc" id="aclasseasynav_1_1ImagePerception_html"><div class="ttname"><a href="classeasynav_1_1ImagePerception.html">easynav::ImagePerception</a></div><div class="ttdoc">Represents a single image perception from a sensor.</div><div class="ttdef"><b>Definition</b> ImagePerception.hpp:47</div></div>
+<div class="ttc" id="aclasseasynav_1_1ImagePerception_html_a395ec0562b61d102dc90ab55595ac76e"><div class="ttname"><a href="classeasynav_1_1ImagePerception.html#a395ec0562b61d102dc90ab55595ac76e">easynav::ImagePerception::supports_msg_type</a></div><div class="ttdeci">static bool supports_msg_type(std::string_view t)</div><div class="ttdoc">Returns whether the given ROS 2 type name is supported by this perception.</div><div class="ttdef"><b>Definition</b> ImagePerception.hpp:55</div></div>
+<div class="ttc" id="aclasseasynav_1_1ImagePerception_html_a6a1aeb48d08927d795eb04f9f9800e49"><div class="ttname"><a href="classeasynav_1_1ImagePerception.html#a6a1aeb48d08927d795eb04f9f9800e49">easynav::ImagePerception::default_group_</a></div><div class="ttdeci">static constexpr std::string_view default_group_</div><div class="ttdoc">Group identifier for image perceptions.</div><div class="ttdef"><b>Definition</b> ImagePerception.hpp:50</div></div>
+<div class="ttc" id="aclasseasynav_1_1ImagePerception_html_abe65ed70273e2d45240309031209a6b2"><div class="ttname"><a href="classeasynav_1_1ImagePerception.html#abe65ed70273e2d45240309031209a6b2">easynav::ImagePerception::data</a></div><div class="ttdeci">cv::Mat data</div><div class="ttdoc">Image data received from the sensor.</div><div class="ttdef"><b>Definition</b> ImagePerception.hpp:64</div></div>
 <div class="ttc" id="aclasseasynav_1_1PerceptionBase_html"><div class="ttname"><a href="classeasynav_1_1PerceptionBase.html">easynav::PerceptionBase</a></div><div class="ttdoc">Abstract base class for representing a single sensor perception.</div><div class="ttdef"><b>Definition</b> Perceptions.hpp:45</div></div>
 <div class="ttc" id="aclasseasynav_1_1PerceptionHandler_html"><div class="ttname"><a href="classeasynav_1_1PerceptionHandler.html">easynav::PerceptionHandler</a></div><div class="ttdoc">Abstract base interface for group-specific perception handlers.</div><div class="ttdef"><b>Definition</b> Perceptions.hpp:121</div></div>
-<div class="ttc" id="anamespaceeasynav_html"><div class="ttname"><a href="namespaceeasynav.html">easynav</a></div><div class="ttdef"><b>Definition</b> RTTFBuffer.hpp:30</div></div>
-<div class="ttc" id="anamespaceeasynav_html_a1551c0f2967fd745b9d74705c0b367d3"><div class="ttname"><a href="namespaceeasynav.html#a1551c0f2967fd745b9d74705c0b367d3">easynav::ImagePerceptions</a></div><div class="ttdeci">std::vector&lt; std::shared_ptr&lt; ImagePerception &gt; &gt; ImagePerceptions</div><div class="ttdoc">Alias for a vector of shared pointers to ImagePerception objects.</div><div class="ttdef"><b>Definition</b> ImagePerception.hpp:113</div></div>
+<div class="ttc" id="anamespaceeasynav_html"><div class="ttname"><a href="namespaceeasynav.html">easynav</a></div><div class="ttdef"><b>Definition</b> RTTFBuffer.hpp:29</div></div>
+<div class="ttc" id="anamespaceeasynav_html_a1551c0f2967fd745b9d74705c0b367d3"><div class="ttname"><a href="namespaceeasynav.html#a1551c0f2967fd745b9d74705c0b367d3">easynav::ImagePerceptions</a></div><div class="ttdeci">std::vector&lt; std::shared_ptr&lt; ImagePerception &gt; &gt; ImagePerceptions</div><div class="ttdoc">Alias for a vector of shared pointers to ImagePerception objects.</div><div class="ttdef"><b>Definition</b> ImagePerception.hpp:112</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

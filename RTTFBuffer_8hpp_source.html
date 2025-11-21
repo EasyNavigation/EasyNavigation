@@ -117,48 +117,47 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &quot;<a class="code" href="Singleton_8hpp.html">easynav_common/Singleton.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &quot;tf2_ros/buffer.hpp&quot;</span></div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &quot;rclcpp/rclcpp.hpp&quot;</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
-<div class="foldopen" id="foldopen00029" data-start="{" data-end="}">
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="namespaceeasynav.html">   29</a></span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceeasynav.html">easynav</a></div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>{</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span></div>
-<div class="foldopen" id="foldopen00036" data-start="{" data-end="};">
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="classeasynav_1_1RTTFBuffer.html">   36</a></span><span class="keyword">class </span><a class="code hl_function" href="classeasynav_1_1RTTFBuffer.html#afaceb31b09807d360fb2b8e91ec6a929">RTTFBuffer</a> : <span class="keyword">public</span> tf2_ros::Buffer, <span class="keyword">public</span> <a class="code hl_function" href="classeasynav_1_1Singleton.html#a48d1fc15e788981ec5f7fe3e5c8641d7">Singleton</a>&lt;RTTFBuffer&gt;</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>{</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="keyword">public</span>:</div>
-<div class="foldopen" id="foldopen00039" data-start="{" data-end="}">
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="classeasynav_1_1RTTFBuffer.html#afaceb31b09807d360fb2b8e91ec6a929">   39</a></span>  <span class="keyword">explicit</span> <a class="code hl_function" href="classeasynav_1_1RTTFBuffer.html#afaceb31b09807d360fb2b8e91ec6a929">RTTFBuffer</a>(<span class="keyword">const</span> rclcpp::Clock::SharedPtr &amp; clock)</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>  : tf2_ros::Buffer(clock)</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>  {}</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
+<div class="foldopen" id="foldopen00028" data-start="{" data-end="}">
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="namespaceeasynav.html">   28</a></span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceeasynav.html">easynav</a></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>{</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span></div>
+<div class="foldopen" id="foldopen00035" data-start="{" data-end="};">
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno"><a class="line" href="classeasynav_1_1RTTFBuffer.html">   35</a></span><span class="keyword">class </span><a class="code hl_function" href="classeasynav_1_1RTTFBuffer.html#afaceb31b09807d360fb2b8e91ec6a929">RTTFBuffer</a> : <span class="keyword">public</span> tf2_ros::Buffer, <span class="keyword">public</span> <a class="code hl_function" href="classeasynav_1_1Singleton.html#a48d1fc15e788981ec5f7fe3e5c8641d7">Singleton</a>&lt;RTTFBuffer&gt;</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>{</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="keyword">public</span>:</div>
+<div class="foldopen" id="foldopen00038" data-start="{" data-end="}">
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="classeasynav_1_1RTTFBuffer.html#afaceb31b09807d360fb2b8e91ec6a929">   38</a></span>  <span class="keyword">explicit</span> <a class="code hl_function" href="classeasynav_1_1RTTFBuffer.html#afaceb31b09807d360fb2b8e91ec6a929">RTTFBuffer</a>(<span class="keyword">const</span> rclcpp::Clock::SharedPtr &amp; clock)</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>  : tf2_ros::Buffer(clock)</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>  {}</div>
 </div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
-<div class="foldopen" id="foldopen00043" data-start="{" data-end="}">
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="classeasynav_1_1RTTFBuffer.html#aa7ef3a0d2cb5503016dd47f8877364fc">   43</a></span>  <span class="keyword">explicit</span> <a class="code hl_function" href="classeasynav_1_1RTTFBuffer.html#aa7ef3a0d2cb5503016dd47f8877364fc">RTTFBuffer</a>()</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  : Buffer(<a class="code hl_namespace" href="namespacestd.html">std</a>::make_shared&lt;rclcpp::Clock&gt;(RCL_ROS_TIME))</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  {</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    RCLCPP_WARN(rclcpp::get_logger(<span class="stringliteral">&quot;RTTFBuffer&quot;</span>),</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>      <span class="stringliteral">&quot;You should be creating this RTTFBuffer with your clock.&quot;</span></div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>      <span class="stringliteral">&quot;Using default clock RCL_ROS_TIME&quot;</span>);</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  }</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
+<div class="foldopen" id="foldopen00042" data-start="{" data-end="}">
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="classeasynav_1_1RTTFBuffer.html#aa7ef3a0d2cb5503016dd47f8877364fc">   42</a></span>  <span class="keyword">explicit</span> <a class="code hl_function" href="classeasynav_1_1RTTFBuffer.html#aa7ef3a0d2cb5503016dd47f8877364fc">RTTFBuffer</a>()</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>  : Buffer(<a class="code hl_namespace" href="namespacestd.html">std</a>::make_shared&lt;rclcpp::Clock&gt;(RCL_ROS_TIME))</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  {</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    RCLCPP_WARN(rclcpp::get_logger(<span class="stringliteral">&quot;RTTFBuffer&quot;</span>),</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>      <span class="stringliteral">&quot;You should be creating this RTTFBuffer with your clock.&quot;</span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>      <span class="stringliteral">&quot;Using default clock RCL_ROS_TIME&quot;</span>);</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>  }</div>
 </div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>  <a class="code hl_define" href="Singleton_8hpp.html#af0372c6f11888fb8af91d3a0c10a1899">SINGLETON_DEFINITIONS</a>(<a class="code hl_class" href="classeasynav_1_1RTTFBuffer.html">RTTFBuffer</a>)</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>};</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  <a class="code hl_define" href="Singleton_8hpp.html#af0372c6f11888fb8af91d3a0c10a1899">SINGLETON_DEFINITIONS</a>(<a class="code hl_class" href="classeasynav_1_1RTTFBuffer.html">RTTFBuffer</a>)</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>};</div>
 </div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>}  <span class="comment">// namespace easynav</span></div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>}  <span class="comment">// namespace easynav</span></div>
 </div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="preprocessor">#endif  </span><span class="comment">// EASYNAV_COMMON_TYPES__RTTFBUFFER_HPP_</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="preprocessor">#endif  </span><span class="comment">// EASYNAV_COMMON_TYPES__RTTFBUFFER_HPP_</span></div>
 <div class="ttc" id="aSingleton_8hpp_html"><div class="ttname"><a href="Singleton_8hpp.html">Singleton.hpp</a></div></div>
 <div class="ttc" id="aSingleton_8hpp_html_af0372c6f11888fb8af91d3a0c10a1899"><div class="ttname"><a href="Singleton_8hpp.html#af0372c6f11888fb8af91d3a0c10a1899">SINGLETON_DEFINITIONS</a></div><div class="ttdeci">#define SINGLETON_DEFINITIONS(ClassName)</div><div class="ttdef"><b>Definition</b> Singleton.hpp:75</div></div>
-<div class="ttc" id="aclasseasynav_1_1RTTFBuffer_html"><div class="ttname"><a href="classeasynav_1_1RTTFBuffer.html">easynav::RTTFBuffer</a></div><div class="ttdoc">Provides functionality for RTTFBuffer.</div><div class="ttdef"><b>Definition</b> RTTFBuffer.hpp:37</div></div>
-<div class="ttc" id="aclasseasynav_1_1RTTFBuffer_html_aa7ef3a0d2cb5503016dd47f8877364fc"><div class="ttname"><a href="classeasynav_1_1RTTFBuffer.html#aa7ef3a0d2cb5503016dd47f8877364fc">easynav::RTTFBuffer::RTTFBuffer</a></div><div class="ttdeci">RTTFBuffer()</div><div class="ttdef"><b>Definition</b> RTTFBuffer.hpp:43</div></div>
-<div class="ttc" id="aclasseasynav_1_1RTTFBuffer_html_afaceb31b09807d360fb2b8e91ec6a929"><div class="ttname"><a href="classeasynav_1_1RTTFBuffer.html#afaceb31b09807d360fb2b8e91ec6a929">easynav::RTTFBuffer::RTTFBuffer</a></div><div class="ttdeci">RTTFBuffer(const rclcpp::Clock::SharedPtr &amp;clock)</div><div class="ttdef"><b>Definition</b> RTTFBuffer.hpp:39</div></div>
+<div class="ttc" id="aclasseasynav_1_1RTTFBuffer_html"><div class="ttname"><a href="classeasynav_1_1RTTFBuffer.html">easynav::RTTFBuffer</a></div><div class="ttdoc">Provides functionality for RTTFBuffer.</div><div class="ttdef"><b>Definition</b> RTTFBuffer.hpp:36</div></div>
+<div class="ttc" id="aclasseasynav_1_1RTTFBuffer_html_aa7ef3a0d2cb5503016dd47f8877364fc"><div class="ttname"><a href="classeasynav_1_1RTTFBuffer.html#aa7ef3a0d2cb5503016dd47f8877364fc">easynav::RTTFBuffer::RTTFBuffer</a></div><div class="ttdeci">RTTFBuffer()</div><div class="ttdef"><b>Definition</b> RTTFBuffer.hpp:42</div></div>
+<div class="ttc" id="aclasseasynav_1_1RTTFBuffer_html_afaceb31b09807d360fb2b8e91ec6a929"><div class="ttname"><a href="classeasynav_1_1RTTFBuffer.html#afaceb31b09807d360fb2b8e91ec6a929">easynav::RTTFBuffer::RTTFBuffer</a></div><div class="ttdeci">RTTFBuffer(const rclcpp::Clock::SharedPtr &amp;clock)</div><div class="ttdef"><b>Definition</b> RTTFBuffer.hpp:38</div></div>
 <div class="ttc" id="aclasseasynav_1_1Singleton_html_a48d1fc15e788981ec5f7fe3e5c8641d7"><div class="ttname"><a href="classeasynav_1_1Singleton.html#a48d1fc15e788981ec5f7fe3e5c8641d7">easynav::Singleton&lt; RTTFBuffer &gt;::Singleton</a></div><div class="ttdeci">Singleton()=default</div></div>
-<div class="ttc" id="anamespaceeasynav_html"><div class="ttname"><a href="namespaceeasynav.html">easynav</a></div><div class="ttdef"><b>Definition</b> RTTFBuffer.hpp:30</div></div>
+<div class="ttc" id="anamespaceeasynav_html"><div class="ttname"><a href="namespaceeasynav.html">easynav</a></div><div class="ttdef"><b>Definition</b> RTTFBuffer.hpp:29</div></div>
 <div class="ttc" id="anamespacestd_html"><div class="ttname"><a href="namespacestd.html">std</a></div><div class="ttdef"><b>Definition</b> PointPerception.hpp:52</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->

@@ -1,17 +1,7 @@
 <map id="easynav_common/include/easynav_common/YTSession.hpp" name="easynav_common/include/easynav_common/YTSession.hpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="566,5,788,46"/>
-<area shape="rect" id="Node000002" href="$PointPerception_8cpp.html" title=" " alt="" coords="5,94,171,150"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="551,42,376,64,183,97,172,99,170,94,182,91,375,58,550,37"/>
-<area shape="rect" id="Node000003" href="$ControllerNode_8cpp.html" title="Implementation of the ControllerNode class." alt="" coords="194,94,350,150"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="560,52,362,97,351,100,349,94,361,91,559,47"/>
-<area shape="rect" id="Node000004" href="$LocalizerNode_8cpp.html" title="Implementation of the LocalizerNode class." alt="" coords="374,94,557,150"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="620,55,528,96,526,91,618,50"/>
-<area shape="rect" id="Node000005" href="$MapsManagerNode_8cpp.html" title="Implementation of the MapsManagerNode class." alt="" coords="582,94,773,150"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="680,61,680,93,675,93,675,61"/>
-<area shape="rect" id="Node000006" href="$PlannerNode_8cpp.html" title="Implementation of the PlannerNode class." alt="" coords="797,102,1022,142"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="741,50,862,98,860,103,739,55"/>
-<area shape="rect" id="Node000007" href="$SystemNode_8cpp.html" title="Implementation of the SystemNode class." alt="" coords="1046,102,1271,142"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="801,47,1035,91,1069,98,1067,103,1034,97,800,52"/>
-<area shape="rect" id="Node000008" href="$system__main_8cpp.html" title=" " alt="" coords="1295,102,1436,142"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="804,31,1029,51,1158,68,1285,91,1311,98,1310,103,1283,97,1157,73,1029,56,804,36"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="110,5,332,46"/>
+<area shape="rect" id="Node000002" href="$SystemNode_8cpp.html" title="Implementation of the SystemNode class." alt="" coords="5,94,231,135"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="187,58,143,96,139,92,184,54"/>
+<area shape="rect" id="Node000003" href="$system__main_8cpp.html" title=" " alt="" coords="254,94,395,135"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="257,54,303,92,299,96,254,58"/>
 </map>

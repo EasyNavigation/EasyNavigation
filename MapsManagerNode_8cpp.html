@@ -96,51 +96,31 @@ $(function(){ initResizable(false); });
 
 <p>Implementation of the MapsManagerNode class.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;rclcpp/rclcpp.hpp&quot;</code><br />
-<code>#include &quot;rclcpp/macros.hpp&quot;</code><br />
-<code>#include &quot;rclcpp_lifecycle/lifecycle_node.hpp&quot;</code><br />
+<div class="textblock"><code>#include &quot;rclcpp_lifecycle/lifecycle_node.hpp&quot;</code><br />
 <code>#include &quot;lifecycle_msgs/msg/transition.hpp&quot;</code><br />
 <code>#include &quot;lifecycle_msgs/msg/state.hpp&quot;</code><br />
 <code>#include &quot;<a class="el" href="MapsManagerNode_8hpp_source.html">easynav_maps_manager/MapsManagerNode.hpp</a>&quot;</code><br />
-<code>#include &quot;easynav_core/MapsManagerBase.hpp&quot;</code><br />
-<code>#include &quot;<a class="el" href="YTSession_8hpp_source.html">easynav_common/YTSession.hpp</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for MapsManagerNode.cpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="MapsManagerNode_8cpp__incl.png" border="0" usemap="#aeasynav__maps__manager_2src_2easynav__maps__manager_2MapsManagerNode_8cpp" alt=""/></div>
 <map name="aeasynav__maps__manager_2src_2easynav__maps__manager_2MapsManagerNode_8cpp" id="aeasynav__maps__manager_2src_2easynav__maps__manager_2MapsManagerNode_8cpp">
-<area shape="rect" title="Implementation of the MapsManagerNode class." alt="" coords="321,5,513,61"/>
-<area shape="rect" title=" " alt="" coords="29,116,149,142"/>
-<area shape="poly" title=" " alt="" coords="323,64,146,114,145,109,321,59"/>
-<area shape="rect" title=" " alt="" coords="5,205,133,231"/>
-<area shape="poly" title=" " alt="" coords="345,64,240,111,163,156,99,198,97,194,160,152,237,107,343,59"/>
-<area shape="rect" title=" " alt="" coords="156,198,318,238"/>
-<area shape="poly" title=" " alt="" coords="328,64,293,84,264,111,254,127,247,145,240,183,235,182,242,144,249,125,260,107,290,80,326,59"/>
-<area shape="rect" title=" " alt="" coords="514,109,650,150"/>
-<area shape="poly" title=" " alt="" coords="466,59,536,99,533,103,464,64"/>
-<area shape="rect" title=" " alt="" coords="674,109,810,150"/>
-<area shape="poly" title=" " alt="" coords="512,59,661,102,659,107,510,64"/>
-<area shape="rect" href="MapsManagerNode_8hpp.html" title="Declaration of the MapsManagerNode class, a ROS 2 lifecycle node for map handling in Easy Navigation." alt="" coords="274,109,440,150"/>
-<area shape="poly" title=" " alt="" coords="402,63,380,97,375,94,397,60"/>
-<area shape="rect" title=" " alt="" coords="535,198,723,238"/>
-<area shape="poly" title=" " alt="" coords="434,60,464,104,504,148,535,170,568,188,566,193,532,175,501,152,460,107,430,63"/>
-<area shape="rect" href="YTSession_8hpp.html" title=" " alt="" coords="834,116,1053,142"/>
-<area shape="poly" title=" " alt="" coords="513,49,861,111,860,116,513,54"/>
-<area shape="poly" title=" " alt="" coords="292,153,125,203,123,198,291,148"/>
-<area shape="poly" title=" " alt="" coords="331,152,278,191,275,186,328,148"/>
-<area shape="poly" title=" " alt="" coords="420,148,554,190,552,195,418,153"/>
-<area shape="rect" title=" " alt="" coords="342,205,511,231"/>
-<area shape="poly" title=" " alt="" coords="375,149,409,192,405,195,371,152"/>
-<area shape="rect" href="Singleton_8hpp.html" title=" " alt="" coords="793,205,1001,231"/>
-<area shape="poly" title=" " alt="" coords="940,144,913,193,908,190,935,141"/>
-<area shape="rect" title=" " alt="" coords="1025,205,1145,231"/>
-<area shape="poly" title=" " alt="" coords="965,140,1054,194,1051,199,962,145"/>
-<area shape="rect" title=" " alt="" coords="778,286,845,312"/>
-<area shape="poly" title=" " alt="" coords="886,233,838,278,834,274,882,229"/>
-<area shape="rect" title=" " alt="" coords="869,286,925,312"/>
-<area shape="poly" title=" " alt="" coords="900,231,900,270,894,270,894,231"/>
-<area shape="rect" title=" " alt="" coords="949,286,1000,312"/>
-<area shape="poly" title=" " alt="" coords="911,229,954,273,950,277,907,233"/>
+<area shape="rect" title="Implementation of the MapsManagerNode class." alt="" coords="130,5,322,61"/>
+<area shape="rect" title=" " alt="" coords="5,198,167,238"/>
+<area shape="poly" title=" " alt="" coords="131,61,96,81,68,110,62,127,61,146,71,183,66,184,56,146,56,126,64,108,92,77,128,56"/>
+<area shape="rect" title=" " alt="" coords="78,109,214,150"/>
+<area shape="poly" title=" " alt="" coords="205,63,174,99,170,96,201,60"/>
+<area shape="rect" title=" " alt="" coords="238,109,374,150"/>
+<area shape="poly" title=" " alt="" coords="251,60,282,96,278,99,247,63"/>
+<area shape="rect" href="MapsManagerNode_8hpp.html" title="Declaration of the MapsManagerNode class, a ROS 2 lifecycle node for map handling in Easy Navigation." alt="" coords="398,109,563,150"/>
+<area shape="poly" title=" " alt="" coords="301,59,414,101,412,106,299,64"/>
+<area shape="poly" title=" " alt="" coords="398,151,182,198,181,193,397,146"/>
+<area shape="rect" title=" " alt="" coords="236,205,363,231"/>
+<area shape="poly" title=" " alt="" coords="441,153,339,201,337,196,438,148"/>
+<area shape="rect" title=" " alt="" coords="387,198,574,238"/>
+<area shape="poly" title=" " alt="" coords="483,150,483,182,478,182,478,150"/>
+<area shape="rect" title=" " alt="" coords="599,205,768,231"/>
+<area shape="poly" title=" " alt="" coords="528,148,642,196,640,201,526,153"/>
 </map>
 </div>
 </div><table class="memberdecls">

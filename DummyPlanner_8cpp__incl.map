@@ -1,14 +1,13 @@
 <map id="easynav_planner/src/easynav_planner/DummyPlanner.cpp" name="easynav_planner/src/easynav_planner/DummyPlanner.cpp">
-<area shape="rect" id="Node000001" title="Implementation of the DummyPlanner class." alt="" coords="72,5,310,46"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,190,79,216"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="129,49,93,68,64,96,54,114,48,135,43,175,38,174,42,134,49,112,60,92,90,64,126,44"/>
-<area shape="rect" id="Node000003" href="$DummyPlanner_8hpp.html" title="Declaration of the DummyPlanner class, a default fallback planner plugin." alt="" coords="74,102,308,127"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="194,47,194,86,189,86,189,47"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="333,94,460,135"/>
-<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="239,44,337,85,335,90,237,49"/>
-<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="172,130,78,184,75,180,169,125"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="106,190,269,216"/>
-<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="193,128,191,175,186,174,188,128"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="292,183,485,223"/>
-<area shape="poly" id="edge5_Node000003_Node000005" title=" " alt="" coords="220,125,331,174,329,178,218,130"/>
+<area shape="rect" id="Node000001" title="Implementation of the DummyPlanner class." alt="" coords="168,5,406,46"/>
+<area shape="rect" id="Node000002" href="$DummyPlanner_8hpp.html" title="Declaration of the DummyPlanner class, a default fallback planner plugin." alt="" coords="68,102,302,127"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="266,49,212,94,209,90,262,44"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="326,94,454,135"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="312,44,357,82,353,86,309,49"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,190,79,216"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="166,130,77,184,74,179,163,125"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="103,190,266,216"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="187,128,187,174,182,174,182,128"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="290,183,482,223"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="214,125,327,174,325,179,212,130"/>
 </map>
