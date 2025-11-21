@@ -97,11 +97,10 @@ $(function(){ initResizable(false); });
 
 <p>Declaration of the SensorsNode class, a ROS 2 lifecycle node for sensor fusion tasks in Easy Navigation.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;rclcpp/rclcpp.hpp&quot;</code><br />
+<div class="textblock"><code>#include &lt;unordered_map&gt;</code><br />
+<code>#include &quot;rclcpp/rclcpp.hpp&quot;</code><br />
 <code>#include &quot;rclcpp/macros.hpp&quot;</code><br />
 <code>#include &quot;rclcpp_lifecycle/lifecycle_node.hpp&quot;</code><br />
-<code>#include &quot;tf2_ros/buffer.hpp&quot;</code><br />
-<code>#include &quot;tf2_ros/transform_listener.hpp&quot;</code><br />
 <code>#include &quot;sensor_msgs/msg/point_cloud2.hpp&quot;</code><br />
 <code>#include &quot;<a class="el" href="Perceptions_8hpp_source.html">easynav_common/types/Perceptions.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="NavState_8hpp_source.html">easynav_common/types/NavState.hpp</a>&quot;</code><br />
@@ -110,58 +109,48 @@ Include dependency graph for SensorsNode.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="SensorsNode_8hpp__incl.png" border="0" usemap="#aeasynav__sensors_2include_2easynav__sensors_2SensorsNode_8hpp" alt=""/></div>
 <map name="aeasynav__sensors_2include_2easynav__sensors_2SensorsNode_8hpp" id="aeasynav__sensors_2include_2easynav__sensors_2SensorsNode_8hpp">
-<area shape="rect" title="Declaration of the SensorsNode class, a ROS 2 lifecycle node for sensor fusion tasks in Easy Navigati..." alt="" coords="387,5,620,46"/>
-<area shape="rect" title=" " alt="" coords="5,102,125,127"/>
-<area shape="poly" title=" " alt="" coords="387,49,138,97,124,100,123,95,136,91,386,43"/>
-<area shape="rect" title=" " alt="" coords="149,102,277,127"/>
-<area shape="poly" title=" " alt="" coords="438,49,269,99,267,94,437,44"/>
-<area shape="rect" title=" " alt="" coords="256,183,418,223"/>
-<area shape="poly" title=" " alt="" coords="406,49,370,68,342,96,334,112,330,130,332,168,326,168,325,130,329,110,338,92,367,63,404,44"/>
-<area shape="rect" title=" " alt="" coords="352,102,474,127"/>
-<area shape="poly" title=" " alt="" coords="485,48,438,93,435,89,481,45"/>
-<area shape="rect" title=" " alt="" coords="498,102,691,127"/>
-<area shape="poly" title=" " alt="" coords="526,45,573,89,569,93,522,48"/>
-<area shape="rect" title=" " alt="" coords="454,183,614,223"/>
-<area shape="poly" title=" " alt="" coords="622,38,668,58,689,74,706,92,713,107,714,121,708,134,698,146,668,165,630,181,628,176,666,161,695,142,704,131,708,120,708,109,701,96,685,77,665,63,619,43"/>
-<area shape="rect" href="Perceptions_8hpp.html" title="Defines data structures and utilities for representing and processing sensor perceptions." alt="" coords="767,94,928,135"/>
-<area shape="poly" title=" " alt="" coords="583,44,755,87,754,92,582,49"/>
-<area shape="rect" href="NavState_8hpp.html" title="A blackboard&#45;like structure to hold the current state of the navigation system." alt="" coords="1674,94,1835,135"/>
-<area shape="poly" title=" " alt="" coords="621,32,1658,104,1658,109,621,38"/>
-<area shape="poly" title=" " alt="" coords="767,131,443,185,433,187,433,182,442,180,766,126"/>
-<area shape="poly" title=" " alt="" coords="777,138,621,181,620,175,775,133"/>
-<area shape="rect" title=" " alt="" coords="1241,190,1294,216"/>
-<area shape="poly" title=" " alt="" coords="929,121,1071,141,1151,158,1230,180,1232,181,1231,186,1228,185,1150,163,1070,147,928,126"/>
-<area shape="rect" title=" " alt="" coords="914,183,1074,223"/>
-<area shape="poly" title=" " alt="" coords="882,133,950,172,947,177,880,137"/>
-<area shape="rect" title=" " alt="" coords="1099,190,1218,216"/>
-<area shape="poly" title=" " alt="" coords="919,133,1101,183,1099,188,918,138"/>
-<area shape="rect" title=" " alt="" coords="639,190,758,216"/>
-<area shape="poly" title=" " alt="" coords="815,137,734,184,731,180,812,133"/>
-<area shape="rect" title=" " alt="" coords="781,190,890,216"/>
-<area shape="poly" title=" " alt="" coords="848,136,842,175,837,174,842,135"/>
-<area shape="poly" title=" " alt="" coords="1674,123,1503,142,1404,160,1307,185,1304,186,1302,181,1306,180,1403,155,1502,137,1673,118"/>
-<area shape="rect" title=" " alt="" coords="1410,190,1520,216"/>
-<area shape="poly" title=" " alt="" coords="1689,138,1521,188,1519,183,1688,133"/>
-<area shape="rect" title=" " alt="" coords="1545,190,1612,216"/>
-<area shape="poly" title=" " alt="" coords="1716,138,1618,185,1615,181,1713,133"/>
-<area shape="rect" title=" " alt="" coords="1636,190,1692,216"/>
-<area shape="poly" title=" " alt="" coords="1736,137,1689,181,1685,178,1732,133"/>
-<area shape="rect" title=" " alt="" coords="1716,190,1793,216"/>
-<area shape="poly" title=" " alt="" coords="1757,135,1757,175,1752,175,1752,135"/>
-<area shape="rect" title=" " alt="" coords="1818,190,1886,216"/>
-<area shape="poly" title=" " alt="" coords="1778,133,1829,178,1825,182,1775,137"/>
-<area shape="rect" title=" " alt="" coords="1910,190,1991,216"/>
-<area shape="poly" title=" " alt="" coords="1800,133,1910,181,1908,186,1798,138"/>
-<area shape="rect" title=" " alt="" coords="2015,190,2086,216"/>
-<area shape="poly" title=" " alt="" coords="1836,132,1918,154,2004,180,2009,182,2007,187,2003,185,1916,159,1835,137"/>
-<area shape="rect" title=" " alt="" coords="2110,190,2188,216"/>
-<area shape="poly" title=" " alt="" coords="1836,125,1961,147,2099,180,2106,182,2104,187,2098,185,1960,153,1835,130"/>
-<area shape="rect" title=" " alt="" coords="2212,190,2291,216"/>
-<area shape="poly" title=" " alt="" coords="1836,120,2005,142,2103,159,2200,180,2208,182,2207,187,2199,185,2102,164,2004,147,1835,126"/>
-<area shape="rect" title=" " alt="" coords="2316,190,2382,216"/>
-<area shape="poly" title=" " alt="" coords="1835,116,1931,122,2049,134,2178,153,2304,180,2310,182,2309,187,2303,185,2177,158,2049,139,1931,127,1835,121"/>
+<area shape="rect" title="Declaration of the SensorsNode class, a ROS 2 lifecycle node for sensor fusion tasks in Easy Navigati..." alt="" coords="653,5,887,46"/>
+<area shape="rect" title=" " alt="" coords="402,190,512,216"/>
+<area shape="poly" title=" " alt="" coords="737,49,493,184,490,180,734,44"/>
+<area shape="rect" title=" " alt="" coords="874,102,994,127"/>
+<area shape="poly" title=" " alt="" coords="808,44,899,92,896,96,806,49"/>
+<area shape="rect" title=" " alt="" coords="1018,102,1146,127"/>
+<area shape="poly" title=" " alt="" coords="842,44,1024,94,1023,99,840,49"/>
+<area shape="rect" title=" " alt="" coords="5,183,167,223"/>
+<area shape="poly" title=" " alt="" coords="653,37,415,58,303,75,258,85,224,96,193,112,164,132,116,173,113,169,161,128,191,108,222,92,257,80,302,70,415,53,653,31"/>
+<area shape="rect" title=" " alt="" coords="1170,94,1330,135"/>
+<area shape="poly" title=" " alt="" coords="887,44,1155,91,1154,96,886,49"/>
+<area shape="rect" href="Perceptions_8hpp.html" title="Defines data structures and utilities for representing and processing sensor perceptions." alt="" coords="235,94,396,135"/>
+<area shape="poly" title=" " alt="" coords="667,49,412,97,411,92,666,44"/>
+<area shape="rect" href="NavState_8hpp.html" title="A blackboard&#45;like structure to hold the current state of the navigation system." alt="" coords="689,94,851,135"/>
+<area shape="poly" title=" " alt="" coords="773,47,773,78,767,78,767,47"/>
+<area shape="poly" title=" " alt="" coords="264,138,153,179,151,174,262,133"/>
+<area shape="rect" title=" " alt="" coords="325,190,378,216"/>
+<area shape="poly" title=" " alt="" coords="326,134,343,175,338,177,321,136"/>
+<area shape="rect" title=" " alt="" coords="191,190,301,216"/>
+<area shape="poly" title=" " alt="" coords="302,137,267,180,263,177,298,134"/>
+<area shape="poly" title=" " alt="" coords="698,138,524,185,514,188,513,183,523,180,696,133"/>
+<area shape="poly" title=" " alt="" coords="689,126,548,147,469,163,391,185,388,186,387,181,389,180,467,158,547,141,688,121"/>
 <area shape="rect" title=" " alt="" coords="1318,190,1385,216"/>
-<area shape="poly" title=" " alt="" coords="1673,129,1544,151,1399,185,1394,187,1392,182,1398,180,1542,146,1673,124"/>
+<area shape="poly" title=" " alt="" coords="852,130,862,132,987,146,1085,149,1182,156,1239,165,1305,180,1312,182,1310,187,1304,185,1238,171,1182,162,1085,155,986,151,862,137,851,136"/>
+<area shape="rect" title=" " alt="" coords="1408,190,1465,216"/>
+<area shape="poly" title=" " alt="" coords="852,130,862,132,944,142,1013,145,1132,146,1189,146,1250,151,1318,161,1397,180,1401,181,1400,186,1396,185,1317,167,1249,156,1188,152,1132,151,1013,151,943,147,862,137,851,136"/>
+<area shape="rect" title=" " alt="" coords="535,190,613,216"/>
+<area shape="poly" title=" " alt="" coords="727,138,616,186,614,181,724,133"/>
+<area shape="rect" title=" " alt="" coords="637,190,706,216"/>
+<area shape="poly" title=" " alt="" coords="749,137,698,182,695,178,746,133"/>
+<area shape="rect" title=" " alt="" coords="729,190,811,216"/>
+<area shape="poly" title=" " alt="" coords="773,135,773,175,767,175,767,135"/>
+<area shape="rect" title=" " alt="" coords="834,190,906,216"/>
+<area shape="poly" title=" " alt="" coords="794,133,847,178,843,182,791,137"/>
+<area shape="rect" title=" " alt="" coords="930,190,1007,216"/>
+<area shape="poly" title=" " alt="" coords="816,133,928,181,926,186,814,138"/>
+<area shape="rect" title=" " alt="" coords="1032,190,1111,216"/>
+<area shape="poly" title=" " alt="" coords="851,133,1020,180,1026,182,1025,187,1019,185,850,138"/>
+<area shape="rect" title=" " alt="" coords="1136,190,1202,216"/>
+<area shape="poly" title=" " alt="" coords="852,130,862,132,994,152,1052,162,1124,180,1130,182,1128,187,1123,185,1050,167,993,157,862,137,851,135"/>
+<area shape="rect" title=" " alt="" coords="1226,190,1293,216"/>
+<area shape="poly" title=" " alt="" coords="852,130,862,132,961,145,1039,150,1117,159,1215,180,1220,182,1219,187,1213,185,1116,164,1039,156,961,150,862,137,851,135"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">

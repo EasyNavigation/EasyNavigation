@@ -89,9 +89,7 @@ $(function(){ initResizable(false); });
 <div id="doc-content">
 <div class="header">
   <div class="summary">
-<a href="#namespaces">Namespaces</a> &#124;
-<a href="#typedef-members">Typedefs</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#namespaces">Namespaces</a>  </div>
   <div class="headertitle"><div class="title">SensorsNode.cpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
@@ -102,15 +100,14 @@ $(function(){ initResizable(false); });
 <code>#include &lt;string_view&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
 <code>#include &lt;unordered_map&gt;</code><br />
+<code>#include &lt;array&gt;</code><br />
 <code>#include &quot;rclcpp/rclcpp.hpp&quot;</code><br />
 <code>#include &quot;rclcpp/macros.hpp&quot;</code><br />
 <code>#include &quot;rclcpp_lifecycle/lifecycle_node.hpp&quot;</code><br />
 <code>#include &quot;lifecycle_msgs/msg/transition.hpp&quot;</code><br />
 <code>#include &quot;lifecycle_msgs/msg/state.hpp&quot;</code><br />
-<code>#include &quot;sensor_msgs/msg/laser_scan.hpp&quot;</code><br />
 <code>#include &quot;sensor_msgs/msg/point_cloud2.hpp&quot;</code><br />
 <code>#include &quot;<a class="el" href="SensorsNode_8hpp_source.html">easynav_sensors/SensorsNode.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="YTSession_8hpp_source.html">easynav_common/YTSession.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="ImagePerception_8hpp_source.html">easynav_common/types/ImagePerception.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="PointPerception_8hpp_source.html">easynav_common/types/PointPerception.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="IMUPerception_8hpp_source.html">easynav_common/types/IMUPerception.hpp</a>&quot;</code><br />
@@ -120,141 +117,112 @@ Include dependency graph for SensorsNode.cpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="SensorsNode_8cpp__incl.png" border="0" usemap="#aeasynav__sensors_2src_2easynav__sensors_2SensorsNode_8cpp" alt=""/></div>
 <map name="aeasynav__sensors_2src_2easynav__sensors_2SensorsNode_8cpp" id="aeasynav__sensors_2src_2easynav__sensors_2SensorsNode_8cpp">
-<area shape="rect" title="Implementation of the SensorsNode class." alt="" coords="1129,5,1363,46"/>
+<area shape="rect" title="Implementation of the SensorsNode class." alt="" coords="2108,5,2341,46"/>
 <area shape="rect" title=" " alt="" coords="5,102,55,127"/>
-<area shape="poly" title=" " alt="" coords="1129,30,882,33,575,43,421,52,279,63,158,78,67,97,64,98,62,92,65,91,157,73,279,58,421,47,575,38,882,28,1129,25"/>
+<area shape="poly" title=" " alt="" coords="2107,30,1638,34,1003,45,688,53,409,65,193,79,117,87,67,97,64,98,62,92,65,91,116,82,193,74,409,59,687,48,1003,39,1638,29,2107,25"/>
 <area shape="rect" title=" " alt="" coords="78,102,166,127"/>
-<area shape="poly" title=" " alt="" coords="1129,34,635,56,374,74,267,85,185,97,172,99,171,94,184,91,266,80,374,69,634,51,1129,28"/>
-<area shape="rect" title=" " alt="" coords="3473,190,3531,216"/>
-<area shape="poly" title=" " alt="" coords="1363,24,1821,26,2439,35,2744,43,3014,55,3223,71,3296,80,3345,91,3385,109,3422,131,3480,177,3477,181,3419,136,3383,113,3344,97,3295,86,3222,76,3014,60,2744,48,2439,40,1821,31,1363,30"/>
-<area shape="rect" title=" " alt="" coords="167,279,277,304"/>
-<area shape="poly" title=" " alt="" coords="1129,34,952,42,745,54,550,72,470,84,409,97,352,110,306,122,286,131,267,143,249,160,231,184,222,203,218,224,219,264,214,264,213,223,217,201,226,181,245,157,264,139,283,126,304,117,351,105,408,91,469,79,549,67,744,49,952,36,1129,28"/>
-<area shape="rect" title=" " alt="" coords="617,190,736,216"/>
-<area shape="poly" title=" " alt="" coords="1129,33,1022,40,909,52,809,70,770,82,741,96,722,113,707,134,687,176,682,174,702,131,718,109,738,92,768,77,808,65,908,47,1022,35,1129,28"/>
-<area shape="rect" title=" " alt="" coords="761,190,888,216"/>
-<area shape="poly" title=" " alt="" coords="1129,29,1022,32,910,43,859,51,814,63,779,78,755,96,749,106,747,116,756,138,774,160,796,179,792,183,770,163,751,141,742,116,744,104,751,92,776,73,812,58,858,46,909,37,1022,27,1129,23"/>
-<area shape="rect" title=" " alt="" coords="3249,271,3411,312"/>
-<area shape="poly" title=" " alt="" coords="1363,25,1943,31,2761,44,3535,63,3819,76,3986,91,4074,99,4146,104,4179,111,4210,125,4240,147,4270,181,4279,203,4277,215,4269,225,4250,237,4220,246,4130,260,4012,267,3877,271,3609,272,3426,274,3426,269,3609,266,3877,266,4012,262,4130,255,4219,241,4248,232,4265,221,4272,212,4273,204,4265,184,4236,151,4208,130,4178,116,4146,109,4073,105,3986,97,3818,82,3535,69,2760,49,1943,37,1363,31"/>
-<area shape="rect" title=" " alt="" coords="1018,94,1154,135"/>
-<area shape="poly" title=" " alt="" coords="1211,49,1137,89,1134,84,1208,44"/>
-<area shape="rect" title=" " alt="" coords="1178,94,1314,135"/>
-<area shape="poly" title=" " alt="" coords="1249,47,1249,78,1243,78,1243,47"/>
-<area shape="rect" title=" " alt="" coords="1648,271,1809,312"/>
-<area shape="poly" title=" " alt="" coords="1296,44,1326,64,1350,93,1356,114,1350,136,1336,153,1320,161,1305,169,1292,184,1285,204,1286,213,1291,221,1634,273,1633,279,1289,226,1281,214,1280,204,1288,181,1301,165,1317,156,1333,149,1345,133,1351,114,1345,95,1322,68,1293,49"/>
-<area shape="rect" title=" " alt="" coords="1428,271,1589,312"/>
-<area shape="poly" title=" " alt="" coords="1280,44,1303,63,1324,85,1335,110,1334,123,1328,136,1313,152,1296,159,1260,161,1225,163,1210,170,1196,184,1189,203,1196,222,1223,234,1277,248,1414,274,1413,279,1275,254,1221,239,1192,225,1183,203,1192,181,1207,166,1224,158,1260,156,1295,154,1310,147,1324,133,1329,122,1329,111,1320,88,1300,67,1276,49"/>
-<area shape="rect" href="SensorsNode_8hpp.html" title="Declaration of the SensorsNode class, a ROS 2 lifecycle node for sensor fusion tasks in Easy Navigati..." alt="" coords="765,102,994,127"/>
-<area shape="poly" title=" " alt="" coords="1163,49,946,100,945,95,1162,44"/>
-<area shape="rect" href="YTSession_8hpp.html" title=" " alt="" coords="421,102,639,127"/>
-<area shape="poly" title=" " alt="" coords="1129,42,658,97,624,101,623,96,658,91,1128,37"/>
-<area shape="rect" href="ImagePerception_8hpp.html" title="Defines data structures and utilities for representing and processing image perceptions." alt="" coords="3171,94,3332,135"/>
-<area shape="poly" title=" " alt="" coords="1363,29,3155,106,3155,112,1363,35"/>
-<area shape="rect" href="PointPerception_8hpp.html" title="Defines data structures and utilities for representing and processing point&#45;based sensor perceptions." alt="" coords="2123,94,2284,135"/>
-<area shape="poly" title=" " alt="" coords="1363,35,2108,102,2107,107,1363,40"/>
-<area shape="rect" href="IMUPerception_8hpp.html" title="Defines data structures and utilities for representing and processing IMU perceptions." alt="" coords="3541,94,3703,135"/>
-<area shape="poly" title=" " alt="" coords="1363,25,1714,29,2227,39,2826,59,3135,73,3438,91,3526,99,3526,104,3438,97,3135,79,2826,64,2227,45,1714,34,1363,30"/>
-<area shape="rect" href="GNSSPerception_8hpp.html" title="Defines data structures and utilities for representing and processing GNSS perceptions." alt="" coords="3812,94,3973,135"/>
-<area shape="poly" title=" " alt="" coords="1363,24,1753,26,2333,35,3016,55,3369,71,3716,91,3797,99,3796,104,3715,97,3369,76,3016,61,2333,41,1753,32,1363,30"/>
-<area shape="poly" title=" " alt="" coords="852,130,720,186,718,181,850,125"/>
-<area shape="poly" title=" " alt="" coords="874,129,843,178,838,176,869,126"/>
-<area shape="poly" title=" " alt="" coords="926,125,1290,221,1446,237,1640,248,2091,259,2544,263,2895,269,3234,283,3234,288,2895,274,2544,268,2091,264,1640,253,1446,242,1290,226,925,130"/>
-<area shape="poly" title=" " alt="" coords="932,125,1007,147,1087,180,1104,191,1116,202,1128,212,1144,221,1251,244,1414,272,1413,278,1250,250,1142,226,1125,216,1113,206,1101,195,1085,185,1005,152,930,130"/>
-<area shape="rect" title=" " alt="" coords="1519,190,1640,216"/>
-<area shape="poly" title=" " alt="" coords="956,125,1006,132,1147,145,1258,151,1368,160,1508,180,1524,183,1523,189,1507,185,1367,165,1257,157,1147,151,1006,137,956,130"/>
-<area shape="rect" title=" " alt="" coords="1301,190,1495,216"/>
-<area shape="poly" title=" " alt="" coords="953,125,1310,184,1309,190,952,130"/>
-<area shape="rect" href="Perceptions_8hpp.html" title="Defines data structures and utilities for representing and processing sensor perceptions." alt="" coords="2581,183,2743,223"/>
-<area shape="poly" title=" " alt="" coords="950,125,1006,132,1242,149,1443,154,1620,153,1785,149,1951,146,2128,147,2329,157,2566,180,2566,185,2329,163,2128,153,1951,151,1785,155,1620,159,1443,160,1242,154,1006,137,950,130"/>
-<area shape="rect" href="NavState_8hpp.html" title="A blackboard&#45;like structure to hold the current state of the navigation system." alt="" coords="912,183,1073,223"/>
-<area shape="poly" title=" " alt="" coords="897,126,957,171,953,175,893,130"/>
-<area shape="poly" title=" " alt="" coords="2744,212,3234,275,3233,281,2743,217"/>
-<area shape="poly" title=" " alt="" coords="2581,224,2570,226,2362,251,2155,269,1824,289,1824,284,2155,264,2362,246,2570,221,2580,219"/>
-<area shape="poly" title=" " alt="" coords="2581,224,2570,226,2429,242,2309,250,2104,254,1899,257,1779,262,1637,274,1605,278,1604,272,1636,269,1778,257,1899,251,2104,249,2308,245,2428,236,2570,221,2580,219"/>
-<area shape="rect" title=" " alt="" coords="2830,279,2883,304"/>
-<area shape="poly" title=" " alt="" coords="2707,221,2817,270,2815,275,2705,226"/>
-<area shape="rect" title=" " alt="" coords="2186,279,2304,304"/>
-<area shape="poly" title=" " alt="" coords="2581,224,2571,226,2319,278,2318,273,2569,221,2580,219"/>
-<area shape="rect" title=" " alt="" coords="2511,279,2629,304"/>
-<area shape="poly" title=" " alt="" coords="2643,226,2596,270,2592,266,2639,222"/>
-<area shape="rect" title=" " alt="" coords="3435,279,3545,304"/>
-<area shape="poly" title=" " alt="" coords="2744,210,2864,221,3021,231,3145,236,3267,245,3424,269,3438,272,3437,277,3423,274,3267,251,3144,241,3021,237,2863,226,2743,215"/>
-<area shape="poly" title=" " alt="" coords="912,224,901,226,734,244,604,249,474,255,308,274,286,278,285,273,307,269,473,250,604,244,734,238,900,221,911,219"/>
-<area shape="poly" title=" " alt="" coords="1074,209,1245,221,1637,237,1943,243,2248,250,2641,269,2815,283,2814,289,2640,274,2248,255,1943,249,1637,243,1245,226,1074,214"/>
-<area shape="rect" title=" " alt="" coords="406,279,473,304"/>
-<area shape="poly" title=" " alt="" coords="912,224,901,226,790,241,703,248,617,256,507,274,489,278,487,273,505,269,616,250,703,242,790,235,900,221,911,219"/>
-<area shape="rect" title=" " alt="" coords="518,279,574,304"/>
-<area shape="poly" title=" " alt="" coords="912,224,901,226,816,239,749,246,683,255,599,274,589,277,588,271,597,269,682,250,748,241,815,234,900,221,911,219"/>
-<area shape="rect" title=" " alt="" coords="1197,279,1274,304"/>
-<area shape="poly" title=" " alt="" coords="1051,221,1186,269,1190,271,1188,276,1184,274,1049,226"/>
-<area shape="rect" title=" " alt="" coords="1298,279,1367,304"/>
-<area shape="poly" title=" " alt="" coords="1074,219,1193,245,1287,269,1292,271,1291,276,1285,274,1192,250,1073,224"/>
-<area shape="rect" title=" " alt="" coords="609,279,691,304"/>
-<area shape="poly" title=" " alt="" coords="912,224,703,274,696,276,695,271,701,269,911,219"/>
-<area shape="rect" title=" " alt="" coords="714,279,786,304"/>
-<area shape="poly" title=" " alt="" coords="935,226,799,274,795,275,793,270,797,269,933,221"/>
-<area shape="rect" title=" " alt="" coords="810,279,887,304"/>
-<area shape="poly" title=" " alt="" coords="961,226,883,273,880,268,959,222"/>
-<area shape="rect" title=" " alt="" coords="912,279,991,304"/>
-<area shape="poly" title=" " alt="" coords="986,225,966,266,961,264,981,223"/>
-<area shape="rect" title=" " alt="" coords="1016,279,1082,304"/>
-<area shape="poly" title=" " alt="" coords="1008,222,1035,265,1031,267,1003,225"/>
-<area shape="rect" title=" " alt="" coords="1106,279,1173,304"/>
-<area shape="poly" title=" " alt="" coords="1027,222,1107,268,1104,273,1025,226"/>
-<area shape="rect" href="Singleton_8hpp.html" title=" " alt="" coords="240,190,449,216"/>
-<area shape="poly" title=" " alt="" coords="505,130,386,186,383,181,503,125"/>
-<area shape="rect" title=" " alt="" coords="473,190,592,216"/>
-<area shape="poly" title=" " alt="" coords="533,128,534,174,529,175,528,128"/>
-<area shape="poly" title=" " alt="" coords="360,214,417,267,414,271,356,218"/>
-<area shape="poly" title=" " alt="" coords="374,214,505,270,503,275,372,219"/>
-<area shape="rect" title=" " alt="" coords="319,279,370,304"/>
-<area shape="poly" title=" " alt="" coords="347,216,347,263,342,263,342,216"/>
-<area shape="poly" title=" " alt="" coords="3315,133,3455,180,3460,182,3458,187,3453,185,3313,138"/>
-<area shape="poly" title=" " alt="" coords="3306,133,3337,153,3362,181,3368,201,3367,221,3353,259,3348,257,3362,220,3363,202,3357,184,3334,157,3303,137"/>
-<area shape="poly" title=" " alt="" coords="3170,130,2758,190,2758,185,3170,125"/>
-<area shape="poly" title=" " alt="" coords="3171,124,3121,132,3067,144,3012,161,2961,185,2935,203,2911,225,2875,268,2871,264,2907,221,2931,199,2958,180,3010,156,3066,138,3120,126,3170,119"/>
-<area shape="poly" title=" " alt="" coords="3298,133,3340,154,3382,181,3432,224,3472,265,3468,269,3429,227,3379,185,3337,159,3296,138"/>
-<area shape="rect" title=" " alt="" coords="3554,190,3620,216"/>
-<area shape="poly" title=" " alt="" coords="3333,128,3434,150,3544,180,3548,182,3546,187,3543,185,3433,155,3332,133"/>
-<area shape="rect" title=" " alt="" coords="2971,190,3132,216"/>
-<area shape="poly" title=" " alt="" coords="3207,138,3094,186,3092,181,3205,133"/>
-<area shape="rect" title=" " alt="" coords="3156,190,3347,216"/>
-<area shape="poly" title=" " alt="" coords="3254,135,3254,175,3249,175,3249,135"/>
-<area shape="poly" title=" " alt="" coords="2285,116,2742,136,3048,155,3360,180,3458,192,3458,198,3359,185,3048,160,2742,141,2284,121"/>
-<area shape="poly" title=" " alt="" coords="2284,118,2560,140,2700,158,2757,168,2800,180,2820,190,2833,201,2846,211,2864,221,2960,249,3059,268,3153,280,3234,286,3234,291,3152,285,3058,274,2959,255,2862,226,2843,216,2830,205,2817,194,2798,185,2756,174,2699,163,2559,145,2284,123"/>
-<area shape="poly" title=" " alt="" coords="2122,120,2024,125,1915,136,1818,155,1781,169,1756,185,1744,200,1736,218,1730,256,1725,255,1731,216,1739,197,1752,181,1779,164,1817,150,1914,131,2024,120,2122,114"/>
-<area shape="poly" title=" " alt="" coords="2122,121,2039,127,1939,138,1833,157,1728,185,1690,203,1654,226,1567,267,1565,262,1651,221,1688,199,1726,180,1831,152,1938,133,2038,122,2122,116"/>
-<area shape="poly" title=" " alt="" coords="2123,125,1912,148,1660,185,1642,189,1641,184,1659,180,1912,143,2122,120"/>
-<area shape="poly" title=" " alt="" coords="2122,124,1849,147,1508,185,1478,190,1477,184,1507,180,1849,142,2122,119"/>
-<area shape="poly" title=" " alt="" coords="2285,127,2567,179,2566,185,2284,133"/>
-<area shape="poly" title=" " alt="" coords="2285,116,2403,123,2540,135,2667,154,2718,166,2757,180,2784,198,2808,220,2843,264,2839,268,2804,224,2780,202,2754,185,2717,171,2666,159,2539,140,2403,128,2284,121"/>
-<area shape="poly" title=" " alt="" coords="2196,136,2184,177,2183,200,2187,222,2201,246,2219,267,2215,270,2197,250,2182,224,2177,200,2179,176,2191,135"/>
-<area shape="poly" title=" " alt="" coords="2205,135,2209,179,2217,202,2231,221,2249,234,2275,245,2343,262,2422,275,2496,282,2495,288,2421,280,2342,267,2273,250,2246,238,2227,225,2212,204,2204,180,2199,135"/>
-<area shape="poly" title=" " alt="" coords="2285,115,2397,120,2539,132,2695,151,2851,180,2882,190,2906,201,2929,211,2960,221,3029,235,3089,243,3191,248,3294,251,3354,257,3424,269,3438,272,3437,277,3423,274,3353,263,3293,257,3191,253,3088,248,3028,240,2959,226,2927,216,2904,205,2880,195,2849,185,2694,156,2538,137,2397,126,2284,120"/>
-<area shape="poly" title=" " alt="" coords="2285,113,2554,116,2918,126,3106,135,3280,146,3431,161,3544,180,3550,182,3549,187,3543,185,3430,166,3280,151,3105,140,2918,131,2553,122,2284,119"/>
-<area shape="rect" title=" " alt="" coords="1766,183,1902,223"/>
-<area shape="poly" title=" " alt="" coords="2123,137,1918,184,1917,179,2122,132"/>
-<area shape="rect" title=" " alt="" coords="1926,190,2115,216"/>
-<area shape="poly" title=" " alt="" coords="2163,138,2061,186,2059,181,2161,133"/>
-<area shape="rect" title=" " alt="" coords="2240,190,2409,216"/>
-<area shape="poly" title=" " alt="" coords="2232,133,2297,179,2294,183,2229,137"/>
-<area shape="rect" title=" " alt="" coords="2433,190,2558,216"/>
-<area shape="poly" title=" " alt="" coords="2271,133,2441,183,2439,188,2269,138"/>
-<area shape="poly" title=" " alt="" coords="3596,137,3533,183,3530,179,3593,133"/>
-<area shape="poly" title=" " alt="" coords="3646,133,3665,153,3680,176,3687,201,3685,214,3679,225,3660,239,3634,249,3567,262,3426,274,3426,269,3566,256,3633,244,3658,234,3675,222,3680,212,3682,201,3676,179,3661,156,3643,137"/>
-<area shape="poly" title=" " alt="" coords="3541,126,2758,196,2758,190,3541,120"/>
-<area shape="poly" title=" " alt="" coords="3634,134,3642,155,3647,179,3646,204,3634,225,3601,236,3530,247,3316,266,2899,291,2899,286,3316,260,3529,241,3600,231,3631,221,3641,202,3642,180,3637,156,3629,136"/>
-<area shape="poly" title=" " alt="" coords="3704,125,3848,151,3907,166,3939,181,3948,203,3946,214,3939,225,3913,244,3874,260,3827,271,3773,280,3660,290,3560,293,3560,288,3660,284,3773,274,3826,266,3873,254,3910,240,3935,222,3941,212,3943,203,3935,185,3905,171,3847,156,3703,130"/>
-<area shape="poly" title=" " alt="" coords="3617,136,3600,177,3595,175,3612,134"/>
-<area shape="rect" title=" " alt="" coords="3747,190,3924,216"/>
-<area shape="poly" title=" " alt="" coords="3671,133,3792,181,3790,186,3669,138"/>
-<area shape="poly" title=" " alt="" coords="3812,128,3684,149,3613,165,3543,185,3540,186,3538,181,3541,180,3611,160,3683,144,3811,123"/>
-<area shape="poly" title=" " alt="" coords="3953,133,3992,150,4025,171,4036,184,4043,197,4042,211,4033,225,4020,234,3998,241,3935,252,3755,265,3562,270,3426,274,3426,269,3562,264,3755,259,3934,247,3997,236,4017,229,4029,221,4037,209,4037,198,4032,187,4021,175,3989,155,3951,138"/>
-<area shape="poly" title=" " alt="" coords="3812,128,3716,137,3338,164,2959,185,2758,198,2758,193,2959,180,3337,159,3715,132,3811,122"/>
-<area shape="poly" title=" " alt="" coords="3914,133,3930,154,3943,178,3948,202,3946,214,3938,226,3799,239,3489,258,2899,291,2899,285,3489,253,3798,233,3935,221,3941,212,3943,202,3938,180,3926,157,3910,137"/>
-<area shape="poly" title=" " alt="" coords="3974,112,4089,116,4149,122,4204,131,4249,145,4279,165,4286,178,4288,192,4282,208,4269,225,4255,235,4232,243,4163,258,4071,269,3964,277,3741,288,3560,292,3560,287,3741,283,3964,272,4071,264,4162,252,4230,238,4252,230,4265,221,4277,205,4282,191,4281,179,4275,169,4247,150,4203,136,4148,127,4089,121,3974,117"/>
-<area shape="poly" title=" " alt="" coords="3824,138,3636,191,3635,185,3822,133"/>
-<area shape="rect" title=" " alt="" coords="4101,183,4255,223"/>
-<area shape="poly" title=" " alt="" coords="3959,133,4099,175,4098,180,3957,138"/>
+<area shape="poly" title=" " alt="" coords="2108,29,1701,31,1145,40,858,48,590,60,359,76,185,97,171,99,170,94,184,91,359,71,590,55,858,43,1145,35,1701,26,2107,24"/>
+<area shape="rect" title=" " alt="" coords="824,190,881,216"/>
+<area shape="poly" title=" " alt="" coords="2107,32,1827,40,1482,53,1172,72,1061,83,996,97,961,114,927,136,876,181,872,177,924,131,958,109,994,91,1060,78,1172,66,1482,48,1827,34,2107,27"/>
+<area shape="rect" title=" " alt="" coords="2412,279,2522,304"/>
+<area shape="poly" title=" " alt="" coords="2270,44,2312,67,2359,97,2406,136,2444,181,2455,201,2462,223,2469,263,2464,264,2457,224,2450,203,2440,184,2402,139,2356,102,2309,71,2267,49"/>
+<area shape="rect" title=" " alt="" coords="2911,102,2960,127"/>
+<area shape="poly" title=" " alt="" coords="2342,25,2458,30,2597,41,2745,61,2892,91,2898,93,2896,98,2891,97,2744,66,2596,47,2458,36,2341,31"/>
+<area shape="rect" title=" " alt="" coords="2976,190,3095,216"/>
+<area shape="poly" title=" " alt="" coords="2342,31,2593,53,2712,70,2798,92,2816,101,2828,111,2855,132,2919,161,2980,183,2978,188,2917,166,2853,137,2824,115,2813,105,2796,96,2711,76,2592,59,2342,37"/>
+<area shape="rect" title=" " alt="" coords="3120,190,3247,216"/>
+<area shape="poly" title=" " alt="" coords="2342,30,2473,38,2618,51,2751,68,2805,79,2846,92,2863,101,2874,112,2885,122,2901,132,2956,153,3001,163,3048,169,3108,180,3122,183,3120,189,3107,185,3048,174,3001,168,2954,158,2898,137,2882,127,2870,116,2860,105,2844,96,2803,84,2750,73,2617,56,2473,43,2342,35"/>
+<area shape="rect" title=" " alt="" coords="839,271,1000,312"/>
+<area shape="poly" title=" " alt="" coords="2108,30,1706,35,1177,46,917,54,688,65,512,79,449,88,408,97,362,111,326,125,297,147,271,184,264,204,265,213,270,221,297,235,347,247,495,266,669,278,823,285,823,290,669,283,495,271,346,252,295,240,267,225,260,214,258,204,266,181,293,143,324,120,360,106,407,91,448,82,511,74,688,60,917,49,1177,40,1706,30,2108,25"/>
+<area shape="rect" title=" " alt="" coords="2984,94,3121,135"/>
+<area shape="poly" title=" " alt="" coords="2342,30,2624,50,2795,67,2969,91,2968,96,2794,72,2624,55,2342,35"/>
+<area shape="rect" title=" " alt="" coords="3144,94,3281,135"/>
+<area shape="poly" title=" " alt="" coords="2342,27,2496,33,2691,45,2908,63,3129,91,3128,96,2907,69,2691,50,2496,38,2342,32"/>
+<area shape="rect" title=" " alt="" coords="2504,183,2665,223"/>
+<area shape="poly" title=" " alt="" coords="2342,40,2416,59,2453,74,2487,92,2511,108,2532,128,2566,168,2561,172,2528,132,2507,113,2485,96,2451,79,2414,64,2341,45"/>
+<area shape="rect" href="SensorsNode_8hpp.html" title="Declaration of the SensorsNode class, a ROS 2 lifecycle node for sensor fusion tasks in Easy Navigati..." alt="" coords="2555,102,2785,127"/>
+<area shape="poly" title=" " alt="" coords="2327,44,2593,95,2592,101,2326,49"/>
+<area shape="rect" href="ImagePerception_8hpp.html" title="Defines data structures and utilities for representing and processing image perceptions." alt="" coords="1008,94,1169,135"/>
+<area shape="poly" title=" " alt="" coords="2108,39,1185,108,1185,103,2107,33"/>
+<area shape="rect" href="PointPerception_8hpp.html" title="Defines data structures and utilities for representing and processing point&#45;based sensor perceptions." alt="" coords="1901,94,2063,135"/>
+<area shape="poly" title=" " alt="" coords="2170,49,2053,91,2051,86,2169,44"/>
+<area shape="rect" href="IMUPerception_8hpp.html" title="Defines data structures and utilities for representing and processing IMU perceptions." alt="" coords="420,94,581,135"/>
+<area shape="poly" title=" " alt="" coords="2108,33,1509,55,1112,73,710,97,597,106,596,101,710,91,1112,68,1509,49,2108,28"/>
+<area shape="rect" href="GNSSPerception_8hpp.html" title="Defines data structures and utilities for representing and processing GNSS perceptions." alt="" coords="723,94,884,135"/>
+<area shape="poly" title=" " alt="" coords="2108,32,1598,51,1269,70,936,97,900,101,899,95,935,91,1268,64,1598,45,2107,27"/>
+<area shape="poly" title=" " alt="" coords="2685,126,2704,145,2722,171,2731,198,2729,212,2723,225,2703,246,2682,259,2661,265,2639,267,2591,267,2564,268,2535,274,2525,277,2523,271,2533,269,2563,263,2591,261,2639,262,2660,260,2680,254,2699,242,2718,222,2724,210,2725,199,2717,173,2700,149,2682,129"/>
+<area shape="poly" title=" " alt="" coords="2727,125,2965,180,2977,183,2976,188,2964,185,2725,130"/>
+<area shape="poly" title=" " alt="" coords="2767,125,2927,148,3108,180,3124,183,3122,189,3107,185,2926,154,2766,130"/>
+<area shape="poly" title=" " alt="" coords="2678,127,2686,148,2692,174,2691,201,2678,225,2649,237,2592,247,2406,260,2152,268,1864,271,1318,272,1031,274,1016,276,1015,270,1031,269,1318,267,1864,266,2152,262,2405,255,2591,241,2648,232,2675,221,2686,200,2687,174,2681,149,2673,129"/>
+<area shape="poly" title=" " alt="" coords="2660,130,2616,174,2612,170,2656,126"/>
+<area shape="rect" href="Perceptions_8hpp.html" title="Defines data structures and utilities for representing and processing sensor perceptions." alt="" coords="1008,183,1169,223"/>
+<area shape="poly" title=" " alt="" coords="2555,122,1820,151,1432,169,1185,185,1184,180,1432,164,1820,146,2555,117"/>
+<area shape="rect" href="NavState_8hpp.html" title="A blackboard&#45;like structure to hold the current state of the navigation system." alt="" coords="2791,183,2952,223"/>
+<area shape="poly" title=" " alt="" coords="2699,125,2813,174,2811,179,2697,130"/>
+<area shape="poly" title=" " alt="" coords="1051,226,972,266,970,262,1049,221"/>
+<area shape="rect" title=" " alt="" coords="1043,279,1097,304"/>
+<area shape="poly" title=" " alt="" coords="1087,224,1078,264,1073,263,1082,223"/>
+<area shape="rect" title=" " alt="" coords="1634,279,1743,304"/>
+<area shape="poly" title=" " alt="" coords="1170,219,1181,221,1422,256,1619,280,1618,285,1421,261,1180,226,1169,224"/>
+<area shape="poly" title=" " alt="" coords="2791,223,2535,274,2523,277,2521,272,2533,269,2790,217"/>
+<area shape="poly" title=" " alt="" coords="2790,219,2721,226,2434,241,1945,261,1112,292,1112,286,1945,255,2434,235,2720,221,2790,213"/>
+<area shape="rect" title=" " alt="" coords="2728,279,2796,304"/>
+<area shape="poly" title=" " alt="" coords="2848,226,2790,271,2787,267,2845,222"/>
+<area shape="rect" title=" " alt="" coords="2819,279,2876,304"/>
+<area shape="poly" title=" " alt="" coords="2868,225,2857,265,2852,263,2863,223"/>
+<area shape="rect" title=" " alt="" coords="2899,279,2977,304"/>
+<area shape="poly" title=" " alt="" coords="2889,222,2922,265,2917,268,2884,225"/>
+<area shape="rect" title=" " alt="" coords="3001,279,3070,304"/>
+<area shape="poly" title=" " alt="" coords="2910,221,3000,269,2998,274,2907,226"/>
+<area shape="rect" title=" " alt="" coords="3093,279,3175,304"/>
+<area shape="poly" title=" " alt="" coords="2936,221,3083,269,3088,271,3087,276,3081,274,2934,226"/>
+<area shape="rect" title=" " alt="" coords="3198,279,3270,304"/>
+<area shape="poly" title=" " alt="" coords="2953,219,3188,269,3194,271,3192,276,3187,274,2952,224"/>
+<area shape="rect" title=" " alt="" coords="3294,279,3371,304"/>
+<area shape="poly" title=" " alt="" coords="2953,219,2964,221,3053,234,3124,241,3194,250,3283,269,3290,271,3288,276,3281,274,3193,255,3123,246,3053,239,2963,226,2952,224"/>
+<area shape="rect" title=" " alt="" coords="3396,279,3475,304"/>
+<area shape="poly" title=" " alt="" coords="2953,219,2964,221,3082,235,3175,240,3267,247,3384,269,3392,271,3391,276,3383,274,3266,252,3174,245,3081,240,2963,226,2952,224"/>
+<area shape="rect" title=" " alt="" coords="2546,279,2612,304"/>
+<area shape="poly" title=" " alt="" coords="2791,226,2711,247,2626,274,2622,275,2620,270,2624,269,2709,242,2790,221"/>
+<area shape="rect" title=" " alt="" coords="2636,279,2704,304"/>
+<area shape="poly" title=" " alt="" coords="2827,226,2713,275,2711,270,2825,221"/>
+<area shape="poly" title=" " alt="" coords="1033,138,902,185,896,187,894,182,900,180,1031,133"/>
+<area shape="poly" title=" " alt="" coords="1051,137,1018,158,987,185,958,221,937,259,932,256,954,218,983,181,1015,154,1048,133"/>
+<area shape="poly" title=" " alt="" coords="1091,135,1091,167,1086,167,1086,135"/>
+<area shape="poly" title=" " alt="" coords="1047,137,1019,157,998,184,992,203,998,222,1015,248,1038,268,1034,272,1011,251,993,224,987,203,993,181,1015,153,1044,133"/>
+<area shape="rect" title=" " alt="" coords="1378,190,1444,216"/>
+<area shape="poly" title=" " alt="" coords="1170,129,1265,151,1367,180,1372,182,1370,187,1365,185,1264,156,1169,134"/>
+<area shape="rect" title=" " alt="" coords="1193,190,1355,216"/>
+<area shape="poly" title=" " alt="" coords="1132,133,1236,181,1233,186,1130,138"/>
+<area shape="poly" title=" " alt="" coords="1901,122,1511,144,1255,162,996,185,897,198,896,192,995,180,1255,157,1511,139,1901,117"/>
+<area shape="poly" title=" " alt="" coords="2020,133,2048,152,2073,175,2085,200,2084,213,2076,225,2057,233,2020,240,1902,250,1559,263,1032,274,1016,276,1015,271,1031,269,1559,258,1902,245,2020,235,2056,228,2072,221,2079,211,2080,201,2068,178,2045,156,2017,137"/>
+<area shape="poly" title=" " alt="" coords="2064,125,2490,185,2489,191,2063,130"/>
+<area shape="poly" title=" " alt="" coords="1901,122,1590,142,1390,160,1185,185,1184,180,1390,155,1590,136,1901,117"/>
+<area shape="poly" title=" " alt="" coords="2041,133,2079,150,2112,172,2123,184,2129,197,2129,211,2120,225,2104,233,2073,239,1973,251,1674,271,1345,285,1112,292,1112,287,1345,279,1674,266,1973,246,2072,234,2102,228,2116,221,2124,210,2124,198,2119,187,2108,176,2077,155,2039,138"/>
+<area shape="poly" title=" " alt="" coords="2064,129,2114,145,2156,165,2172,178,2180,192,2180,208,2171,225,2142,246,2100,262,2048,274,1990,282,1866,292,1759,294,1759,289,1866,286,1989,277,2047,269,2099,257,2140,241,2167,222,2175,207,2175,194,2168,181,2154,170,2112,150,2062,135"/>
+<area shape="poly" title=" " alt="" coords="1901,122,1809,129,1698,140,1577,159,1457,185,1452,187,1450,182,1456,180,1576,154,1697,135,1809,123,1901,117"/>
+<area shape="rect" title=" " alt="" coords="2238,190,2430,216"/>
+<area shape="poly" title=" " alt="" coords="2063,133,2271,183,2269,189,2062,138"/>
+<area shape="rect" title=" " alt="" coords="1468,190,1586,216"/>
+<area shape="poly" title=" " alt="" coords="1901,130,1760,154,1600,185,1586,188,1585,183,1599,180,1759,149,1901,125"/>
+<area shape="rect" title=" " alt="" coords="1611,190,1729,216"/>
+<area shape="poly" title=" " alt="" coords="1912,138,1729,188,1728,183,1910,133"/>
+<area shape="rect" title=" " alt="" coords="1753,190,1878,216"/>
+<area shape="poly" title=" " alt="" coords="1945,138,1853,185,1851,180,1943,133"/>
+<area shape="rect" title=" " alt="" coords="1902,183,2062,223"/>
+<area shape="poly" title=" " alt="" coords="1985,135,1985,167,1979,167,1979,135"/>
+<area shape="poly" title=" " alt="" coords="582,133,809,188,808,194,580,138"/>
+<area shape="poly" title=" " alt="" coords="420,130,360,144,307,164,289,177,279,190,278,205,288,221,313,235,362,246,505,265,673,277,823,284,823,290,673,283,504,270,361,252,311,240,284,225,273,206,274,188,286,173,305,160,358,139,419,125"/>
+<area shape="poly" title=" " alt="" coords="582,125,993,185,992,190,581,130"/>
+<area shape="poly" title=" " alt="" coords="422,138,377,154,341,174,329,185,323,196,324,208,332,221,346,230,372,238,448,250,549,256,662,260,881,263,963,265,1012,269,1029,273,1028,278,1011,274,963,270,881,268,662,265,549,262,448,255,370,243,344,235,328,225,318,210,318,195,325,182,338,169,375,149,420,133"/>
+<area shape="rect" title=" " alt="" coords="343,190,520,216"/>
+<area shape="poly" title=" " alt="" coords="487,137,452,180,448,177,483,134"/>
+<area shape="poly" title=" " alt="" coords="817,134,841,176,836,178,812,137"/>
+<area shape="poly" title=" " alt="" coords="789,137,777,156,767,178,763,201,770,222,794,248,826,266,823,270,791,252,765,225,758,201,762,177,772,153,785,134"/>
+<area shape="poly" title=" " alt="" coords="869,133,1010,175,1008,180,868,138"/>
+<area shape="poly" title=" " alt="" coords="801,136,798,179,802,202,813,222,835,242,856,254,878,260,901,261,951,261,980,262,1012,269,1029,274,1027,279,1011,274,980,268,951,266,900,267,877,265,854,259,832,247,809,225,797,204,793,179,796,135"/>
+<area shape="rect" title=" " alt="" coords="544,183,697,223"/>
+<area shape="poly" title=" " alt="" coords="763,138,677,178,674,173,761,133"/>
 </map>
 </div>
 </div><table class="memberdecls">
@@ -262,22 +230,6 @@ Include dependency graph for SensorsNode.cpp:</div>
 Namespaces</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceeasynav.html">easynav</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
-Typedefs</h2></td></tr>
-<tr class="memitem:aa8cfa96994d82bf82988d088706e5587" id="r_aa8cfa96994d82bf82988d088706e5587"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceeasynav.html#aa8cfa96994d82bf82988d088706e5587">Registry</a></td></tr>
-<tr class="separator:aa8cfa96994d82bf82988d088706e5587"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:a2165934feb1b2db51f50eba96b03a4d9" id="r_a2165934feb1b2db51f50eba96b03a4d9"><td class="memTemplParams" colspan="2">template&lt;std::size_t I = 0&gt; </td></tr>
-<tr class="memitem:a2165934feb1b2db51f50eba96b03a4d9"><td class="memTemplItemLeft" align="right" valign="top">std::string&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceeasynav.html#a2165934feb1b2db51f50eba96b03a4d9">resolve_group_from_msg</a> (std::string_view msg_type)</td></tr>
-<tr class="separator:a2165934feb1b2db51f50eba96b03a4d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6f00c1fcd8e711f2f1451f7441983559" id="r_a6f00c1fcd8e711f2f1451f7441983559"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceeasynav.html#a6f00c1fcd8e711f2f1451f7441983559">resolve_group_from_msg</a> (std::string_view msg_type, std::true_type)</td></tr>
-<tr class="separator:a6f00c1fcd8e711f2f1451f7441983559"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af26944830a84a41d51ba0c20322987f4" id="r_af26944830a84a41d51ba0c20322987f4"><td class="memTemplParams" colspan="2">template&lt;std::size_t I = 0&gt; </td></tr>
-<tr class="memitem:af26944830a84a41d51ba0c20322987f4"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceeasynav.html#af26944830a84a41d51ba0c20322987f4">set_by_group</a> (const std::string &amp;group, const std::vector&lt; <a class="el" href="structeasynav_1_1PerceptionPtr.html">easynav::PerceptionPtr</a> &gt; &amp;src, <a class="el" href="classeasynav_1_1NavState.html">::easynav::NavState</a> &amp;ns)</td></tr>
-<tr class="separator:af26944830a84a41d51ba0c20322987f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implementation of the SensorsNode class. </p>

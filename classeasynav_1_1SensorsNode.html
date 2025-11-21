@@ -125,6 +125,9 @@ Collaboration diagram for SensorsNode:</div>
 Public Types</h2></td></tr>
 <tr class="memitem:ad09d90f1fe35c9e2f2fd7fc1902312f4" id="r_ad09d90f1fe35c9e2f2fd7fc1902312f4"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad09d90f1fe35c9e2f2fd7fc1902312f4">CallbackReturnT</a> = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn</td></tr>
 <tr class="separator:ad09d90f1fe35c9e2f2fd7fc1902312f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac9926ee4f197296b143e1588428defba" id="r_ac9926ee4f197296b143e1588428defba"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac9926ee4f197296b143e1588428defba">SensorsHandlerFn</a></td></tr>
+<tr class="memdesc:ac9926ee4f197296b143e1588428defba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function pointer type used to handle sensor groups.  <br /></td></tr>
+<tr class="separator:ac9926ee4f197296b143e1588428defba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -179,6 +182,36 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac9926ee4f197296b143e1588428defba" name="ac9926ee4f197296b143e1588428defba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac9926ee4f197296b143e1588428defba">&#9670;&#160;</a></span>SensorsHandlerFn</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="#ac9926ee4f197296b143e1588428defba">SensorsHandlerFn</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line"> void(*)(</div>
+<div class="line">    <span class="keyword">const</span> std::string &amp; group,</div>
+<div class="line">    <span class="keyword">const</span> std::vector&lt;easynav::PerceptionPtr&gt; &amp; perceptions,</div>
+<div class="line">    <a class="code hl_class" href="classeasynav_1_1NavState.html">::easynav::NavState</a> &amp; ns</div>
+<div class="line">  )</div>
+<div class="ttc" id="aclasseasynav_1_1NavState_html"><div class="ttname"><a href="classeasynav_1_1NavState.html">easynav::NavState</a></div><div class="ttdoc">A generic, type-safe, thread-safe blackboard to hold runtime state.</div><div class="ttdef"><b>Definition</b> NavState.hpp:87</div></div>
+</div><!-- fragment -->
+<p>Function pointer type used to handle sensor groups. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">group</td><td>Sensor group name. </td></tr>
+    <tr><td class="paramname">perceptions</td><td>List of perceptions (one element from each sensor in the group). </td></tr>
+    <tr><td class="paramname">ns</td><td>Navigation state to populate. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

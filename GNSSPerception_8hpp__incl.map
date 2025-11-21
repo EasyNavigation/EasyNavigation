@@ -1,28 +1,17 @@
 <map id="easynav_common/include/easynav_common/types/GNSSPerception.hpp" name="easynav_common/include/easynav_common/types/GNSSPerception.hpp">
-<area shape="rect" id="Node000001" title="Defines data structures and utilities for representing and processing GNSS perceptions." alt="" coords="302,5,474,61"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,205,59,231"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="326,64,225,111,66,199,64,195,223,107,324,59"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="493,116,550,142"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="428,59,494,105,491,110,425,64"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="574,116,640,142"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="453,59,564,107,566,108,564,113,562,111,450,64"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="663,109,817,150"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="475,55,652,102,651,107,473,60"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="83,205,192,231"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="350,64,283,111,167,198,164,193,280,107,347,59"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="217,198,378,238"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="341,63,317,84,298,110,293,128,290,146,292,182,287,183,285,146,287,126,294,108,313,81,338,59"/>
-<area shape="rect" id="Node000008" href="$Perceptions_8hpp.html" title="Defines data structures and utilities for representing and processing sensor perceptions." alt="" coords="307,109,469,150"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="391,62,391,94,385,94,385,62"/>
-<area shape="poly" id="edge8_Node000008_Node000002" title=" " alt="" coords="307,145,194,166,71,200,69,201,67,196,70,195,193,161,306,139"/>
-<area shape="poly" id="edge13_Node000008_Node000006" title=" " alt="" coords="332,153,188,202,186,197,330,148"/>
-<area shape="poly" id="edge14_Node000008_Node000007" title=" " alt="" coords="369,152,331,189,327,185,366,148"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="873,198,1034,238"/>
-<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="469,145,482,147,586,162,668,171,751,180,858,195,858,200,751,185,667,176,585,167,481,152,468,150"/>
-<area shape="rect" id="Node000010" title=" " alt="" coords="402,198,563,238"/>
-<area shape="poly" id="edge10_Node000008_Node000010" title=" " alt="" coords="411,148,452,185,448,189,408,152"/>
-<area shape="rect" id="Node000011" title=" " alt="" coords="588,205,706,231"/>
-<area shape="poly" id="edge11_Node000008_Node000011" title=" " alt="" coords="448,148,597,197,595,202,446,153"/>
-<area shape="rect" id="Node000012" title=" " alt="" coords="730,205,848,231"/>
-<area shape="poly" id="edge12_Node000008_Node000012" title=" " alt="" coords="469,145,482,147,600,170,718,195,731,198,730,203,717,200,599,175,481,152,468,150"/>
+<area shape="rect" id="Node000001" title="Defines data structures and utilities for representing and processing GNSS perceptions." alt="" coords="97,5,269,61"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="76,205,130,231"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="98,54,51,75,31,91,15,110,8,129,15,148,36,176,64,196,61,200,33,179,10,151,3,129,10,108,27,87,48,71,96,49"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="25,116,82,142"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="147,64,84,109,81,105,144,59"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="106,109,260,150"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="186,62,186,94,180,94,180,62"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="402,198,564,238"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="269,33,318,40,369,53,418,75,460,107,472,124,480,143,486,182,481,183,475,145,467,127,456,111,415,79,367,58,317,45,268,38"/>
+<area shape="rect" id="Node000006" href="$Perceptions_8hpp.html" title="Defines data structures and utilities for representing and processing sensor perceptions." alt="" coords="284,109,445,150"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="237,59,314,99,312,104,234,64"/>
+<area shape="poly" id="edge6_Node000006_Node000002" title=" " alt="" coords="306,153,145,206,143,201,304,148"/>
+<area shape="poly" id="edge8_Node000006_Node000005" title=" " alt="" coords="393,148,446,186,443,191,390,152"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="268,205,378,231"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="357,151,338,192,333,190,353,149"/>
 </map>
