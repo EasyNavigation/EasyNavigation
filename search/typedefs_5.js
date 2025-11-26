@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['sensorshandlerfn_0',['SensorsHandlerFn',['../classeasynav_1_1SensorsNode.html#ac9926ee4f197296b143e1588428defba',1,'easynav::SensorsNode']]]
+  ['perceptionbaseptr_0',['PerceptionBasePtr',['../namespaceeasynav.html#a4d10e036523aceea280b71de936e1c41',1,'easynav']]],
+  ['pointperceptions_1',['PointPerceptions',['../namespaceeasynav.html#aa872928bf2fa4fde3e32434f0a95fa15',1,'easynav']]]
 ];

@@ -98,6 +98,11 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classeasynav_1_1ControllerNode.html">ControllerNode</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">ROS 2 lifecycle node that manages calculating speeds for the Easy Navigation system.  <a href="classeasynav_1_1ControllerNode.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classeasynav_1_1DetectionsPerception.html">DetectionsPerception</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classeasynav_1_1DetectionsPerceptionsHandler.html">DetectionsPerceptionsHandler</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles the creation and updating of <a class="el" href="classDetectionsPerceptions.html" title="Represents a single image perception from a sensor.">DetectionsPerceptions</a> instances from sensor_msgs::msg::Image messages.  <a href="classeasynav_1_1DetectionsPerceptionsHandler.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classeasynav_1_1DummyController.html">DummyController</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A default "dummy" implementation for the Control Method.  <a href="classeasynav_1_1DummyController.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -186,6 +191,8 @@ Classes</h2></td></tr>
 Typedefs</h2></td></tr>
 <tr class="memitem:ad09d90f1fe35c9e2f2fd7fc1902312f4" id="r_ad09d90f1fe35c9e2f2fd7fc1902312f4"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad09d90f1fe35c9e2f2fd7fc1902312f4">CallbackReturnT</a> = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn</td></tr>
 <tr class="separator:ad09d90f1fe35c9e2f2fd7fc1902312f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af063ed644a76059e52052d52485b7ce3" id="r_af063ed644a76059e52052d52485b7ce3"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af063ed644a76059e52052d52485b7ce3">DetectionsPerceptions</a></td></tr>
+<tr class="separator:af063ed644a76059e52052d52485b7ce3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abd2a844526522d80f5d0a387062bfc7e" id="r_abd2a844526522d80f5d0a387062bfc7e"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abd2a844526522d80f5d0a387062bfc7e">GNSSPerceptions</a></td></tr>
 <tr class="memdesc:abd2a844526522d80f5d0a387062bfc7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alias for a vector of shared pointers to <a class="el" href="classeasynav_1_1GNSSPerception.html" title="Represents a single GNSS perception from a sensor.">GNSSPerception</a> objects.  <br /></td></tr>
 <tr class="separator:abd2a844526522d80f5d0a387062bfc7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -258,6 +265,22 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+</div>
+</div>
+<a id="af063ed644a76059e52052d52485b7ce3" name="af063ed644a76059e52052d52485b7ce3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af063ed644a76059e52052d52485b7ce3">&#9670;&#160;</a></span>DetectionsPerceptions</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="#af063ed644a76059e52052d52485b7ce3">DetectionsPerceptions</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line"> </div>
+<div class="line">  std::vector&lt;std::shared_ptr&lt;DetectionsPerception&gt;&gt;</div>
+</div><!-- fragment -->
 </div>
 </div>
 <a id="abd2a844526522d80f5d0a387062bfc7e" name="abd2a844526522d80f5d0a387062bfc7e"></a>

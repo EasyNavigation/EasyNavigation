@@ -1,0 +1,5 @@
+<map id="DetectionsPerceptionsHandler" name="DetectionsPerceptionsHandler">
+<area shape="rect" id="Node000001" title="Handles the creation and updating of DetectionsPerceptions instances from sensor_msgs::msg::Image mes..." alt="" coords="5,79,203,105"/>
+<area shape="rect" id="Node000002" href="$classeasynav_1_1PerceptionHandler.html" title="Abstract base interface for group&#45;specific perception handlers." alt="" coords="40,5,168,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="107,46,107,79,101,79,101,46"/>
+</map>

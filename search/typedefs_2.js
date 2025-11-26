@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['gnssperceptions_0',['GNSSPerceptions',['../namespaceeasynav.html#abd2a844526522d80f5d0a387062bfc7e',1,'easynav']]]
+  ['detectionsperceptions_0',['DetectionsPerceptions',['../namespaceeasynav.html#af063ed644a76059e52052d52485b7ce3',1,'easynav']]]
 ];

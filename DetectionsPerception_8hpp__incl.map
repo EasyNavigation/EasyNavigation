@@ -1,0 +1,17 @@
+<map id="easynav_common/include/easynav_common/types/DetectionsPerception.hpp" name="easynav_common/include/easynav_common/types/DetectionsPerception.hpp">
+<area shape="rect" id="Node000001" title="Defines data structures and utilities for representing and processing image perceptions." alt="" coords="114,5,287,61"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="94,205,147,231"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="114,49,86,59,59,71,34,89,15,110,8,129,15,148,28,166,44,180,81,201,78,205,41,184,24,169,10,151,3,129,10,108,31,85,56,67,84,54,113,44"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="25,116,83,142"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="160,64,87,110,84,106,157,59"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="107,109,294,150"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="203,62,203,94,198,94,198,62"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="437,198,599,238"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="288,44,409,69,460,86,494,107,507,124,515,143,521,182,516,183,510,145,502,126,491,111,458,91,407,74,287,49"/>
+<area shape="rect" id="Node000006" href="$Perceptions_8hpp.html" title="Defines data structures and utilities for representing and processing sensor perceptions." alt="" coords="319,109,480,150"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="259,59,345,100,343,104,257,64"/>
+<area shape="poly" id="edge6_Node000006_Node000002" title=" " alt="" coords="336,153,163,206,161,201,335,148"/>
+<area shape="poly" id="edge8_Node000006_Node000005" title=" " alt="" coords="428,148,481,186,478,191,425,152"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="303,205,413,231"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="392,151,373,192,368,190,387,149"/>
+</map>
