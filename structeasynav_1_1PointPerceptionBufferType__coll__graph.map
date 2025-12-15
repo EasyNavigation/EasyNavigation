@@ -1,0 +1,9 @@
+<map id="PointPerceptionBufferType" name="PointPerceptionBufferType">
+<area shape="rect" id="Node000001" title=" " alt="" coords="154,94,330,120"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,191,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="132,37,223,91,220,96,130,42"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="215,5,269,31"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="245,47,245,94,239,94,239,47"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="293,5,343,31"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="305,45,285,72,260,96,256,92,281,68,301,42"/>
+</map>

@@ -1,13 +1,17 @@
 <map id="easynav_common/include/easynav_common/RTTFBuffer.hpp" name="easynav_common/include/easynav_common/RTTFBuffer.hpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="106,5,332,46"/>
-<area shape="rect" id="Node000002" href="$Singleton_8hpp.html" title=" " alt="" coords="20,94,228,120"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="197,48,152,86,149,82,194,44"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="253,94,374,120"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="244,44,289,82,286,86,241,48"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="5,168,73,193"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="112,122,66,160,63,156,108,118"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="96,168,152,193"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="127,120,127,152,122,152,122,120"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="176,168,227,193"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="139,118,179,155,176,159,136,122"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="221,5,446,46"/>
+<area shape="rect" id="Node000002" href="$Singleton_8hpp.html" title=" " alt="" coords="20,102,228,127"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="287,49,168,98,166,93,285,44"/>
+<area shape="rect" id="Node000006" href="$TFInfo_8hpp.html" title=" " alt="" coords="253,94,414,135"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="336,47,336,78,331,78,331,47"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="438,102,560,127"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="372,44,464,92,461,96,370,49"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,183,73,208"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="113,130,65,174,61,170,110,126"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="96,183,152,208"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="127,128,127,167,122,167,122,128"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="176,183,227,208"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="138,126,181,170,178,173,134,129"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="307,183,360,208"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="336,135,336,167,331,167,331,135"/>
 </map>

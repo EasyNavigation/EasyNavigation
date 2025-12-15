@@ -1,0 +1,9 @@
+<map id="easynav_common/include/easynav_common/CircularBuffer.hpp" name="easynav_common/include/easynav_common/CircularBuffer.hpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,242,46"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="14,94,71,120"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="105,48,67,85,64,81,102,44"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="95,94,152,120"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="126,46,126,78,121,78,121,46"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="175,94,240,120"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="146,44,185,81,182,85,142,48"/>
+</map>

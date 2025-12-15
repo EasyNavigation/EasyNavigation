@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['navstate_0',['NavState',['../classeasynav_1_1NavState.html#abd38e1587ce9ba1a3306460dbeb3c49f',1,'easynav::NavState']]],
-  ['norm_5fangle_1',['norm_angle',['../namespaceeasynav.html#aaf7b2449dfa550dee63301e3d721ab3a',1,'easynav']]]
+  ['integrate_5fpending_5fperceptions_0',['integrate_pending_perceptions',['../classeasynav_1_1PointPerception.html#af8124b1de9bcb177570f59cbf6ded6b9',1,'easynav::PointPerception']]]
 ];

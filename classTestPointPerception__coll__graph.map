@@ -1,0 +1,22 @@
+<map id="TestPointPerception" name="TestPointPerception">
+<area shape="rect" id="Node000001" title=" " alt="" coords="659,207,798,232"/>
+<area shape="rect" id="Node000002" href="$classeasynav_1_1PointPerception.html" title="Concrete perception class for 3D point cloud data." alt="" coords="496,207,609,232"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="625,217,658,217,658,222,625,222"/>
+<area shape="rect" id="Node000003" href="$classeasynav_1_1PerceptionBase.html" title="Abstract base class for representing a single sensor perception." alt="" coords="205,141,318,167"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="335,167,473,198,496,204,495,209,471,203,333,172"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="7,87,57,112"/>
+<area shape="poly" id="edge10_Node000002_Node000004" title=" " alt="" coords="73,95,142,96,238,102,313,112,385,133,473,170,532,204,529,208,471,175,383,138,312,118,237,108,142,101,73,100"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="73,108,83,111,205,139,204,145,82,116,71,113"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="5,5,59,31"/>
+<area shape="poly" id="edge9_Node000002_Node000005" title=" " alt="" coords="74,17,154,24,258,42,314,57,370,77,424,102,474,133,514,170,543,204,539,208,510,174,470,138,421,107,368,82,312,62,257,47,153,29,74,22"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="66,38,167,107,231,138,228,143,164,111,63,42"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="9,184,55,210"/>
+<area shape="poly" id="edge8_Node000002_Node000006" title=" " alt="" coords="70,196,496,214,495,220,70,201"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="69,187,204,162,205,167,70,193"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="218,268,306,294"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="320,275,393,266,471,251,524,230,526,235,473,256,394,272,321,280"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="169,317,354,343"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="370,329,421,321,471,303,494,288,513,268,541,231,546,234,517,272,497,292,473,308,423,326,370,335"/>
+<area shape="rect" id="Node000009" href="$classeasynav_1_1CircularBuffer.html" title=" " alt="" coords="166,367,358,408"/>
+<area shape="poly" id="edge11_Node000002_Node000009" title=" " alt="" coords="373,383,424,371,470,348,499,322,520,290,545,232,550,234,525,292,503,325,474,353,426,376,374,388"/>
+</map>

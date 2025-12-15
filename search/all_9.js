@@ -1,9 +1,8 @@
 var searchData=
 [
-  ['main_0',['main',['../goalmanager__test__main_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627',1,'main(int argc, char **argv):&#160;goalmanager_test_main.cpp'],['../system__main_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627',1,'main(int argc, char **argv):&#160;system_main.cpp']]],
-  ['main_20repositories_1',['📦 Main Repositories',['../index.html#autotoc_md1',1,'']]],
-  ['maintainers_2',['👥 Project Maintainers',['../index.html#autotoc_md3',1,'']]],
-  ['mapsmanagernode_3',['MapsManagerNode',['../classeasynav_1_1MapsManagerNode.html',1,'MapsManagerNode'],['../classeasynav_1_1MapsManagerNode.html#a03a1cd33d6a3eaa802fa457a172cc646',1,'easynav::MapsManagerNode::MapsManagerNode()']]],
-  ['mapsmanagernode_2ecpp_4',['MapsManagerNode.cpp',['../MapsManagerNode_8cpp.html',1,'']]],
-  ['mapsmanagernode_2ehpp_5',['MapsManagerNode.hpp',['../MapsManagerNode_8hpp.html',1,'']]]
+  ['latest_0',['latest',['../classeasynav_1_1CircularBuffer.html#a6f6e74f2c9785bad7c76b2a46dd213b8',1,'easynav::CircularBuffer']]],
+  ['latest_5fref_1',['latest_ref',['../classeasynav_1_1CircularBuffer.html#a25437d0c41a3599db4879957af4b8a87',1,'easynav::CircularBuffer']]],
+  ['localizernode_2',['LocalizerNode',['../classeasynav_1_1LocalizerNode.html',1,'LocalizerNode'],['../classeasynav_1_1LocalizerNode.html#ae1de0a7f82d29fc56a673e668f316eb6',1,'easynav::LocalizerNode::LocalizerNode()']]],
+  ['localizernode_2ecpp_3',['LocalizerNode.cpp',['../LocalizerNode_8cpp.html',1,'']]],
+  ['localizernode_2ehpp_4',['LocalizerNode.hpp',['../LocalizerNode_8hpp.html',1,'']]]
 ];

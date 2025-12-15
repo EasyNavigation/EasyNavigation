@@ -7,6 +7,7 @@ var searchData=
   ['perceptionstestcase_4',['PerceptionsTestCase',['../classPerceptionsTestCase.html',1,'']]],
   ['plannernode_5',['PlannerNode',['../classeasynav_1_1PlannerNode.html',1,'easynav']]],
   ['pointperception_6',['PointPerception',['../classeasynav_1_1PointPerception.html',1,'easynav']]],
-  ['pointperceptionhandler_7',['PointPerceptionHandler',['../classeasynav_1_1PointPerceptionHandler.html',1,'easynav']]],
-  ['pointperceptionsopsview_8',['PointPerceptionsOpsView',['../classeasynav_1_1PointPerceptionsOpsView.html',1,'easynav']]]
+  ['pointperceptionbuffertype_7',['PointPerceptionBufferType',['../structeasynav_1_1PointPerceptionBufferType.html',1,'easynav']]],
+  ['pointperceptionhandler_8',['PointPerceptionHandler',['../classeasynav_1_1PointPerceptionHandler.html',1,'easynav']]],
+  ['pointperceptionsopsview_9',['PointPerceptionsOpsView',['../classeasynav_1_1PointPerceptionsOpsView.html',1,'easynav']]]
 ];

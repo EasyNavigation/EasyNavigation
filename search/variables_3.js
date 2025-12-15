@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['height_0',['height',['../structeasynav_1_1GoalManager_1_1GoalTolerance.html#a89f6abd564014faeff7cd20c340a9c7d',1,'easynav::GoalManager::GoalTolerance']]]
+  ['frame_0',['frame',['../structeasynav_1_1PointPerceptionBufferType.html#abe60a2ebe324a7ec86e5bd0024febf2e',1,'easynav::PointPerceptionBufferType']]],
+  ['frame_5fid_1',['frame_id',['../classeasynav_1_1PerceptionBase.html#aee63db9a1c81df1506964242aacdac88',1,'easynav::PerceptionBase']]]
 ];

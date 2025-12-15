@@ -1,0 +1,7 @@
+<map id="TestPointPerception" name="TestPointPerception">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,153,145,178"/>
+<area shape="rect" id="Node000002" href="$classeasynav_1_1PointPerception.html" title="Concrete perception class for 3D point cloud data." alt="" coords="18,79,132,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="78,120,78,152,72,152,72,120"/>
+<area shape="rect" id="Node000003" href="$classeasynav_1_1PerceptionBase.html" title="Abstract base class for representing a single sensor perception." alt="" coords="18,5,132,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="78,46,78,79,72,79,72,46"/>
+</map>

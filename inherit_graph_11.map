@@ -1,15 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classeasynav_1_1PerceptionBase.html" title="Abstract base class for representing a single sensor perception." alt="" coords="5,129,119,155"/>
-<area shape="rect" id="Node000001" href="$classDummyPerception.html" title=" " alt="" coords="176,5,303,31"/>
-<area shape="poly" id="edge12_Node000000_Node000001" title=" " alt="" coords="81,116,118,77,165,40,187,29,190,34,168,44,121,81,85,119"/>
-<area shape="rect" id="Node000002" href="$classeasynav_1_1DetectionsPerception.html" title=" " alt="" coords="167,55,312,80"/>
-<area shape="poly" id="edge13_Node000000_Node000002" title=" " alt="" coords="100,120,166,89,194,78,196,83,168,94,103,124"/>
-<area shape="rect" id="Node000003" href="$classeasynav_1_1GNSSPerception.html" title="Represents a single GNSS perception from a sensor." alt="" coords="179,104,300,130"/>
-<area shape="poly" id="edge14_Node000000_Node000003" title=" " alt="" coords="134,129,178,123,179,128,135,135"/>
-<area shape="rect" id="Node000004" href="$classeasynav_1_1IMUPerception.html" title="Represents a single IMU perception from a sensor." alt="" coords="185,153,294,179"/>
-<area shape="poly" id="edge15_Node000000_Node000004" title=" " alt="" coords="135,149,185,156,184,161,134,155"/>
-<area shape="rect" id="Node000005" href="$classeasynav_1_1ImagePerception.html" title="Represents a single image perception from a sensor." alt="" coords="180,203,299,228"/>
-<area shape="poly" id="edge16_Node000000_Node000005" title=" " alt="" coords="104,160,168,189,196,200,195,205,166,194,102,165"/>
-<area shape="rect" id="Node000006" href="$classeasynav_1_1PointPerception.html" title="Concrete perception class for 3D point cloud data." alt="" coords="183,252,296,278"/>
-<area shape="poly" id="edge17_Node000000_Node000006" title=" " alt="" coords="85,165,122,203,168,239,190,249,188,254,165,243,118,207,82,169"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,5,139,31"/>
+<area shape="rect" id="Node000001" href="$classeasynav_1_1DummyMapsManager.html" title="A default &quot;do&#45;nothing&quot; implementation of MapsManagerBase." alt="" coords="187,5,334,31"/>
+<area shape="poly" id="edge11_Node000000_Node000001" title=" " alt="" coords="155,16,186,16,186,21,155,21"/>
 </map>

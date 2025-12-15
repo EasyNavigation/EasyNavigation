@@ -1,3 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classstatic_01std_1_1unique__ptr_3_01RTTFBuffer_01_4.html" title=" " alt="" coords="5,5,176,31"/>
+<area shape="rect" id="Node000000" href="$classeasynav_1_1Singleton.html" title=" " alt="" coords="5,5,167,31"/>
+<area shape="rect" id="Node000001" href="$classeasynav_1_1YTSession.html" title="A Yaets Tracing Session." alt="" coords="215,31,300,56"/>
+<area shape="poly" id="edge26_Node000000_Node000001" title=" " alt="" coords="183,30,214,35,214,40,182,35"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="35,55,137,80"/>
+<area shape="poly" id="edge27_Node000002_Node000001" title=" " alt="" coords="151,56,214,47,214,52,152,61"/>
 </map>

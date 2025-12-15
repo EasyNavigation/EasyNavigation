@@ -1,15 +1,17 @@
 <map id="easynav_system/include/easynav_system/GoalManager.hpp" name="easynav_system/include/easynav_system/GoalManager.hpp">
-<area shape="rect" id="Node000001" title="Declaration of the GoalManager class." alt="" coords="474,5,701,46"/>
-<area shape="rect" id="Node000002" href="$SystemNode_8hpp.html" title="Declaration of the SystemNode class, the central coordinator node for Easy Navigation components." alt="" coords="108,94,333,135"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="490,53,305,96,303,91,488,47"/>
-<area shape="rect" id="Node000005" href="$GoalManager_8cpp.html" title="Implementation of the GoalManager class." alt="" coords="358,94,585,135"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="550,58,499,96,496,91,547,53"/>
-<area shape="rect" id="Node000006" href="$goalmanager__test__main_8cpp.html" title=" " alt="" coords="610,94,797,135"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="628,53,679,91,676,96,624,58"/>
-<area shape="rect" id="Node000007" href="$goalmanager__tests_8cpp.html" title=" " alt="" coords="821,94,980,135"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="674,48,830,91,829,96,672,53"/>
+<area shape="rect" id="Node000001" title="Declaration of the GoalManager class." alt="" coords="578,5,805,46"/>
+<area shape="rect" id="Node000002" href="$SystemNode_8hpp.html" title="Declaration of the SystemNode class, the central coordinator node for Easy Navigation components." alt="" coords="212,94,437,135"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="594,53,409,96,407,91,592,47"/>
+<area shape="rect" id="Node000006" href="$GoalManager_8cpp.html" title="Implementation of the GoalManager class." alt="" coords="462,94,689,135"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="654,58,603,96,600,91,651,53"/>
+<area shape="rect" id="Node000007" href="$goalmanager__test__main_8cpp.html" title=" " alt="" coords="714,94,901,135"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="732,53,783,91,780,96,728,58"/>
+<area shape="rect" id="Node000008" href="$goalmanager__tests_8cpp.html" title=" " alt="" coords="925,94,1084,135"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="778,48,934,91,933,96,776,53"/>
 <area shape="rect" id="Node000003" href="$SystemNode_8cpp.html" title="Implementation of the SystemNode class." alt="" coords="5,183,231,223"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="187,147,143,184,139,180,184,143"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="265,143,166,185,164,180,263,139"/>
 <area shape="rect" id="Node000004" href="$system__main_8cpp.html" title=" " alt="" coords="254,183,395,223"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="257,143,303,180,299,184,254,147"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="327,150,327,182,322,182,322,150"/>
+<area shape="rect" id="Node000005" href="$system__tfinfo__tests_8cpp.html" title=" " alt="" coords="420,183,582,223"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="380,140,462,180,460,185,377,144"/>
 </map>
