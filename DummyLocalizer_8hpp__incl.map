@@ -1,11 +1,9 @@
 <map id="easynav_localizer/include/easynav_localizer/DummyLocalizer.hpp" name="easynav_localizer/include/easynav_localizer/DummyLocalizer.hpp">
-<area shape="rect" id="Node000001" title="Declaration of the DummyLocalizer class, a default plugin implementation for localization." alt="" coords="182,5,433,46"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,102,79,127"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="240,49,91,97,86,98,84,93,89,91,238,44"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="102,102,294,127"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="284,49,226,94,223,90,281,44"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="318,94,518,135"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="334,44,383,82,380,87,331,49"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="542,102,761,127"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="386,44,589,95,588,100,385,49"/>
+<area shape="rect" id="Node000001" title="Declaration of the DummyLocalizer class, a default plugin implementation for localization." alt="" coords="195,5,447,46"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,102,197,127"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="272,49,147,98,145,93,270,44"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="221,94,421,135"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="324,47,324,78,318,78,318,47"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="445,102,664,127"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="375,44,508,93,507,98,373,49"/>
 </map>

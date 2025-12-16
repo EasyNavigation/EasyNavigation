@@ -114,40 +114,38 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#ifndef EASYNAV_PLANNER__DUMMYPLANNER_HPP_</span></div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#define EASYNAV_PLANNER__DUMMYPLANNER_HPP_</span></div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &lt;expected&gt;</span></div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &quot;nav_msgs/msg/path.hpp&quot;</span></div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &quot;easynav_core/PlannerMethodBase.hpp&quot;</span></div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceeasynav.html">easynav</a></div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>{</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span></div>
-<div class="foldopen" id="foldopen00040" data-start="{" data-end="};">
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="classeasynav_1_1DummyPlanner.html">   40</a></span><span class="keyword">class </span><a class="code hl_function" href="classeasynav_1_1DummyPlanner.html#a17e0443632add3355bdb6e8e8c81cf68">DummyPlanner</a> : <span class="keyword">public</span> easynav::PlannerMethodBase</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>{</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno"><a class="line" href="classeasynav_1_1DummyPlanner.html#a17e0443632add3355bdb6e8e8c81cf68">   44</a></span>  <a class="code hl_function" href="classeasynav_1_1DummyPlanner.html#a17e0443632add3355bdb6e8e8c81cf68">DummyPlanner</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span></div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno"><a class="line" href="classeasynav_1_1DummyPlanner.html#ae5b7a07c0a2137e5faef603bf7f707ef">   47</a></span>  <a class="code hl_function" href="classeasynav_1_1DummyPlanner.html#ae5b7a07c0a2137e5faef603bf7f707ef">~DummyPlanner</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span></div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  <span class="keyword">virtual</span> std::expected&lt;void, std::string&gt; <a class="code hl_function" href="classeasynav_1_1DummyPlanner.html#aa09f4316ce265b452c96e6d74101cd76">on_initialize</a>() <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span></div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classeasynav_1_1DummyPlanner.html#a24ddfd2eba3d3d6a90d492e8d25ff0da">update</a>(<a class="code hl_class" href="classeasynav_1_1NavState.html">NavState</a> &amp; nav_state) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>  nav_msgs::msg::Path path_;</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>  <span class="keywordtype">double</span> cycle_time_rt_ {0.0};</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>  <span class="keywordtype">double</span> cycle_time_nort_ {0.0};</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>};</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &quot;nav_msgs/msg/path.hpp&quot;</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &quot;easynav_core/PlannerMethodBase.hpp&quot;</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceeasynav.html">easynav</a></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>{</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span></div>
+<div class="foldopen" id="foldopen00038" data-start="{" data-end="};">
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="classeasynav_1_1DummyPlanner.html">   38</a></span><span class="keyword">class </span><a class="code hl_function" href="classeasynav_1_1DummyPlanner.html#a17e0443632add3355bdb6e8e8c81cf68">DummyPlanner</a> : <span class="keyword">public</span> easynav::PlannerMethodBase</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>{</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="classeasynav_1_1DummyPlanner.html#a17e0443632add3355bdb6e8e8c81cf68">   42</a></span>  <a class="code hl_function" href="classeasynav_1_1DummyPlanner.html#a17e0443632add3355bdb6e8e8c81cf68">DummyPlanner</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span></div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="classeasynav_1_1DummyPlanner.html#ae5b7a07c0a2137e5faef603bf7f707ef">   45</a></span>  <a class="code hl_function" href="classeasynav_1_1DummyPlanner.html#ae5b7a07c0a2137e5faef603bf7f707ef">~DummyPlanner</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classeasynav_1_1DummyPlanner.html#ac9d1795b6cf8a4da7bf9b33f783db911">on_initialize</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classeasynav_1_1DummyPlanner.html#a24ddfd2eba3d3d6a90d492e8d25ff0da">update</a>(<a class="code hl_class" href="classeasynav_1_1NavState.html">NavState</a> &amp; nav_state) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>  nav_msgs::msg::Path path_;</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>  <span class="keywordtype">double</span> cycle_time_rt_ {0.0};</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>  <span class="keywordtype">double</span> cycle_time_nort_ {0.0};</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>};</div>
 </div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>}  <span class="comment">// namespace easynav</span></div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span><span class="preprocessor">#endif  </span><span class="comment">// EASYNAV_PLANNER__DUMMYPLANNER_HPP_</span></div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>}  <span class="comment">// namespace easynav</span></div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span><span class="preprocessor">#endif  </span><span class="comment">// EASYNAV_PLANNER__DUMMYPLANNER_HPP_</span></div>
 <div class="ttc" id="aclasseasynav_1_1DummyPlanner_html_a17e0443632add3355bdb6e8e8c81cf68"><div class="ttname"><a href="classeasynav_1_1DummyPlanner.html#a17e0443632add3355bdb6e8e8c81cf68">easynav::DummyPlanner::DummyPlanner</a></div><div class="ttdeci">DummyPlanner()=default</div><div class="ttdoc">Default constructor.</div></div>
-<div class="ttc" id="aclasseasynav_1_1DummyPlanner_html_a24ddfd2eba3d3d6a90d492e8d25ff0da"><div class="ttname"><a href="classeasynav_1_1DummyPlanner.html#a24ddfd2eba3d3d6a90d492e8d25ff0da">easynav::DummyPlanner::update</a></div><div class="ttdeci">virtual void update(NavState &amp;nav_state) override</div><div class="ttdoc">Dummy update method.</div><div class="ttdef"><b>Definition</b> DummyPlanner.cpp:45</div></div>
-<div class="ttc" id="aclasseasynav_1_1DummyPlanner_html_aa09f4316ce265b452c96e6d74101cd76"><div class="ttname"><a href="classeasynav_1_1DummyPlanner.html#aa09f4316ce265b452c96e6d74101cd76">easynav::DummyPlanner::on_initialize</a></div><div class="ttdeci">virtual std::expected&lt; void, std::string &gt; on_initialize() override</div><div class="ttdoc">Initialization hook.</div><div class="ttdef"><b>Definition</b> DummyPlanner.cpp:29</div></div>
+<div class="ttc" id="aclasseasynav_1_1DummyPlanner_html_a24ddfd2eba3d3d6a90d492e8d25ff0da"><div class="ttname"><a href="classeasynav_1_1DummyPlanner.html#a24ddfd2eba3d3d6a90d492e8d25ff0da">easynav::DummyPlanner::update</a></div><div class="ttdeci">virtual void update(NavState &amp;nav_state) override</div><div class="ttdoc">Dummy update method.</div><div class="ttdef"><b>Definition</b> DummyPlanner.cpp:43</div></div>
+<div class="ttc" id="aclasseasynav_1_1DummyPlanner_html_ac9d1795b6cf8a4da7bf9b33f783db911"><div class="ttname"><a href="classeasynav_1_1DummyPlanner.html#ac9d1795b6cf8a4da7bf9b33f783db911">easynav::DummyPlanner::on_initialize</a></div><div class="ttdeci">virtual void on_initialize() override</div><div class="ttdoc">Initialization hook.</div><div class="ttdef"><b>Definition</b> DummyPlanner.cpp:29</div></div>
 <div class="ttc" id="aclasseasynav_1_1DummyPlanner_html_ae5b7a07c0a2137e5faef603bf7f707ef"><div class="ttname"><a href="classeasynav_1_1DummyPlanner.html#ae5b7a07c0a2137e5faef603bf7f707ef">easynav::DummyPlanner::~DummyPlanner</a></div><div class="ttdeci">~DummyPlanner()=default</div><div class="ttdoc">Destructor.</div></div>
 <div class="ttc" id="aclasseasynav_1_1NavState_html"><div class="ttname"><a href="classeasynav_1_1NavState.html">easynav::NavState</a></div><div class="ttdoc">A generic, type-safe, thread-safe blackboard to hold runtime state.</div><div class="ttdef"><b>Definition</b> NavState.hpp:87</div></div>
 <div class="ttc" id="anamespaceeasynav_html"><div class="ttname"><a href="namespaceeasynav.html">easynav</a></div><div class="ttdef"><b>Definition</b> CircularBuffer.hpp:28</div></div>

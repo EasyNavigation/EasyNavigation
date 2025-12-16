@@ -124,9 +124,9 @@ Collaboration diagram for DummyController:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:af7ac7ec07d3c63ff4f77f19543350c9f" id="r_af7ac7ec07d3c63ff4f77f19543350c9f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af7ac7ec07d3c63ff4f77f19543350c9f">DummyController</a> ()=default</td></tr>
 <tr class="separator:af7ac7ec07d3c63ff4f77f19543350c9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa09f4316ce265b452c96e6d74101cd76" id="r_aa09f4316ce265b452c96e6d74101cd76"><td class="memItemLeft" align="right" valign="top">virtual std::expected&lt; void, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa09f4316ce265b452c96e6d74101cd76">on_initialize</a> () override</td></tr>
-<tr class="memdesc:aa09f4316ce265b452c96e6d74101cd76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the control method plugin.  <br /></td></tr>
-<tr class="separator:aa09f4316ce265b452c96e6d74101cd76"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac9d1795b6cf8a4da7bf9b33f783db911" id="r_ac9d1795b6cf8a4da7bf9b33f783db911"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac9d1795b6cf8a4da7bf9b33f783db911">on_initialize</a> () override</td></tr>
+<tr class="memdesc:ac9d1795b6cf8a4da7bf9b33f783db911"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the control method plugin.  <br /></td></tr>
+<tr class="separator:ac9d1795b6cf8a4da7bf9b33f783db911"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6ed380ba537bbe9a85710810db50a95c" id="r_a6ed380ba537bbe9a85710810db50a95c"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6ed380ba537bbe9a85710810db50a95c">update_rt</a> (<a class="el" href="classeasynav_1_1NavState.html">NavState</a> &amp;nav_state) override</td></tr>
 <tr class="memdesc:a6ed380ba537bbe9a85710810db50a95c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Run the control method and update the control command.  <br /></td></tr>
 <tr class="separator:a6ed380ba537bbe9a85710810db50a95c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -188,8 +188,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="aa09f4316ce265b452c96e6d74101cd76" name="aa09f4316ce265b452c96e6d74101cd76"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa09f4316ce265b452c96e6d74101cd76">&#9670;&#160;</a></span>on_initialize()</h2>
+<a id="ac9d1795b6cf8a4da7bf9b33f783db911" name="ac9d1795b6cf8a4da7bf9b33f783db911"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac9d1795b6cf8a4da7bf9b33f783db911">&#9670;&#160;</a></span>on_initialize()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -198,7 +198,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::expected&lt; void, std::string &gt; on_initialize </td>
+          <td class="memname">void on_initialize </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -212,12 +212,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Initializes the control method plugin. </p>
-<p>This method is called once during the configuration phase of the controller node, and can be optionally overridden by derived classes to perform custom setup logic.</p>
-<dl class="section return"><dt>Returns</dt><dd>std::expected&lt;void, std::string&gt; Returns an expected object:<ul>
-<li><code>void</code> if initialization was successful,</li>
-<li>a <code>std::string</code> containing an error message if initialization failed. </li>
-</ul>
-</dd></dl>
+<p>This method is called once during the configuration phase of the controller node, and can be optionally overridden by derived classes to perform custom setup logic. </p>
 
 </div>
 </div>

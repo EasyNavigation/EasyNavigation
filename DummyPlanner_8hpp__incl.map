@@ -1,9 +1,7 @@
 <map id="easynav_planner/include/easynav_planner/DummyPlanner.hpp" name="easynav_planner/include/easynav_planner/DummyPlanner.hpp">
-<area shape="rect" id="Node000001" title="Declaration of the DummyPlanner class, a default fallback planner plugin." alt="" coords="66,5,304,46"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,102,79,127"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="154,49,76,96,73,91,151,44"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="103,102,266,127"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="187,47,187,86,182,86,182,47"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="290,94,482,135"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="231,44,327,85,325,90,229,49"/>
+<area shape="rect" id="Node000001" title="Declaration of the DummyPlanner class, a default fallback planner plugin." alt="" coords="68,5,306,46"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,102,169,127"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="166,49,114,94,110,90,163,44"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="192,94,384,135"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="212,44,256,82,252,86,208,49"/>
 </map>

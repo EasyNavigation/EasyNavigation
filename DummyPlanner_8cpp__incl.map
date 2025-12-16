@@ -1,29 +1,27 @@
 <map id="easynav_planner/src/easynav_planner/DummyPlanner.cpp" name="easynav_planner/src/easynav_planner/DummyPlanner.cpp">
-<area shape="rect" id="Node000001" title="Implementation of the DummyPlanner class." alt="" coords="548,5,786,46"/>
-<area shape="rect" id="Node000002" href="$DummyPlanner_8hpp.html" title="Declaration of the DummyPlanner class, a default fallback planner plugin." alt="" coords="212,102,446,127"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="591,49,392,100,390,95,589,44"/>
-<area shape="rect" id="Node000006" href="$RTTFBuffer_8hpp.html" title=" " alt="" coords="557,102,778,127"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="670,47,670,86,665,86,665,47"/>
-<area shape="rect" id="Node000014" title=" " alt="" coords="802,94,930,135"/>
-<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="713,44,808,85,806,90,711,49"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="5,190,79,216"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="282,130,193,154,92,185,87,187,85,182,91,180,192,149,280,125"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="103,190,266,216"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="310,130,219,184,217,179,307,125"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="290,183,482,223"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="339,126,367,168,363,171,334,129"/>
-<area shape="rect" id="Node000007" href="$Singleton_8hpp.html" title=" " alt="" coords="506,190,714,216"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="662,129,628,179,624,176,657,126"/>
-<area shape="rect" id="Node000011" href="$TFInfo_8hpp.html" title=" " alt="" coords="739,183,900,223"/>
-<area shape="poly" id="edge10_Node000006_Node000011" title=" " alt="" coords="690,125,773,172,770,177,687,130"/>
-<area shape="rect" id="Node000013" title=" " alt="" coords="924,190,1045,216"/>
-<area shape="poly" id="edge12_Node000006_Node000013" title=" " alt="" coords="713,125,926,183,925,188,711,130"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="491,271,558,297"/>
-<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="599,218,551,263,547,259,595,214"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="582,271,638,297"/>
-<area shape="poly" id="edge8_Node000007_Node000009" title=" " alt="" coords="613,216,613,255,607,255,607,216"/>
-<area shape="rect" id="Node000010" title=" " alt="" coords="662,271,713,297"/>
-<area shape="poly" id="edge9_Node000007_Node000010" title=" " alt="" coords="624,214,667,258,663,262,620,218"/>
-<area shape="rect" id="Node000012" title=" " alt="" coords="793,271,846,297"/>
-<area shape="poly" id="edge11_Node000011_Node000012" title=" " alt="" coords="822,224,822,256,817,256,817,224"/>
+<area shape="rect" id="Node000001" title="Implementation of the DummyPlanner class." alt="" coords="512,5,750,46"/>
+<area shape="rect" id="Node000002" href="$DummyPlanner_8hpp.html" title="Declaration of the DummyPlanner class, a default fallback planner plugin." alt="" coords="171,102,406,127"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="553,49,352,100,350,95,552,44"/>
+<area shape="rect" id="Node000005" href="$RTTFBuffer_8hpp.html" title=" " alt="" coords="520,102,742,127"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="634,47,634,86,628,86,628,47"/>
+<area shape="rect" id="Node000013" title=" " alt="" coords="766,94,893,135"/>
+<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="677,44,772,85,769,90,675,49"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,190,169,216"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="261,130,130,186,128,181,259,125"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="192,183,384,223"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="291,128,291,168,286,168,286,128"/>
+<area shape="rect" id="Node000006" href="$Singleton_8hpp.html" title=" " alt="" coords="408,190,616,216"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="616,130,543,183,540,178,613,125"/>
+<area shape="rect" id="Node000010" href="$TFInfo_8hpp.html" title=" " alt="" coords="641,183,802,223"/>
+<area shape="poly" id="edge9_Node000005_Node000010" title=" " alt="" coords="645,126,692,170,688,174,642,130"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="826,190,948,216"/>
+<area shape="poly" id="edge11_Node000005_Node000012" title=" " alt="" coords="668,125,838,182,836,187,666,130"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="393,271,461,297"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="501,218,453,263,449,259,498,214"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="484,271,540,297"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="515,216,515,255,510,255,510,216"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="564,271,615,297"/>
+<area shape="poly" id="edge8_Node000006_Node000009" title=" " alt="" coords="526,214,569,258,566,262,522,218"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="695,271,748,297"/>
+<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="724,224,724,256,719,256,719,224"/>
 </map>
