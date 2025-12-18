@@ -1,7 +1,7 @@
 <map id="easynav_system/src/easynav_system/GoalManager.cpp" name="easynav_system/src/easynav_system/GoalManager.cpp">
 <area shape="rect" id="Node000001" title="Implementation of the GoalManager class." alt="" coords="262,5,490,46"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="58,102,129,127"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="301,49,142,97,137,98,136,93,140,91,299,44"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="72,102,130,127"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="296,49,220,70,142,97,140,97,138,92,140,91,219,65,294,44"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="153,94,308,135"/>
 <area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="344,49,278,88,275,84,341,44"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="332,102,420,127"/>
