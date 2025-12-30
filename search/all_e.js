@@ -10,7 +10,8 @@ var searchData=
   ['repositories_7',['📦 Main Repositories',['../index.html#autotoc_md1',1,'']]],
   ['reset_8',['reset',['../classeasynav_1_1GoalManagerClient.html#ad20897c5c8bd47f5d4005989bead0e55',1,'easynav::GoalManagerClient']]],
   ['resize_9',['resize',['../classeasynav_1_1PointPerception.html#abec4b6a1f866fa00c123e151c664dab2',1,'easynav::PointPerception']]],
-  ['robot_5fframe_10',['robot_frame',['../structeasynav_1_1TFInfo.html#a353f8a8b1f5f926d60a93b70c87e173f',1,'easynav::TFInfo']]],
-  ['rttfbuffer_11',['RTTFBuffer',['../classeasynav_1_1RTTFBuffer.html',1,'RTTFBuffer'],['../classeasynav_1_1RTTFBuffer.html#afaceb31b09807d360fb2b8e91ec6a929',1,'easynav::RTTFBuffer::RTTFBuffer(const rclcpp::Clock::SharedPtr &amp;clock)'],['../classeasynav_1_1RTTFBuffer.html#aa7ef3a0d2cb5503016dd47f8877364fc',1,'easynav::RTTFBuffer::RTTFBuffer()']]],
-  ['rttfbuffer_2ehpp_12',['RTTFBuffer.hpp',['../RTTFBuffer_8hpp.html',1,'']]]
+  ['robot_5ffootprint_5fframe_10',['robot_footprint_frame',['../structeasynav_1_1TFInfo.html#a8dbd52299e41d67bf96df83528cb1eac',1,'easynav::TFInfo']]],
+  ['robot_5fframe_11',['robot_frame',['../structeasynav_1_1TFInfo.html#a353f8a8b1f5f926d60a93b70c87e173f',1,'easynav::TFInfo']]],
+  ['rttfbuffer_12',['RTTFBuffer',['../classeasynav_1_1RTTFBuffer.html',1,'RTTFBuffer'],['../classeasynav_1_1RTTFBuffer.html#afaceb31b09807d360fb2b8e91ec6a929',1,'easynav::RTTFBuffer::RTTFBuffer(const rclcpp::Clock::SharedPtr &amp;clock)'],['../classeasynav_1_1RTTFBuffer.html#aa7ef3a0d2cb5503016dd47f8877364fc',1,'easynav::RTTFBuffer::RTTFBuffer()']]],
+  ['rttfbuffer_2ehpp_13',['RTTFBuffer.hpp',['../RTTFBuffer_8hpp.html',1,'']]]
 ];

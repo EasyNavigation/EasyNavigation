@@ -104,9 +104,9 @@ Collaboration diagram for TFInfo:</div>
 <div class="dyncontent">
 <div class="center"><img src="structeasynav_1_1TFInfo__coll__graph.png" border="0" usemap="#aTFInfo_coll__map" alt="Collaboration graph"/></div>
 <map name="aTFInfo_coll__map" id="aTFInfo_coll__map">
-<area shape="rect" title="Aggregated TF configuration used across EasyNav." alt="" coords="5,154,65,180"/>
+<area shape="rect" title="Aggregated TF configuration used across EasyNav." alt="" coords="5,184,65,210"/>
 <area shape="rect" title=" " alt="" coords="8,5,62,31"/>
-<area shape="poly" title=" " alt="" coords="38,46,38,153,32,153,32,46"/>
+<area shape="poly" title=" " alt="" coords="38,47,38,184,32,184,32,47"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -118,8 +118,11 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:ae4692f4f0f9d4fea125ce56cadb80f8a" id="r_ae4692f4f0f9d4fea125ce56cadb80f8a"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae4692f4f0f9d4fea125ce56cadb80f8a">odom_frame</a> {&quot;odom&quot;}</td></tr>
 <tr class="memdesc:ae4692f4f0f9d4fea125ce56cadb80f8a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Odometry frame.  <br /></td></tr>
 <tr class="separator:ae4692f4f0f9d4fea125ce56cadb80f8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8dbd52299e41d67bf96df83528cb1eac" id="r_a8dbd52299e41d67bf96df83528cb1eac"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8dbd52299e41d67bf96df83528cb1eac">robot_footprint_frame</a> {&quot;base_footprint&quot;}</td></tr>
+<tr class="memdesc:a8dbd52299e41d67bf96df83528cb1eac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Robot base frame (base_footprint equivalent).  <br /></td></tr>
+<tr class="separator:a8dbd52299e41d67bf96df83528cb1eac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a353f8a8b1f5f926d60a93b70c87e173f" id="r_a353f8a8b1f5f926d60a93b70c87e173f"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a353f8a8b1f5f926d60a93b70c87e173f">robot_frame</a> {&quot;base_link&quot;}</td></tr>
-<tr class="memdesc:a353f8a8b1f5f926d60a93b70c87e173f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Robot base frame (base_link/base_footprint equivalent).  <br /></td></tr>
+<tr class="memdesc:a353f8a8b1f5f926d60a93b70c87e173f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Robot base frame (base_link equivalent).  <br /></td></tr>
 <tr class="separator:a353f8a8b1f5f926d60a93b70c87e173f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad9c446687c77da1009753a37c278d82c" id="r_ad9c446687c77da1009753a37c278d82c"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad9c446687c77da1009753a37c278d82c">tf_prefix</a> {&quot;&quot;}</td></tr>
 <tr class="memdesc:ad9c446687c77da1009753a37c278d82c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Optional TF prefix applied to frame names.  <br /></td></tr>
@@ -163,6 +166,22 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a8dbd52299e41d67bf96df83528cb1eac" name="a8dbd52299e41d67bf96df83528cb1eac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8dbd52299e41d67bf96df83528cb1eac">&#9670;&#160;</a></span>robot_footprint_frame</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string robot_footprint_frame {&quot;base_footprint&quot;}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Robot base frame (base_footprint equivalent). </p>
+
+</div>
+</div>
 <a id="a353f8a8b1f5f926d60a93b70c87e173f" name="a353f8a8b1f5f926d60a93b70c87e173f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a353f8a8b1f5f926d60a93b70c87e173f">&#9670;&#160;</a></span>robot_frame</h2>
 
@@ -175,7 +194,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Robot base frame (base_link/base_footprint equivalent). </p>
+<p>Robot base frame (base_link equivalent). </p>
 
 </div>
 </div>
