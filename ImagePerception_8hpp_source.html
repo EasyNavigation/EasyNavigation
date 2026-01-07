@@ -167,10 +167,12 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span></div>
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno"><a class="line" href="namespaceeasynav.html#a1551c0f2967fd745b9d74705c0b367d3">  112</a></span><span class="keyword">using </span><a class="code hl_typedef" href="namespaceeasynav.html#a1551c0f2967fd745b9d74705c0b367d3">ImagePerceptions</a> =</div>
 <div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>  std::vector&lt;std::shared_ptr&lt;ImagePerception&gt;&gt;;</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span> </div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>}  <span class="comment">// namespace easynav</span></div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span> </div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span><span class="preprocessor">#endif  </span><span class="comment">// EASYNAV_COMMON_TYPES__IMAGEPERCEPTIONS_HPP_</span></div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span></div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>rclcpp::Time <a class="code hl_function" href="namespaceeasynav.html#aba5d8b0cc3e993bba05193176d8e52e2">get_latest_image_perceptions_stamp</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="namespaceeasynav.html#a1551c0f2967fd745b9d74705c0b367d3">ImagePerceptions</a> &amp; perceptions);</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span> </div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>}  <span class="comment">// namespace easynav</span></div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span> </div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span><span class="preprocessor">#endif  </span><span class="comment">// EASYNAV_COMMON_TYPES__IMAGEPERCEPTIONS_HPP_</span></div>
 <div class="ttc" id="aPerceptions_8hpp_html"><div class="ttname"><a href="Perceptions_8hpp.html">Perceptions.hpp</a></div><div class="ttdoc">Defines data structures and utilities for representing and processing sensor perceptions.</div></div>
 <div class="ttc" id="aclasseasynav_1_1ImagePerceptionHandler_html"><div class="ttname"><a href="classeasynav_1_1ImagePerceptionHandler.html">easynav::ImagePerceptionHandler</a></div><div class="ttdoc">Handles the creation and updating of ImagePerception instances from sensor_msgs::msg::Image messages.</div><div class="ttdef"><b>Definition</b> ImagePerception.hpp:73</div></div>
 <div class="ttc" id="aclasseasynav_1_1ImagePerceptionHandler_html_a1801b9e6bdf60e89fdec38476d3718dd"><div class="ttname"><a href="classeasynav_1_1ImagePerceptionHandler.html#a1801b9e6bdf60e89fdec38476d3718dd">easynav::ImagePerceptionHandler::create</a></div><div class="ttdeci">std::shared_ptr&lt; PerceptionBase &gt; create(const std::string &amp;) override</div><div class="ttdoc">Creates a new empty ImagePerception instance.</div><div class="ttdef"><b>Definition</b> ImagePerception.hpp:82</div></div>
@@ -184,6 +186,7 @@ $(function(){ initResizable(false); });
 <div class="ttc" id="aclasseasynav_1_1PerceptionHandler_html"><div class="ttname"><a href="classeasynav_1_1PerceptionHandler.html">easynav::PerceptionHandler</a></div><div class="ttdoc">Abstract base interface for group-specific perception handlers.</div><div class="ttdef"><b>Definition</b> Perceptions.hpp:121</div></div>
 <div class="ttc" id="anamespaceeasynav_html"><div class="ttname"><a href="namespaceeasynav.html">easynav</a></div><div class="ttdef"><b>Definition</b> CircularBuffer.hpp:28</div></div>
 <div class="ttc" id="anamespaceeasynav_html_a1551c0f2967fd745b9d74705c0b367d3"><div class="ttname"><a href="namespaceeasynav.html#a1551c0f2967fd745b9d74705c0b367d3">easynav::ImagePerceptions</a></div><div class="ttdeci">std::vector&lt; std::shared_ptr&lt; ImagePerception &gt; &gt; ImagePerceptions</div><div class="ttdoc">Alias for a vector of shared pointers to ImagePerception objects.</div><div class="ttdef"><b>Definition</b> ImagePerception.hpp:112</div></div>
+<div class="ttc" id="anamespaceeasynav_html_aba5d8b0cc3e993bba05193176d8e52e2"><div class="ttname"><a href="namespaceeasynav.html#aba5d8b0cc3e993bba05193176d8e52e2">easynav::get_latest_image_perceptions_stamp</a></div><div class="ttdeci">rclcpp::Time get_latest_image_perceptions_stamp(const ImagePerceptions &amp;perceptions)</div><div class="ttdoc">Retrieves the latest timestamp among a set of image-based perceptions.</div><div class="ttdef"><b>Definition</b> ImagePerception.cpp:74</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

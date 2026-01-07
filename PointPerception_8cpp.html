@@ -97,6 +97,10 @@ $(function(){ initResizable(false); });
 <div class="textblock"><code>#include &lt;string&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
 <code>#include &lt;optional&gt;</code><br />
+<code>#include &lt;execinfo.h&gt;</code><br />
+<code>#include &lt;cxxabi.h&gt;</code><br />
+<code>#include &lt;cstdlib&gt;</code><br />
+<code>#include &lt;sstream&gt;</code><br />
 <code>#include &quot;pcl_conversions/pcl_conversions.h&quot;</code><br />
 <code>#include &quot;pcl/point_cloud.h&quot;</code><br />
 <code>#include &quot;pcl/point_types.h&quot;</code><br />
@@ -112,33 +116,41 @@ Include dependency graph for PointPerception.cpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="PointPerception_8cpp__incl.png" border="0" usemap="#aeasynav__common_2src_2easynav__common_2types_2PointPerception_8cpp" alt=""/></div>
 <map name="aeasynav__common_2src_2easynav__common_2types_2PointPerception_8cpp" id="aeasynav__common_2src_2easynav__common_2types_2PointPerception_8cpp">
-<area shape="rect" title=" " alt="" coords="1822,5,1987,61"/>
+<area shape="rect" title=" " alt="" coords="2170,5,2335,61"/>
 <area shape="rect" title=" " alt="" coords="926,375,979,401"/>
-<area shape="poly" title=" " alt="" coords="1821,38,1538,42,1166,54,984,63,825,76,704,92,662,101,635,111,598,137,573,167,566,183,564,200,567,218,577,237,610,275,650,306,694,330,742,349,789,363,835,372,910,382,910,387,834,377,788,368,740,354,692,335,647,310,606,279,573,240,562,220,559,201,561,182,568,165,594,133,632,107,660,96,703,86,825,70,984,58,1166,48,1538,37,1821,32"/>
+<area shape="poly" title=" " alt="" coords="2169,37,1817,37,1336,46,1098,55,889,68,728,87,673,98,637,111,600,137,573,167,566,183,564,200,567,218,577,237,610,275,650,306,694,330,742,349,789,363,835,372,910,382,910,387,834,377,788,368,740,354,692,335,647,310,606,279,573,240,562,220,559,200,561,182,569,164,596,133,635,107,671,93,727,82,888,63,1098,50,1336,41,1817,32,2169,31"/>
 <area shape="rect" title=" " alt="" coords="820,294,877,320"/>
-<area shape="poly" title=" " alt="" coords="1821,36,1645,38,1406,48,1134,70,996,88,861,112,777,121,707,127,677,134,648,146,620,167,593,199,586,212,583,224,585,235,590,244,612,261,645,274,727,292,805,300,804,306,726,298,643,280,609,266,586,248,580,236,578,224,581,211,589,196,617,164,645,142,675,129,706,122,776,116,860,106,995,83,1134,65,1406,42,1645,33,1821,31"/>
+<area shape="poly" title=" " alt="" coords="2169,39,1890,45,1510,59,1132,81,975,95,857,112,774,121,705,127,675,134,647,147,620,168,593,199,586,212,583,224,585,235,590,244,612,261,645,275,727,292,805,300,804,306,726,298,643,280,610,266,586,248,580,237,578,224,581,211,589,196,616,164,644,142,674,129,705,122,773,116,856,106,975,90,1132,75,1510,54,1890,40,2169,33"/>
 <area shape="rect" title=" " alt="" coords="603,205,669,231"/>
-<area shape="poly" title=" " alt="" coords="1821,42,1517,67,1324,87,1131,112,904,145,806,166,682,200,678,202,676,197,681,195,805,160,903,140,1130,106,1324,81,1516,62,1821,37"/>
-<area shape="rect" title=" " alt="" coords="2457,109,2594,150"/>
-<area shape="poly" title=" " alt="" coords="1988,41,2193,68,2439,106,2443,107,2442,112,2438,112,2193,73,1987,47"/>
+<area shape="poly" title=" " alt="" coords="2169,39,1981,45,1721,58,1423,79,1122,112,899,144,804,165,682,200,678,202,676,197,681,195,802,160,898,139,1121,106,1423,74,1721,52,1981,40,2169,34"/>
+<area shape="rect" title=" " alt="" coords="2424,116,2504,142"/>
+<area shape="poly" title=" " alt="" coords="2315,59,2424,107,2422,112,2312,64"/>
+<area shape="rect" title=" " alt="" coords="2528,116,2595,142"/>
+<area shape="poly" title=" " alt="" coords="2336,53,2424,77,2517,106,2521,108,2519,113,2515,112,2422,82,2334,58"/>
+<area shape="rect" title=" " alt="" coords="2620,116,2679,142"/>
+<area shape="poly" title=" " alt="" coords="2336,44,2465,69,2608,106,2612,108,2610,113,2606,112,2464,74,2335,49"/>
+<area shape="rect" title=" " alt="" coords="2703,116,2772,142"/>
+<area shape="poly" title=" " alt="" coords="2336,41,2502,64,2597,83,2692,106,2697,108,2696,113,2690,112,2596,88,2501,70,2335,46"/>
+<area shape="rect" title=" " alt="" coords="2796,109,2932,150"/>
+<area shape="poly" title=" " alt="" coords="2336,41,2535,66,2781,106,2780,111,2534,72,2335,46"/>
 <area shape="rect" title=" " alt="" coords="693,205,811,231"/>
-<area shape="poly" title=" " alt="" coords="1821,49,1402,110,1126,153,846,200,825,204,824,199,845,195,1125,148,1401,104,1821,43"/>
+<area shape="poly" title=" " alt="" coords="2169,43,1844,69,1428,112,1136,151,846,200,825,204,824,199,845,195,1136,145,1428,106,1844,64,2169,38"/>
 <area shape="rect" title=" " alt="" coords="1845,205,1963,231"/>
-<area shape="poly" title=" " alt="" coords="1907,61,1907,189,1902,189,1902,61"/>
-<area shape="rect" title=" " alt="" coords="2618,109,2772,150"/>
-<area shape="poly" title=" " alt="" coords="1987,38,2257,62,2427,82,2603,106,2602,111,2427,87,2256,67,1987,43"/>
+<area shape="poly" title=" " alt="" coords="2202,64,1942,200,1939,195,2199,59"/>
+<area shape="rect" title=" " alt="" coords="2956,109,3111,150"/>
+<area shape="poly" title=" " alt="" coords="2335,38,2601,62,2769,82,2942,106,2941,111,2768,87,2601,68,2335,43"/>
 <area shape="rect" title=" " alt="" coords="1988,198,2148,238"/>
-<area shape="poly" title=" " alt="" coords="1930,60,2043,184,2039,188,1926,63"/>
+<area shape="poly" title=" " alt="" coords="2227,63,2100,189,2096,185,2223,59"/>
 <area shape="rect" title=" " alt="" coords="2172,198,2332,238"/>
-<area shape="poly" title=" " alt="" coords="1957,59,2203,188,2200,192,1955,64"/>
+<area shape="poly" title=" " alt="" coords="2255,61,2255,182,2250,182,2250,61"/>
 <area shape="rect" title=" " alt="" coords="1672,294,1782,320"/>
-<area shape="poly" title=" " alt="" coords="1988,41,2125,62,2199,79,2267,100,2322,126,2344,141,2359,158,2368,176,2370,196,2362,218,2346,240,2333,249,2312,256,2250,266,2077,278,1900,283,1795,289,1781,292,1780,287,1794,284,1900,278,2076,272,2249,261,2311,250,2331,244,2342,236,2358,215,2364,196,2363,178,2355,161,2340,146,2320,131,2265,105,2197,84,2124,68,1987,46"/>
+<area shape="poly" title=" " alt="" coords="2284,60,2318,98,2349,145,2359,170,2363,194,2360,218,2346,240,2333,249,2312,256,2250,266,2077,278,1900,283,1795,289,1781,292,1780,287,1794,284,1900,278,2076,272,2249,261,2311,250,2331,244,2342,236,2355,216,2358,195,2354,171,2345,147,2314,101,2280,63"/>
 <area shape="rect" title=" " alt="" coords="1806,286,1968,327"/>
-<area shape="poly" title=" " alt="" coords="1988,32,2096,36,2216,48,2272,58,2323,70,2363,87,2390,107,2412,141,2419,174,2412,207,2390,240,2370,252,2334,262,2228,279,2101,292,1983,302,1983,297,2101,287,2227,274,2333,257,2368,247,2386,236,2407,205,2414,174,2407,143,2386,111,2360,91,2321,75,2271,63,2215,53,2095,42,1987,37"/>
+<area shape="poly" title=" " alt="" coords="2303,59,2331,81,2357,107,2383,141,2402,174,2407,190,2407,206,2402,223,2390,240,2370,252,2334,262,2228,279,2101,292,1983,302,1983,297,2101,287,2227,274,2333,257,2368,247,2386,236,2397,221,2402,206,2402,191,2397,176,2379,144,2353,111,2328,85,2299,64"/>
 <area shape="rect" href="PointPerception_8hpp.html" title="Defines data structures and utilities for representing and processing point&#45;based sensor perceptions." alt="" coords="1440,109,1601,150"/>
-<area shape="poly" title=" " alt="" coords="1821,57,1616,107,1615,102,1820,52"/>
+<area shape="poly" title=" " alt="" coords="2169,48,1616,118,1616,113,2169,42"/>
 <area shape="rect" href="RTTFBuffer_8hpp.html" title=" " alt="" coords="256,205,478,231"/>
-<area shape="poly" title=" " alt="" coords="1821,39,1512,45,1099,59,716,81,577,95,529,103,497,111,464,128,434,150,388,195,384,191,431,146,462,124,495,107,528,98,576,90,715,75,1099,54,1512,40,1821,33"/>
+<area shape="poly" title=" " alt="" coords="2169,38,1792,41,1269,53,1008,62,778,75,600,91,538,101,497,111,464,128,434,150,388,195,384,191,431,146,462,124,495,107,537,96,599,86,778,69,1008,57,1269,47,1792,36,2169,32"/>
 <area shape="poly" title=" " alt="" coords="1521,150,1514,193,1497,239,1480,270,1463,293,1442,312,1412,329,1377,342,1330,353,1213,370,1091,381,994,387,994,382,1091,376,1212,365,1329,348,1375,337,1410,325,1439,307,1459,290,1475,267,1492,237,1509,191,1516,150"/>
 <area shape="poly" title=" " alt="" coords="1439,137,1287,144,1111,157,957,176,904,187,875,200,862,216,854,237,849,279,844,278,849,235,857,214,872,196,902,182,956,171,1110,152,1287,139,1439,131"/>
 <area shape="poly" title=" " alt="" coords="1439,137,1046,158,835,177,748,188,682,200,676,202,674,197,681,195,747,183,834,172,1045,153,1439,131"/>
@@ -187,9 +199,14 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a1ea58f451bda419fce2140ef9097d393" id="r_a1ea58f451bda419fce2140ef9097d393"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceeasynav.html#a1ea58f451bda419fce2140ef9097d393">backtrace_to_string</a> (std::size_t max_frames=64, std::size_t skip=0)</td></tr>
+<tr class="separator:a1ea58f451bda419fce2140ef9097d393"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa1af512138bf2ac8f6d199ba2761a918" id="r_aa1af512138bf2ac8f6d199ba2761a918"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceeasynav.html#aa1af512138bf2ac8f6d199ba2761a918">convert</a> (const sensor_msgs::msg::LaserScan &amp;scan, pcl::PointCloud&lt; pcl::PointXYZ &gt; &amp;pc)</td></tr>
 <tr class="memdesc:aa1af512138bf2ac8f6d199ba2761a918"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a <code>LaserScan</code> message into a point cloud.  <br /></td></tr>
 <tr class="separator:aa1af512138bf2ac8f6d199ba2761a918"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a41c264598339537f447072e0e490fb6f" id="r_a41c264598339537f447072e0e490fb6f"><td class="memItemLeft" align="right" valign="top">rclcpp::Time&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceeasynav.html#a41c264598339537f447072e0e490fb6f">get_latest_point_perceptions_stamp</a> (const <a class="el" href="namespaceeasynav.html#aa872928bf2fa4fde3e32434f0a95fa15">PointPerceptions</a> &amp;perceptions)</td></tr>
+<tr class="memdesc:a41c264598339537f447072e0e490fb6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the latest timestamp among a set of point-based perceptions.  <br /></td></tr>
+<tr class="separator:a41c264598339537f447072e0e490fb6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad88fea01569979532c80883949bee0dd" id="r_ad88fea01569979532c80883949bee0dd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceeasynav.html#aa872928bf2fa4fde3e32434f0a95fa15">PointPerceptions</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceeasynav.html#ad88fea01569979532c80883949bee0dd">get_point_perceptions</a> (std::vector&lt; <a class="el" href="structeasynav_1_1PerceptionPtr.html">PerceptionPtr</a> &gt; &amp;perceptionptr)</td></tr>
 <tr class="memdesc:ad88fea01569979532c80883949bee0dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extracts all <a class="el" href="classeasynav_1_1PointPerception.html">PointPerception</a> objects from a heterogeneous collection.  <br /></td></tr>
 <tr class="separator:ad88fea01569979532c80883949bee0dd"><td class="memSeparator" colspan="2">&#160;</td></tr>

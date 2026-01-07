@@ -219,6 +219,8 @@ Typedefs</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a1ea58f451bda419fce2140ef9097d393" id="r_a1ea58f451bda419fce2140ef9097d393"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1ea58f451bda419fce2140ef9097d393">backtrace_to_string</a> (std::size_t max_frames=64, std::size_t skip=0)</td></tr>
+<tr class="separator:a1ea58f451bda419fce2140ef9097d393"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7bb977b8b2c38af1039172c74d9b5024" id="r_a7bb977b8b2c38af1039172c74d9b5024"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7bb977b8b2c38af1039172c74d9b5024">calculate_angle</a> (const geometry_msgs::msg::Pose &amp;pose1, const geometry_msgs::msg::Pose &amp;pose2)</td></tr>
 <tr class="memdesc:a7bb977b8b2c38af1039172c74d9b5024"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the (absolute) yaw angle difference between two poses.  <br /></td></tr>
 <tr class="separator:a7bb977b8b2c38af1039172c74d9b5024"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -231,6 +233,21 @@ Functions</h2></td></tr>
 <tr class="memitem:a979982102c0dbd9e9c970d56c96481e3" id="r_a979982102c0dbd9e9c970d56c96481e3"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a979982102c0dbd9e9c970d56c96481e3">demangle</a> (const char *name)</td></tr>
 <tr class="memdesc:a979982102c0dbd9e9c970d56c96481e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Demangles a C++ RTTI type name if possible.  <br /></td></tr>
 <tr class="separator:a979982102c0dbd9e9c970d56c96481e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6955841f950d0cda0d0d34c96a909e7a" id="r_a6955841f950d0cda0d0d34c96a909e7a"><td class="memItemLeft" align="right" valign="top">rclcpp::Time&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6955841f950d0cda0d0d34c96a909e7a">get_latest_detections_perceptions_stamp</a> (const <a class="el" href="#af063ed644a76059e52052d52485b7ce3">DetectionsPerceptions</a> &amp;perceptions)</td></tr>
+<tr class="memdesc:a6955841f950d0cda0d0d34c96a909e7a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the latest timestamp among a set of detection-based perceptions.  <br /></td></tr>
+<tr class="separator:a6955841f950d0cda0d0d34c96a909e7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d0bcb7988f0d0786dbae29ea64506b7" id="r_a6d0bcb7988f0d0786dbae29ea64506b7"><td class="memItemLeft" align="right" valign="top">rclcpp::Time&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6d0bcb7988f0d0786dbae29ea64506b7">get_latest_gnss_perceptions_stamp</a> (const <a class="el" href="#abd2a844526522d80f5d0a387062bfc7e">GNSSPerceptions</a> &amp;perceptions)</td></tr>
+<tr class="memdesc:a6d0bcb7988f0d0786dbae29ea64506b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the latest timestamp among a set of GNSS perceptions.  <br /></td></tr>
+<tr class="separator:a6d0bcb7988f0d0786dbae29ea64506b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aba5d8b0cc3e993bba05193176d8e52e2" id="r_aba5d8b0cc3e993bba05193176d8e52e2"><td class="memItemLeft" align="right" valign="top">rclcpp::Time&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aba5d8b0cc3e993bba05193176d8e52e2">get_latest_image_perceptions_stamp</a> (const <a class="el" href="#a1551c0f2967fd745b9d74705c0b367d3">ImagePerceptions</a> &amp;perceptions)</td></tr>
+<tr class="memdesc:aba5d8b0cc3e993bba05193176d8e52e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the latest timestamp among a set of image-based perceptions.  <br /></td></tr>
+<tr class="separator:aba5d8b0cc3e993bba05193176d8e52e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abf2e1d1aa75148c0196d9be12f2c9ca5" id="r_abf2e1d1aa75148c0196d9be12f2c9ca5"><td class="memItemLeft" align="right" valign="top">rclcpp::Time&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abf2e1d1aa75148c0196d9be12f2c9ca5">get_latest_imu_perceptions_stamp</a> (const <a class="el" href="#a69eec3e3b40d1fd642ff49b3c67bf46d">IMUPerceptions</a> &amp;perceptions)</td></tr>
+<tr class="memdesc:abf2e1d1aa75148c0196d9be12f2c9ca5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the latest timestamp among a set of IMU perceptions.  <br /></td></tr>
+<tr class="separator:abf2e1d1aa75148c0196d9be12f2c9ca5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a41c264598339537f447072e0e490fb6f" id="r_a41c264598339537f447072e0e490fb6f"><td class="memItemLeft" align="right" valign="top">rclcpp::Time&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a41c264598339537f447072e0e490fb6f">get_latest_point_perceptions_stamp</a> (const <a class="el" href="#aa872928bf2fa4fde3e32434f0a95fa15">PointPerceptions</a> &amp;perceptions)</td></tr>
+<tr class="memdesc:a41c264598339537f447072e0e490fb6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the latest timestamp among a set of point-based perceptions.  <br /></td></tr>
+<tr class="separator:a41c264598339537f447072e0e490fb6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a843ecd75e7c807bdaf73f409e59d8dc4" id="r_a843ecd75e7c807bdaf73f409e59d8dc4"><td class="memTemplParams" colspan="2">template&lt;typename T = PerceptionBase&gt; </td></tr>
 <tr class="memitem:a843ecd75e7c807bdaf73f409e59d8dc4"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; std::shared_ptr&lt; T &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a843ecd75e7c807bdaf73f409e59d8dc4">get_perceptions</a> (const std::vector&lt; <a class="el" href="structeasynav_1_1PerceptionPtr.html">PerceptionPtr</a> &gt; &amp;src)</td></tr>
 <tr class="memdesc:a843ecd75e7c807bdaf73f409e59d8dc4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extracts a homogeneous collection of perceptions of type <code class="param">T</code> from a heterogeneous vector.  <br /></td></tr>
@@ -383,6 +400,27 @@ Variables</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="a1ea58f451bda419fce2140ef9097d393" name="a1ea58f451bda419fce2140ef9097d393"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1ea58f451bda419fce2140ef9097d393">&#9670;&#160;</a></span>backtrace_to_string()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string backtrace_to_string </td>
+          <td>(</td>
+          <td class="paramtype">std::size_t</td>          <td class="paramname"><span class="paramname"><em>max_frames</em></span><span class="paramdefsep"> = </span><span class="paramdefval">64</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::size_t</td>          <td class="paramname"><span class="paramname"><em>skip</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0</span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a7bb977b8b2c38af1039172c74d9b5024" name="a7bb977b8b2c38af1039172c74d9b5024"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7bb977b8b2c38af1039172c74d9b5024">&#9670;&#160;</a></span>calculate_angle()</h2>
 
@@ -497,6 +535,136 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Readable (demangled) type name if available; otherwise returns <code class="param">name</code>. </dd></dl>
+
+</div>
+</div>
+<a id="a6955841f950d0cda0d0d34c96a909e7a" name="a6955841f950d0cda0d0d34c96a909e7a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6955841f950d0cda0d0d34c96a909e7a">&#9670;&#160;</a></span>get_latest_detections_perceptions_stamp()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">rclcpp::Time get_latest_detections_perceptions_stamp </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="#af063ed644a76059e52052d52485b7ce3">DetectionsPerceptions</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>perceptions</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieves the latest timestamp among a set of detection-based perceptions. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">perceptions</td><td>Container of detection-based perceptions. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The most recent timestamp found in <code class="param">perceptions</code>, or a default-constructed <code>rclcpp::Time</code> if <code class="param">perceptions</code> is empty. </dd></dl>
+
+</div>
+</div>
+<a id="a6d0bcb7988f0d0786dbae29ea64506b7" name="a6d0bcb7988f0d0786dbae29ea64506b7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6d0bcb7988f0d0786dbae29ea64506b7">&#9670;&#160;</a></span>get_latest_gnss_perceptions_stamp()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">rclcpp::Time get_latest_gnss_perceptions_stamp </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="#abd2a844526522d80f5d0a387062bfc7e">GNSSPerceptions</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>perceptions</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieves the latest timestamp among a set of GNSS perceptions. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">perceptions</td><td>Container of GNSS perceptions. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The most recent timestamp found in <code class="param">perceptions</code>, or a default-constructed <code>rclcpp::Time</code> if <code class="param">perceptions</code> is empty. </dd></dl>
+
+</div>
+</div>
+<a id="aba5d8b0cc3e993bba05193176d8e52e2" name="aba5d8b0cc3e993bba05193176d8e52e2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aba5d8b0cc3e993bba05193176d8e52e2">&#9670;&#160;</a></span>get_latest_image_perceptions_stamp()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">rclcpp::Time get_latest_image_perceptions_stamp </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="#a1551c0f2967fd745b9d74705c0b367d3">ImagePerceptions</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>perceptions</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieves the latest timestamp among a set of image-based perceptions. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">perceptions</td><td>Container of image-based perceptions. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The most recent timestamp found in <code class="param">perceptions</code>, or a default-constructed <code>rclcpp::Time</code> if <code class="param">perceptions</code> is empty. </dd></dl>
+
+</div>
+</div>
+<a id="abf2e1d1aa75148c0196d9be12f2c9ca5" name="abf2e1d1aa75148c0196d9be12f2c9ca5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abf2e1d1aa75148c0196d9be12f2c9ca5">&#9670;&#160;</a></span>get_latest_imu_perceptions_stamp()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">rclcpp::Time get_latest_imu_perceptions_stamp </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="#a69eec3e3b40d1fd642ff49b3c67bf46d">IMUPerceptions</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>perceptions</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieves the latest timestamp among a set of IMU perceptions. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">perceptions</td><td>Container of IMU perceptions. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The most recent timestamp found in <code class="param">perceptions</code>, or a default-constructed <code>rclcpp::Time</code> if <code class="param">perceptions</code> is empty. </dd></dl>
+
+</div>
+</div>
+<a id="a41c264598339537f447072e0e490fb6f" name="a41c264598339537f447072e0e490fb6f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a41c264598339537f447072e0e490fb6f">&#9670;&#160;</a></span>get_latest_point_perceptions_stamp()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">rclcpp::Time get_latest_point_perceptions_stamp </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="#aa872928bf2fa4fde3e32434f0a95fa15">PointPerceptions</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>perceptions</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieves the latest timestamp among a set of point-based perceptions. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">perceptions</td><td>Container of point-based perceptions. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The most recent timestamp found in <code class="param">perceptions</code>, or a default-constructed <code>rclcpp::Time</code> if <code class="param">perceptions</code> is empty. </dd></dl>
 
 </div>
 </div>

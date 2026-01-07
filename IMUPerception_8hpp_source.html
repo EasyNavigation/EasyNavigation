@@ -167,10 +167,12 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span></div>
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno"><a class="line" href="namespaceeasynav.html#a69eec3e3b40d1fd642ff49b3c67bf46d">  108</a></span><span class="keyword">using </span><a class="code hl_typedef" href="namespaceeasynav.html#a69eec3e3b40d1fd642ff49b3c67bf46d">IMUPerceptions</a> =</div>
 <div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>  std::vector&lt;std::shared_ptr&lt;IMUPerception&gt;&gt;;</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span> </div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>}  <span class="comment">// namespace easynav</span></div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span> </div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span><span class="preprocessor">#endif  </span><span class="comment">// EASYNAV_COMMON_TYPES__IMUPERCEPTIONS_HPP_</span></div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span></div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>rclcpp::Time <a class="code hl_function" href="namespaceeasynav.html#abf2e1d1aa75148c0196d9be12f2c9ca5">get_latest_imu_perceptions_stamp</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="namespaceeasynav.html#a69eec3e3b40d1fd642ff49b3c67bf46d">IMUPerceptions</a> &amp; perceptions);</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span> </div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>}  <span class="comment">// namespace easynav</span></div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span> </div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span><span class="preprocessor">#endif  </span><span class="comment">// EASYNAV_COMMON_TYPES__IMUPERCEPTIONS_HPP_</span></div>
 <div class="ttc" id="aPerceptions_8hpp_html"><div class="ttname"><a href="Perceptions_8hpp.html">Perceptions.hpp</a></div><div class="ttdoc">Defines data structures and utilities for representing and processing sensor perceptions.</div></div>
 <div class="ttc" id="aclasseasynav_1_1IMUPerceptionHandler_html"><div class="ttname"><a href="classeasynav_1_1IMUPerceptionHandler.html">easynav::IMUPerceptionHandler</a></div><div class="ttdoc">Handles the creation and updating of IMUPerception instances from sensor_msgs::msg::Imu messages.</div><div class="ttdef"><b>Definition</b> IMUPerception.hpp:69</div></div>
 <div class="ttc" id="aclasseasynav_1_1IMUPerceptionHandler_html_a1801b9e6bdf60e89fdec38476d3718dd"><div class="ttname"><a href="classeasynav_1_1IMUPerceptionHandler.html#a1801b9e6bdf60e89fdec38476d3718dd">easynav::IMUPerceptionHandler::create</a></div><div class="ttdeci">std::shared_ptr&lt; PerceptionBase &gt; create(const std::string &amp;) override</div><div class="ttdoc">Creates a new empty IMUPerception instance.</div><div class="ttdef"><b>Definition</b> IMUPerception.hpp:78</div></div>
@@ -184,6 +186,7 @@ $(function(){ initResizable(false); });
 <div class="ttc" id="aclasseasynav_1_1PerceptionHandler_html"><div class="ttname"><a href="classeasynav_1_1PerceptionHandler.html">easynav::PerceptionHandler</a></div><div class="ttdoc">Abstract base interface for group-specific perception handlers.</div><div class="ttdef"><b>Definition</b> Perceptions.hpp:121</div></div>
 <div class="ttc" id="anamespaceeasynav_html"><div class="ttname"><a href="namespaceeasynav.html">easynav</a></div><div class="ttdef"><b>Definition</b> CircularBuffer.hpp:28</div></div>
 <div class="ttc" id="anamespaceeasynav_html_a69eec3e3b40d1fd642ff49b3c67bf46d"><div class="ttname"><a href="namespaceeasynav.html#a69eec3e3b40d1fd642ff49b3c67bf46d">easynav::IMUPerceptions</a></div><div class="ttdeci">std::vector&lt; std::shared_ptr&lt; IMUPerception &gt; &gt; IMUPerceptions</div><div class="ttdoc">Alias for a vector of shared pointers to IMUPerception objects.</div><div class="ttdef"><b>Definition</b> IMUPerception.hpp:108</div></div>
+<div class="ttc" id="anamespaceeasynav_html_abf2e1d1aa75148c0196d9be12f2c9ca5"><div class="ttname"><a href="namespaceeasynav.html#abf2e1d1aa75148c0196d9be12f2c9ca5">easynav::get_latest_imu_perceptions_stamp</a></div><div class="ttdeci">rclcpp::Time get_latest_imu_perceptions_stamp(const IMUPerceptions &amp;perceptions)</div><div class="ttdoc">Retrieves the latest timestamp among a set of IMU perceptions.</div><div class="ttdef"><b>Definition</b> IMUPerception.cpp:64</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
