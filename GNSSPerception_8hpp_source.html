@@ -93,100 +93,95 @@ $(function(){ initResizable(false); });
 <div class="contents">
 <a href="GNSSPerception_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// Copyright 2025 Intelligent Robotics Lab</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">//</span></div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment">// This file is part of the project Easy Navigation (EasyNav in short)</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">// licensed under the GNU General Public License v3.0.</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment">// See &lt;http://www.gnu.org/licenses/&gt; for details.</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">// you may not use this file except in compliance with the License.</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment">// You may obtain a copy of the License at</span></div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment">//</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment">// Easy Navigation program is free software: you can redistribute it and/or modify</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment">// it under the terms of the GNU General Public License as published by</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="comment">// the Free Software Foundation, either version 3 of the License, or</span></div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="comment">// (at your option) any later version.</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment">//</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="comment">// This program is distributed in the hope that it will be useful,</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="comment">// but WITHOUT ANY WARRANTY; without even the implied warranty of</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="comment">// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="comment">// GNU General Public License for more details.</span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="comment">//</span></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="comment">// You should have received a copy of the GNU General Public License</span></div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="comment">// along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#ifndef EASYNAV_COMMON_TYPES__GNSSPERCEPTIONS_HPP_</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#define EASYNAV_COMMON_TYPES__GNSSPERCEPTIONS_HPP_</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment">//     http://www.apache.org/licenses/LICENSE-2.0</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment">//</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="comment">// Unless required by applicable law or agreed to in writing, software</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="comment">// See the License for the specific language governing permissions and</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="comment">// limitations under the License.</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#ifndef EASYNAV_COMMON_TYPES__GNSSPERCEPTIONS_HPP_</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#define EASYNAV_COMMON_TYPES__GNSSPERCEPTIONS_HPP_</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &quot;sensor_msgs/msg/nav_sat_fix.hpp&quot;</span></div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="preprocessor">#include &quot;sensor_msgs/msg/nav_sat_fix.hpp&quot;</span></div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="preprocessor">#include &quot;rclcpp_lifecycle/lifecycle_node.hpp&quot;</span></div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="preprocessor">#include &quot;<a class="code" href="Perceptions_8hpp.html">easynav_common/types/Perceptions.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceeasynav.html">easynav</a></div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>{</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span></div>
-<div class="foldopen" id="foldopen00046" data-start="{" data-end="};">
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="classeasynav_1_1GNSSPerception.html">   46</a></span><span class="keyword">class </span><a class="code hl_class" href="classeasynav_1_1GNSSPerception.html">GNSSPerception</a> : <span class="keyword">public</span> <a class="code hl_class" href="classeasynav_1_1PerceptionBase.html">PerceptionBase</a></div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>{</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="classeasynav_1_1GNSSPerception.html#a6a1aeb48d08927d795eb04f9f9800e49">   50</a></span>  <span class="keyword">static</span> <span class="keyword">constexpr</span> std::string_view <a class="code hl_variable" href="classeasynav_1_1GNSSPerception.html#a6a1aeb48d08927d795eb04f9f9800e49">default_group_</a> = <span class="stringliteral">&quot;gnss&quot;</span>;</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span></div>
-<div class="foldopen" id="foldopen00055" data-start="{" data-end="}">
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno"><a class="line" href="classeasynav_1_1GNSSPerception.html#a395ec0562b61d102dc90ab55595ac76e">   55</a></span>  <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classeasynav_1_1GNSSPerception.html#a395ec0562b61d102dc90ab55595ac76e">supports_msg_type</a>(std::string_view t)</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  {</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keywordflow">return</span> t == <span class="stringliteral">&quot;sensor_msgs/msg/NavSatFix&quot;</span>;</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>  }</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#include &quot;rclcpp_lifecycle/lifecycle_node.hpp&quot;</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="preprocessor">#include &quot;<a class="code" href="Perceptions_8hpp.html">easynav_common/types/Perceptions.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceeasynav.html">easynav</a></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>{</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span></div>
+<div class="foldopen" id="foldopen00041" data-start="{" data-end="};">
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="classeasynav_1_1GNSSPerception.html">   41</a></span><span class="keyword">class </span><a class="code hl_class" href="classeasynav_1_1GNSSPerception.html">GNSSPerception</a> : <span class="keyword">public</span> <a class="code hl_class" href="classeasynav_1_1PerceptionBase.html">PerceptionBase</a></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>{</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="classeasynav_1_1GNSSPerception.html#a6a1aeb48d08927d795eb04f9f9800e49">   45</a></span>  <span class="keyword">static</span> <span class="keyword">constexpr</span> std::string_view <a class="code hl_variable" href="classeasynav_1_1GNSSPerception.html#a6a1aeb48d08927d795eb04f9f9800e49">default_group_</a> = <span class="stringliteral">&quot;gnss&quot;</span>;</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span></div>
+<div class="foldopen" id="foldopen00050" data-start="{" data-end="}">
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="classeasynav_1_1GNSSPerception.html#a395ec0562b61d102dc90ab55595ac76e">   50</a></span>  <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classeasynav_1_1GNSSPerception.html#a395ec0562b61d102dc90ab55595ac76e">supports_msg_type</a>(std::string_view t)</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>  {</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keywordflow">return</span> t == <span class="stringliteral">&quot;sensor_msgs/msg/NavSatFix&quot;</span>;</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  }</div>
 </div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span></div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno"><a class="line" href="classeasynav_1_1GNSSPerception.html#a359244fe3cdabda450d68232fa38958c">   61</a></span>  sensor_msgs::msg::NavSatFix <a class="code hl_variable" href="classeasynav_1_1GNSSPerception.html#a359244fe3cdabda450d68232fa38958c">data</a>;</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>};</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno"><a class="line" href="classeasynav_1_1GNSSPerception.html#a359244fe3cdabda450d68232fa38958c">   56</a></span>  sensor_msgs::msg::NavSatFix <a class="code hl_variable" href="classeasynav_1_1GNSSPerception.html#a359244fe3cdabda450d68232fa38958c">data</a>;</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>};</div>
 </div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span></div>
-<div class="foldopen" id="foldopen00068" data-start="{" data-end="};">
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno"><a class="line" href="classeasynav_1_1GNSSPerceptionHandler.html">   68</a></span><span class="keyword">class </span><a class="code hl_class" href="classeasynav_1_1GNSSPerceptionHandler.html">GNSSPerceptionHandler</a> : <span class="keyword">public</span> <a class="code hl_class" href="classeasynav_1_1PerceptionHandler.html">PerceptionHandler</a></div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>{</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno"><a class="line" href="classeasynav_1_1GNSSPerceptionHandler.html#a4dcf237e516e7aa43aff18fffd22a9a2">   73</a></span>  std::string <a class="code hl_function" href="classeasynav_1_1GNSSPerceptionHandler.html#a4dcf237e516e7aa43aff18fffd22a9a2">group</a>()<span class="keyword"> const override </span>{<span class="keywordflow">return</span> <span class="stringliteral">&quot;gnss&quot;</span>;}</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span></div>
-<div class="foldopen" id="foldopen00078" data-start="{" data-end="}">
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno"><a class="line" href="classeasynav_1_1GNSSPerceptionHandler.html#a1801b9e6bdf60e89fdec38476d3718dd">   78</a></span>  std::shared_ptr&lt;PerceptionBase&gt; <a class="code hl_function" href="classeasynav_1_1GNSSPerceptionHandler.html#a1801b9e6bdf60e89fdec38476d3718dd">create</a>(<span class="keyword">const</span> std::string &amp;)<span class="keyword"> override</span></div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span><span class="keyword">  </span>{</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <span class="keywordflow">return</span> std::make_shared&lt;GNSSPerception&gt;();</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>  }</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span></div>
+<div class="foldopen" id="foldopen00063" data-start="{" data-end="};">
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno"><a class="line" href="classeasynav_1_1GNSSPerceptionHandler.html">   63</a></span><span class="keyword">class </span><a class="code hl_class" href="classeasynav_1_1GNSSPerceptionHandler.html">GNSSPerceptionHandler</a> : <span class="keyword">public</span> <a class="code hl_class" href="classeasynav_1_1PerceptionHandler.html">PerceptionHandler</a></div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>{</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno"><a class="line" href="classeasynav_1_1GNSSPerceptionHandler.html#a4dcf237e516e7aa43aff18fffd22a9a2">   68</a></span>  std::string <a class="code hl_function" href="classeasynav_1_1GNSSPerceptionHandler.html#a4dcf237e516e7aa43aff18fffd22a9a2">group</a>()<span class="keyword"> const override </span>{<span class="keywordflow">return</span> <span class="stringliteral">&quot;gnss&quot;</span>;}</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span></div>
+<div class="foldopen" id="foldopen00073" data-start="{" data-end="}">
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno"><a class="line" href="classeasynav_1_1GNSSPerceptionHandler.html#a1801b9e6bdf60e89fdec38476d3718dd">   73</a></span>  std::shared_ptr&lt;PerceptionBase&gt; <a class="code hl_function" href="classeasynav_1_1GNSSPerceptionHandler.html#a1801b9e6bdf60e89fdec38476d3718dd">create</a>(<span class="keyword">const</span> std::string &amp;)<span class="keyword"> override</span></div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span><span class="keyword">  </span>{</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="keywordflow">return</span> std::make_shared&lt;GNSSPerception&gt;();</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>  }</div>
 </div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span></div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>  rclcpp::SubscriptionBase::SharedPtr <a class="code hl_function" href="classeasynav_1_1GNSSPerceptionHandler.html#a891643b72cfcd8643ba35d62faff8cce">create_subscription</a>(</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    rclcpp_lifecycle::LifecycleNode &amp; node,</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    <span class="keyword">const</span> std::string &amp; topic,</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    <span class="keyword">const</span> std::string &amp; type,</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    std::shared_ptr&lt;PerceptionBase&gt; target,</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    rclcpp::CallbackGroup::SharedPtr cb_group) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>};</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span></div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>  rclcpp::SubscriptionBase::SharedPtr <a class="code hl_function" href="classeasynav_1_1GNSSPerceptionHandler.html#a891643b72cfcd8643ba35d62faff8cce">create_subscription</a>(</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    rclcpp_lifecycle::LifecycleNode &amp; node,</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    <span class="keyword">const</span> std::string &amp; topic,</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    <span class="keyword">const</span> std::string &amp; type,</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    std::shared_ptr&lt;PerceptionBase&gt; target,</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    rclcpp::CallbackGroup::SharedPtr cb_group) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>};</div>
 </div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span></div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno"><a class="line" href="namespaceeasynav.html#abd2a844526522d80f5d0a387062bfc7e">  108</a></span><span class="keyword">using </span><a class="code hl_typedef" href="namespaceeasynav.html#abd2a844526522d80f5d0a387062bfc7e">GNSSPerceptions</a> =</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>  std::vector&lt;std::shared_ptr&lt;GNSSPerception&gt;&gt;;</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span></div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>rclcpp::Time <a class="code hl_function" href="namespaceeasynav.html#a6d0bcb7988f0d0786dbae29ea64506b7">get_latest_gnss_perceptions_stamp</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="namespaceeasynav.html#abd2a844526522d80f5d0a387062bfc7e">GNSSPerceptions</a> &amp; perceptions);</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span> </div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>}  <span class="comment">// namespace easynav</span></div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span> </div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span><span class="preprocessor">#endif  </span><span class="comment">// EASYNAV_COMMON_TYPES__GNSSPERCEPTIONS_HPP_</span></div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span></div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno"><a class="line" href="namespaceeasynav.html#abd2a844526522d80f5d0a387062bfc7e">  103</a></span><span class="keyword">using </span><a class="code hl_typedef" href="namespaceeasynav.html#abd2a844526522d80f5d0a387062bfc7e">GNSSPerceptions</a> =</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>  std::vector&lt;std::shared_ptr&lt;GNSSPerception&gt;&gt;;</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span></div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>rclcpp::Time <a class="code hl_function" href="namespaceeasynav.html#a6d0bcb7988f0d0786dbae29ea64506b7">get_latest_gnss_perceptions_stamp</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="namespaceeasynav.html#abd2a844526522d80f5d0a387062bfc7e">GNSSPerceptions</a> &amp; perceptions);</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span> </div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>}  <span class="comment">// namespace easynav</span></div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span> </div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span><span class="preprocessor">#endif  </span><span class="comment">// EASYNAV_COMMON_TYPES__GNSSPERCEPTIONS_HPP_</span></div>
 <div class="ttc" id="aPerceptions_8hpp_html"><div class="ttname"><a href="Perceptions_8hpp.html">Perceptions.hpp</a></div><div class="ttdoc">Defines data structures and utilities for representing and processing sensor perceptions.</div></div>
-<div class="ttc" id="aclasseasynav_1_1GNSSPerceptionHandler_html"><div class="ttname"><a href="classeasynav_1_1GNSSPerceptionHandler.html">easynav::GNSSPerceptionHandler</a></div><div class="ttdoc">Handles the creation and updating of GNSSPerception instances from sensor_msgs::msg::NavSatFix messag...</div><div class="ttdef"><b>Definition</b> GNSSPerception.hpp:69</div></div>
-<div class="ttc" id="aclasseasynav_1_1GNSSPerceptionHandler_html_a1801b9e6bdf60e89fdec38476d3718dd"><div class="ttname"><a href="classeasynav_1_1GNSSPerceptionHandler.html#a1801b9e6bdf60e89fdec38476d3718dd">easynav::GNSSPerceptionHandler::create</a></div><div class="ttdeci">std::shared_ptr&lt; PerceptionBase &gt; create(const std::string &amp;) override</div><div class="ttdoc">Creates a new empty GNSSPerception instance.</div><div class="ttdef"><b>Definition</b> GNSSPerception.hpp:78</div></div>
-<div class="ttc" id="aclasseasynav_1_1GNSSPerceptionHandler_html_a4dcf237e516e7aa43aff18fffd22a9a2"><div class="ttname"><a href="classeasynav_1_1GNSSPerceptionHandler.html#a4dcf237e516e7aa43aff18fffd22a9a2">easynav::GNSSPerceptionHandler::group</a></div><div class="ttdeci">std::string group() const override</div><div class="ttdoc">Returns the group managed by this handler.</div><div class="ttdef"><b>Definition</b> GNSSPerception.hpp:73</div></div>
-<div class="ttc" id="aclasseasynav_1_1GNSSPerceptionHandler_html_a891643b72cfcd8643ba35d62faff8cce"><div class="ttname"><a href="classeasynav_1_1GNSSPerceptionHandler.html#a891643b72cfcd8643ba35d62faff8cce">easynav::GNSSPerceptionHandler::create_subscription</a></div><div class="ttdeci">rclcpp::SubscriptionBase::SharedPtr create_subscription(rclcpp_lifecycle::LifecycleNode &amp;node, const std::string &amp;topic, const std::string &amp;type, std::shared_ptr&lt; PerceptionBase &gt; target, rclcpp::CallbackGroup::SharedPtr cb_group) override</div><div class="ttdoc">Creates a subscription to an GNSS topic that updates a target GNSSPerception.</div><div class="ttdef"><b>Definition</b> GNSSPerception.cpp:34</div></div>
-<div class="ttc" id="aclasseasynav_1_1GNSSPerception_html"><div class="ttname"><a href="classeasynav_1_1GNSSPerception.html">easynav::GNSSPerception</a></div><div class="ttdoc">Represents a single GNSS perception from a sensor.</div><div class="ttdef"><b>Definition</b> GNSSPerception.hpp:47</div></div>
-<div class="ttc" id="aclasseasynav_1_1GNSSPerception_html_a359244fe3cdabda450d68232fa38958c"><div class="ttname"><a href="classeasynav_1_1GNSSPerception.html#a359244fe3cdabda450d68232fa38958c">easynav::GNSSPerception::data</a></div><div class="ttdeci">sensor_msgs::msg::NavSatFix data</div><div class="ttdoc">GNSS data received from the sensor.</div><div class="ttdef"><b>Definition</b> GNSSPerception.hpp:61</div></div>
-<div class="ttc" id="aclasseasynav_1_1GNSSPerception_html_a395ec0562b61d102dc90ab55595ac76e"><div class="ttname"><a href="classeasynav_1_1GNSSPerception.html#a395ec0562b61d102dc90ab55595ac76e">easynav::GNSSPerception::supports_msg_type</a></div><div class="ttdeci">static bool supports_msg_type(std::string_view t)</div><div class="ttdoc">Returns whether the given ROS 2 type name is supported by this perception.</div><div class="ttdef"><b>Definition</b> GNSSPerception.hpp:55</div></div>
-<div class="ttc" id="aclasseasynav_1_1GNSSPerception_html_a6a1aeb48d08927d795eb04f9f9800e49"><div class="ttname"><a href="classeasynav_1_1GNSSPerception.html#a6a1aeb48d08927d795eb04f9f9800e49">easynav::GNSSPerception::default_group_</a></div><div class="ttdeci">static constexpr std::string_view default_group_</div><div class="ttdoc">Group identifier for GNSS perceptions.</div><div class="ttdef"><b>Definition</b> GNSSPerception.hpp:50</div></div>
-<div class="ttc" id="aclasseasynav_1_1PerceptionBase_html"><div class="ttname"><a href="classeasynav_1_1PerceptionBase.html">easynav::PerceptionBase</a></div><div class="ttdoc">Abstract base class for representing a single sensor perception.</div><div class="ttdef"><b>Definition</b> Perceptions.hpp:45</div></div>
-<div class="ttc" id="aclasseasynav_1_1PerceptionHandler_html"><div class="ttname"><a href="classeasynav_1_1PerceptionHandler.html">easynav::PerceptionHandler</a></div><div class="ttdoc">Abstract base interface for group-specific perception handlers.</div><div class="ttdef"><b>Definition</b> Perceptions.hpp:121</div></div>
-<div class="ttc" id="anamespaceeasynav_html"><div class="ttname"><a href="namespaceeasynav.html">easynav</a></div><div class="ttdef"><b>Definition</b> CircularBuffer.hpp:28</div></div>
-<div class="ttc" id="anamespaceeasynav_html_a6d0bcb7988f0d0786dbae29ea64506b7"><div class="ttname"><a href="namespaceeasynav.html#a6d0bcb7988f0d0786dbae29ea64506b7">easynav::get_latest_gnss_perceptions_stamp</a></div><div class="ttdeci">rclcpp::Time get_latest_gnss_perceptions_stamp(const GNSSPerceptions &amp;perceptions)</div><div class="ttdoc">Retrieves the latest timestamp among a set of GNSS perceptions.</div><div class="ttdef"><b>Definition</b> GNSSPerception.cpp:63</div></div>
-<div class="ttc" id="anamespaceeasynav_html_abd2a844526522d80f5d0a387062bfc7e"><div class="ttname"><a href="namespaceeasynav.html#abd2a844526522d80f5d0a387062bfc7e">easynav::GNSSPerceptions</a></div><div class="ttdeci">std::vector&lt; std::shared_ptr&lt; GNSSPerception &gt; &gt; GNSSPerceptions</div><div class="ttdoc">Alias for a vector of shared pointers to GNSSPerception objects.</div><div class="ttdef"><b>Definition</b> GNSSPerception.hpp:108</div></div>
+<div class="ttc" id="aclasseasynav_1_1GNSSPerceptionHandler_html"><div class="ttname"><a href="classeasynav_1_1GNSSPerceptionHandler.html">easynav::GNSSPerceptionHandler</a></div><div class="ttdoc">Handles the creation and updating of GNSSPerception instances from sensor_msgs::msg::NavSatFix messag...</div><div class="ttdef"><b>Definition</b> GNSSPerception.hpp:64</div></div>
+<div class="ttc" id="aclasseasynav_1_1GNSSPerceptionHandler_html_a1801b9e6bdf60e89fdec38476d3718dd"><div class="ttname"><a href="classeasynav_1_1GNSSPerceptionHandler.html#a1801b9e6bdf60e89fdec38476d3718dd">easynav::GNSSPerceptionHandler::create</a></div><div class="ttdeci">std::shared_ptr&lt; PerceptionBase &gt; create(const std::string &amp;) override</div><div class="ttdoc">Creates a new empty GNSSPerception instance.</div><div class="ttdef"><b>Definition</b> GNSSPerception.hpp:73</div></div>
+<div class="ttc" id="aclasseasynav_1_1GNSSPerceptionHandler_html_a4dcf237e516e7aa43aff18fffd22a9a2"><div class="ttname"><a href="classeasynav_1_1GNSSPerceptionHandler.html#a4dcf237e516e7aa43aff18fffd22a9a2">easynav::GNSSPerceptionHandler::group</a></div><div class="ttdeci">std::string group() const override</div><div class="ttdoc">Returns the group managed by this handler.</div><div class="ttdef"><b>Definition</b> GNSSPerception.hpp:68</div></div>
+<div class="ttc" id="aclasseasynav_1_1GNSSPerceptionHandler_html_a891643b72cfcd8643ba35d62faff8cce"><div class="ttname"><a href="classeasynav_1_1GNSSPerceptionHandler.html#a891643b72cfcd8643ba35d62faff8cce">easynav::GNSSPerceptionHandler::create_subscription</a></div><div class="ttdeci">rclcpp::SubscriptionBase::SharedPtr create_subscription(rclcpp_lifecycle::LifecycleNode &amp;node, const std::string &amp;topic, const std::string &amp;type, std::shared_ptr&lt; PerceptionBase &gt; target, rclcpp::CallbackGroup::SharedPtr cb_group) override</div><div class="ttdoc">Creates a subscription to an GNSS topic that updates a target GNSSPerception.</div><div class="ttdef"><b>Definition</b> GNSSPerception.cpp:29</div></div>
+<div class="ttc" id="aclasseasynav_1_1GNSSPerception_html"><div class="ttname"><a href="classeasynav_1_1GNSSPerception.html">easynav::GNSSPerception</a></div><div class="ttdoc">Represents a single GNSS perception from a sensor.</div><div class="ttdef"><b>Definition</b> GNSSPerception.hpp:42</div></div>
+<div class="ttc" id="aclasseasynav_1_1GNSSPerception_html_a359244fe3cdabda450d68232fa38958c"><div class="ttname"><a href="classeasynav_1_1GNSSPerception.html#a359244fe3cdabda450d68232fa38958c">easynav::GNSSPerception::data</a></div><div class="ttdeci">sensor_msgs::msg::NavSatFix data</div><div class="ttdoc">GNSS data received from the sensor.</div><div class="ttdef"><b>Definition</b> GNSSPerception.hpp:56</div></div>
+<div class="ttc" id="aclasseasynav_1_1GNSSPerception_html_a395ec0562b61d102dc90ab55595ac76e"><div class="ttname"><a href="classeasynav_1_1GNSSPerception.html#a395ec0562b61d102dc90ab55595ac76e">easynav::GNSSPerception::supports_msg_type</a></div><div class="ttdeci">static bool supports_msg_type(std::string_view t)</div><div class="ttdoc">Returns whether the given ROS 2 type name is supported by this perception.</div><div class="ttdef"><b>Definition</b> GNSSPerception.hpp:50</div></div>
+<div class="ttc" id="aclasseasynav_1_1GNSSPerception_html_a6a1aeb48d08927d795eb04f9f9800e49"><div class="ttname"><a href="classeasynav_1_1GNSSPerception.html#a6a1aeb48d08927d795eb04f9f9800e49">easynav::GNSSPerception::default_group_</a></div><div class="ttdeci">static constexpr std::string_view default_group_</div><div class="ttdoc">Group identifier for GNSS perceptions.</div><div class="ttdef"><b>Definition</b> GNSSPerception.hpp:45</div></div>
+<div class="ttc" id="aclasseasynav_1_1PerceptionBase_html"><div class="ttname"><a href="classeasynav_1_1PerceptionBase.html">easynav::PerceptionBase</a></div><div class="ttdoc">Abstract base class for representing a single sensor perception.</div><div class="ttdef"><b>Definition</b> Perceptions.hpp:40</div></div>
+<div class="ttc" id="aclasseasynav_1_1PerceptionHandler_html"><div class="ttname"><a href="classeasynav_1_1PerceptionHandler.html">easynav::PerceptionHandler</a></div><div class="ttdoc">Abstract base interface for group-specific perception handlers.</div><div class="ttdef"><b>Definition</b> Perceptions.hpp:116</div></div>
+<div class="ttc" id="anamespaceeasynav_html"><div class="ttname"><a href="namespaceeasynav.html">easynav</a></div><div class="ttdef"><b>Definition</b> CircularBuffer.hpp:23</div></div>
+<div class="ttc" id="anamespaceeasynav_html_a6d0bcb7988f0d0786dbae29ea64506b7"><div class="ttname"><a href="namespaceeasynav.html#a6d0bcb7988f0d0786dbae29ea64506b7">easynav::get_latest_gnss_perceptions_stamp</a></div><div class="ttdeci">rclcpp::Time get_latest_gnss_perceptions_stamp(const GNSSPerceptions &amp;perceptions)</div><div class="ttdoc">Retrieves the latest timestamp among a set of GNSS perceptions.</div><div class="ttdef"><b>Definition</b> GNSSPerception.cpp:58</div></div>
+<div class="ttc" id="anamespaceeasynav_html_abd2a844526522d80f5d0a387062bfc7e"><div class="ttname"><a href="namespaceeasynav.html#abd2a844526522d80f5d0a387062bfc7e">easynav::GNSSPerceptions</a></div><div class="ttdeci">std::vector&lt; std::shared_ptr&lt; GNSSPerception &gt; &gt; GNSSPerceptions</div><div class="ttdoc">Alias for a vector of shared pointers to GNSSPerception objects.</div><div class="ttdef"><b>Definition</b> GNSSPerception.hpp:103</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
