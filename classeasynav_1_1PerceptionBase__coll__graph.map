@@ -1,9 +1,9 @@
 <map id="PerceptionBase" name="PerceptionBase">
-<area shape="rect" id="Node000001" title="Abstract base class for representing a single sensor perception." alt="" coords="50,109,163,135"/>
+<area shape="rect" id="Node000001" title="Abstract base class for representing a single sensor perception." alt="" coords="50,122,163,148"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,5,56,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="42,44,64,83,90,107,86,111,60,87,38,47"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="38,45,46,72,59,97,86,120,82,124,55,100,41,74,33,47"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="80,5,133,31"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="109,47,109,109,104,109,104,47"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="168,5,213,31"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="185,46,176,67,163,87,133,111,129,106,159,83,172,64,180,44"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="109,47,109,122,104,122,104,47"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="173,5,218,31"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="193,47,184,74,169,100,154,114,137,124,134,119,150,109,164,97,179,72,188,45"/>
 </map>

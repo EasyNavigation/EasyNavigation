@@ -9,7 +9,7 @@ var searchData=
   ['detectionsperception_6',['DetectionsPerception',['../classeasynav_1_1DetectionsPerception.html',1,'easynav']]],
   ['detectionsperception_2ecpp_7',['DetectionsPerception.cpp',['../DetectionsPerception_8cpp.html',1,'']]],
   ['detectionsperception_2ehpp_8',['DetectionsPerception.hpp',['../DetectionsPerception_8hpp.html',1,'']]],
-  ['detectionsperceptions_9',['DetectionsPerceptions',['../classDetectionsPerceptions.html',1,'DetectionsPerceptions'],['../namespaceeasynav.html#af063ed644a76059e52052d52485b7ce3',1,'easynav::DetectionsPerceptions']]],
+  ['detectionsperceptions_9',['DetectionsPerceptions',['../classDetectionsPerceptions.html',1,'DetectionsPerceptions'],['../namespaceeasynav.html#a34208393446e7eea376f79a166034f4c',1,'easynav::DetectionsPerceptions']]],
   ['detectionsperceptionshandler_10',['DetectionsPerceptionsHandler',['../classeasynav_1_1DetectionsPerceptionsHandler.html',1,'easynav']]],
   ['downsample_11',['downsample',['../classeasynav_1_1PointPerceptionsOpsView.html#a1f623939c1f8af3760267fc88ce3e8e6',1,'easynav::PointPerceptionsOpsView']]],
   ['dummycontroller_12',['DummyController',['../classeasynav_1_1DummyController.html',1,'DummyController'],['../classeasynav_1_1DummyController.html#af7ac7ec07d3c63ff4f77f19543350c9f',1,'easynav::DummyController::DummyController()']]],

@@ -1,5 +1,5 @@
 <map id="PointPerceptionsOpsView::VoxelKey" name="PointPerceptionsOpsView::VoxelKey">
-<area shape="rect" id="Node000001" title="Discrete 3D voxel index used for downsampling." alt="" coords="5,124,179,165"/>
+<area shape="rect" id="Node000001" title="Discrete 3D voxel index used for downsampling." alt="" coords="5,143,179,183"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="73,5,111,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="95,47,95,124,89,124,89,47"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="95,47,95,142,89,142,89,47"/>
 </map>

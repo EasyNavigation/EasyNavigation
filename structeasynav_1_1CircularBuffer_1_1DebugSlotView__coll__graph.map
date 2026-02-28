@@ -1,7 +1,7 @@
 <map id="CircularBuffer&lt; T &gt;::DebugSlotView" name="CircularBuffer&lt; T &gt;::DebugSlotView">
-<area shape="rect" id="Node000001" title=" " alt="" coords="10,94,139,135"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="11,102,141,143"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,5,51,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="28,46,32,69,50,92,46,95,28,71,23,47"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="83,5,160,31"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="111,46,87,95,82,92,106,44"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="27,46,27,62,31,77,50,100,45,103,27,79,22,63,21,46"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="87,5,164,31"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="115,46,88,103,83,101,110,44"/>
 </map>

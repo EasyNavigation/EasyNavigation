@@ -1,12 +1,12 @@
 <map id="DummyPerception" name="DummyPerception">
-<area shape="rect" id="Node000001" title=" " alt="" coords="148,184,276,210"/>
-<area shape="rect" id="Node000002" href="$classeasynav_1_1PerceptionBase.html" title="Abstract base class for representing a single sensor perception." alt="" coords="75,109,188,135"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="158,143,201,182,197,186,155,147"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="162,197,289,223"/>
+<area shape="rect" id="Node000002" href="$classeasynav_1_1PerceptionBase.html" title="Abstract base class for representing a single sensor perception." alt="" coords="83,122,196,148"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="167,156,213,195,210,199,164,160"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="5,5,56,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="38,46,45,65,56,83,72,96,91,106,89,111,69,101,52,87,40,68,33,47"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="201,5,254,31"/>
-<area shape="poly" id="edge5_Node000001_Node000004" title=" " alt="" coords="246,44,249,54,251,70,249,85,235,141,219,184,214,183,230,140,244,85,246,70,244,56,240,46"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="208,44,195,57,145,110,141,107,192,53,204,40"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="80,5,125,31"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="102,47,102,66,106,84,121,107,117,110,101,86,97,66,96,47"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="34,46,39,72,53,97,68,110,87,119,85,124,65,114,48,100,34,74,29,47"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="212,5,265,31"/>
+<area shape="poly" id="edge5_Node000001_Node000004" title=" " alt="" coords="258,43,262,54,266,76,262,99,249,155,233,198,228,196,243,153,257,98,260,76,257,56,253,45"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="216,44,204,57,173,100,152,124,148,120,168,97,200,53,212,40"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="82,5,128,31"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="104,46,103,72,109,97,126,120,122,123,104,99,98,72,98,46"/>
 </map>

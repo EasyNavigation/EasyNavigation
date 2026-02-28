@@ -1,7 +1,7 @@
 <map id="SensorsNodeTestCase" name="SensorsNodeTestCase">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,94,162,120"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,102,162,128"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="25,5,72,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="62,44,81,93,76,95,57,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="61,45,82,100,77,102,56,47"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="97,5,142,31"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="111,46,91,95,86,93,106,44"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="112,47,91,102,86,100,107,45"/>
 </map>

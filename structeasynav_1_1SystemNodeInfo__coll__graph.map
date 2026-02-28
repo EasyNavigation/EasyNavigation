@@ -1,7 +1,7 @@
 <map id="SystemNodeInfo" name="SystemNodeInfo">
-<area shape="rect" id="Node000001" title="Structure holding runtime information for a subnode." alt="" coords="38,94,156,120"/>
+<area shape="rect" id="Node000001" title="Structure holding runtime information for a subnode." alt="" coords="38,102,156,128"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,5,85,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="57,45,69,69,87,92,83,95,64,71,52,47"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="52,45,64,77,84,100,80,103,59,79,47,47"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="109,5,189,31"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="137,46,122,71,107,95,102,92,117,69,132,44"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="139,46,122,79,107,103,103,100,117,77,135,44"/>
 </map>

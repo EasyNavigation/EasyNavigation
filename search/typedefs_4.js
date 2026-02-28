@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['imageperceptions_0',['ImagePerceptions',['../namespaceeasynav.html#a1551c0f2967fd745b9d74705c0b367d3',1,'easynav']]],
-  ['imuperceptions_1',['IMUPerceptions',['../namespaceeasynav.html#a69eec3e3b40d1fd642ff49b3c67bf46d',1,'easynav']]]
+  ['imageperceptions_0',['ImagePerceptions',['../namespaceeasynav.html#a1c0d797bf0eab57f4ca85e9beeddc340',1,'easynav']]],
+  ['imuperceptions_1',['IMUPerceptions',['../namespaceeasynav.html#a8372f717c9057205b1a5627b39714c97',1,'easynav']]]
 ];

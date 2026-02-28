@@ -3,7 +3,7 @@ var searchData=
   ['send_5fgoal_0',['send_goal',['../classeasynav_1_1GoalManagerClient.html#a59905ae9a8aa37cbed4a7d6c23c701bb',1,'easynav::GoalManagerClient']]],
   ['send_5fgoals_1',['send_goals',['../classeasynav_1_1GoalManagerClient.html#a56e2a6e14899715118e7ae5d66b58b71',1,'easynav::GoalManagerClient']]],
   ['sensors_5fnode_5ftests_2ecpp_2',['sensors_node_tests.cpp',['../sensors__node__tests_8cpp.html',1,'']]],
-  ['sensorshandlerfn_3',['SensorsHandlerFn',['../classeasynav_1_1SensorsNode.html#ac9926ee4f197296b143e1588428defba',1,'easynav::SensorsNode']]],
+  ['sensorshandlerfn_3',['SensorsHandlerFn',['../classeasynav_1_1SensorsNode.html#aaa4a084620a1436824c7788b231056cd',1,'easynav::SensorsNode']]],
   ['sensorsnode_4',['SensorsNode',['../classeasynav_1_1SensorsNode.html',1,'SensorsNode'],['../classeasynav_1_1SensorsNode.html#a5629e27f739777bfe6b081a54f41ef30',1,'easynav::SensorsNode::SensorsNode()']]],
   ['sensorsnode_2ecpp_5',['SensorsNode.cpp',['../SensorsNode_8cpp.html',1,'']]],
   ['sensorsnode_2ehpp_6',['SensorsNode.hpp',['../SensorsNode_8hpp.html',1,'']]],
