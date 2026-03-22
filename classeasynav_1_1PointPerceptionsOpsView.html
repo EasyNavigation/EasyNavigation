@@ -109,10 +109,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a1f623939c1f8af3760267fc88ce3e8e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Downsamples each perception using a voxel grid.  <br /></td></tr>
 <tr class="memitem:aea26f51c08e637df3671eba56902a54a" id="r_aea26f51c08e637df3671eba56902a54a"><td class="memItemLeft"><a class="el" href="#aa7a7f47c3b772956f68daddc01115a40">PointPerceptionsOpsView</a> &amp;&#160;</td><td class="memItemRight"><a class="el" href="#aea26f51c08e637df3671eba56902a54a">filter</a> (const std::vector&lt; double &gt; &amp;min_bounds, const std::vector&lt; double &gt; &amp;max_bounds, bool lazy_post_fuse=true)</td></tr>
 <tr class="memdesc:aea26f51c08e637df3671eba56902a54a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Filters all point clouds by axis-aligned bounds.  <br /></td></tr>
-<tr class="memitem:a600de21cd2f773753f5b6130b71caedc" id="r_a600de21cd2f773753f5b6130b71caedc"><td class="memItemLeft"><a class="el" href="#aa7a7f47c3b772956f68daddc01115a40">PointPerceptionsOpsView</a> &amp;&#160;</td><td class="memItemRight"><a class="el" href="#a600de21cd2f773753f5b6130b71caedc">fuse</a> (const std::string &amp;target_frame, bool exact_time=true)</td></tr>
-<tr class="memdesc:a600de21cd2f773753f5b6130b71caedc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configures fusion of all perceptions into a common frame.  <br /></td></tr>
-<tr class="memitem:ac121a6cbc8ee6fe79e3368be78ba9d80" id="r_ac121a6cbc8ee6fe79e3368be78ba9d80"><td class="memItemLeft"><a class="el" href="#aa7a7f47c3b772956f68daddc01115a40">PointPerceptionsOpsView</a> &amp;&#160;</td><td class="memItemRight"><a class="el" href="#ac121a6cbc8ee6fe79e3368be78ba9d80">fuse</a> (const std::string &amp;target_frame, rclcpp::Time &amp;stamp, bool exact_time=true)</td></tr>
-<tr class="memdesc:ac121a6cbc8ee6fe79e3368be78ba9d80"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configures fusion of all perceptions into a common frame, returning the effective stamp.  <br /></td></tr>
+<tr class="memitem:a5f528e4eb6e67d91b3c56711a314fc85" id="r_a5f528e4eb6e67d91b3c56711a314fc85"><td class="memItemLeft"><a class="el" href="#aa7a7f47c3b772956f68daddc01115a40">PointPerceptionsOpsView</a> &amp;&#160;</td><td class="memItemRight"><a class="el" href="#a5f528e4eb6e67d91b3c56711a314fc85">fuse</a> (const std::string &amp;target_frame, bool exact_time=false)</td></tr>
+<tr class="memdesc:a5f528e4eb6e67d91b3c56711a314fc85"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configures fusion of all perceptions into a common frame.  <br /></td></tr>
+<tr class="memitem:a3db0346625ad7fb7c2fba73578020d56" id="r_a3db0346625ad7fb7c2fba73578020d56"><td class="memItemLeft"><a class="el" href="#aa7a7f47c3b772956f68daddc01115a40">PointPerceptionsOpsView</a> &amp;&#160;</td><td class="memItemRight"><a class="el" href="#a3db0346625ad7fb7c2fba73578020d56">fuse</a> (const std::string &amp;target_frame, rclcpp::Time &amp;stamp, bool exact_time=false)</td></tr>
+<tr class="memdesc:a3db0346625ad7fb7c2fba73578020d56"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configures fusion of all perceptions into a common frame, returning the effective stamp.  <br /></td></tr>
 <tr class="memitem:aaf70b8f889c9a335998155738d808926" id="r_aaf70b8f889c9a335998155738d808926"><td class="memItemLeft">rclcpp::Time&#160;</td><td class="memItemRight"><a class="el" href="#aaf70b8f889c9a335998155738d808926">get_latest_stamp</a> () const</td></tr>
 <tr class="memdesc:aaf70b8f889c9a335998155738d808926"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the latest timestamp across all perceptions.  <br /></td></tr>
 <tr class="memitem:a73c313d785b6b510f8bb620996432a0d" id="r_a73c313d785b6b510f8bb620996432a0d"><td class="memItemLeft">const <a class="el" href="namespaceeasynav.html#aa83db8e6a9c3d5f8bff1fe325cf9e99a">PointPerceptions</a> &amp;&#160;</td><td class="memItemRight"><a class="el" href="#a73c313d785b6b510f8bb620996432a0d">get_perceptions</a> () const</td></tr>
@@ -454,8 +454,8 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Filters all point clouds by axis-aligned bounds. </p>
-<p>When the view has no target frame configured (that is, <code><a class="el" href="#a600de21cd2f773753f5b6130b71caedc" title="Configures fusion of all perceptions into a common frame.">fuse()</a></code> has not been called), this method always performs an eager filtering step in the original frame of each sensor, updating the internal index sets in-place.</p>
-<p>When a target frame has been configured via <code><a class="el" href="#a600de21cd2f773753f5b6130b71caedc" title="Configures fusion of all perceptions into a common frame.">fuse()</a></code>, the behaviour depends on <code class="param">lazy_post_fuse:</code> </p><ul>
+<p>When the view has no target frame configured (that is, <code><a class="el" href="#a5f528e4eb6e67d91b3c56711a314fc85" title="Configures fusion of all perceptions into a common frame.">fuse()</a></code> has not been called), this method always performs an eager filtering step in the original frame of each sensor, updating the internal index sets in-place.</p>
+<p>When a target frame has been configured via <code><a class="el" href="#a5f528e4eb6e67d91b3c56711a314fc85" title="Configures fusion of all perceptions into a common frame.">fuse()</a></code>, the behaviour depends on <code class="param">lazy_post_fuse:</code> </p><ul>
 <li>If <code class="param">lazy_post_fuse</code> is <code>true</code> (default), the bounds are stored as a post-fuse filter in the target frame and are applied lazily during materialization (for example, in <code><a class="el" href="#a805d236592ccedb4d00c893bbf797bcd" title="Retrieves all selected points across perceptions as a single concatenated cloud.">as_points()</a></code>), without modifying the internal indices.</li>
 <li>If <code class="param">lazy_post_fuse</code> is <code>false</code>, the method applies the transform to the target frame immediately and performs an eager filtering step in that frame, updating the internal indices accordingly.</li>
 </ul>
@@ -472,8 +472,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a600de21cd2f773753f5b6130b71caedc" name="a600de21cd2f773753f5b6130b71caedc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a600de21cd2f773753f5b6130b71caedc">&#9670;&#160;</a></span>fuse() <span class="overload">[1/2]</span></h2>
+<a id="a5f528e4eb6e67d91b3c56711a314fc85" name="a5f528e4eb6e67d91b3c56711a314fc85"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5f528e4eb6e67d91b3c56711a314fc85">&#9670;&#160;</a></span>fuse() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -486,7 +486,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>exact_time</em></span><span class="paramdefsep"> = </span><span class="paramdefval">true</span>&#160;)</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>exact_time</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -505,8 +505,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ac121a6cbc8ee6fe79e3368be78ba9d80" name="ac121a6cbc8ee6fe79e3368be78ba9d80"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac121a6cbc8ee6fe79e3368be78ba9d80">&#9670;&#160;</a></span>fuse() <span class="overload">[2/2]</span></h2>
+<a id="a3db0346625ad7fb7c2fba73578020d56" name="a3db0346625ad7fb7c2fba73578020d56"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3db0346625ad7fb7c2fba73578020d56">&#9670;&#160;</a></span>fuse() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -524,7 +524,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>exact_time</em></span><span class="paramdefsep"> = </span><span class="paramdefval">true</span>&#160;)</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>exact_time</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
