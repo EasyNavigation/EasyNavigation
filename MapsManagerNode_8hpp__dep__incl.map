@@ -1,14 +1,16 @@
 <map id="easynav_maps_manager/include/easynav_maps_manager/MapsManagerNode.hpp" name="easynav_maps_manager/include/easynav_maps_manager/MapsManagerNode.hpp">
-<area shape="rect" id="Node000001" title="Declaration of the MapsManagerNode class, a ROS 2 lifecycle node for map handling in Easy Navigation." alt="" coords="125,5,344,61"/>
+<area shape="rect" id="Node000001" title="Declaration of the MapsManagerNode class, a ROS 2 lifecycle node for map handling in Easy Navigation." alt="" coords="266,5,485,61"/>
 <area shape="rect" id="Node000002" href="$MapsManagerNode_8cpp.html" title="Implementation of the MapsManagerNode class." alt="" coords="5,109,197,165"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="188,73,138,110,135,106,185,69"/>
-<area shape="rect" id="Node000003" href="$SystemNode_8hpp.html" title="Declaration of the SystemNode class, the central coordinator node for Easy Navigation components." alt="" coords="300,116,526,157"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="297,67,380,114,377,118,294,71"/>
-<area shape="rect" id="Node000004" href="$SystemNode_8cpp.html" title="Implementation of the SystemNode class." alt="" coords="107,213,332,253"/>
-<area shape="poly" id="edge6_Node000001_Node000004" title=" " alt="" coords="234,77,224,212,218,212,229,76"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="360,167,261,214,259,210,358,162"/>
-<area shape="rect" id="Node000005" href="$system__main_8cpp.html" title=" " alt="" coords="356,213,496,253"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="421,172,426,212,421,213,415,173"/>
-<area shape="rect" id="Node000006" href="$system__tfinfo__tests_8cpp.html" title=" " alt="" coords="521,213,684,253"/>
-<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="467,162,564,210,562,214,465,167"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="289,69,176,111,174,106,287,64"/>
+<area shape="rect" id="Node000003" href="$maps__manager__node__tests_8cpp.html" title=" " alt="" coords="220,109,403,165"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="353,76,331,110,327,107,348,73"/>
+<area shape="rect" id="Node000004" href="$SystemNode_8hpp.html" title="Declaration of the SystemNode class, the central coordinator node for Easy Navigation components." alt="" coords="506,116,731,157"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="456,65,572,113,570,118,454,70"/>
+<area shape="rect" id="Node000005" href="$SystemNode_8cpp.html" title="Implementation of the SystemNode class." alt="" coords="312,213,538,253"/>
+<area shape="poly" id="edge7_Node000001_Node000005" title=" " alt="" coords="403,74,417,108,427,164,428,212,423,212,421,165,412,110,398,76"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="565,167,467,214,464,210,563,162"/>
+<area shape="rect" id="Node000006" href="$system__main_8cpp.html" title=" " alt="" coords="562,213,702,253"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="626,172,632,212,626,213,621,173"/>
+<area shape="rect" id="Node000007" href="$system__tfinfo__tests_8cpp.html" title=" " alt="" coords="726,213,889,253"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="673,162,769,210,767,214,670,167"/>
 </map>
