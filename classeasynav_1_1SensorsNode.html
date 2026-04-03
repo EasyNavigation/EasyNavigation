@@ -78,6 +78,7 @@ $(function() {
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classeasynav_1_1SensorsNode-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">SensorsNode Class Reference</div></div>
 </div><!--header-->
@@ -92,9 +93,13 @@ Inheritance diagram for SensorsNode:</div>
 <div class="dyncontent">
 <div class="center"><img src="classeasynav_1_1SensorsNode__inherit__graph.png" border="0" usemap="#aSensorsNode_inherit__map" loading="lazy" alt="Inheritance graph"/></div>
 <map name="aSensorsNode_inherit__map" id="aSensorsNode_inherit__map">
-<area shape="rect" title="ROS 2 lifecycle node that manages sensor fusion in Easy Navigation." alt="" coords="7,79,108,105"/>
-<area shape="rect" title=" " alt="" coords="5,5,110,31"/>
-<area shape="poly" title=" " alt="" coords="60,46,60,79,55,79,55,46"/>
+<area shape="rect" title="ROS 2 lifecycle node that manages sensor fusion in Easy Navigation." alt="" coords="36,79,137,105"/>
+<area shape="rect" href="classSensorsNodeForTesting.html" title="Subclass of SensorsNode that exposes the protected groups_ and handler_list_ for unit testing." alt="" coords="5,153,168,178"/>
+<area shape="poly" title=" " alt="" coords="72,120,72,137,75,152,70,153,66,137,66,120"/>
+<area shape="poly" title=" " alt="" coords="89,120,89,152,84,152,84,120"/>
+<area shape="poly" title=" " alt="" coords="107,120,107,137,103,153,98,152,101,137,101,120"/>
+<area shape="rect" title=" " alt="" coords="34,5,139,31"/>
+<area shape="poly" title=" " alt="" coords="89,46,89,79,84,79,84,46"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
@@ -102,17 +107,19 @@ Collaboration diagram for SensorsNode:</div>
 <div class="dyncontent">
 <div class="center"><img src="classeasynav_1_1SensorsNode__coll__graph.png" border="0" usemap="#aSensorsNode_coll__map" loading="lazy" alt="Collaboration graph"/></div>
 <map name="aSensorsNode_coll__map" id="aSensorsNode_coll__map">
-<area shape="rect" title="ROS 2 lifecycle node that manages sensor fusion in Easy Navigation." alt="" coords="7,79,108,105"/>
-<area shape="rect" title=" " alt="" coords="5,5,110,31"/>
-<area shape="poly" title=" " alt="" coords="60,46,60,79,55,79,55,46"/>
+<area shape="rect" title="ROS 2 lifecycle node that manages sensor fusion in Easy Navigation." alt="" coords="372,63,472,88"/>
+<area shape="rect" title=" " alt="" coords="72,5,176,31"/>
+<area shape="poly" title=" " alt="" coords="192,20,268,29,348,45,391,59,389,65,347,50,267,34,192,25"/>
+<area shape="rect" title=" " alt="" coords="48,55,200,96"/>
+<area shape="poly" title=" " alt="" coords="215,73,371,73,371,78,215,78"/>
+<area shape="rect" title=" " alt="" coords="5,120,243,161"/>
+<area shape="poly" title=" " alt="" coords="257,121,347,101,389,86,391,91,348,106,258,126"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-types" class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
 <tr class="memitem:ad09d90f1fe35c9e2f2fd7fc1902312f4" id="r_ad09d90f1fe35c9e2f2fd7fc1902312f4"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#ad09d90f1fe35c9e2f2fd7fc1902312f4">CallbackReturnT</a> = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn</td></tr>
-<tr class="memitem:aaa4a084620a1436824c7788b231056cd" id="r_aaa4a084620a1436824c7788b231056cd"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#aaa4a084620a1436824c7788b231056cd">SensorsHandlerFn</a></td></tr>
-<tr class="memdesc:aaa4a084620a1436824c7788b231056cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function pointer type used to handle sensor groups.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -134,15 +141,21 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a9b0782b915f4798a61ae8b9e56ebd5fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle lifecycle transition errors.  <br /></td></tr>
 <tr class="memitem:a38b74771f6ab23805f990786e4d6f806" id="r_a38b74771f6ab23805f990786e4d6f806"><td class="memItemLeft"><a class="el" href="#ad09d90f1fe35c9e2f2fd7fc1902312f4">CallbackReturnT</a>&#160;</td><td class="memItemRight"><a class="el" href="#a38b74771f6ab23805f990786e4d6f806">on_shutdown</a> (const rclcpp_lifecycle::State &amp;state)</td></tr>
 <tr class="memdesc:a38b74771f6ab23805f990786e4d6f806"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shutdown the node.  <br /></td></tr>
-<tr class="memitem:a9e43561c2a04d8f9c244055f6bea466f" id="r_a9e43561c2a04d8f9c244055f6bea466f"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a9e43561c2a04d8f9c244055f6bea466f">register_handler</a> (std::shared_ptr&lt; <a class="el" href="classeasynav_1_1PerceptionHandler.html">PerceptionHandler</a> &gt; handler)</td></tr>
 <tr class="memitem:a5629e27f739777bfe6b081a54f41ef30" id="r_a5629e27f739777bfe6b081a54f41ef30"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a5629e27f739777bfe6b081a54f41ef30">SensorsNode</a> (const rclcpp::NodeOptions &amp;options=rclcpp::NodeOptions())</td></tr>
 <tr class="memdesc:a5629e27f739777bfe6b081a54f41ef30"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <br /></td></tr>
 <tr class="memitem:a84e306309c2bba62ee5dc10a2573a960" id="r_a84e306309c2bba62ee5dc10a2573a960"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a84e306309c2bba62ee5dc10a2573a960">~SensorsNode</a> ()</td></tr>
 <tr class="memdesc:a84e306309c2bba62ee5dc10a2573a960"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pro-attribs" class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
+Protected Attributes</h2></td></tr>
+<tr class="memitem:a59cb16a31a60e4647d2d387702be1294" id="r_a59cb16a31a60e4647d2d387702be1294"><td class="memItemLeft">std::map&lt; std::string, std::vector&lt; std::string &gt; &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a59cb16a31a60e4647d2d387702be1294">groups_</a></td></tr>
+<tr class="memdesc:a59cb16a31a60e4647d2d387702be1294"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sensor groups (set as group of keys in the <a class="el" href="classeasynav_1_1NavState.html" title="A generic, type-safe, thread-safe blackboard to hold runtime state.">NavState</a>).  <br /></td></tr>
+<tr class="memitem:ad18a77ce454474ea2d382022a9703d92" id="r_ad18a77ce454474ea2d382022a9703d92"><td class="memItemLeft">std::vector&lt; std::shared_ptr&lt; <a class="el" href="classPerceptionHandler.html">PerceptionHandler</a> &gt; &gt;&#160;</td><td class="memItemRight"><a class="el" href="#ad18a77ce454474ea2d382022a9703d92">handler_list_</a></td></tr>
+<tr class="memdesc:ad18a77ce454474ea2d382022a9703d92"><td class="mdescLeft">&#160;</td><td class="mdescRight">vector of <a class="el" href="classeasynav_1_1PerceptionHandler.html" title="Abstract base class for pluginlib-based sensor perception handlers.">PerceptionHandler</a> instances  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>ROS 2 lifecycle node that manages sensor fusion in Easy Navigation. </p>
-<p>Collects, transforms, and publishes fused perception data from multiple sources. </p>
+<p>Collects, transforms, and publishes fused perception data from multiple sources. Sensor handlers are loaded at runtime as pluginlib plugins, allowing users to add new sensor types without modifying this node. </p>
 </div><a name="doc-typedef-members" id="doc-typedef-members"></a><h2 id="header-doc-typedef-members" class="groupheader">Member Typedef Documentation</h2>
 <a id="ad09d90f1fe35c9e2f2fd7fc1902312f4" name="ad09d90f1fe35c9e2f2fd7fc1902312f4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad09d90f1fe35c9e2f2fd7fc1902312f4">&#9670;&#160;</a></span>CallbackReturnT</h2>
@@ -155,36 +168,6 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-</div>
-</div>
-<a id="aaa4a084620a1436824c7788b231056cd" name="aaa4a084620a1436824c7788b231056cd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaa4a084620a1436824c7788b231056cd">&#9670;&#160;</a></span>SensorsHandlerFn</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">using <a class="el" href="#aaa4a084620a1436824c7788b231056cd">SensorsHandlerFn</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">void(*)(</div>
-<div class="line">   <span class="keyword">const</span> std::string &amp; group,</div>
-<div class="line">   <span class="keyword">const</span> std::vector&lt;easynav::PerceptionPtr&gt; &amp; perceptions,</div>
-<div class="line">   <a class="code hl_class" href="classeasynav_1_1NavState.html">::easynav::NavState</a> &amp; ns</div>
-<div class="line"> )</div>
-<div class="ttc" id="aclasseasynav_1_1NavState_html"><div class="ttname"><a href="classeasynav_1_1NavState.html">easynav::NavState</a></div><div class="ttdoc">A generic, type-safe, thread-safe blackboard to hold runtime state.</div><div class="ttdef"><b>Definition</b> NavState.hpp:82</div></div>
-</div><!-- fragment -->
-<p>Function pointer type used to handle sensor groups. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">group</td><td>Sensor group name. </td></tr>
-    <tr><td class="paramname">perceptions</td><td>List of perceptions (one element from each sensor in the group). </td></tr>
-    <tr><td class="paramname">ns</td><td>Navigation state to populate. </td></tr>
-  </table>
-  </dd>
-</dl>
 
 </div>
 </div>
@@ -467,20 +450,52 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a9e43561c2a04d8f9c244055f6bea466f" name="a9e43561c2a04d8f9c244055f6bea466f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9e43561c2a04d8f9c244055f6bea466f">&#9670;&#160;</a></span>register_handler()</h2>
+<a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
+<a id="a59cb16a31a60e4647d2d387702be1294" name="a59cb16a31a60e4647d2d387702be1294"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a59cb16a31a60e4647d2d387702be1294">&#9670;&#160;</a></span>groups_</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void register_handler </td>
-          <td>(</td>
-          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classeasynav_1_1PerceptionHandler.html">PerceptionHandler</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>handler</em></span></td><td>)</td>
-          <td></td>
+          <td class="memname">std::map&lt;std::string, std::vector&lt;std::string&gt; &gt; groups_</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
+
+<p>Sensor groups (set as group of keys in the <a class="el" href="classeasynav_1_1NavState.html" title="A generic, type-safe, thread-safe blackboard to hold runtime state.">NavState</a>). </p>
+
+</div>
+</div>
+<a id="ad18a77ce454474ea2d382022a9703d92" name="ad18a77ce454474ea2d382022a9703d92"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad18a77ce454474ea2d382022a9703d92">&#9670;&#160;</a></span>handler_list_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;std::shared_ptr&lt;<a class="el" href="classPerceptionHandler.html">PerceptionHandler</a>&gt; &gt; handler_list_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>vector of <a class="el" href="classeasynav_1_1PerceptionHandler.html" title="Abstract base class for pluginlib-based sensor perception handlers.">PerceptionHandler</a> instances </p>
 
 </div>
 </div>

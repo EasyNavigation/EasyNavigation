@@ -1,13 +1,13 @@
 <map id="easynav_maps_manager" name="easynav_maps_manager">
 <area shape="rect" id="node2" href="dir_99a26ff111842302d7440f13c4908e2e.html" title="include" alt="" coords="234,100,296,126"/>
 <area shape="rect" id="node3" href="dir_85074e3a709719f067f9e340a51d569a.html" title="src" alt="" coords="216,27,256,52"/>
-<area shape="poly" id="edge1" href="dir_000031_000024.html" alt="" coords="243,52,257,85,252,87,238,54"/>
-<area shape="rect" id="edge1-headlabel" href="dir_000031_000024.html" title="2" alt="" coords="258,72,265,87"/>
+<area shape="poly" id="edge1" href="dir_000029_000023.html" alt="" coords="243,52,257,85,252,87,238,54"/>
+<area shape="rect" id="edge1-headlabel" href="dir_000029_000023.html" title="2" alt="" coords="258,72,265,87"/>
 <area shape="rect" id="node4" href="dir_6116abecf7c8b44eb9ae2eb0f9792478.html" title="tests" alt="" coords="280,27,330,52"/>
-<area shape="poly" id="edge3" href="dir_000038_000024.html" alt="" coords="301,54,282,88,277,86,296,51"/>
-<area shape="rect" id="edge3-headlabel" href="dir_000038_000024.html" title="1" alt="" coords="285,81,292,96"/>
+<area shape="poly" id="edge3" href="dir_000036_000023.html" alt="" coords="301,54,282,88,277,86,296,51"/>
+<area shape="rect" id="edge3-headlabel" href="dir_000036_000023.html" title="1" alt="" coords="285,81,292,96"/>
 <area shape="rect" id="node5" href="dir_44416c254a438fcc2b63460fcfa852ae.html" title="easynav_common" alt="" coords="352,100,478,126"/>
-<area shape="poly" id="edge2" href="dir_000038_000000.html" alt="" coords="325,51,385,89,382,94,322,55"/>
-<area shape="rect" id="edge2-headlabel" href="dir_000038_000000.html" title="1" alt="" coords="382,75,389,90"/>
+<area shape="poly" id="edge2" href="dir_000036_000000.html" alt="" coords="325,51,385,89,382,94,322,55"/>
+<area shape="rect" id="edge2-headlabel" href="dir_000036_000000.html" title="1" alt="" coords="382,75,389,90"/>
 <area shape="rect" id="clust1" href="dir_08f2ac1687261e34ac98cd598106342d.html" alt="" coords="16,16,341,137"/>
 </map>

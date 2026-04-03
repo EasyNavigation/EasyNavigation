@@ -1,15 +1,22 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classeasynav_1_1PerceptionHandler.html" title="Abstract base interface for group&#45;specific perception handlers." alt="" coords="5,129,134,155"/>
+<area shape="rect" id="Node000000" href="$classeasynav_1_1PerceptionHandler.html" title="Abstract base class for pluginlib&#45;based sensor perception handlers." alt="" coords="5,104,134,130"/>
 <area shape="rect" id="Node000001" href="$classDummyHandler.html" title=" " alt="" coords="225,5,336,31"/>
-<area shape="poly" id="edge19_Node000000_Node000001" title=" " alt="" coords="90,116,129,76,180,40,224,24,226,29,183,45,133,80,94,119"/>
-<area shape="rect" id="Node000002" href="$classeasynav_1_1DetectionsPerceptionsHandler.html" title="Handles the creation and updating of DetectionsPerceptions instances from sensor_msgs::msg::Image mes..." alt="" coords="182,55,379,80"/>
-<area shape="poly" id="edge20_Node000000_Node000002" title=" " alt="" coords="109,120,181,89,216,78,218,83,183,94,111,124"/>
-<area shape="rect" id="Node000003" href="$classeasynav_1_1GNSSPerceptionHandler.html" title="Handles the creation and updating of GNSSPerception instances from sensor_msgs::msg::NavSatFix messag..." alt="" coords="197,104,364,130"/>
-<area shape="poly" id="edge21_Node000000_Node000003" title=" " alt="" coords="149,130,196,124,197,130,149,135"/>
-<area shape="rect" id="Node000004" href="$classeasynav_1_1IMUPerceptionHandler.html" title="Handles the creation and updating of IMUPerception instances from sensor_msgs::msg::Imu messages." alt="" coords="204,153,357,179"/>
-<area shape="poly" id="edge22_Node000000_Node000004" title=" " alt="" coords="149,148,204,155,203,160,148,154"/>
-<area shape="rect" id="Node000005" href="$classeasynav_1_1ImagePerceptionHandler.html" title="Handles the creation and updating of ImagePerception instances from sensor_msgs::msg::Image messages." alt="" coords="198,203,362,228"/>
-<area shape="poly" id="edge23_Node000000_Node000005" title=" " alt="" coords="112,159,183,189,218,199,216,205,181,194,110,164"/>
-<area shape="rect" id="Node000006" href="$classeasynav_1_1PointPerceptionHandler.html" title="PerceptionHandler implementation for sensors producing point&#45;based data." alt="" coords="201,252,360,278"/>
-<area shape="poly" id="edge24_Node000000_Node000006" title=" " alt="" coords="94,165,133,203,183,238,208,249,206,254,180,243,130,207,90,169"/>
+<area shape="poly" id="edge20_Node000000_Node000001" title=" " alt="" coords="97,92,135,65,181,40,224,25,226,30,183,45,138,69,100,97"/>
+<area shape="rect" id="Node000003" href="$classeasynav_1_1DetectionsPerceptionsHandler.html" title="Handles the creation and updating of DetectionsPerceptions instances from sensor_msgs::msg::Image mes..." alt="" coords="182,55,379,80"/>
+<area shape="poly" id="edge21_Node000000_Node000003" title=" " alt="" coords="142,97,222,78,223,84,143,102"/>
+<area shape="rect" id="Node000004" href="$classeasynav_1_1GNSSPerceptionHandler.html" title="Handles the creation and updating of GNSSPerception instances from sensor_msgs::msg::NavSatFix messag..." alt="" coords="197,104,364,130"/>
+<area shape="poly" id="edge22_Node000000_Node000004" title=" " alt="" coords="149,114,197,114,197,120,149,120"/>
+<area shape="rect" id="Node000005" href="$classeasynav_1_1IMUPerceptionHandler.html" title="Handles the creation and updating of IMUPerception instances from sensor_msgs::msg::Imu messages." alt="" coords="204,153,357,179"/>
+<area shape="poly" id="edge23_Node000000_Node000005" title=" " alt="" coords="143,131,223,150,222,155,142,136"/>
+<area shape="rect" id="Node000006" href="$classeasynav_1_1ImagePerceptionHandler.html" title="Handles the creation and updating of ImagePerception instances from sensor_msgs::msg::Image messages." alt="" coords="198,203,362,228"/>
+<area shape="poly" id="edge24_Node000000_Node000006" title=" " alt="" coords="128,134,135,139,150,152,159,165,168,178,183,189,206,200,204,204,180,194,165,181,155,168,146,156,132,143,126,139"/>
+<area shape="rect" id="Node000007" href="$classeasynav_1_1PointPerceptionHandler.html" title="PerceptionHandler implementation for sensors producing point&#45;based data." alt="" coords="201,252,360,278"/>
+<area shape="poly" id="edge25_Node000000_Node000007" title=" " alt="" coords="132,136,136,139,147,152,154,165,160,191,166,216,172,227,183,239,202,250,199,255,180,243,168,231,161,218,154,192,149,167,142,155,132,143,129,140"/>
+<area shape="rect" id="Node000002" href="$classPerceptionHandler.html" title="Abstract base class for pluginlib&#45;based sensor perception handlers." alt="" coords="5,153,134,179"/>
+<area shape="poly" id="edge26_Node000002_Node000001" title=" " alt="" coords="129,143,132,140,142,128,149,116,154,91,161,65,168,52,180,40,201,28,224,20,225,25,203,33,183,44,172,56,166,67,160,92,154,118,147,131,136,144,132,147"/>
+<area shape="poly" id="edge27_Node000002_Node000003" title=" " alt="" coords="126,144,132,140,146,127,155,115,165,102,180,89,204,79,206,83,183,94,168,105,159,118,150,131,135,144,128,149"/>
+<area shape="poly" id="edge28_Node000002_Node000004" title=" " alt="" coords="142,147,222,128,223,133,143,152"/>
+<area shape="poly" id="edge29_Node000002_Node000005" title=" " alt="" coords="149,164,203,164,203,169,149,169"/>
+<area shape="poly" id="edge30_Node000002_Node000006" title=" " alt="" coords="143,181,223,199,222,205,142,186"/>
+<area shape="poly" id="edge31_Node000002_Node000007" title=" " alt="" coords="100,186,138,214,183,238,212,249,211,254,181,243,135,218,97,191"/>
 </map>

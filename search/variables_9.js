@@ -1,9 +1,6 @@
 var searchData=
 [
-  ['pending_5favailable_5f_0',['pending_available_',['../classeasynav_1_1PointPerception.html#a7b7456276bd02c223763924057a0806e',1,'easynav::PointPerception']]],
-  ['pending_5fcloud_5f_1',['pending_cloud_',['../classeasynav_1_1PointPerception.html#a194acd17374e493890fb8a4fb47c90ca',1,'easynav::PointPerception']]],
-  ['pending_5fframe_5f_2',['pending_frame_',['../classeasynav_1_1PointPerception.html#a7a8d0ce5bd53721a80da12bfc67199cb',1,'easynav::PointPerception']]],
-  ['pending_5fstamp_5f_3',['pending_stamp_',['../classeasynav_1_1PointPerception.html#aaddce11136b2919c60fd8c50243af6b8',1,'easynav::PointPerception']]],
-  ['perception_4',['perception',['../structeasynav_1_1PerceptionPtr.html#adbcc140c5deeb62932f1d7d03464ad76',1,'easynav::PerceptionPtr']]],
-  ['position_5',['position',['../structeasynav_1_1GoalManager_1_1GoalTolerance.html#aa1b2c258efdc9e057ee99a45179692fd',1,'easynav::GoalManager::GoalTolerance']]]
+  ['new_5fdata_0',['new_data',['../classeasynav_1_1PerceptionBase.html#a5a4ba60143c31271df0f72bf0e503876',1,'easynav::PerceptionBase']]],
+  ['node_5f_1',['node_',['../classPluginTestCase.html#a9f83d0a03ffbc5bfc6fb9b87bff09fba',1,'PluginTestCase']]],
+  ['node_5fptr_2',['node_ptr',['../structeasynav_1_1SystemNodeInfo.html#a676636486b490302c0c8692b459ad78e',1,'easynav::SystemNodeInfo']]]
 ];

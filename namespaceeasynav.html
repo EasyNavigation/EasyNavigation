@@ -122,16 +122,14 @@ Classes</h2></td></tr>
 <tr class="memitem:PerceptionBase" id="r_PerceptionBase"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="classeasynav_1_1PerceptionBase.html">PerceptionBase</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Abstract base class for representing a single sensor perception.  <a href="classeasynav_1_1PerceptionBase.html#details">More...</a><br /></td></tr>
 <tr class="memitem:PerceptionHandler" id="r_PerceptionHandler"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="classeasynav_1_1PerceptionHandler.html">PerceptionHandler</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Abstract base interface for group-specific perception handlers.  <a href="classeasynav_1_1PerceptionHandler.html#details">More...</a><br /></td></tr>
-<tr class="memitem:PerceptionPtr" id="r_PerceptionPtr"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structeasynav_1_1PerceptionPtr.html">PerceptionPtr</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a perception entry with its state and ROS subscription.  <a href="structeasynav_1_1PerceptionPtr.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Abstract base class for pluginlib-based sensor perception handlers.  <a href="classeasynav_1_1PerceptionHandler.html#details">More...</a><br /></td></tr>
 <tr class="memitem:PlannerNode" id="r_PlannerNode"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="classeasynav_1_1PlannerNode.html">PlannerNode</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">ROS 2 lifecycle node that manages path planning in Easy Navigation.  <a href="classeasynav_1_1PlannerNode.html#details">More...</a><br /></td></tr>
 <tr class="memitem:PointPerception" id="r_PointPerception"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="classeasynav_1_1PointPerception.html">PointPerception</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Concrete perception class for 3D point cloud data.  <a href="classeasynav_1_1PointPerception.html#details">More...</a><br /></td></tr>
 <tr class="memitem:PointPerceptionBufferType" id="r_PointPerceptionBufferType"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structeasynav_1_1PointPerceptionBufferType.html">PointPerceptionBufferType</a></td></tr>
 <tr class="memitem:PointPerceptionHandler" id="r_PointPerceptionHandler"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="classeasynav_1_1PointPerceptionHandler.html">PointPerceptionHandler</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classeasynav_1_1PerceptionHandler.html" title="PerceptionHandler">PerceptionHandler</a> implementation for sensors producing point-based data.  <a href="classeasynav_1_1PointPerceptionHandler.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classPerceptionHandler.html" title="PerceptionHandler">PerceptionHandler</a> implementation for sensors producing point-based data.  <a href="classeasynav_1_1PointPerceptionHandler.html#details">More...</a><br /></td></tr>
 <tr class="memitem:PointPerceptionsOpsView" id="r_PointPerceptionsOpsView"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="classeasynav_1_1PointPerceptionsOpsView.html">PointPerceptionsOpsView</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides efficient, non-destructive, chainable operations over a set of point-based perceptions.  <a href="classeasynav_1_1PointPerceptionsOpsView.html#details">More...</a><br /></td></tr>
 <tr class="memitem:RTTFBuffer" id="r_RTTFBuffer"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="classeasynav_1_1RTTFBuffer.html">RTTFBuffer</a></td></tr>
@@ -184,11 +182,9 @@ Functions</h2></td></tr>
 <tr class="memdesc:abf2e1d1aa75148c0196d9be12f2c9ca5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the latest timestamp among a set of IMU perceptions.  <br /></td></tr>
 <tr class="memitem:a41c264598339537f447072e0e490fb6f" id="r_a41c264598339537f447072e0e490fb6f"><td class="memItemLeft">rclcpp::Time&#160;</td><td class="memItemRight"><a class="el" href="#a41c264598339537f447072e0e490fb6f">get_latest_point_perceptions_stamp</a> (const <a class="el" href="#aa83db8e6a9c3d5f8bff1fe325cf9e99a">PointPerceptions</a> &amp;perceptions)</td></tr>
 <tr class="memdesc:a41c264598339537f447072e0e490fb6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the latest timestamp among a set of point-based perceptions.  <br /></td></tr>
-<tr class="memitem:a843ecd75e7c807bdaf73f409e59d8dc4" id="r_a843ecd75e7c807bdaf73f409e59d8dc4"><td class="memTemplParams" colspan="2">template&lt;typename T = PerceptionBase&gt; </td></tr>
-<tr class="memitem:a843ecd75e7c807bdaf73f409e59d8dc4 template"><td class="memItemLeft">std::vector&lt; std::shared_ptr&lt; T &gt; &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a843ecd75e7c807bdaf73f409e59d8dc4">get_perceptions</a> (const std::vector&lt; <a class="el" href="structeasynav_1_1PerceptionPtr.html">PerceptionPtr</a> &gt; &amp;src)</td></tr>
-<tr class="memdesc:a843ecd75e7c807bdaf73f409e59d8dc4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extracts a homogeneous collection of perceptions of type <code class="param">T</code> from a heterogeneous vector.  <br /></td></tr>
-<tr class="memitem:ad88fea01569979532c80883949bee0dd" id="r_ad88fea01569979532c80883949bee0dd"><td class="memItemLeft"><a class="el" href="#aa83db8e6a9c3d5f8bff1fe325cf9e99a">PointPerceptions</a>&#160;</td><td class="memItemRight"><a class="el" href="#ad88fea01569979532c80883949bee0dd">get_point_perceptions</a> (std::vector&lt; <a class="el" href="structeasynav_1_1PerceptionPtr.html">PerceptionPtr</a> &gt; &amp;perceptionptr)</td></tr>
-<tr class="memdesc:ad88fea01569979532c80883949bee0dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extracts all <a class="el" href="classeasynav_1_1PointPerception.html" title="PointPerception">PointPerception</a> objects from a heterogeneous collection.  <br /></td></tr>
+<tr class="memitem:a85608546062d3c1c397712b595f181fd" id="r_a85608546062d3c1c397712b595f181fd"><td class="memTemplParams" colspan="2">template&lt;typename T = PerceptionBase&gt; </td></tr>
+<tr class="memitem:a85608546062d3c1c397712b595f181fd template"><td class="memItemLeft">std::vector&lt; std::shared_ptr&lt; T &gt; &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a85608546062d3c1c397712b595f181fd">get_perceptions</a> (const std::vector&lt; <a class="el" href="#a4d10e036523aceea280b71de936e1c41">PerceptionBasePtr</a> &gt; &amp;src)</td></tr>
+<tr class="memdesc:a85608546062d3c1c397712b595f181fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extracts a homogeneous collection of perceptions of type <code class="param">T</code> from a heterogeneous vector.  <br /></td></tr>
 <tr class="memitem:aaf7b2449dfa550dee63301e3d721ab3a" id="r_aaf7b2449dfa550dee63301e3d721ab3a"><td class="memItemLeft">constexpr double&#160;</td><td class="memItemRight"><a class="el" href="#aaf7b2449dfa550dee63301e3d721ab3a">norm_angle</a> (const double angle)</td></tr>
 <tr class="memdesc:aaf7b2449dfa550dee63301e3d721ab3a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Angle normalization to [-pi, pi) range (in radians).  <br /></td></tr>
 <tr class="memitem:a9050313b1e39e04002d6e63dfe4dd856" id="r_a9050313b1e39e04002d6e63dfe4dd856"><td class="memItemLeft">sensor_msgs::msg::PointCloud2&#160;</td><td class="memItemRight"><a class="el" href="#a9050313b1e39e04002d6e63dfe4dd856">perception_to_rosmsg</a> (const <a class="el" href="classeasynav_1_1PointPerception.html">PointPerception</a> &amp;perception)</td></tr>
@@ -596,8 +592,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a843ecd75e7c807bdaf73f409e59d8dc4" name="a843ecd75e7c807bdaf73f409e59d8dc4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a843ecd75e7c807bdaf73f409e59d8dc4">&#9670;&#160;</a></span>get_perceptions()</h2>
+<a id="a85608546062d3c1c397712b595f181fd" name="a85608546062d3c1c397712b595f181fd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a85608546062d3c1c397712b595f181fd">&#9670;&#160;</a></span>get_perceptions()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -607,17 +603,14 @@ template&lt;typename T = PerceptionBase&gt; </div>
         <tr>
           <td class="memname">std::vector&lt; std::shared_ptr&lt; T &gt; &gt; get_perceptions </td>
           <td>(</td>
-          <td class="paramtype">const std::vector&lt; <a class="el" href="structeasynav_1_1PerceptionPtr.html">PerceptionPtr</a> &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>src</em></span></td><td>)</td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="#a4d10e036523aceea280b71de936e1c41">PerceptionBasePtr</a> &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>src</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Extracts a homogeneous collection of perceptions of type <code class="param">T</code> from a heterogeneous vector. </p>
-<p>This helper iterates the input vector of <a class="el" href="structeasynav_1_1PerceptionPtr.html" title="PerceptionPtr">PerceptionPtr</a> and:</p><ul>
-<li>If <code class="param">T</code> is exactly <a class="el" href="classeasynav_1_1PerceptionBase.html" title="PerceptionBase">PerceptionBase</a>, returns all stored pointers without casting (heterogeneous view).</li>
-<li>Otherwise, attempts a <span class="tt">std::dynamic_pointer_cast&lt;T&gt;</span> and includes only those perceptions that match (homogeneous view).</li>
-</ul>
+<p>This helper iterates the input vector of <a class="el" href="#a4d10e036523aceea280b71de936e1c41" title="PerceptionBasePtr">PerceptionBasePtr</a> and attempts a <span class="tt">std::dynamic_pointer_cast&lt;T&gt;</span> and includes only those perceptions that match (homogeneous view).</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">T</td><td>Target perception type. Must inherit from <a class="el" href="classeasynav_1_1PerceptionBase.html" title="PerceptionBase">PerceptionBase</a>. Defaults to <a class="el" href="classeasynav_1_1PerceptionBase.html" title="PerceptionBase">PerceptionBase</a>. </td></tr>
@@ -626,37 +619,11 @@ template&lt;typename T = PerceptionBase&gt; </div>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">src</td><td>Source vector containing heterogeneous perceptions and their subscriptions. </td></tr>
+    <tr><td class="paramname">src</td><td>Source vector containing pointers to heterogeneous perceptions ( <a class="el" href="#a4d10e036523aceea280b71de936e1c41" title="PerceptionBasePtr">PerceptionBasePtr</a> ). </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A vector of <span class="tt">std::shared_ptr&lt;T&gt;</span> containing the matching perceptions, in the same order as <code class="param">src</code>. </dd></dl>
-
-</div>
-</div>
-<a id="ad88fea01569979532c80883949bee0dd" name="ad88fea01569979532c80883949bee0dd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad88fea01569979532c80883949bee0dd">&#9670;&#160;</a></span>get_point_perceptions()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="#aa83db8e6a9c3d5f8bff1fe325cf9e99a">PointPerceptions</a> get_point_perceptions </td>
-          <td>(</td>
-          <td class="paramtype">std::vector&lt; <a class="el" href="structeasynav_1_1PerceptionPtr.html">PerceptionPtr</a> &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>perceptionptr</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Extracts all <a class="el" href="classeasynav_1_1PointPerception.html" title="PointPerception">PointPerception</a> objects from a heterogeneous collection. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">perceptionptr</td><td>Vector of <a class="el" href="structeasynav_1_1PerceptionPtr.html" title="PerceptionPtr">PerceptionPtr</a> entries possibly holding mixed perception types. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>A vector with the subset of perceptions that are <a class="el" href="classeasynav_1_1PointPerception.html" title="PointPerception">PointPerception</a>. </dd></dl>
 
 </div>
 </div>

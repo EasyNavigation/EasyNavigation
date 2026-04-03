@@ -13,13 +13,14 @@ var searchData=
   ['_7emapsmanagernodetestcase_10',['~MapsManagerNodeTestCase',['../classMapsManagerNodeTestCase.html#a2b2b37d20a8dcf55e812a200c1d0242c',1,'MapsManagerNodeTestCase']]],
   ['_7enavstate_11',['~NavState',['../classeasynav_1_1NavState.html#abdc1d18307758986bc40729691de0921',1,'easynav::NavState']]],
   ['_7eperceptionbase_12',['~PerceptionBase',['../classeasynav_1_1PerceptionBase.html#a05127c1d4439d2afa8dcf4230e2a177c',1,'easynav::PerceptionBase']]],
-  ['_7eperceptionhandler_13',['~PerceptionHandler',['../classeasynav_1_1PerceptionHandler.html#abbe35c22e1c98340681de734002399d9',1,'easynav::PerceptionHandler']]],
+  ['_7eperceptionhandler_13',['~PerceptionHandler',['../classeasynav_1_1PerceptionHandler.html#abbe35c22e1c98340681de734002399d9',1,'easynav::PerceptionHandler::~PerceptionHandler()'],['../classPerceptionHandler.html#abbe35c22e1c98340681de734002399d9',1,'PerceptionHandler::~PerceptionHandler()']]],
   ['_7eperceptionstestcase_14',['~PerceptionsTestCase',['../classPerceptionsTestCase.html#a5d25c16a1b3f4f77bd597d54ce6ac4fb',1,'PerceptionsTestCase']]],
   ['_7eplannernode_15',['~PlannerNode',['../classeasynav_1_1PlannerNode.html#a10ae20b189dd786b467a8441316e13d7',1,'easynav::PlannerNode']]],
   ['_7eplannernodetestcase_16',['~PlannerNodeTestCase',['../classPlannerNodeTestCase.html#ab7e6eb5bdf9f82639f9cabeb61d4ba5e',1,'PlannerNodeTestCase']]],
-  ['_7esensorsnode_17',['~SensorsNode',['../classeasynav_1_1SensorsNode.html#a84e306309c2bba62ee5dc10a2573a960',1,'easynav::SensorsNode']]],
-  ['_7esensorsnodetestcase_18',['~SensorsNodeTestCase',['../classSensorsNodeTestCase.html#a4543bb6319a1fd94f16b5108529e6115',1,'SensorsNodeTestCase']]],
-  ['_7esingleton_19',['~Singleton',['../classeasynav_1_1Singleton.html#ad5e506b7074ad31f76ccf25c46644623',1,'easynav::Singleton']]],
-  ['_7esystemnode_20',['~SystemNode',['../classeasynav_1_1SystemNode.html#a3bd1259a93656594885b4c59ac3cec93',1,'easynav::SystemNode']]],
-  ['_7eytsession_21',['~YTSession',['../classeasynav_1_1YTSession.html#afccea8a77e02010809479a7dd16218ef',1,'easynav::YTSession']]]
+  ['_7eplugintestcase_17',['~PluginTestCase',['../classPluginTestCase.html#a5079af18a071fbd7eed4028806365870',1,'PluginTestCase']]],
+  ['_7esensorsnode_18',['~SensorsNode',['../classeasynav_1_1SensorsNode.html#a84e306309c2bba62ee5dc10a2573a960',1,'easynav::SensorsNode']]],
+  ['_7esensorsnodetestcase_19',['~SensorsNodeTestCase',['../classSensorsNodeTestCase.html#a4543bb6319a1fd94f16b5108529e6115',1,'SensorsNodeTestCase']]],
+  ['_7esingleton_20',['~Singleton',['../classeasynav_1_1Singleton.html#ad5e506b7074ad31f76ccf25c46644623',1,'easynav::Singleton']]],
+  ['_7esystemnode_21',['~SystemNode',['../classeasynav_1_1SystemNode.html#a3bd1259a93656594885b4c59ac3cec93',1,'easynav::SystemNode']]],
+  ['_7eytsession_22',['~YTSession',['../classeasynav_1_1YTSession.html#afccea8a77e02010809479a7dd16218ef',1,'easynav::YTSession']]]
 ];

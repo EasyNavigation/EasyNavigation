@@ -83,7 +83,7 @@ Inheritance diagram for DummyHandler:</div>
 <div class="center"><img src="classDummyHandler__inherit__graph.png" border="0" usemap="#aDummyHandler_inherit__map" loading="lazy" alt="Inheritance graph"/></div>
 <map name="aDummyHandler_inherit__map" id="aDummyHandler_inherit__map">
 <area shape="rect" title=" " alt="" coords="14,79,125,105"/>
-<area shape="rect" href="classeasynav_1_1PerceptionHandler.html" title="Abstract base interface for group&#45;specific perception handlers." alt="" coords="5,5,134,31"/>
+<area shape="rect" href="classeasynav_1_1PerceptionHandler.html" title="Abstract base class for pluginlib&#45;based sensor perception handlers." alt="" coords="5,5,134,31"/>
 <area shape="poly" title=" " alt="" coords="72,46,72,79,67,79,67,46"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
@@ -92,26 +92,49 @@ Collaboration diagram for DummyHandler:</div>
 <div class="dyncontent">
 <div class="center"><img src="classDummyHandler__coll__graph.png" border="0" usemap="#aDummyHandler_coll__map" loading="lazy" alt="Collaboration graph"/></div>
 <map name="aDummyHandler_coll__map" id="aDummyHandler_coll__map">
-<area shape="rect" title=" " alt="" coords="14,79,125,105"/>
-<area shape="rect" href="classeasynav_1_1PerceptionHandler.html" title="Abstract base interface for group&#45;specific perception handlers." alt="" coords="5,5,134,31"/>
-<area shape="poly" title=" " alt="" coords="72,46,72,79,67,79,67,46"/>
+<area shape="rect" title=" " alt="" coords="188,192,298,218"/>
+<area shape="rect" href="classeasynav_1_1PerceptionHandler.html" title="Abstract base class for pluginlib&#45;based sensor perception handlers." alt="" coords="179,117,307,143"/>
+<area shape="poly" title=" " alt="" coords="246,158,246,192,240,192,240,158"/>
+<area shape="rect" title=" " alt="" coords="5,5,180,46"/>
+<area shape="poly" title=" " alt="" coords="117,57,153,91,177,104,201,114,199,119,174,109,150,95,114,60"/>
+<area shape="rect" title=" " alt="" coords="204,13,283,38"/>
+<area shape="poly" title=" " alt="" coords="246,54,246,116,240,116,240,54"/>
+<area shape="rect" title=" " alt="" coords="336,13,390,38"/>
+<area shape="poly" title=" " alt="" coords="359,55,350,76,336,95,317,109,295,119,293,114,314,104,332,91,345,73,354,52"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a80cc0e0ccac058cc66c6894f2e02e207" id="r_a80cc0e0ccac058cc66c6894f2e02e207"><td class="memItemLeft">std::shared_ptr&lt; <a class="el" href="classeasynav_1_1PerceptionBase.html">easynav::PerceptionBase</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a80cc0e0ccac058cc66c6894f2e02e207">create</a> (const std::string &amp;) override</td></tr>
-<tr class="memdesc:a80cc0e0ccac058cc66c6894f2e02e207"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new instance of a perception object managed by this handler.  <br /></td></tr>
-<tr class="memitem:a505925bada2fce87bbf78e710d8f6d37" id="r_a505925bada2fce87bbf78e710d8f6d37"><td class="memItemLeft">rclcpp::SubscriptionBase::SharedPtr&#160;</td><td class="memItemRight"><a class="el" href="#a505925bada2fce87bbf78e710d8f6d37">create_subscription</a> (rclcpp_lifecycle::LifecycleNode &amp;node, const std::string &amp;topic, const std::string &amp;type, std::shared_ptr&lt; <a class="el" href="classeasynav_1_1PerceptionBase.html">easynav::PerceptionBase</a> &gt; target, rclcpp::CallbackGroup::SharedPtr cb_group) override</td></tr>
-<tr class="memdesc:a505925bada2fce87bbf78e710d8f6d37"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a subscription that processes messages into PerceptionBase instances.  <br /></td></tr>
-<tr class="memitem:a4dcf237e516e7aa43aff18fffd22a9a2" id="r_a4dcf237e516e7aa43aff18fffd22a9a2"><td class="memItemLeft">std::string&#160;</td><td class="memItemRight"><a class="el" href="#a4dcf237e516e7aa43aff18fffd22a9a2">group</a> () const override</td></tr>
-<tr class="memdesc:a4dcf237e516e7aa43aff18fffd22a9a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the group identifier associated with this handler.  <br /></td></tr>
+<tr class="memitem:a96630d027829fc94a87c8877891cc98f" id="r_a96630d027829fc94a87c8877891cc98f"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a96630d027829fc94a87c8877891cc98f">cycle_rt</a> (std::shared_ptr&lt; <a class="el" href="classeasynav_1_1NavState.html">easynav::NavState</a> &gt; nav_state) override</td></tr>
+<tr class="memdesc:a96630d027829fc94a87c8877891cc98f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Run one real-time sensor processing cycle.  <br /></td></tr>
+<tr class="memitem:ac9d1795b6cf8a4da7bf9b33f783db911" id="r_ac9d1795b6cf8a4da7bf9b33f783db911"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ac9d1795b6cf8a4da7bf9b33f783db911">on_initialize</a> () override</td></tr>
+<tr class="memdesc:ac9d1795b6cf8a4da7bf9b33f783db911"><td class="mdescLeft">&#160;</td><td class="mdescRight">Optional post-initialization hook for subclasses.  <br /></td></tr>
 <tr class="inherit_header pub_methods_classeasynav_1_1PerceptionHandler"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classeasynav_1_1PerceptionHandler')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Member Functions inherited from <a class="el" href="classeasynav_1_1PerceptionHandler.html">PerceptionHandler</a></td></tr>
+<tr class="memitem:ab6f232729c466045279af3865fbb1ff7 inherit pub_methods_classeasynav_1_1PerceptionHandler" id="r_ab6f232729c466045279af3865fbb1ff7"><td class="memItemLeft">const std::string &amp;&#160;</td><td class="memItemRight"><a class="el" href="classeasynav_1_1PerceptionHandler.html#ab6f232729c466045279af3865fbb1ff7">get_sensor_name</a> () const</td></tr>
+<tr class="memdesc:ab6f232729c466045279af3865fbb1ff7 inherit pub_methods_classeasynav_1_1PerceptionHandler"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the sensor name provided during <a class="el" href="classeasynav_1_1PerceptionHandler.html#a380e843c8336262e18110e480d8a85e9" title="initialize">initialize</a>.  <br /></td></tr>
+<tr class="memitem:a380e843c8336262e18110e480d8a85e9 inherit pub_methods_classeasynav_1_1PerceptionHandler" id="r_a380e843c8336262e18110e480d8a85e9"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="classeasynav_1_1PerceptionHandler.html#a380e843c8336262e18110e480d8a85e9">initialize</a> (const std::shared_ptr&lt; rclcpp_lifecycle::LifecycleNode &gt; parent_node, const rclcpp::CallbackGroup::SharedPtr realtime_cbg, const std::string &amp;sensor_name)</td></tr>
+<tr class="memdesc:a380e843c8336262e18110e480d8a85e9 inherit pub_methods_classeasynav_1_1PerceptionHandler"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the handler with the parent node and sensor name.  <br /></td></tr>
 <tr class="memitem:abbe35c22e1c98340681de734002399d9 inherit pub_methods_classeasynav_1_1PerceptionHandler" id="r_abbe35c22e1c98340681de734002399d9"><td class="memItemLeft">virtual&#160;</td><td class="memItemRight"><a class="el" href="classeasynav_1_1PerceptionHandler.html#abbe35c22e1c98340681de734002399d9">~PerceptionHandler</a> ()=default</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-inherited" class="groupheader"><a id="inherited" name="inherited"></a>
+Additional Inherited Members</h2></td></tr>
+<tr class="inherit_header pro_methods_classeasynav_1_1PerceptionHandler"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_methods_classeasynav_1_1PerceptionHandler')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Protected Member Functions inherited from <a class="el" href="classeasynav_1_1PerceptionHandler.html">PerceptionHandler</a></td></tr>
+<tr class="memitem:abfb20156702d89bea674892ec784e9a2 inherit pro_methods_classeasynav_1_1PerceptionHandler" id="r_abfb20156702d89bea674892ec784e9a2"><td class="memItemLeft">std::shared_ptr&lt; rclcpp_lifecycle::LifecycleNode &gt;&#160;</td><td class="memItemRight"><a class="el" href="classeasynav_1_1PerceptionHandler.html#abfb20156702d89bea674892ec784e9a2">get_node</a> () const</td></tr>
+<tr class="memdesc:abfb20156702d89bea674892ec784e9a2 inherit pro_methods_classeasynav_1_1PerceptionHandler"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the parent lifecycle node.  <br /></td></tr>
+<tr class="memitem:acd17181fbebb181d7e7ab341227bc8b4 inherit pro_methods_classeasynav_1_1PerceptionHandler" id="r_acd17181fbebb181d7e7ab341227bc8b4"><td class="memItemLeft">rclcpp::CallbackGroup::SharedPtr&#160;</td><td class="memItemRight"><a class="el" href="classeasynav_1_1PerceptionHandler.html#acd17181fbebb181d7e7ab341227bc8b4">get_realtime_cbg</a> () const</td></tr>
+<tr class="memdesc:acd17181fbebb181d7e7ab341227bc8b4 inherit pro_methods_classeasynav_1_1PerceptionHandler"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the parent lifecycle node.  <br /></td></tr>
+<tr class="inherit_header pro_attribs_classeasynav_1_1PerceptionHandler"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_attribs_classeasynav_1_1PerceptionHandler')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Protected Attributes inherited from <a class="el" href="classeasynav_1_1PerceptionHandler.html">PerceptionHandler</a></td></tr>
+<tr class="memitem:a9cb6c9609aa533aa43446fdd36ebbcf0 inherit pro_attribs_classeasynav_1_1PerceptionHandler" id="r_a9cb6c9609aa533aa43446fdd36ebbcf0"><td class="memItemLeft">std::weak_ptr&lt; rclcpp_lifecycle::LifecycleNode &gt;&#160;</td><td class="memItemRight"><a class="el" href="classeasynav_1_1PerceptionHandler.html#a9cb6c9609aa533aa43446fdd36ebbcf0">parent_node_</a></td></tr>
+<tr class="memdesc:a9cb6c9609aa533aa43446fdd36ebbcf0 inherit pro_attribs_classeasynav_1_1PerceptionHandler"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shared pointer to the parent lifecycle node.  <br /></td></tr>
+<tr class="memitem:ab01799de7c3bf477cd4b8de8e08c342c inherit pro_attribs_classeasynav_1_1PerceptionHandler" id="r_ab01799de7c3bf477cd4b8de8e08c342c"><td class="memItemLeft">rclcpp::CallbackGroup::SharedPtr&#160;</td><td class="memItemRight"><a class="el" href="classeasynav_1_1PerceptionHandler.html#ab01799de7c3bf477cd4b8de8e08c342c">realtime_cbg_</a></td></tr>
+<tr class="memdesc:ab01799de7c3bf477cd4b8de8e08c342c inherit pro_attribs_classeasynav_1_1PerceptionHandler"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback group for real-time operations.  <br /></td></tr>
+<tr class="memitem:a5d6c5443e56e32a307cc9a9c653d8f46 inherit pro_attribs_classeasynav_1_1PerceptionHandler" id="r_a5d6c5443e56e32a307cc9a9c653d8f46"><td class="memItemLeft">std::string&#160;</td><td class="memItemRight"><a class="el" href="classeasynav_1_1PerceptionHandler.html#a5d6c5443e56e32a307cc9a9c653d8f46">sensor_name_</a></td></tr>
+<tr class="memdesc:a5d6c5443e56e32a307cc9a9c653d8f46 inherit pro_attribs_classeasynav_1_1PerceptionHandler"><td class="mdescLeft">&#160;</td><td class="mdescRight">Name of the sensor (used as YAML parameter namespace prefix).  <br /></td></tr>
 </table>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
-<a id="a80cc0e0ccac058cc66c6894f2e02e207" name="a80cc0e0ccac058cc66c6894f2e02e207"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a80cc0e0ccac058cc66c6894f2e02e207">&#9670;&#160;</a></span>create()</h2>
+<a id="a96630d027829fc94a87c8877891cc98f" name="a96630d027829fc94a87c8877891cc98f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a96630d027829fc94a87c8877891cc98f">&#9670;&#160;</a></span>cycle_rt()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -120,9 +143,9 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::shared_ptr&lt; <a class="el" href="classeasynav_1_1PerceptionBase.html">easynav::PerceptionBase</a> &gt; create </td>
+          <td class="memname">bool cycle_rt </td>
           <td>(</td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>sensor_id</em></span></td><td>)</td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classeasynav_1_1NavState.html">easynav::NavState</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>nav_state</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -133,21 +156,22 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Creates a new instance of a perception object managed by this handler. </p>
+<p>Run one real-time sensor processing cycle. </p>
+<p>This method is called by the SensorsNode before executing its cycle_rt. Here the handler should update the NavState with the sensor data. If new data arrived before this call and the state is updated, it must return true.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">sensor_id</td><td>Name or ID of the sensor (optional use by handler). </td></tr>
+    <tr><td class="paramname">nav_state</td><td>Pointer to the NavState to store the sensor data. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Shared pointer to a new instance of a class derived from PerceptionBase. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>True if new data was stored (to trigger processing). </dd></dl>
 
-<p>Implements <a class="el" href="classeasynav_1_1PerceptionHandler.html#a7c0b7d9eb779ed511d322f590120e7ea">PerceptionHandler</a>.</p>
+<p>Reimplemented from <a class="el" href="classeasynav_1_1PerceptionHandler.html#a458279dbf8ca498a5ce20f368c280460">PerceptionHandler</a>.</p>
 
 </div>
 </div>
-<a id="a505925bada2fce87bbf78e710d8f6d37" name="a505925bada2fce87bbf78e710d8f6d37"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a505925bada2fce87bbf78e710d8f6d37">&#9670;&#160;</a></span>create_subscription()</h2>
+<a id="ac9d1795b6cf8a4da7bf9b33f783db911" name="ac9d1795b6cf8a4da7bf9b33f783db911"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac9d1795b6cf8a4da7bf9b33f783db911">&#9670;&#160;</a></span>on_initialize()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -156,70 +180,10 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">rclcpp::SubscriptionBase::SharedPtr create_subscription </td>
-          <td>(</td>
-          <td class="paramtype">rclcpp_lifecycle::LifecycleNode &amp;</td>          <td class="paramname"><span class="paramname"><em>node</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>topic</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>type</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classeasynav_1_1PerceptionBase.html">easynav::PerceptionBase</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>target</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">rclcpp::CallbackGroup::SharedPtr</td>          <td class="paramname"><span class="paramname"><em>cb_group</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Creates a subscription that processes messages into PerceptionBase instances. </p>
-<p>The handler is expected to parse the message received on <code class="param">topic</code> of type <code class="param">type</code> and store the result in <code class="param">target</code>.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">node</td><td>Reference to the lifecycle node used for creating the subscription. </td></tr>
-    <tr><td class="paramname">topic</td><td>Topic name to subscribe to. </td></tr>
-    <tr><td class="paramname">type</td><td>ROS message type name (e.g., <span class="tt">"sensor_msgs/msg/LaserScan"</span>). </td></tr>
-    <tr><td class="paramname">target</td><td>Shared pointer where perception results are stored. </td></tr>
-    <tr><td class="paramname">cb_group</td><td>Callback group where the subscription callback will be executed. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Shared pointer to the created subscription. </dd></dl>
-
-<p>Implements <a class="el" href="classeasynav_1_1PerceptionHandler.html#ad4e23be7dcafea9172fafc36b5ce7793">PerceptionHandler</a>.</p>
-
-</div>
-</div>
-<a id="a4dcf237e516e7aa43aff18fffd22a9a2" name="a4dcf237e516e7aa43aff18fffd22a9a2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4dcf237e516e7aa43aff18fffd22a9a2">&#9670;&#160;</a></span>group()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string group </td>
+          <td class="memname">void on_initialize </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
+          <td></td>
         </tr>
       </table>
   </td>
@@ -229,16 +193,15 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Returns the group identifier associated with this handler. </p>
-<p>This identifier is used to match sensors to the appropriate handler. Example: <span class="tt">"points"</span>, <span class="tt">"image"</span>, <span class="tt">"dummy"</span>.</p>
-<dl class="section return"><dt>Returns</dt><dd>String representing the group name. </dd></dl>
+<p>Optional post-initialization hook for subclasses. </p>
+<p>Here, the handler must reserve memory to store the perception data and create any Subscription or similar objects to read the data. </p>
 
-<p>Implements <a class="el" href="classeasynav_1_1PerceptionHandler.html#ad71c317c86661d3d0459590ea07b3880">PerceptionHandler</a>.</p>
+<p>Reimplemented from <a class="el" href="classeasynav_1_1PerceptionHandler.html#abc9f24464037fcf02a6fe46e54a56d00">PerceptionHandler</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>easynav_common/tests/<a class="el" href="perceptions__tests_8cpp.html">perceptions_tests.cpp</a></li>
+<li>easynav_sensors/tests/<a class="el" href="perceptions__tests_8cpp.html">perceptions_tests.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

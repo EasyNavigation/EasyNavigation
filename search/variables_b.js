@@ -1,7 +1,9 @@
 var searchData=
 [
-  ['singleton_3c_20c_20_3e_3a_3ainit_5fflag_5f_0',['init_flag_',['../namespaceeasynav.html#a76e3d54d282b01dd9dd17b2dc4564c24',1,'easynav']]],
-  ['singleton_3c_20c_20_3e_3a_3ainstance_5f_1',['instance_',['../namespaceeasynav.html#af63183b88c39f568dffa0d77e441e468',1,'easynav']]],
-  ['stamp_2',['stamp',['../classeasynav_1_1PerceptionBase.html#a3ace6024cedb403facddccc6842dce24',1,'easynav::PerceptionBase::stamp'],['../structeasynav_1_1PointPerceptionBufferType.html#a3ace6024cedb403facddccc6842dce24',1,'easynav::PointPerceptionBufferType::stamp']]],
-  ['subscription_3',['subscription',['../structeasynav_1_1PerceptionPtr.html#a809515a5f8c318880eb15f1d6be6f2a3',1,'easynav::PerceptionPtr']]]
+  ['parent_5fnode_5f_0',['parent_node_',['../classeasynav_1_1PerceptionHandler.html#a9cb6c9609aa533aa43446fdd36ebbcf0',1,'easynav::PerceptionHandler::parent_node_'],['../classPerceptionHandler.html#a9cb6c9609aa533aa43446fdd36ebbcf0',1,'PerceptionHandler::parent_node_']]],
+  ['pending_5favailable_5f_1',['pending_available_',['../classeasynav_1_1PointPerception.html#a7b7456276bd02c223763924057a0806e',1,'easynav::PointPerception']]],
+  ['pending_5fcloud_5f_2',['pending_cloud_',['../classeasynav_1_1PointPerception.html#a194acd17374e493890fb8a4fb47c90ca',1,'easynav::PointPerception']]],
+  ['pending_5fframe_5f_3',['pending_frame_',['../classeasynav_1_1PointPerception.html#a7a8d0ce5bd53721a80da12bfc67199cb',1,'easynav::PointPerception']]],
+  ['pending_5fstamp_5f_4',['pending_stamp_',['../classeasynav_1_1PointPerception.html#aaddce11136b2919c60fd8c50243af6b8',1,'easynav::PointPerception']]],
+  ['position_5',['position',['../structeasynav_1_1GoalManager_1_1GoalTolerance.html#aa1b2c258efdc9e057ee99a45179692fd',1,'easynav::GoalManager::GoalTolerance']]]
 ];

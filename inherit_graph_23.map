@@ -1,3 +1,27 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$structeasynav_1_1SystemNodeInfo.html" title="Structure holding runtime information for a subnode." alt="" coords="5,5,124,31"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,277,53,303"/>
+<area shape="rect" id="Node000001" href="$classControllerNodeTestCase.html" title=" " alt="" coords="114,5,278,31"/>
+<area shape="poly" id="edge35_Node000000_Node000001" title=" " alt="" coords="27,262,30,214,40,154,61,93,78,65,99,40,114,29,117,34,102,44,82,68,66,96,45,156,35,215,32,262"/>
+<area shape="rect" id="Node000002" href="$classGoalManagerTestCase.html" title=" " alt="" coords="119,55,273,80"/>
+<area shape="poly" id="edge36_Node000000_Node000002" title=" " alt="" coords="30,261,35,223,47,176,67,130,82,108,99,89,117,78,120,82,102,94,86,112,72,132,52,178,40,224,35,262"/>
+<area shape="rect" id="Node000003" href="$classLocalizerNodeTestCase.html" title=" " alt="" coords="116,104,276,130"/>
+<area shape="poly" id="edge37_Node000000_Node000003" title=" " alt="" coords="33,262,55,200,74,167,99,139,116,128,119,133,102,143,78,170,60,202,38,263"/>
+<area shape="rect" id="Node000004" href="$classMapsManagerNodeTestCase.html" title=" " alt="" coords="101,153,291,179"/>
+<area shape="poly" id="edge38_Node000000_Node000004" title=" " alt="" coords="40,262,64,224,80,204,99,188,119,177,122,182,102,192,84,208,68,227,45,265"/>
+<area shape="rect" id="Node000005" href="$classNavStateTest.html" title=" " alt="" coords="145,203,247,228"/>
+<area shape="poly" id="edge39_Node000000_Node000005" title=" " alt="" coords="56,265,100,237,143,222,145,227,102,242,59,269"/>
+<area shape="rect" id="Node000006" href="$classPerceptionsOpsTest.html" title=" " alt="" coords="126,252,266,278"/>
+<area shape="poly" id="edge40_Node000000_Node000006" title=" " alt="" coords="68,282,125,273,125,278,69,287"/>
+<area shape="rect" id="Node000007" href="$classPerceptionsTestCase.html" title=" " alt="" coords="123,301,269,327"/>
+<area shape="poly" id="edge41_Node000000_Node000007" title=" " alt="" coords="68,293,122,301,122,306,68,298"/>
+<area shape="rect" id="Node000008" href="$classPlannerNodeTestCase.html" title=" " alt="" coords="120,351,272,376"/>
+<area shape="poly" id="edge42_Node000000_Node000008" title=" " alt="" coords="59,310,102,337,130,348,128,353,99,342,56,315"/>
+<area shape="rect" id="Node000009" href="$classPluginTestCase.html" title=" " alt="" coords="139,400,252,426"/>
+<area shape="poly" id="edge43_Node000000_Node000009" title=" " alt="" coords="45,316,68,353,84,371,102,387,140,403,138,408,99,391,80,375,64,356,40,318"/>
+<area shape="rect" id="Node000010" href="$classSensorsLifecycleTestCase.html" title=" " alt="" coords="107,449,284,475"/>
+<area shape="poly" id="edge44_Node000000_Node000010" title=" " alt="" coords="39,318,60,378,78,410,102,436,119,447,117,451,99,440,74,413,55,381,34,319"/>
+<area shape="rect" id="Node000011" href="$classSensorsNodeTestCase.html" title=" " alt="" coords="118,499,274,524"/>
+<area shape="poly" id="edge45_Node000000_Node000011" title=" " alt="" coords="35,318,41,356,52,401,72,447,86,467,102,485,119,497,116,501,99,490,82,471,68,449,47,403,35,357,30,319"/>
+<area shape="rect" id="Node000012" href="$classSystemTFInfoTest.html" title=" " alt="" coords="131,548,260,574"/>
+<area shape="poly" id="edge46_Node000000_Node000012" title=" " alt="" coords="33,318,35,365,45,424,66,484,82,511,102,535,116,545,132,552,130,557,113,549,99,539,78,514,62,486,40,425,30,366,27,319"/>
 </map>

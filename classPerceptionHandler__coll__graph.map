@@ -1,0 +1,9 @@
+<map id="PerceptionHandler" name="PerceptionHandler">
+<area shape="rect" id="Node000001" title="Abstract base class for pluginlib&#45;based sensor perception handlers." alt="" coords="179,117,307,143"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,180,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="117,57,153,91,177,104,201,114,199,119,174,109,150,95,114,60"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="204,13,283,38"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="246,54,246,116,240,116,240,54"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="336,13,390,38"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="359,55,350,76,336,95,317,109,295,119,293,114,314,104,332,91,345,73,354,52"/>
+</map>

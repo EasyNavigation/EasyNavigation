@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Easy Navigation: easynav_common/include/easynav_common/types/PointPerception.hpp File Reference</title>
+<title>Easy Navigation: easynav_sensors/include/easynav_sensors/types/PointPerception.hpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -70,7 +70,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a href="dir_44416c254a438fcc2b63460fcfa852ae.html">easynav_common</a></li><li class="navelem"><a href="dir_cc6972266a67b0b1fd157ae5527840e4.html">include</a></li><li class="navelem"><a href="dir_ec05cbd8f7b709da2af7637994ebfa9c.html">easynav_common</a></li><li class="navelem"><a href="dir_ebe9adb9f1b38446d372d9f8adaa336f.html">types</a></li>  </ul>
+<li class="navelem"><a href="dir_614ab350d9e5a7622e6a48999ce2a386.html">easynav_sensors</a></li><li class="navelem"><a href="dir_4659c21185412ae3e088e10890213fb4.html">include</a></li><li class="navelem"><a href="dir_b0c22edc73147f7d064879d2e88aaf25.html">easynav_sensors</a></li><li class="navelem"><a href="dir_fbbbe98f21025e9e8437ddc77897dbc1.html">types</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div id="doc-content">
@@ -97,83 +97,112 @@ $(function() {
 <code>#include &quot;sensor_msgs/msg/point_cloud2.hpp&quot;</code><br />
 <code>#include &quot;rclcpp/time.hpp&quot;</code><br />
 <code>#include &quot;rclcpp_lifecycle/lifecycle_node.hpp&quot;</code><br />
-<code>#include &quot;<a class="el" href="Perceptions_8hpp_source.html">easynav_common/types/Perceptions.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="Perceptions_8hpp_source.html">easynav_sensors/types/Perceptions.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="CircularBuffer_8hpp_source.html">easynav_common/CircularBuffer.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="RTTFBuffer_8hpp_source.html">easynav_common/RTTFBuffer.hpp</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for PointPerception.hpp:</div>
 <div class="dyncontent">
-<div class="center"><img src="PointPerception_8hpp__incl.png" border="0" usemap="#aeasynav__common_2include_2easynav__common_2types_2PointPerception_8hpp" loading="lazy" alt=""/></div>
-<map name="aeasynav__common_2include_2easynav__common_2types_2PointPerception_8hpp" id="aeasynav__common_2include_2easynav__common_2types_2PointPerception_8hpp">
-<area shape="rect" title="Defines data structures and utilities for representing and processing point&#45;based sensor perceptions." alt="" coords="1070,5,1242,61"/>
-<area shape="rect" title=" " alt="" coords="363,286,416,312"/>
-<area shape="poly" title=" " alt="" coords="1070,40,972,46,852,59,723,80,595,112,496,140,457,161,418,199,408,216,400,235,393,272,388,271,395,233,403,214,414,196,454,156,494,135,594,106,722,75,851,54,971,41,1070,35"/>
-<area shape="rect" title=" " alt="" coords="1131,205,1189,231"/>
-<area shape="poly" title=" " alt="" coords="1154,62,1149,103,1149,149,1156,190,1151,191,1144,150,1144,103,1148,61"/>
-<area shape="rect" title=" " alt="" coords="1159,116,1225,142"/>
-<area shape="poly" title=" " alt="" coords="1169,61,1184,101,1180,103,1164,63"/>
-<area shape="rect" title=" " alt="" coords="1249,116,1442,142"/>
-<area shape="poly" title=" " alt="" coords="1212,59,1309,107,1306,112,1210,64"/>
-<area shape="rect" title=" " alt="" coords="1466,116,1584,142"/>
-<area shape="poly" title=" " alt="" coords="1243,53,1454,106,1466,109,1464,115,1453,112,1241,58"/>
-<area shape="rect" title=" " alt="" coords="1609,116,1727,142"/>
-<area shape="poly" title=" " alt="" coords="1242,44,1407,70,1597,106,1610,110,1609,115,1595,112,1406,76,1242,49"/>
-<area shape="rect" title=" " alt="" coords="1751,116,1876,142"/>
-<area shape="poly" title=" " alt="" coords="1242,40,1468,65,1604,83,1739,106,1755,110,1754,115,1738,112,1603,89,1467,70,1242,45"/>
-<area shape="rect" title=" " alt="" coords="1900,109,2060,150"/>
-<area shape="poly" title=" " alt="" coords="1242,38,1524,62,1702,81,1885,106,1884,111,1701,87,1523,67,1242,43"/>
-<area shape="rect" title=" " alt="" coords="2084,109,2244,150"/>
-<area shape="poly" title=" " alt="" coords="1242,35,1599,57,1831,78,2069,106,2068,111,1830,83,1599,62,1242,41"/>
-<area shape="rect" title=" " alt="" coords="5,205,115,231"/>
-<area shape="poly" title=" " alt="" coords="1070,38,832,44,531,56,387,66,261,78,165,93,133,102,112,111,95,128,82,148,67,191,62,189,77,146,91,124,109,107,131,97,164,88,260,73,386,61,531,51,831,39,1070,33"/>
-<area shape="rect" title=" " alt="" coords="190,198,351,238"/>
-<area shape="poly" title=" " alt="" coords="1070,38,903,42,699,53,598,63,506,75,429,91,372,111,348,126,327,145,293,186,289,183,323,142,345,122,370,107,427,86,506,70,598,57,699,48,902,37,1070,32"/>
-<area shape="rect" href="Perceptions_8hpp.html" title="Defines data structures and utilities for representing and processing sensor perceptions." alt="" coords="123,109,285,150"/>
-<area shape="poly" title=" " alt="" coords="1070,42,738,67,527,87,315,112,300,114,300,108,314,106,527,82,738,62,1070,37"/>
-<area shape="rect" href="CircularBuffer_8hpp.html" title=" " alt="" coords="852,116,1084,142"/>
-<area shape="poly" title=" " alt="" coords="1103,64,1007,112,1005,107,1100,59"/>
-<area shape="rect" href="RTTFBuffer_8hpp.html" title=" " alt="" coords="607,116,828,142"/>
-<area shape="poly" title=" " alt="" coords="1070,55,789,115,788,110,1069,50"/>
-<area shape="poly" title=" " alt="" coords="193,151,182,171,174,194,172,216,180,237,190,246,206,254,250,270,348,289,347,295,248,275,204,259,187,250,175,240,166,217,168,193,177,169,188,149"/>
-<area shape="poly" title=" " alt="" coords="173,152,94,199,92,195,170,148"/>
-<area shape="poly" title=" " alt="" coords="221,149,248,184,244,187,217,152"/>
-<area shape="poly" title=" " alt="" coords="996,140,1120,195,1121,196,1119,201,1118,200,994,145"/>
-<area shape="rect" title=" " alt="" coords="917,286,974,312"/>
-<area shape="poly" title=" " alt="" coords="975,142,985,185,986,212,983,239,966,275,961,272,977,238,981,212,979,185,969,143"/>
-<area shape="rect" title=" " alt="" coords="1042,205,1107,231"/>
-<area shape="poly" title=" " alt="" coords="985,141,1050,193,1046,197,981,145"/>
-<area shape="rect" href="Singleton_8hpp.html" title=" " alt="" coords="613,205,822,231"/>
-<area shape="poly" title=" " alt="" coords="720,143,720,189,715,189,715,143"/>
-<area shape="rect" href="TFInfo_8hpp.html" title=" " alt="" coords="427,198,589,238"/>
-<area shape="poly" title=" " alt="" coords="689,145,570,194,568,189,687,140"/>
-<area shape="rect" title=" " alt="" coords="846,205,967,231"/>
-<area shape="poly" title=" " alt="" coords="745,140,867,196,865,201,743,145"/>
-<area shape="poly" title=" " alt="" coords="753,229,903,281,901,286,752,234"/>
-<area shape="rect" title=" " alt="" coords="725,286,792,312"/>
-<area shape="poly" title=" " alt="" coords="726,230,748,271,743,273,721,232"/>
-<area shape="rect" title=" " alt="" coords="649,286,700,312"/>
-<area shape="poly" title=" " alt="" coords="713,233,691,274,686,271,709,230"/>
-<area shape="poly" title=" " alt="" coords="480,241,422,280,419,275,477,237"/>
+<div class="center"><img src="PointPerception_8hpp__incl.png" border="0" usemap="#aeasynav__sensors_2include_2easynav__sensors_2types_2PointPerception_8hpp" loading="lazy" alt=""/></div>
+<map name="aeasynav__sensors_2include_2easynav__sensors_2types_2PointPerception_8hpp" id="aeasynav__sensors_2include_2easynav__sensors_2types_2PointPerception_8hpp">
+<area shape="rect" title="Defines data structures and utilities for representing and processing point&#45;based sensor perceptions." alt="" coords="1242,5,1409,61"/>
+<area shape="rect" title=" " alt="" coords="5,286,59,312"/>
+<area shape="poly" title=" " alt="" coords="1241,37,1009,39,706,48,551,57,409,71,287,88,197,112,157,127,128,144,103,167,76,199,54,236,41,273,36,271,49,234,71,196,99,163,125,140,155,123,195,106,286,83,408,65,551,52,705,43,1009,33,1241,31"/>
+<area shape="rect" title=" " alt="" coords="1343,205,1401,231"/>
+<area shape="poly" title=" " alt="" coords="1320,62,1313,104,1314,127,1318,149,1331,172,1348,192,1344,196,1327,175,1314,151,1308,127,1308,104,1314,61"/>
+<area shape="rect" title=" " alt="" coords="1328,116,1394,142"/>
+<area shape="poly" title=" " alt="" coords="1338,61,1354,101,1349,103,1333,63"/>
+<area shape="rect" title=" " alt="" coords="1418,116,1611,142"/>
+<area shape="poly" title=" " alt="" coords="1381,59,1478,107,1476,112,1379,64"/>
+<area shape="rect" title=" " alt="" coords="1636,116,1754,142"/>
+<area shape="poly" title=" " alt="" coords="1410,53,1623,106,1635,109,1634,115,1622,112,1409,58"/>
+<area shape="rect" title=" " alt="" coords="1778,116,1896,142"/>
+<area shape="poly" title=" " alt="" coords="1410,44,1575,70,1766,106,1780,110,1779,115,1765,112,1574,75,1409,49"/>
+<area shape="rect" title=" " alt="" coords="1920,116,2045,142"/>
+<area shape="poly" title=" " alt="" coords="1410,39,1636,64,1772,83,1908,106,1924,110,1923,115,1908,112,1771,89,1635,70,1409,45"/>
+<area shape="rect" title=" " alt="" coords="2069,109,2230,150"/>
+<area shape="poly" title=" " alt="" coords="1409,38,1691,62,1870,81,2054,106,2053,111,1870,87,1691,67,1409,43"/>
+<area shape="rect" title=" " alt="" coords="2253,109,2414,150"/>
+<area shape="poly" title=" " alt="" coords="1409,35,1766,57,1999,77,2238,106,2237,111,1998,83,1766,62,1409,41"/>
+<area shape="rect" title=" " alt="" coords="85,205,195,231"/>
+<area shape="poly" title=" " alt="" coords="1241,40,1001,49,696,65,418,86,319,98,261,111,231,128,203,150,160,195,156,191,199,146,228,124,259,107,318,93,418,80,695,59,1001,44,1241,35"/>
+<area shape="rect" title=" " alt="" coords="270,198,431,238"/>
+<area shape="poly" title=" " alt="" coords="1241,45,1025,70,894,89,765,112,585,153,431,195,429,190,583,148,763,106,893,84,1024,65,1241,40"/>
+<area shape="rect" href="Perceptions_8hpp.html" title="Defines data structures and utilities for representing and processing sensor perceptions." alt="" coords="272,109,429,150"/>
+<area shape="poly" title=" " alt="" coords="1242,45,445,122,445,116,1241,40"/>
+<area shape="rect" href="CircularBuffer_8hpp.html" title=" " alt="" coords="1021,116,1254,142"/>
+<area shape="poly" title=" " alt="" coords="1272,64,1176,112,1174,107,1270,59"/>
+<area shape="rect" href="RTTFBuffer_8hpp.html" title=" " alt="" coords="776,116,997,142"/>
+<area shape="poly" title=" " alt="" coords="1242,55,959,115,958,110,1241,50"/>
+<area shape="poly" title=" " alt="" coords="325,152,260,200,235,221,208,241,149,264,74,288,73,283,147,259,205,236,232,217,257,196,322,148"/>
+<area shape="poly" title=" " alt="" coords="304,153,184,201,182,196,302,148"/>
+<area shape="poly" title=" " alt="" coords="353,150,353,182,348,182,348,150"/>
+<area shape="rect" href="NavState_8hpp.html" title="A blackboard&#45;like structure to hold the current state of the navigation system." alt="" coords="641,198,802,238"/>
+<area shape="poly" title=" " alt="" coords="430,146,626,192,625,197,429,152"/>
+<area shape="poly" title=" " alt="" coords="641,239,630,241,475,257,353,262,230,268,159,276,74,289,73,284,158,271,230,263,353,256,475,252,629,236,640,234"/>
+<area shape="rect" title=" " alt="" coords="672,286,782,312"/>
+<area shape="poly" title=" " alt="" coords="725,239,727,271,722,271,720,239"/>
+<area shape="rect" title=" " alt="" coords="806,286,909,312"/>
+<area shape="poly" title=" " alt="" coords="757,237,825,276,822,281,754,241"/>
+<area shape="rect" title=" " alt="" coords="1128,286,1195,312"/>
+<area shape="poly" title=" " alt="" coords="803,233,815,236,963,258,1113,283,1112,288,962,263,814,241,802,239"/>
+<area shape="rect" title=" " alt="" coords="1294,286,1351,312"/>
+<area shape="poly" title=" " alt="" coords="803,234,815,236,944,251,1046,257,1149,264,1279,283,1279,289,1148,269,1046,262,943,256,814,241,802,239"/>
+<area shape="rect" title=" " alt="" coords="933,286,1011,312"/>
+<area shape="poly" title=" " alt="" coords="785,236,920,279,918,284,783,241"/>
+<area shape="rect" title=" " alt="" coords="1035,286,1104,312"/>
+<area shape="poly" title=" " alt="" coords="803,234,1021,283,1019,288,802,239"/>
+<area shape="rect" title=" " alt="" coords="83,286,165,312"/>
+<area shape="poly" title=" " alt="" coords="641,239,630,241,505,257,406,264,306,272,180,289,179,283,306,267,406,259,504,252,629,236,640,234"/>
+<area shape="rect" title=" " alt="" coords="188,286,260,312"/>
+<area shape="poly" title=" " alt="" coords="641,239,630,241,532,255,454,264,376,273,276,289,275,283,375,268,453,259,531,250,629,236,640,234"/>
+<area shape="rect" title=" " alt="" coords="284,286,361,312"/>
+<area shape="poly" title=" " alt="" coords="641,239,630,241,377,288,376,283,629,236,640,234"/>
+<area shape="rect" title=" " alt="" coords="386,286,465,312"/>
+<area shape="poly" title=" " alt="" coords="648,242,481,286,479,281,647,236"/>
+<area shape="rect" title=" " alt="" coords="490,286,556,312"/>
+<area shape="poly" title=" " alt="" coords="673,241,568,283,566,278,671,236"/>
+<area shape="rect" title=" " alt="" coords="580,286,647,312"/>
+<area shape="poly" title=" " alt="" coords="696,241,644,279,640,275,693,237"/>
+<area shape="poly" title=" " alt="" coords="1177,140,1332,195,1334,196,1332,201,1330,200,1175,145"/>
+<area shape="poly" title=" " alt="" coords="1150,141,1190,184,1244,236,1294,275,1291,279,1241,240,1186,188,1146,144"/>
+<area shape="rect" title=" " alt="" coords="1254,205,1319,231"/>
+<area shape="poly" title=" " alt="" coords="1159,140,1254,195,1251,199,1157,145"/>
+<area shape="rect" href="Singleton_8hpp.html" title=" " alt="" coords="972,205,1180,231"/>
+<area shape="poly" title=" " alt="" coords="914,140,1037,196,1035,201,912,145"/>
+<area shape="rect" href="TFInfo_8hpp.html" title=" " alt="" coords="455,198,617,238"/>
+<area shape="poly" title=" " alt="" coords="838,145,631,196,630,191,837,140"/>
+<area shape="rect" title=" " alt="" coords="826,205,947,231"/>
+<area shape="poly" title=" " alt="" coords="889,143,889,189,884,189,884,143"/>
+<area shape="poly" title=" " alt="" coords="1091,229,1139,274,1135,278,1087,233"/>
+<area shape="poly" title=" " alt="" coords="1115,229,1281,282,1279,287,1113,234"/>
+<area shape="rect" title=" " alt="" coords="1220,286,1271,312"/>
+<area shape="poly" title=" " alt="" coords="1103,229,1207,277,1205,282,1101,234"/>
+<area shape="poly" title=" " alt="" coords="455,239,444,241,342,255,261,263,179,271,74,289,73,284,178,266,260,257,342,250,444,236,454,234"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><img src="PointPerception_8hpp__dep__incl.png" border="0" usemap="#aeasynav__common_2include_2easynav__common_2types_2PointPerception_8hppdep" loading="lazy" alt=""/></div>
-<map name="aeasynav__common_2include_2easynav__common_2types_2PointPerception_8hppdep" id="aeasynav__common_2include_2easynav__common_2types_2PointPerception_8hppdep">
-<area shape="rect" title="Defines data structures and utilities for representing and processing point&#45;based sensor perceptions." alt="" coords="482,5,654,61"/>
-<area shape="rect" href="PointPerception_8cpp.html" title=" " alt="" coords="5,109,171,165"/>
-<area shape="poly" title=" " alt="" coords="468,54,332,80,183,112,172,114,170,109,182,106,331,74,467,49"/>
-<area shape="rect" href="perceptions__tests_8cpp.html" title=" " alt="" coords="195,116,354,157"/>
-<area shape="poly" title=" " alt="" coords="476,69,332,118,331,113,474,64"/>
-<area shape="rect" href="pointperceptionsops__tests_8cpp.html" title=" " alt="" coords="379,109,538,165"/>
-<area shape="poly" title=" " alt="" coords="529,74,490,110,486,106,526,70"/>
-<area shape="rect" href="SensorsNode_8cpp.html" title="Implementation of the SensorsNode class." alt="" coords="562,116,795,157"/>
-<area shape="poly" title=" " alt="" coords="611,70,659,114,656,118,607,74"/>
-<area shape="rect" href="sensors__node__tests_8cpp.html" title=" " alt="" coords="820,116,986,157"/>
-<area shape="poly" title=" " alt="" coords="669,62,839,113,837,119,668,67"/>
-<area shape="rect" href="SystemNode_8cpp.html" title="Implementation of the SystemNode class." alt="" coords="1010,116,1235,157"/>
-<area shape="poly" title=" " alt="" coords="669,48,998,106,1032,113,1031,118,997,112,668,54"/>
+<div class="center"><img src="PointPerception_8hpp__dep__incl.png" border="0" usemap="#aeasynav__sensors_2include_2easynav__sensors_2types_2PointPerception_8hppdep" loading="lazy" alt=""/></div>
+<map name="aeasynav__sensors_2include_2easynav__sensors_2types_2PointPerception_8hppdep" id="aeasynav__sensors_2include_2easynav__sensors_2types_2PointPerception_8hppdep">
+<area shape="rect" title="Defines data structures and utilities for representing and processing point&#45;based sensor perceptions." alt="" coords="712,5,879,61"/>
+<area shape="rect" href="SensorsNode_8cpp.html" title="Implementation of the SensorsNode class." alt="" coords="5,116,239,157"/>
+<area shape="poly" title=" " alt="" coords="697,49,491,75,250,112,214,118,213,113,250,106,490,70,696,43"/>
+<area shape="rect" href="PointPerception_8cpp.html" title=" " alt="" coords="263,109,424,165"/>
+<area shape="poly" title=" " alt="" coords="697,56,437,112,425,115,424,110,436,106,696,50"/>
+<area shape="rect" href="perceptions__tests_8cpp.html" title=" " alt="" coords="448,116,604,157"/>
+<area shape="poly" title=" " alt="" coords="710,69,579,118,577,113,708,64"/>
+<area shape="rect" href="plugin__tests_8cpp.html" title="Tests that verify the pluginlib plugin registration, loading, and correctness of all built&#45;in Percept..." alt="" coords="628,116,784,157"/>
+<area shape="poly" title=" " alt="" coords="763,75,725,118,721,115,759,71"/>
+<area shape="rect" href="pointperceptionsops__tests_8cpp.html" title=" " alt="" coords="808,109,964,165"/>
+<area shape="poly" title=" " alt="" coords="832,71,864,107,860,110,828,75"/>
+<area shape="rect" href="sensors__lifecycle__tests_8cpp.html" title=" " alt="" coords="988,116,1173,157"/>
+<area shape="poly" title=" " alt="" coords="887,64,1026,113,1024,118,885,69"/>
+<area shape="rect" href="sensors__node__tests_8cpp.html" title=" " alt="" coords="1198,116,1364,157"/>
+<area shape="poly" title=" " alt="" coords="895,48,1034,74,1187,106,1214,113,1212,118,1185,112,1033,79,894,54"/>
+<area shape="rect" href="SystemNode_8cpp.html" title="Implementation of the SystemNode class." alt="" coords="1388,116,1613,157"/>
+<area shape="poly" title=" " alt="" coords="895,42,1116,68,1376,106,1413,113,1412,118,1375,112,1115,74,894,47"/>
 </map>
 </div>
 </div>
@@ -187,7 +216,7 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Concrete perception class for 3D point cloud data.  <a href="classeasynav_1_1PointPerception.html#details">More...</a><br /></td></tr>
 <tr class="memitem:PointPerceptionBufferType" id="r_PointPerceptionBufferType"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structeasynav_1_1PointPerceptionBufferType.html">PointPerceptionBufferType</a></td></tr>
 <tr class="memitem:PointPerceptionHandler" id="r_PointPerceptionHandler"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="classeasynav_1_1PointPerceptionHandler.html">PointPerceptionHandler</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classeasynav_1_1PerceptionHandler.html" title="PerceptionHandler">PerceptionHandler</a> implementation for sensors producing point-based data.  <a href="classeasynav_1_1PointPerceptionHandler.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classPerceptionHandler.html" title="PerceptionHandler">PerceptionHandler</a> implementation for sensors producing point-based data.  <a href="classeasynav_1_1PointPerceptionHandler.html#details">More...</a><br /></td></tr>
 <tr class="memitem:PointPerceptionsOpsView" id="r_PointPerceptionsOpsView"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="classeasynav_1_1PointPerceptionsOpsView.html">PointPerceptionsOpsView</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides efficient, non-destructive, chainable operations over a set of point-based perceptions.  <a href="classeasynav_1_1PointPerceptionsOpsView.html#details">More...</a><br /></td></tr>
 <tr class="memitem:PointPerceptionsOpsView_3A_3AVoxelKey" id="r_PointPerceptionsOpsView_3A_3AVoxelKey"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structeasynav_1_1PointPerceptionsOpsView_1_1VoxelKey.html">PointPerceptionsOpsView::VoxelKey</a></td></tr>
@@ -211,8 +240,6 @@ Functions</h2></td></tr>
 <tr class="memdesc:aa1af512138bf2ac8f6d199ba2761a918"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a <code>LaserScan</code> message into a point cloud.  <br /></td></tr>
 <tr class="memitem:a41c264598339537f447072e0e490fb6f" id="r_a41c264598339537f447072e0e490fb6f"><td class="memItemLeft">rclcpp::Time&#160;</td><td class="memItemRight"><a class="el" href="namespaceeasynav.html#a41c264598339537f447072e0e490fb6f">get_latest_point_perceptions_stamp</a> (const <a class="el" href="namespaceeasynav.html#aa83db8e6a9c3d5f8bff1fe325cf9e99a">PointPerceptions</a> &amp;perceptions)</td></tr>
 <tr class="memdesc:a41c264598339537f447072e0e490fb6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the latest timestamp among a set of point-based perceptions.  <br /></td></tr>
-<tr class="memitem:ad88fea01569979532c80883949bee0dd" id="r_ad88fea01569979532c80883949bee0dd"><td class="memItemLeft"><a class="el" href="namespaceeasynav.html#aa83db8e6a9c3d5f8bff1fe325cf9e99a">PointPerceptions</a>&#160;</td><td class="memItemRight"><a class="el" href="namespaceeasynav.html#ad88fea01569979532c80883949bee0dd">get_point_perceptions</a> (std::vector&lt; <a class="el" href="structeasynav_1_1PerceptionPtr.html">PerceptionPtr</a> &gt; &amp;perceptionptr)</td></tr>
-<tr class="memdesc:ad88fea01569979532c80883949bee0dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extracts all <a class="el" href="classeasynav_1_1PointPerception.html" title="PointPerception">PointPerception</a> objects from a heterogeneous collection.  <br /></td></tr>
 <tr class="memitem:a9050313b1e39e04002d6e63dfe4dd856" id="r_a9050313b1e39e04002d6e63dfe4dd856"><td class="memItemLeft">sensor_msgs::msg::PointCloud2&#160;</td><td class="memItemRight"><a class="el" href="namespaceeasynav.html#a9050313b1e39e04002d6e63dfe4dd856">perception_to_rosmsg</a> (const <a class="el" href="classeasynav_1_1PointPerception.html">PointPerception</a> &amp;perception)</td></tr>
 <tr class="memdesc:a9050313b1e39e04002d6e63dfe4dd856"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a <a class="el" href="classeasynav_1_1PointPerception.html" title="PointPerception">PointPerception</a> into a <code>sensor_msgs::msg::PointCloud2</code> message.  <br /></td></tr>
 <tr class="memitem:a4adf6aa9d2208b93442fc96f4e732147" id="r_a4adf6aa9d2208b93442fc96f4e732147"><td class="memItemLeft">sensor_msgs::msg::PointCloud2&#160;</td><td class="memItemRight"><a class="el" href="namespaceeasynav.html#a4adf6aa9d2208b93442fc96f4e732147">points_to_rosmsg</a> (const pcl::PointCloud&lt; pcl::PointXYZ &gt; &amp;points)</td></tr>

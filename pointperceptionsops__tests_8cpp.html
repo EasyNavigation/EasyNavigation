@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Easy Navigation: easynav_common/tests/pointperceptionsops_tests.cpp File Reference</title>
+<title>Easy Navigation: easynav_sensors/tests/pointperceptionsops_tests.cpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -70,7 +70,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a href="dir_44416c254a438fcc2b63460fcfa852ae.html">easynav_common</a></li><li class="navelem"><a href="dir_11ebf0c247b4a68d536bd9223b08b540.html">tests</a></li>  </ul>
+<li class="navelem"><a href="dir_614ab350d9e5a7622e6a48999ce2a386.html">easynav_sensors</a></li><li class="navelem"><a href="dir_9f66e4e5a6b1703786acba201d7c9f1a.html">tests</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div id="doc-content">
@@ -88,82 +88,107 @@ $(function() {
 <code>#include &lt;thread&gt;</code><br />
 <code>#include &lt;chrono&gt;</code><br />
 <code>#include &quot;tf2_ros/transform_listener.hpp&quot;</code><br />
-<code>#include &quot;<a class="el" href="PointPerception_8hpp_source.html">easynav_common/types/PointPerception.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="PointPerception_8hpp_source.html">easynav_sensors/types/PointPerception.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="RTTFBuffer_8hpp_source.html">easynav_common/RTTFBuffer.hpp</a>&quot;</code><br />
 <code>#include &quot;rclcpp/rclcpp.hpp&quot;</code><br />
 <code>#include &quot;rclcpp_lifecycle/lifecycle_node.hpp&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for pointperceptionsops_tests.cpp:</div>
 <div class="dyncontent">
-<div class="center"><img src="pointperceptionsops__tests_8cpp__incl.png" border="0" usemap="#aeasynav__common_2tests_2pointperceptionsops__tests_8cpp" loading="lazy" alt=""/></div>
-<map name="aeasynav__common_2tests_2pointperceptionsops__tests_8cpp" id="aeasynav__common_2tests_2pointperceptionsops__tests_8cpp">
-<area shape="rect" title=" " alt="" coords="1450,5,1609,61"/>
-<area shape="rect" title=" " alt="" coords="5,116,99,142"/>
-<area shape="poly" title=" " alt="" coords="1449,39,1168,47,783,61,398,83,239,96,118,112,103,115,102,109,117,106,238,91,398,77,783,56,1168,41,1449,34"/>
-<area shape="rect" title=" " alt="" coords="132,375,199,401"/>
-<area shape="poly" title=" " alt="" coords="1449,40,1250,48,994,63,744,84,641,97,563,112,436,136,381,146,332,157,286,173,244,199,203,236,164,288,156,305,154,323,159,360,154,361,149,323,151,303,159,285,199,232,241,194,284,169,330,152,380,140,435,131,562,106,640,92,743,78,993,57,1249,43,1449,35"/>
-<area shape="rect" title=" " alt="" coords="2390,294,2447,320"/>
-<area shape="poly" title=" " alt="" coords="1530,61,1535,107,1543,129,1558,148,1589,166,1629,179,1676,186,1730,188,1852,182,1983,168,2114,155,2235,150,2288,153,2336,161,2376,175,2407,196,2420,214,2427,236,2427,278,2421,278,2421,237,2415,216,2403,200,2373,180,2334,166,2288,158,2235,155,2114,160,1983,174,1852,187,1730,193,1676,191,1628,184,1587,171,1554,152,1538,132,1529,108,1525,62"/>
-<area shape="rect" title=" " alt="" coords="1567,116,1625,142"/>
-<area shape="poly" title=" " alt="" coords="1551,60,1581,103,1577,106,1546,63"/>
-<area shape="rect" title=" " alt="" coords="1649,116,1706,142"/>
-<area shape="poly" title=" " alt="" coords="1574,59,1647,106,1644,110,1571,64"/>
-<area shape="rect" title=" " alt="" coords="1730,116,1790,142"/>
-<area shape="poly" title=" " alt="" coords="1602,59,1720,107,1722,107,1720,112,1718,111,1600,64"/>
-<area shape="rect" title=" " alt="" coords="1814,116,2007,142"/>
-<area shape="poly" title=" " alt="" coords="1610,52,1847,110,1846,115,1609,57"/>
-<area shape="rect" href="PointPerception_8hpp.html" title="Defines data structures and utilities for representing and processing point&#45;based sensor perceptions." alt="" coords="1330,109,1491,150"/>
-<area shape="poly" title=" " alt="" coords="1497,64,1449,101,1445,97,1493,59"/>
-<area shape="rect" title=" " alt="" coords="737,286,898,327"/>
-<area shape="poly" title=" " alt="" coords="1450,41,1269,54,1159,66,1046,82,937,103,841,129,764,161,735,179,714,199,708,209,707,219,716,240,736,259,762,276,760,281,733,263,712,243,702,220,703,208,710,196,732,175,761,156,839,124,936,97,1045,77,1158,61,1268,49,1449,35"/>
-<area shape="rect" href="RTTFBuffer_8hpp.html" title=" " alt="" coords="389,205,611,231"/>
-<area shape="poly" title=" " alt="" coords="1449,38,1261,42,1023,53,903,62,793,75,700,91,630,111,598,129,568,150,522,195,518,191,565,146,595,124,628,107,698,86,792,70,903,57,1022,48,1261,36,1449,32"/>
-<area shape="rect" title=" " alt="" coords="2031,116,2150,142"/>
-<area shape="poly" title=" " alt="" coords="1610,41,1798,67,2021,106,2034,110,2033,115,2019,112,1797,72,1609,46"/>
-<area shape="poly" title=" " alt="" coords="1492,144,1511,147,1674,152,1947,155,2089,159,2217,166,2315,178,2350,186,2372,195,2390,213,2403,234,2417,278,2412,279,2398,236,2386,216,2369,200,2348,191,2315,183,2216,172,2089,164,1947,160,1674,157,1510,152,1491,150"/>
-<area shape="rect" title=" " alt="" coords="909,375,963,401"/>
-<area shape="poly" title=" " alt="" coords="1492,144,1511,147,1667,150,1929,150,2065,154,2186,161,2278,174,2309,184,2329,196,2335,206,2336,217,2329,239,2314,272,2298,295,2275,313,2244,329,2212,339,2164,348,2025,361,1846,372,1645,379,1248,387,978,389,978,384,1248,382,1645,374,1846,367,2025,356,2163,342,2211,334,2242,325,2272,308,2294,291,2310,269,2324,237,2331,216,2330,208,2325,200,2307,189,2277,180,2185,167,2065,159,1929,156,1667,155,1510,152,1491,150"/>
-<area shape="rect" title=" " alt="" coords="974,205,1040,231"/>
-<area shape="poly" title=" " alt="" coords="1330,143,1199,165,1125,181,1053,200,1047,202,1046,197,1051,195,1124,176,1198,160,1329,138"/>
-<area shape="rect" title=" " alt="" coords="1064,205,1256,231"/>
-<area shape="poly" title=" " alt="" coords="1355,153,1211,202,1209,197,1353,148"/>
-<area shape="rect" title=" " alt="" coords="1281,205,1399,231"/>
-<area shape="poly" title=" " alt="" coords="1397,152,1361,195,1357,192,1393,148"/>
-<area shape="rect" title=" " alt="" coords="1424,205,1542,231"/>
-<area shape="poly" title=" " alt="" coords="1429,148,1465,191,1461,195,1425,152"/>
-<area shape="rect" title=" " alt="" coords="1566,205,1690,231"/>
-<area shape="poly" title=" " alt="" coords="1461,148,1585,197,1583,202,1459,153"/>
-<area shape="rect" title=" " alt="" coords="1714,198,1875,238"/>
-<area shape="poly" title=" " alt="" coords="1492,146,1700,193,1699,198,1491,151"/>
-<area shape="rect" title=" " alt="" coords="1898,198,2059,238"/>
-<area shape="poly" title=" " alt="" coords="1492,144,1511,147,1696,170,1778,179,1884,195,1883,200,1778,185,1695,176,1510,152,1491,149"/>
-<area shape="rect" title=" " alt="" coords="973,294,1083,320"/>
-<area shape="poly" title=" " alt="" coords="1330,133,1230,137,1120,147,1068,156,1023,167,987,182,963,199,958,209,956,219,963,241,980,263,1001,282,997,286,976,266,959,244,951,220,953,207,959,196,984,177,1021,162,1067,151,1119,142,1229,132,1329,128"/>
-<area shape="poly" title=" " alt="" coords="1330,135,1168,141,978,153,813,172,756,185,738,192,727,200,721,209,720,218,728,238,746,258,770,276,767,280,742,262,723,241,714,219,716,207,723,196,736,187,755,180,812,167,978,148,1168,136,1330,130"/>
-<area shape="rect" href="Perceptions_8hpp.html" title="Defines data structures and utilities for representing and processing sensor perceptions." alt="" coords="737,198,898,238"/>
-<area shape="poly" title=" " alt="" coords="1330,143,1141,167,918,200,914,201,913,196,917,195,1141,162,1329,138"/>
-<area shape="rect" href="CircularBuffer_8hpp.html" title=" " alt="" coords="2082,205,2315,231"/>
-<area shape="poly" title=" " alt="" coords="1492,144,1511,147,1668,165,1791,173,1913,180,2071,195,2108,200,2107,205,2070,200,1913,185,1790,178,1667,170,1510,152,1491,149"/>
-<area shape="poly" title=" " alt="" coords="1330,140,680,200,626,206,626,200,680,195,1329,135"/>
-<area shape="poly" title=" " alt="" coords="858,237,887,257,913,285,930,323,937,359,932,360,925,324,908,288,884,261,855,241"/>
-<area shape="poly" title=" " alt="" coords="866,236,986,285,984,290,864,241"/>
-<area shape="poly" title=" " alt="" coords="820,239,820,271,815,271,815,239"/>
-<area shape="poly" title=" " alt="" coords="2231,229,2376,286,2374,291,2229,234"/>
-<area shape="rect" title=" " alt="" coords="578,375,635,401"/>
-<area shape="poly" title=" " alt="" coords="2121,234,2071,241,1638,291,1217,334,650,385,650,380,1217,328,1637,286,2070,236,2121,229"/>
-<area shape="rect" title=" " alt="" coords="2166,294,2231,320"/>
-<area shape="poly" title=" " alt="" coords="2201,231,2201,278,2196,278,2196,231"/>
-<area shape="rect" href="Singleton_8hpp.html" title=" " alt="" coords="173,294,382,320"/>
-<area shape="poly" title=" " alt="" coords="470,234,323,290,321,285,468,229"/>
-<area shape="rect" href="TFInfo_8hpp.html" title=" " alt="" coords="551,286,713,327"/>
-<area shape="poly" title=" " alt="" coords="520,229,591,275,588,280,517,234"/>
-<area shape="rect" title=" " alt="" coords="406,294,527,320"/>
-<area shape="poly" title=" " alt="" coords="498,232,479,281,474,279,493,230"/>
-<area shape="poly" title=" " alt="" coords="262,322,196,368,193,364,259,318"/>
-<area shape="poly" title=" " alt="" coords="329,317,564,374,563,379,327,323"/>
-<area shape="rect" title=" " alt="" coords="252,375,303,401"/>
-<area shape="poly" title=" " alt="" coords="280,320,280,359,275,359,275,320"/>
-<area shape="poly" title=" " alt="" coords="709,325,895,373,894,378,707,330"/>
+<div class="center"><img src="pointperceptionsops__tests_8cpp__incl.png" border="0" usemap="#aeasynav__sensors_2tests_2pointperceptionsops__tests_8cpp" loading="lazy" alt=""/></div>
+<map name="aeasynav__sensors_2tests_2pointperceptionsops__tests_8cpp" id="aeasynav__sensors_2tests_2pointperceptionsops__tests_8cpp">
+<area shape="rect" title=" " alt="" coords="737,5,892,61"/>
+<area shape="rect" title=" " alt="" coords="85,116,179,142"/>
+<area shape="poly" title=" " alt="" coords="737,42,495,66,346,86,198,112,185,115,184,109,197,106,345,80,494,60,736,37"/>
+<area shape="rect" title=" " alt="" coords="1049,375,1116,401"/>
+<area shape="poly" title=" " alt="" coords="737,43,591,62,511,77,436,97,375,123,352,138,335,155,325,172,322,192,329,213,345,236,369,253,405,264,449,271,499,274,597,277,639,279,673,284,732,304,790,324,857,340,910,350,1035,372,1034,377,909,355,856,345,789,330,730,309,671,289,639,284,597,282,498,279,449,276,404,270,367,258,341,240,324,215,317,192,320,171,330,151,348,134,372,118,434,92,509,72,590,56,736,38"/>
+<area shape="rect" title=" " alt="" coords="1591,294,1649,320"/>
+<area shape="poly" title=" " alt="" coords="893,37,1165,56,1520,90,1692,112,1841,137,1953,165,1990,180,2013,196,2020,207,2022,218,2020,229,2013,240,1985,259,1945,270,1898,276,1845,279,1741,281,1696,283,1662,289,1658,290,1657,285,1661,284,1696,278,1740,275,1845,274,1897,271,1944,265,1983,254,2009,236,2015,227,2017,218,2015,209,2009,200,1987,184,1951,170,1840,142,1691,117,1519,96,1164,62,893,42"/>
+<area shape="rect" title=" " alt="" coords="622,116,679,142"/>
+<area shape="poly" title=" " alt="" coords="769,64,686,111,684,106,766,59"/>
+<area shape="rect" title=" " alt="" coords="703,116,761,142"/>
+<area shape="poly" title=" " alt="" coords="793,63,754,107,750,103,789,60"/>
+<area shape="rect" title=" " alt="" coords="784,116,845,142"/>
+<area shape="poly" title=" " alt="" coords="817,62,817,101,812,101,812,62"/>
+<area shape="rect" title=" " alt="" coords="869,116,1062,142"/>
+<area shape="poly" title=" " alt="" coords="860,59,935,106,932,110,857,64"/>
+<area shape="rect" href="PointPerception_8hpp.html" title="Defines data structures and utilities for representing and processing point&#45;based sensor perceptions." alt="" coords="1087,109,1244,150"/>
+<area shape="poly" title=" " alt="" coords="894,53,1078,102,1077,107,892,58"/>
+<area shape="rect" title=" " alt="" coords="237,286,398,327"/>
+<area shape="poly" title=" " alt="" coords="737,42,603,52,449,67,317,87,273,98,250,111,231,141,228,170,236,201,250,237,262,257,278,274,275,278,258,260,246,240,231,203,223,170,226,139,246,107,271,94,316,82,448,61,602,46,736,36"/>
+<area shape="rect" href="RTTFBuffer_8hpp.html" title=" " alt="" coords="2101,205,2323,231"/>
+<area shape="poly" title=" " alt="" coords="893,34,1173,41,1544,56,1887,77,2011,91,2084,107,2107,120,2135,142,2191,192,2187,196,2132,146,2104,124,2082,111,2010,96,1886,83,1543,61,1173,47,893,39"/>
+<area shape="rect" title=" " alt="" coords="2152,116,2272,142"/>
+<area shape="poly" title=" " alt="" coords="893,31,1107,33,1415,43,1772,65,1955,83,2134,106,2154,110,2153,115,2133,112,1954,89,1771,71,1415,48,1107,39,893,37"/>
+<area shape="poly" title=" " alt="" coords="1244,128,1436,132,1671,142,1783,151,1879,162,1951,177,1975,186,1990,196,1997,207,2000,218,1997,229,1990,240,1964,258,1927,269,1882,275,1833,278,1735,281,1694,283,1662,289,1658,290,1657,285,1661,284,1693,278,1735,275,1833,273,1882,270,1926,264,1962,253,1986,236,1992,227,1994,218,1992,209,1986,200,1972,190,1949,182,1878,167,1782,156,1671,148,1436,137,1244,134"/>
+<area shape="rect" title=" " alt="" coords="1205,375,1259,401"/>
+<area shape="poly" title=" " alt="" coords="1246,146,1285,165,1302,179,1316,196,1325,219,1327,242,1323,266,1313,289,1286,332,1257,366,1253,363,1282,329,1308,287,1317,265,1322,242,1320,220,1311,199,1298,183,1282,170,1243,150"/>
+<area shape="rect" title=" " alt="" coords="355,205,421,231"/>
+<area shape="poly" title=" " alt="" coords="1087,150,1075,152,977,163,894,167,752,166,684,166,611,170,530,181,434,200,428,202,426,197,433,195,529,175,611,165,684,161,752,161,894,162,977,158,1074,147,1086,145"/>
+<area shape="rect" title=" " alt="" coords="445,205,638,231"/>
+<area shape="poly" title=" " alt="" coords="1087,150,1075,152,956,169,862,177,769,186,650,200,622,205,621,199,649,195,769,180,862,172,955,163,1074,147,1086,145"/>
+<area shape="rect" title=" " alt="" coords="842,205,960,231"/>
+<area shape="poly" title=" " alt="" coords="1106,153,953,202,952,197,1105,148"/>
+<area shape="rect" title=" " alt="" coords="1034,205,1152,231"/>
+<area shape="poly" title=" " alt="" coords="1151,152,1115,195,1111,191,1147,148"/>
+<area shape="rect" title=" " alt="" coords="1176,205,1301,231"/>
+<area shape="poly" title=" " alt="" coords="1184,148,1221,192,1217,195,1180,152"/>
+<area shape="rect" title=" " alt="" coords="1632,198,1792,238"/>
+<area shape="poly" title=" " alt="" coords="1245,138,1412,162,1617,194,1616,200,1411,167,1244,144"/>
+<area shape="rect" title=" " alt="" coords="1816,198,1976,238"/>
+<area shape="poly" title=" " alt="" coords="1245,134,1489,156,1643,173,1801,195,1800,200,1642,178,1488,161,1244,139"/>
+<area shape="rect" title=" " alt="" coords="860,294,969,320"/>
+<area shape="poly" title=" " alt="" coords="1114,153,1069,173,1024,200,975,242,936,283,932,280,971,238,1021,195,1066,169,1112,148"/>
+<area shape="poly" title=" " alt="" coords="1087,151,1075,152,935,157,702,161,580,165,472,172,389,184,361,191,344,200,332,215,324,232,318,271,313,270,319,231,327,212,341,196,359,186,388,178,472,167,580,160,702,155,935,152,1074,147,1086,145"/>
+<area shape="rect" href="Perceptions_8hpp.html" title="Defines data structures and utilities for representing and processing sensor perceptions." alt="" coords="661,198,819,238"/>
+<area shape="poly" title=" " alt="" coords="1087,150,1075,152,835,200,834,194,1074,147,1086,145"/>
+<area shape="rect" href="CircularBuffer_8hpp.html" title=" " alt="" coords="1376,205,1608,231"/>
+<area shape="poly" title=" " alt="" coords="1241,148,1432,198,1431,203,1239,153"/>
+<area shape="poly" title=" " alt="" coords="1244,133,1587,158,2032,195,2087,200,2086,206,2032,200,1586,164,1244,139"/>
+<area shape="poly" title=" " alt="" coords="756,237,794,283,820,306,849,325,902,338,996,353,1190,379,1189,384,995,358,900,343,847,329,817,310,790,286,751,241"/>
+<area shape="poly" title=" " alt="" coords="781,236,878,284,876,289,778,241"/>
+<area shape="poly" title=" " alt="" coords="661,239,650,241,414,289,413,283,649,236,660,233"/>
+<area shape="rect" href="NavState_8hpp.html" title="A blackboard&#45;like structure to hold the current state of the navigation system." alt="" coords="498,286,659,327"/>
+<area shape="poly" title=" " alt="" coords="705,241,630,281,627,276,702,236"/>
+<area shape="poly" title=" " alt="" coords="660,321,679,324,777,338,855,346,934,355,1034,372,1033,377,933,361,855,352,777,343,678,330,659,326"/>
+<area shape="poly" title=" " alt="" coords="660,315,1191,379,1190,384,659,320"/>
+<area shape="rect" title=" " alt="" coords="393,375,503,401"/>
+<area shape="poly" title=" " alt="" coords="547,330,482,369,479,364,545,325"/>
+<area shape="rect" title=" " alt="" coords="527,375,630,401"/>
+<area shape="poly" title=" " alt="" coords="581,327,581,359,576,359,576,327"/>
+<area shape="rect" title=" " alt="" coords="1494,375,1551,401"/>
+<area shape="poly" title=" " alt="" coords="660,312,1479,380,1479,386,660,317"/>
+<area shape="rect" title=" " alt="" coords="655,375,732,401"/>
+<area shape="poly" title=" " alt="" coords="609,325,665,364,662,368,606,330"/>
+<area shape="rect" title=" " alt="" coords="756,375,825,401"/>
+<area shape="poly" title=" " alt="" coords="633,325,745,367,743,372,631,330"/>
+<area shape="rect" title=" " alt="" coords="849,375,930,401"/>
+<area shape="poly" title=" " alt="" coords="657,325,834,370,833,375,656,330"/>
+<area shape="rect" title=" " alt="" coords="954,375,1025,401"/>
+<area shape="poly" title=" " alt="" coords="660,321,679,324,808,347,939,372,938,377,807,352,678,330,659,326"/>
+<area shape="rect" title=" " alt="" coords="5,375,83,401"/>
+<area shape="poly" title=" " alt="" coords="498,320,319,343,98,377,98,372,318,337,497,314"/>
+<area shape="rect" title=" " alt="" coords="107,375,186,401"/>
+<area shape="poly" title=" " alt="" coords="498,324,202,377,201,372,497,319"/>
+<area shape="rect" title=" " alt="" coords="211,375,277,401"/>
+<area shape="poly" title=" " alt="" coords="498,329,293,377,292,372,497,324"/>
+<area shape="rect" title=" " alt="" coords="301,375,368,401"/>
+<area shape="poly" title=" " alt="" coords="519,330,384,373,383,368,517,325"/>
+<area shape="poly" title=" " alt="" coords="1511,229,1591,282,1588,287,1508,234"/>
+<area shape="poly" title=" " alt="" coords="1497,231,1520,359,1515,360,1492,232"/>
+<area shape="rect" title=" " alt="" coords="1421,294,1486,320"/>
+<area shape="poly" title=" " alt="" coords="1489,232,1467,281,1462,279,1484,230"/>
+<area shape="rect" href="Singleton_8hpp.html" title=" " alt="" coords="1858,294,2067,320"/>
+<area shape="poly" title=" " alt="" coords="2178,234,2013,291,2011,286,2176,229"/>
+<area shape="rect" href="TFInfo_8hpp.html" title=" " alt="" coords="1673,286,1834,327"/>
+<area shape="poly" title=" " alt="" coords="2144,234,1850,288,1849,283,2143,229"/>
+<area shape="rect" title=" " alt="" coords="2151,294,2273,320"/>
+<area shape="poly" title=" " alt="" coords="2215,231,2215,278,2209,278,2209,231"/>
+<area shape="poly" title=" " alt="" coords="1896,323,1847,330,1664,348,1520,357,1377,364,1194,378,1132,384,1131,378,1193,372,1377,359,1520,352,1663,343,1846,324,1895,317"/>
+<area shape="poly" title=" " alt="" coords="1895,323,1567,381,1566,376,1894,317"/>
+<area shape="rect" title=" " alt="" coords="1937,375,1988,401"/>
+<area shape="poly" title=" " alt="" coords="1965,320,1965,359,1960,359,1960,320"/>
+<area shape="poly" title=" " alt="" coords="1673,328,1662,330,1444,363,1275,384,1274,379,1443,357,1661,324,1672,322"/>
 </map>
 </div>
 </div><table class="memberdecls">
@@ -177,6 +202,13 @@ Functions</h2></td></tr>
 <tr class="memitem:a797ac41d209793f5c61e12d146d4d815" id="r_a797ac41d209793f5c61e12d146d4d815"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a797ac41d209793f5c61e12d146d4d815">TEST</a> (PerceptionsOpsViewCtor, FromSinglePerception_Basic)</td></tr>
 <tr class="memitem:a74923b067845ac97a139ad7bf29e26ad" id="r_a74923b067845ac97a139ad7bf29e26ad"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a74923b067845ac97a139ad7bf29e26ad">TEST</a> (PerceptionsOpsViewCtor, FromSinglePerception_EmptyOrInvalid)</td></tr>
 <tr class="memitem:aba6bf586bb6d1f969992bb7fb9ef41e6" id="r_aba6bf586bb6d1f969992bb7fb9ef41e6"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#aba6bf586bb6d1f969992bb7fb9ef41e6">TEST</a> (PerceptionsOpsViewCtor, FromSinglePerception_FilterDownsampleCollapse)</td></tr>
+<tr class="memitem:a094b469d66d1467889361aa6bcc87fa2" id="r_a094b469d66d1467889361aa6bcc87fa2"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a094b469d66d1467889361aa6bcc87fa2">TEST</a> (PerceptionsOpsViewEmpty, EmptyVectorAsPoints)</td></tr>
+<tr class="memitem:afdb643d811d6dd44140442fddb495687" id="r_afdb643d811d6dd44140442fddb495687"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#afdb643d811d6dd44140442fddb495687">TEST</a> (PerceptionsOpsViewEmpty, EmptyVectorCollapse)</td></tr>
+<tr class="memitem:adef198c5d5d240d06cf1c7221003be87" id="r_adef198c5d5d240d06cf1c7221003be87"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#adef198c5d5d240d06cf1c7221003be87">TEST</a> (PerceptionsOpsViewEmpty, EmptyVectorDownsample)</td></tr>
+<tr class="memitem:aaece44f9a778af22e2e709c0ea882bac" id="r_aaece44f9a778af22e2e709c0ea882bac"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#aaece44f9a778af22e2e709c0ea882bac">TEST</a> (PerceptionsOpsViewEmpty, EmptyVectorFilter)</td></tr>
+<tr class="memitem:ab4dae2ba7137ad2b065b423a7e1a6739" id="r_ab4dae2ba7137ad2b065b423a7e1a6739"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#ab4dae2ba7137ad2b065b423a7e1a6739">TEST</a> (PerceptionsOpsViewEmpty, EmptyVectorFullPipeline)</td></tr>
+<tr class="memitem:ab490600c3e31ea8d833098b0bcfd85cf" id="r_ab490600c3e31ea8d833098b0bcfd85cf"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#ab490600c3e31ea8d833098b0bcfd85cf">TEST</a> (PerceptionsOpsViewEmpty, EmptyVectorGetPerceptions)</td></tr>
+<tr class="memitem:a942d8b2fe60f1fbf1dd5dcc10d5f171c" id="r_a942d8b2fe60f1fbf1dd5dcc10d5f171c"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a942d8b2fe60f1fbf1dd5dcc10d5f171c">TEST</a> (PerceptionsOpsViewEmpty, NullptrEntriesInVector)</td></tr>
 <tr class="memitem:a6b49dce7fab54c6cb5c85292f4deb4a9" id="r_a6b49dce7fab54c6cb5c85292f4deb4a9"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a6b49dce7fab54c6cb5c85292f4deb4a9">TEST</a> (PerceptionsOpsViewTests, CollapseEager_NonOwningView_Ignored)</td></tr>
 <tr class="memitem:a6b4ca59533501ed0160c96c32ed8dfb0" id="r_a6b4ca59533501ed0160c96c32ed8dfb0"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a6b4ca59533501ed0160c96c32ed8dfb0">TEST</a> (PerceptionsOpsViewTests, CollapseEager_OwningView_ModifiesOwnedData)</td></tr>
 <tr class="memitem:a298e4c2dd7b9eed2969a1aec36b94d4d" id="r_a298e4c2dd7b9eed2969a1aec36b94d4d"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a298e4c2dd7b9eed2969a1aec36b94d4d">TEST</a> (PerceptionsOpsViewTests, CollapseLazy_DoesNotAffectIntermediateFilter)</td></tr>
@@ -195,7 +227,7 @@ Functions</h2></td></tr>
 </table>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
 <a id="a1afb586e774f3f1350ed697b10c06428" name="a1afb586e774f3f1350ed697b10c06428"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1afb586e774f3f1350ed697b10c06428">&#9670;&#160;</a></span>TEST() <span class="overload">[1/9]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a1afb586e774f3f1350ed697b10c06428">&#9670;&#160;</a></span>TEST() <span class="overload">[1/16]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -216,7 +248,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="a797ac41d209793f5c61e12d146d4d815" name="a797ac41d209793f5c61e12d146d4d815"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a797ac41d209793f5c61e12d146d4d815">&#9670;&#160;</a></span>TEST() <span class="overload">[2/9]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a797ac41d209793f5c61e12d146d4d815">&#9670;&#160;</a></span>TEST() <span class="overload">[2/16]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -237,7 +269,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="a74923b067845ac97a139ad7bf29e26ad" name="a74923b067845ac97a139ad7bf29e26ad"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a74923b067845ac97a139ad7bf29e26ad">&#9670;&#160;</a></span>TEST() <span class="overload">[3/9]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a74923b067845ac97a139ad7bf29e26ad">&#9670;&#160;</a></span>TEST() <span class="overload">[3/16]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -258,7 +290,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="aba6bf586bb6d1f969992bb7fb9ef41e6" name="aba6bf586bb6d1f969992bb7fb9ef41e6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aba6bf586bb6d1f969992bb7fb9ef41e6">&#9670;&#160;</a></span>TEST() <span class="overload">[4/9]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aba6bf586bb6d1f969992bb7fb9ef41e6">&#9670;&#160;</a></span>TEST() <span class="overload">[4/16]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -278,8 +310,155 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a094b469d66d1467889361aa6bcc87fa2" name="a094b469d66d1467889361aa6bcc87fa2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a094b469d66d1467889361aa6bcc87fa2">&#9670;&#160;</a></span>TEST() <span class="overload">[5/16]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TEST </td>
+          <td>(</td>
+          <td class="paramtype">PerceptionsOpsViewEmpty</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">EmptyVectorAsPoints</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="afdb643d811d6dd44140442fddb495687" name="afdb643d811d6dd44140442fddb495687"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afdb643d811d6dd44140442fddb495687">&#9670;&#160;</a></span>TEST() <span class="overload">[6/16]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TEST </td>
+          <td>(</td>
+          <td class="paramtype">PerceptionsOpsViewEmpty</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">EmptyVectorCollapse</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="adef198c5d5d240d06cf1c7221003be87" name="adef198c5d5d240d06cf1c7221003be87"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adef198c5d5d240d06cf1c7221003be87">&#9670;&#160;</a></span>TEST() <span class="overload">[7/16]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TEST </td>
+          <td>(</td>
+          <td class="paramtype">PerceptionsOpsViewEmpty</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">EmptyVectorDownsample</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aaece44f9a778af22e2e709c0ea882bac" name="aaece44f9a778af22e2e709c0ea882bac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaece44f9a778af22e2e709c0ea882bac">&#9670;&#160;</a></span>TEST() <span class="overload">[8/16]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TEST </td>
+          <td>(</td>
+          <td class="paramtype">PerceptionsOpsViewEmpty</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">EmptyVectorFilter</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab4dae2ba7137ad2b065b423a7e1a6739" name="ab4dae2ba7137ad2b065b423a7e1a6739"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab4dae2ba7137ad2b065b423a7e1a6739">&#9670;&#160;</a></span>TEST() <span class="overload">[9/16]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TEST </td>
+          <td>(</td>
+          <td class="paramtype">PerceptionsOpsViewEmpty</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">EmptyVectorFullPipeline</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab490600c3e31ea8d833098b0bcfd85cf" name="ab490600c3e31ea8d833098b0bcfd85cf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab490600c3e31ea8d833098b0bcfd85cf">&#9670;&#160;</a></span>TEST() <span class="overload">[10/16]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TEST </td>
+          <td>(</td>
+          <td class="paramtype">PerceptionsOpsViewEmpty</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">EmptyVectorGetPerceptions</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a942d8b2fe60f1fbf1dd5dcc10d5f171c" name="a942d8b2fe60f1fbf1dd5dcc10d5f171c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a942d8b2fe60f1fbf1dd5dcc10d5f171c">&#9670;&#160;</a></span>TEST() <span class="overload">[11/16]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TEST </td>
+          <td>(</td>
+          <td class="paramtype">PerceptionsOpsViewEmpty</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">NullptrEntriesInVector</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a6b49dce7fab54c6cb5c85292f4deb4a9" name="a6b49dce7fab54c6cb5c85292f4deb4a9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6b49dce7fab54c6cb5c85292f4deb4a9">&#9670;&#160;</a></span>TEST() <span class="overload">[5/9]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a6b49dce7fab54c6cb5c85292f4deb4a9">&#9670;&#160;</a></span>TEST() <span class="overload">[12/16]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -300,7 +479,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="a6b4ca59533501ed0160c96c32ed8dfb0" name="a6b4ca59533501ed0160c96c32ed8dfb0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6b4ca59533501ed0160c96c32ed8dfb0">&#9670;&#160;</a></span>TEST() <span class="overload">[6/9]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a6b4ca59533501ed0160c96c32ed8dfb0">&#9670;&#160;</a></span>TEST() <span class="overload">[13/16]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -321,7 +500,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="a298e4c2dd7b9eed2969a1aec36b94d4d" name="a298e4c2dd7b9eed2969a1aec36b94d4d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a298e4c2dd7b9eed2969a1aec36b94d4d">&#9670;&#160;</a></span>TEST() <span class="overload">[7/9]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a298e4c2dd7b9eed2969a1aec36b94d4d">&#9670;&#160;</a></span>TEST() <span class="overload">[14/16]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -342,7 +521,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="a34da8b0a26908a60c8348b09b1647f30" name="a34da8b0a26908a60c8348b09b1647f30"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a34da8b0a26908a60c8348b09b1647f30">&#9670;&#160;</a></span>TEST() <span class="overload">[8/9]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a34da8b0a26908a60c8348b09b1647f30">&#9670;&#160;</a></span>TEST() <span class="overload">[15/16]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -363,7 +542,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="a026b9a4c826d5c5af9ab30d4676c22be" name="a026b9a4c826d5c5af9ab30d4676c22be"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a026b9a4c826d5c5af9ab30d4676c22be">&#9670;&#160;</a></span>TEST() <span class="overload">[9/9]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a026b9a4c826d5c5af9ab30d4676c22be">&#9670;&#160;</a></span>TEST() <span class="overload">[16/16]</span></h2>
 
 <div class="memitem">
 <div class="memproto">

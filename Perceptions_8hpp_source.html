@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Easy Navigation: easynav_common/include/easynav_common/types/Perceptions.hpp Source File</title>
+<title>Easy Navigation: easynav_sensors/include/easynav_sensors/types/Perceptions.hpp Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -70,7 +70,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a href="dir_44416c254a438fcc2b63460fcfa852ae.html">easynav_common</a></li><li class="navelem"><a href="dir_cc6972266a67b0b1fd157ae5527840e4.html">include</a></li><li class="navelem"><a href="dir_ec05cbd8f7b709da2af7637994ebfa9c.html">easynav_common</a></li><li class="navelem"><a href="dir_ebe9adb9f1b38446d372d9f8adaa336f.html">types</a></li>  </ul>
+<li class="navelem"><a href="dir_614ab350d9e5a7622e6a48999ce2a386.html">easynav_sensors</a></li><li class="navelem"><a href="dir_4659c21185412ae3e088e10890213fb4.html">include</a></li><li class="navelem"><a href="dir_b0c22edc73147f7d064879d2e88aaf25.html">easynav_sensors</a></li><li class="navelem"><a href="dir_fbbbe98f21025e9e8437ddc77897dbc1.html">types</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div id="doc-content">
@@ -93,111 +93,127 @@ $(function() {
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="comment">// limitations under the License.</span></div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span></div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#ifndef EASYNAV_COMMON_TYPES__PERCEPTIONS_HPP_</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#define EASYNAV_COMMON_TYPES__PERCEPTIONS_HPP_</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#ifndef EASYNAV_SENSORS_TYPES__PERCEPTIONS_HPP_</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#define EASYNAV_SENSORS_TYPES__PERCEPTIONS_HPP_</span></div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &quot;rclcpp/time.hpp&quot;</span></div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#include &quot;rclcpp_lifecycle/lifecycle_node.hpp&quot;</span></div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceeasynav.html">easynav</a></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>{</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span></div>
-<div class="foldopen" id="foldopen00039" data-start="{" data-end="};">
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="classeasynav_1_1PerceptionBase.html">   39</a></span><span class="keyword">class </span><a class="code hl_class" href="classeasynav_1_1PerceptionBase.html">PerceptionBase</a></div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>{</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="classeasynav_1_1PerceptionBase.html#a05127c1d4439d2afa8dcf4230e2a177c">   42</a></span>  <span class="keyword">virtual</span> <a class="code hl_function" href="classeasynav_1_1PerceptionBase.html#a05127c1d4439d2afa8dcf4230e2a177c">~PerceptionBase</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span></div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="classeasynav_1_1PerceptionBase.html#a3ace6024cedb403facddccc6842dce24">   45</a></span>  rclcpp::Time <a class="code hl_variable" href="classeasynav_1_1PerceptionBase.html#a3ace6024cedb403facddccc6842dce24">stamp</a>;</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span></div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno"><a class="line" href="classeasynav_1_1PerceptionBase.html#aee63db9a1c81df1506964242aacdac88">   48</a></span>  std::string <a class="code hl_variable" href="classeasynav_1_1PerceptionBase.html#aee63db9a1c81df1506964242aacdac88">frame_id</a>;</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span></div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="classeasynav_1_1PerceptionBase.html#a28e3c179a86f337095088b3ca02a2b2a">   51</a></span>  <span class="keywordtype">bool</span> <a class="code hl_variable" href="classeasynav_1_1PerceptionBase.html#a28e3c179a86f337095088b3ca02a2b2a">valid</a> = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span></div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno"><a class="line" href="classeasynav_1_1PerceptionBase.html#a5a4ba60143c31271df0f72bf0e503876">   54</a></span>  <span class="keywordtype">bool</span> <a class="code hl_variable" href="classeasynav_1_1PerceptionBase.html#a5a4ba60143c31271df0f72bf0e503876">new_data</a> = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>};</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#include &quot;<a class="code" href="NavState_8hpp.html">easynav_common/types/NavState.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceeasynav.html">easynav</a></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>{</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="comment">// Forward declaration needed by PerceptionPtr.</span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="keyword">class </span><a class="code hl_class" href="classeasynav_1_1PerceptionHandler.html">PerceptionHandler</a>;</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span></div>
+<div class="foldopen" id="foldopen00043" data-start="{" data-end="};">
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="classeasynav_1_1PerceptionBase.html">   43</a></span><span class="keyword">class </span><a class="code hl_class" href="classeasynav_1_1PerceptionBase.html">PerceptionBase</a></div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>{</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="classeasynav_1_1PerceptionBase.html#a05127c1d4439d2afa8dcf4230e2a177c">   46</a></span>  <span class="keyword">virtual</span> <a class="code hl_function" href="classeasynav_1_1PerceptionBase.html#a05127c1d4439d2afa8dcf4230e2a177c">~PerceptionBase</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno"><a class="line" href="classeasynav_1_1PerceptionBase.html#a3ace6024cedb403facddccc6842dce24">   49</a></span>  rclcpp::Time <a class="code hl_variable" href="classeasynav_1_1PerceptionBase.html#a3ace6024cedb403facddccc6842dce24">stamp</a>;</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span></div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno"><a class="line" href="classeasynav_1_1PerceptionBase.html#aee63db9a1c81df1506964242aacdac88">   52</a></span>  std::string <a class="code hl_variable" href="classeasynav_1_1PerceptionBase.html#aee63db9a1c81df1506964242aacdac88">frame_id</a>;</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span></div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>  <span class="comment">// TODO: Not in use</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno"><a class="line" href="classeasynav_1_1PerceptionBase.html#a28e3c179a86f337095088b3ca02a2b2a">   56</a></span>  <span class="keywordtype">bool</span> <a class="code hl_variable" href="classeasynav_1_1PerceptionBase.html#a28e3c179a86f337095088b3ca02a2b2a">valid</a> = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span></div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno"><a class="line" href="classeasynav_1_1PerceptionBase.html#a5a4ba60143c31271df0f72bf0e503876">   59</a></span>  <span class="keywordtype">bool</span> <a class="code hl_variable" href="classeasynav_1_1PerceptionBase.html#a5a4ba60143c31271df0f72bf0e503876">new_data</a> = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>};</div>
 </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span></div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno"><a class="line" href="namespaceeasynav.html#a4d10e036523aceea280b71de936e1c41">   59</a></span><span class="keyword">using </span><a class="code hl_typedef" href="namespaceeasynav.html#a4d10e036523aceea280b71de936e1c41">PerceptionBasePtr</a> = std::shared_ptr&lt;PerceptionBase&gt;;</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span></div>
-<div class="foldopen" id="foldopen00066" data-start="{" data-end="};">
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno"><a class="line" href="structeasynav_1_1PerceptionPtr.html">   66</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structeasynav_1_1PerceptionPtr.html">PerceptionPtr</a></div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>{</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno"><a class="line" href="structeasynav_1_1PerceptionPtr.html#adbcc140c5deeb62932f1d7d03464ad76">   69</a></span>  <a class="code hl_typedef" href="namespaceeasynav.html#a4d10e036523aceea280b71de936e1c41">PerceptionBasePtr</a> <a class="code hl_variable" href="structeasynav_1_1PerceptionPtr.html#adbcc140c5deeb62932f1d7d03464ad76">perception</a>;</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span></div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno"><a class="line" href="structeasynav_1_1PerceptionPtr.html#a809515a5f8c318880eb15f1d6be6f2a3">   72</a></span>  rclcpp::SubscriptionBase::SharedPtr <a class="code hl_variable" href="structeasynav_1_1PerceptionPtr.html#a809515a5f8c318880eb15f1d6be6f2a3">subscription</a>;</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>};</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span></div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno"><a class="line" href="namespaceeasynav.html#a4d10e036523aceea280b71de936e1c41">   64</a></span><span class="keyword">using </span><a class="code hl_typedef" href="namespaceeasynav.html#a4d10e036523aceea280b71de936e1c41">PerceptionBasePtr</a> = std::shared_ptr&lt;PerceptionBase&gt;;</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span></div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T = PerceptionBase&gt;</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span><span class="keyword">inline</span> std::vector&lt;std::shared_ptr&lt;T&gt;&gt;</div>
+<div class="foldopen" id="foldopen00077" data-start="{" data-end="}">
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno"><a class="line" href="namespaceeasynav.html#a85608546062d3c1c397712b595f181fd">   77</a></span><a class="code hl_function" href="namespaceeasynav.html#a85608546062d3c1c397712b595f181fd">get_perceptions</a>(<span class="keyword">const</span> std::vector&lt;PerceptionBasePtr&gt; &amp; src)</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>{</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>  <span class="keyword">static_assert</span>(std::is_base_of_v&lt;PerceptionBase, T&gt;,</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>                <span class="stringliteral">&quot;T must inherit from PerceptionBase&quot;</span>);</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>  std::vector&lt;std::shared_ptr&lt;T&gt;&gt; out;</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>  out.reserve(src.size());</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp; perception : src) {</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    <span class="keywordflow">if</span> (!perception) {<span class="keywordflow">continue</span>;}</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    <span class="comment">// Homogeneous by derived type: include only successful casts</span></div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    <span class="keywordflow">if</span> (<span class="keyword">auto</span> p = std::dynamic_pointer_cast&lt;T&gt;(perception)) {</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>      out.push_back(std::move(p));</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    }</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>  }</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>  <span class="keywordflow">return</span> out;</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>}</div>
 </div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span></div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T = PerceptionBase&gt;</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span><span class="keyword">inline</span> std::vector&lt;std::shared_ptr&lt;T&gt;&gt;</div>
-<div class="foldopen" id="foldopen00086" data-start="{" data-end="}">
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno"><a class="line" href="namespaceeasynav.html#a843ecd75e7c807bdaf73f409e59d8dc4">   86</a></span><a class="code hl_function" href="namespaceeasynav.html#a843ecd75e7c807bdaf73f409e59d8dc4">get_perceptions</a>(<span class="keyword">const</span> std::vector&lt;PerceptionPtr&gt; &amp; src)</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>{</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>  <span class="keyword">static_assert</span>(std::is_base_of_v&lt;PerceptionBase, T&gt;,</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>                <span class="stringliteral">&quot;T must inherit from PerceptionBase&quot;</span>);</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>  std::vector&lt;std::shared_ptr&lt;T&gt;&gt; out;</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>  out.reserve(src.size());</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span> </div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp; h : src) {</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    <span class="keywordflow">if</span> (!h.perception) {<span class="keywordflow">continue</span>;}</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span> </div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;T, PerceptionBase&gt;) {</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>      <span class="comment">// Heterogeneous: no cast needed</span></div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>      out.push_back(h.perception);</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>      <span class="comment">// Homogeneous by derived type: include only successful casts</span></div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>      <span class="keywordflow">if</span> (<span class="keyword">auto</span> p = std::dynamic_pointer_cast&lt;T&gt;(h.perception)) {</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        out.push_back(std::move(p));</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>      }</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    }</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>  }</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>  <span class="keywordflow">return</span> out;</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>}</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span> </div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span></div>
+<div class="foldopen" id="foldopen00107" data-start="{" data-end="};">
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno"><a class="line" href="classeasynav_1_1PerceptionHandler.html">  107</a></span><span class="keyword">class </span><a class="code hl_class" href="classeasynav_1_1PerceptionHandler.html">PerceptionHandler</a></div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>{</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno"><a class="line" href="classeasynav_1_1PerceptionHandler.html#abbe35c22e1c98340681de734002399d9">  110</a></span>  <span class="keyword">virtual</span> <a class="code hl_function" href="classeasynav_1_1PerceptionHandler.html#abbe35c22e1c98340681de734002399d9">~PerceptionHandler</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span></div>
+<div class="foldopen" id="foldopen00119" data-start="{" data-end="}">
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno"><a class="line" href="classeasynav_1_1PerceptionHandler.html#a380e843c8336262e18110e480d8a85e9">  119</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classeasynav_1_1PerceptionHandler.html#a380e843c8336262e18110e480d8a85e9">initialize</a>(</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    <span class="keyword">const</span> std::shared_ptr&lt;rclcpp_lifecycle::LifecycleNode&gt; parent_node,</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    <span class="keyword">const</span> rclcpp::CallbackGroup::SharedPtr realtime_cbg,</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    <span class="keyword">const</span> std::string &amp; sensor_name)</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>  {</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    <a class="code hl_variable" href="classeasynav_1_1PerceptionHandler.html#a9cb6c9609aa533aa43446fdd36ebbcf0">parent_node_</a> = parent_node;</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    <a class="code hl_variable" href="classeasynav_1_1PerceptionHandler.html#ab01799de7c3bf477cd4b8de8e08c342c">realtime_cbg_</a> = realtime_cbg;</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    <a class="code hl_variable" href="classeasynav_1_1PerceptionHandler.html#a5d6c5443e56e32a307cc9a9c653d8f46">sensor_name_</a> = sensor_name;</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>    <a class="code hl_function" href="classeasynav_1_1PerceptionHandler.html#abc9f24464037fcf02a6fe46e54a56d00">on_initialize</a>();</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>  }</div>
 </div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span></div>
-<div class="foldopen" id="foldopen00115" data-start="{" data-end="};">
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno"><a class="line" href="classeasynav_1_1PerceptionHandler.html">  115</a></span><span class="keyword">class </span><a class="code hl_class" href="classeasynav_1_1PerceptionHandler.html">PerceptionHandler</a></div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>{</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno"><a class="line" href="classeasynav_1_1PerceptionHandler.html#abbe35c22e1c98340681de734002399d9">  118</a></span>  <span class="keyword">virtual</span> <a class="code hl_function" href="classeasynav_1_1PerceptionHandler.html#abbe35c22e1c98340681de734002399d9">~PerceptionHandler</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span></div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno"><a class="line" href="classeasynav_1_1PerceptionHandler.html#a7c0b7d9eb779ed511d322f590120e7ea">  123</a></span>  <span class="keyword">virtual</span> std::shared_ptr&lt;PerceptionBase&gt; <a class="code hl_function" href="classeasynav_1_1PerceptionHandler.html#a7c0b7d9eb779ed511d322f590120e7ea">create</a>(<span class="keyword">const</span> std::string &amp; sensor_id) = 0;</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span></div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno"><a class="line" href="classeasynav_1_1PerceptionHandler.html#ad4e23be7dcafea9172fafc36b5ce7793">  136</a></span>  <span class="keyword">virtual</span> rclcpp::SubscriptionBase::SharedPtr <a class="code hl_function" href="classeasynav_1_1PerceptionHandler.html#ad4e23be7dcafea9172fafc36b5ce7793">create_subscription</a>(</div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>    rclcpp_lifecycle::LifecycleNode &amp; node,</div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>    <span class="keyword">const</span> std::string &amp; topic,</div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>    <span class="keyword">const</span> std::string &amp; type,</div>
-<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>    std::shared_ptr&lt;PerceptionBase&gt; target,</div>
-<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>    rclcpp::CallbackGroup::SharedPtr cb_group) = 0;</div>
-<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span></div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno"><a class="line" href="classeasynav_1_1PerceptionHandler.html#ad71c317c86661d3d0459590ea07b3880">  149</a></span>  <span class="keyword">virtual</span> std::string <a class="code hl_function" href="classeasynav_1_1PerceptionHandler.html#ad71c317c86661d3d0459590ea07b3880">group</a>() <span class="keyword">const</span> = 0;</div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>};</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span></div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno"><a class="line" href="classeasynav_1_1PerceptionHandler.html#abc9f24464037fcf02a6fe46e54a56d00">  133</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classeasynav_1_1PerceptionHandler.html#abc9f24464037fcf02a6fe46e54a56d00">on_initialize</a>() {}</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span></div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno"><a class="line" href="classeasynav_1_1PerceptionHandler.html#a458279dbf8ca498a5ce20f368c280460">  142</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classeasynav_1_1PerceptionHandler.html#a458279dbf8ca498a5ce20f368c280460">cycle_rt</a>([[maybe_unused]] std::shared_ptr&lt;NavState&gt; nav_state) {<span class="keywordflow">return</span> <span class="keyword">false</span>;}</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span> </div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span></div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno"><a class="line" href="classeasynav_1_1PerceptionHandler.html#ab6f232729c466045279af3865fbb1ff7">  146</a></span>  <span class="keyword">const</span> std::string &amp; <a class="code hl_function" href="classeasynav_1_1PerceptionHandler.html#ab6f232729c466045279af3865fbb1ff7">get_sensor_name</a>()<span class="keyword"> const </span>{<span class="keywordflow">return</span> <a class="code hl_variable" href="classeasynav_1_1PerceptionHandler.html#a5d6c5443e56e32a307cc9a9c653d8f46">sensor_name_</a>;}</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span> </div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span><span class="keyword">protected</span>:</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno"><a class="line" href="classeasynav_1_1PerceptionHandler.html#abfb20156702d89bea674892ec784e9a2">  150</a></span>  std::shared_ptr&lt;rclcpp_lifecycle::LifecycleNode&gt; <a class="code hl_function" href="classeasynav_1_1PerceptionHandler.html#abfb20156702d89bea674892ec784e9a2">get_node</a>()<span class="keyword"> const </span>{<span class="keywordflow">return</span> <a class="code hl_variable" href="classeasynav_1_1PerceptionHandler.html#a9cb6c9609aa533aa43446fdd36ebbcf0">parent_node_</a>.lock();}</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span></div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno"><a class="line" href="classeasynav_1_1PerceptionHandler.html#acd17181fbebb181d7e7ab341227bc8b4">  153</a></span>  rclcpp::CallbackGroup::SharedPtr <a class="code hl_function" href="classeasynav_1_1PerceptionHandler.html#acd17181fbebb181d7e7ab341227bc8b4">get_realtime_cbg</a>()<span class="keyword"> const </span>{<span class="keywordflow">return</span> <a class="code hl_variable" href="classeasynav_1_1PerceptionHandler.html#ab01799de7c3bf477cd4b8de8e08c342c">realtime_cbg_</a>;}</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span></div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno"><a class="line" href="classeasynav_1_1PerceptionHandler.html#a9cb6c9609aa533aa43446fdd36ebbcf0">  156</a></span>  std::weak_ptr&lt;rclcpp_lifecycle::LifecycleNode&gt; <a class="code hl_variable" href="classeasynav_1_1PerceptionHandler.html#a9cb6c9609aa533aa43446fdd36ebbcf0">parent_node_</a>;</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span></div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno"><a class="line" href="classeasynav_1_1PerceptionHandler.html#ab01799de7c3bf477cd4b8de8e08c342c">  159</a></span>  rclcpp::CallbackGroup::SharedPtr <a class="code hl_variable" href="classeasynav_1_1PerceptionHandler.html#ab01799de7c3bf477cd4b8de8e08c342c">realtime_cbg_</a>;</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span></div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno"><a class="line" href="classeasynav_1_1PerceptionHandler.html#a5d6c5443e56e32a307cc9a9c653d8f46">  162</a></span>  std::string <a class="code hl_variable" href="classeasynav_1_1PerceptionHandler.html#a5d6c5443e56e32a307cc9a9c653d8f46">sensor_name_</a>;</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>};</div>
 </div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span> </div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>}  <span class="comment">// namespace easynav</span></div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span> </div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span><span class="preprocessor">#endif  </span><span class="comment">// EASYNAV_COMMON_TYPES__PERCEPTIONS_HPP_</span></div>
-<div class="ttc" id="aclasseasynav_1_1PerceptionBase_html"><div class="ttname"><a href="classeasynav_1_1PerceptionBase.html">easynav::PerceptionBase</a></div><div class="ttdoc">Abstract base class for representing a single sensor perception.</div><div class="ttdef"><b>Definition</b> Perceptions.hpp:40</div></div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span> </div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>}  <span class="comment">// namespace easynav</span></div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span> </div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span><span class="preprocessor">#endif  </span><span class="comment">// EASYNAV_SENSORS_TYPES__PERCEPTIONS_HPP_</span></div>
+<div class="ttc" id="aNavState_8hpp_html"><div class="ttname"><a href="NavState_8hpp.html">NavState.hpp</a></div><div class="ttdoc">A blackboard-like structure to hold the current state of the navigation system.</div></div>
+<div class="ttc" id="aclasseasynav_1_1PerceptionBase_html"><div class="ttname"><a href="classeasynav_1_1PerceptionBase.html">easynav::PerceptionBase</a></div><div class="ttdoc">Abstract base class for representing a single sensor perception.</div><div class="ttdef"><b>Definition</b> Perceptions.hpp:44</div></div>
 <div class="ttc" id="aclasseasynav_1_1PerceptionBase_html_a05127c1d4439d2afa8dcf4230e2a177c"><div class="ttname"><a href="classeasynav_1_1PerceptionBase.html#a05127c1d4439d2afa8dcf4230e2a177c">easynav::PerceptionBase::~PerceptionBase</a></div><div class="ttdeci">virtual ~PerceptionBase()=default</div></div>
-<div class="ttc" id="aclasseasynav_1_1PerceptionBase_html_a28e3c179a86f337095088b3ca02a2b2a"><div class="ttname"><a href="classeasynav_1_1PerceptionBase.html#a28e3c179a86f337095088b3ca02a2b2a">easynav::PerceptionBase::valid</a></div><div class="ttdeci">bool valid</div><div class="ttdoc">Whether the perception contains valid data.</div><div class="ttdef"><b>Definition</b> Perceptions.hpp:51</div></div>
-<div class="ttc" id="aclasseasynav_1_1PerceptionBase_html_a3ace6024cedb403facddccc6842dce24"><div class="ttname"><a href="classeasynav_1_1PerceptionBase.html#a3ace6024cedb403facddccc6842dce24">easynav::PerceptionBase::stamp</a></div><div class="ttdeci">rclcpp::Time stamp</div><div class="ttdoc">Timestamp of the perception (ROS time).</div><div class="ttdef"><b>Definition</b> Perceptions.hpp:45</div></div>
-<div class="ttc" id="aclasseasynav_1_1PerceptionBase_html_a5a4ba60143c31271df0f72bf0e503876"><div class="ttname"><a href="classeasynav_1_1PerceptionBase.html#a5a4ba60143c31271df0f72bf0e503876">easynav::PerceptionBase::new_data</a></div><div class="ttdeci">bool new_data</div><div class="ttdoc">Whether the data has changed since the last observation.</div><div class="ttdef"><b>Definition</b> Perceptions.hpp:54</div></div>
-<div class="ttc" id="aclasseasynav_1_1PerceptionBase_html_aee63db9a1c81df1506964242aacdac88"><div class="ttname"><a href="classeasynav_1_1PerceptionBase.html#aee63db9a1c81df1506964242aacdac88">easynav::PerceptionBase::frame_id</a></div><div class="ttdeci">std::string frame_id</div><div class="ttdoc">Coordinate frame associated with the perception.</div><div class="ttdef"><b>Definition</b> Perceptions.hpp:48</div></div>
-<div class="ttc" id="aclasseasynav_1_1PerceptionHandler_html"><div class="ttname"><a href="classeasynav_1_1PerceptionHandler.html">easynav::PerceptionHandler</a></div><div class="ttdoc">Abstract base interface for group-specific perception handlers.</div><div class="ttdef"><b>Definition</b> Perceptions.hpp:116</div></div>
-<div class="ttc" id="aclasseasynav_1_1PerceptionHandler_html_a7c0b7d9eb779ed511d322f590120e7ea"><div class="ttname"><a href="classeasynav_1_1PerceptionHandler.html#a7c0b7d9eb779ed511d322f590120e7ea">easynav::PerceptionHandler::create</a></div><div class="ttdeci">virtual std::shared_ptr&lt; PerceptionBase &gt; create(const std::string &amp;sensor_id)=0</div><div class="ttdoc">Creates a new instance of a perception object managed by this handler.</div></div>
+<div class="ttc" id="aclasseasynav_1_1PerceptionBase_html_a28e3c179a86f337095088b3ca02a2b2a"><div class="ttname"><a href="classeasynav_1_1PerceptionBase.html#a28e3c179a86f337095088b3ca02a2b2a">easynav::PerceptionBase::valid</a></div><div class="ttdeci">bool valid</div><div class="ttdoc">Whether the perception contains valid data.</div><div class="ttdef"><b>Definition</b> Perceptions.hpp:56</div></div>
+<div class="ttc" id="aclasseasynav_1_1PerceptionBase_html_a3ace6024cedb403facddccc6842dce24"><div class="ttname"><a href="classeasynav_1_1PerceptionBase.html#a3ace6024cedb403facddccc6842dce24">easynav::PerceptionBase::stamp</a></div><div class="ttdeci">rclcpp::Time stamp</div><div class="ttdoc">Timestamp of the perception (ROS time).</div><div class="ttdef"><b>Definition</b> Perceptions.hpp:49</div></div>
+<div class="ttc" id="aclasseasynav_1_1PerceptionBase_html_a5a4ba60143c31271df0f72bf0e503876"><div class="ttname"><a href="classeasynav_1_1PerceptionBase.html#a5a4ba60143c31271df0f72bf0e503876">easynav::PerceptionBase::new_data</a></div><div class="ttdeci">bool new_data</div><div class="ttdoc">Whether the data has changed since the last observation.</div><div class="ttdef"><b>Definition</b> Perceptions.hpp:59</div></div>
+<div class="ttc" id="aclasseasynav_1_1PerceptionBase_html_aee63db9a1c81df1506964242aacdac88"><div class="ttname"><a href="classeasynav_1_1PerceptionBase.html#aee63db9a1c81df1506964242aacdac88">easynav::PerceptionBase::frame_id</a></div><div class="ttdeci">std::string frame_id</div><div class="ttdoc">Coordinate frame associated with the perception.</div><div class="ttdef"><b>Definition</b> Perceptions.hpp:52</div></div>
+<div class="ttc" id="aclasseasynav_1_1PerceptionHandler_html"><div class="ttname"><a href="classeasynav_1_1PerceptionHandler.html">easynav::PerceptionHandler</a></div><div class="ttdoc">Abstract base class for pluginlib-based sensor perception handlers.</div><div class="ttdef"><b>Definition</b> Perceptions.hpp:108</div></div>
+<div class="ttc" id="aclasseasynav_1_1PerceptionHandler_html_a380e843c8336262e18110e480d8a85e9"><div class="ttname"><a href="classeasynav_1_1PerceptionHandler.html#a380e843c8336262e18110e480d8a85e9">easynav::PerceptionHandler::initialize</a></div><div class="ttdeci">void initialize(const std::shared_ptr&lt; rclcpp_lifecycle::LifecycleNode &gt; parent_node, const rclcpp::CallbackGroup::SharedPtr realtime_cbg, const std::string &amp;sensor_name)</div><div class="ttdoc">Initializes the handler with the parent node and sensor name.</div><div class="ttdef"><b>Definition</b> Perceptions.hpp:119</div></div>
+<div class="ttc" id="aclasseasynav_1_1PerceptionHandler_html_a458279dbf8ca498a5ce20f368c280460"><div class="ttname"><a href="classeasynav_1_1PerceptionHandler.html#a458279dbf8ca498a5ce20f368c280460">easynav::PerceptionHandler::cycle_rt</a></div><div class="ttdeci">virtual bool cycle_rt(std::shared_ptr&lt; NavState &gt; nav_state)</div><div class="ttdoc">Run one real-time sensor processing cycle.</div><div class="ttdef"><b>Definition</b> Perceptions.hpp:142</div></div>
+<div class="ttc" id="aclasseasynav_1_1PerceptionHandler_html_a5d6c5443e56e32a307cc9a9c653d8f46"><div class="ttname"><a href="classeasynav_1_1PerceptionHandler.html#a5d6c5443e56e32a307cc9a9c653d8f46">easynav::PerceptionHandler::sensor_name_</a></div><div class="ttdeci">std::string sensor_name_</div><div class="ttdoc">Name of the sensor (used as YAML parameter namespace prefix).</div><div class="ttdef"><b>Definition</b> Perceptions.hpp:162</div></div>
+<div class="ttc" id="aclasseasynav_1_1PerceptionHandler_html_a9cb6c9609aa533aa43446fdd36ebbcf0"><div class="ttname"><a href="classeasynav_1_1PerceptionHandler.html#a9cb6c9609aa533aa43446fdd36ebbcf0">easynav::PerceptionHandler::parent_node_</a></div><div class="ttdeci">std::weak_ptr&lt; rclcpp_lifecycle::LifecycleNode &gt; parent_node_</div><div class="ttdoc">Shared pointer to the parent lifecycle node.</div><div class="ttdef"><b>Definition</b> Perceptions.hpp:156</div></div>
+<div class="ttc" id="aclasseasynav_1_1PerceptionHandler_html_ab01799de7c3bf477cd4b8de8e08c342c"><div class="ttname"><a href="classeasynav_1_1PerceptionHandler.html#ab01799de7c3bf477cd4b8de8e08c342c">easynav::PerceptionHandler::realtime_cbg_</a></div><div class="ttdeci">rclcpp::CallbackGroup::SharedPtr realtime_cbg_</div><div class="ttdoc">Callback group for real-time operations.</div><div class="ttdef"><b>Definition</b> Perceptions.hpp:159</div></div>
+<div class="ttc" id="aclasseasynav_1_1PerceptionHandler_html_ab6f232729c466045279af3865fbb1ff7"><div class="ttname"><a href="classeasynav_1_1PerceptionHandler.html#ab6f232729c466045279af3865fbb1ff7">easynav::PerceptionHandler::get_sensor_name</a></div><div class="ttdeci">const std::string &amp; get_sensor_name() const</div><div class="ttdoc">Returns the sensor name provided during initialize.</div><div class="ttdef"><b>Definition</b> Perceptions.hpp:146</div></div>
 <div class="ttc" id="aclasseasynav_1_1PerceptionHandler_html_abbe35c22e1c98340681de734002399d9"><div class="ttname"><a href="classeasynav_1_1PerceptionHandler.html#abbe35c22e1c98340681de734002399d9">easynav::PerceptionHandler::~PerceptionHandler</a></div><div class="ttdeci">virtual ~PerceptionHandler()=default</div></div>
-<div class="ttc" id="aclasseasynav_1_1PerceptionHandler_html_ad4e23be7dcafea9172fafc36b5ce7793"><div class="ttname"><a href="classeasynav_1_1PerceptionHandler.html#ad4e23be7dcafea9172fafc36b5ce7793">easynav::PerceptionHandler::create_subscription</a></div><div class="ttdeci">virtual rclcpp::SubscriptionBase::SharedPtr create_subscription(rclcpp_lifecycle::LifecycleNode &amp;node, const std::string &amp;topic, const std::string &amp;type, std::shared_ptr&lt; PerceptionBase &gt; target, rclcpp::CallbackGroup::SharedPtr cb_group)=0</div><div class="ttdoc">Creates a subscription that processes messages into PerceptionBase instances.</div></div>
-<div class="ttc" id="aclasseasynav_1_1PerceptionHandler_html_ad71c317c86661d3d0459590ea07b3880"><div class="ttname"><a href="classeasynav_1_1PerceptionHandler.html#ad71c317c86661d3d0459590ea07b3880">easynav::PerceptionHandler::group</a></div><div class="ttdeci">virtual std::string group() const =0</div><div class="ttdoc">Returns the group identifier associated with this handler.</div></div>
+<div class="ttc" id="aclasseasynav_1_1PerceptionHandler_html_abc9f24464037fcf02a6fe46e54a56d00"><div class="ttname"><a href="classeasynav_1_1PerceptionHandler.html#abc9f24464037fcf02a6fe46e54a56d00">easynav::PerceptionHandler::on_initialize</a></div><div class="ttdeci">virtual void on_initialize()</div><div class="ttdoc">Optional post-initialization hook for subclasses.</div><div class="ttdef"><b>Definition</b> Perceptions.hpp:133</div></div>
+<div class="ttc" id="aclasseasynav_1_1PerceptionHandler_html_abfb20156702d89bea674892ec784e9a2"><div class="ttname"><a href="classeasynav_1_1PerceptionHandler.html#abfb20156702d89bea674892ec784e9a2">easynav::PerceptionHandler::get_node</a></div><div class="ttdeci">std::shared_ptr&lt; rclcpp_lifecycle::LifecycleNode &gt; get_node() const</div><div class="ttdoc">Returns the parent lifecycle node.</div><div class="ttdef"><b>Definition</b> Perceptions.hpp:150</div></div>
+<div class="ttc" id="aclasseasynav_1_1PerceptionHandler_html_acd17181fbebb181d7e7ab341227bc8b4"><div class="ttname"><a href="classeasynav_1_1PerceptionHandler.html#acd17181fbebb181d7e7ab341227bc8b4">easynav::PerceptionHandler::get_realtime_cbg</a></div><div class="ttdeci">rclcpp::CallbackGroup::SharedPtr get_realtime_cbg() const</div><div class="ttdoc">Returns the parent lifecycle node.</div><div class="ttdef"><b>Definition</b> Perceptions.hpp:153</div></div>
 <div class="ttc" id="anamespaceeasynav_html"><div class="ttname"><a href="namespaceeasynav.html">easynav</a></div><div class="ttdef"><b>Definition</b> CircularBuffer.hpp:23</div></div>
-<div class="ttc" id="anamespaceeasynav_html_a4d10e036523aceea280b71de936e1c41"><div class="ttname"><a href="namespaceeasynav.html#a4d10e036523aceea280b71de936e1c41">easynav::PerceptionBasePtr</a></div><div class="ttdeci">std::shared_ptr&lt; PerceptionBase &gt; PerceptionBasePtr</div><div class="ttdoc">Shared pointer alias to PerceptionBase.</div><div class="ttdef"><b>Definition</b> Perceptions.hpp:59</div></div>
-<div class="ttc" id="anamespaceeasynav_html_a843ecd75e7c807bdaf73f409e59d8dc4"><div class="ttname"><a href="namespaceeasynav.html#a843ecd75e7c807bdaf73f409e59d8dc4">easynav::get_perceptions</a></div><div class="ttdeci">std::vector&lt; std::shared_ptr&lt; T &gt; &gt; get_perceptions(const std::vector&lt; PerceptionPtr &gt; &amp;src)</div><div class="ttdoc">Extracts a homogeneous collection of perceptions of type T from a heterogeneous vector.</div><div class="ttdef"><b>Definition</b> Perceptions.hpp:86</div></div>
-<div class="ttc" id="astructeasynav_1_1PerceptionPtr_html"><div class="ttname"><a href="structeasynav_1_1PerceptionPtr.html">easynav::PerceptionPtr</a></div><div class="ttdoc">Represents a perception entry with its state and ROS subscription.</div><div class="ttdef"><b>Definition</b> Perceptions.hpp:67</div></div>
-<div class="ttc" id="astructeasynav_1_1PerceptionPtr_html_a809515a5f8c318880eb15f1d6be6f2a3"><div class="ttname"><a href="structeasynav_1_1PerceptionPtr.html#a809515a5f8c318880eb15f1d6be6f2a3">easynav::PerceptionPtr::subscription</a></div><div class="ttdeci">rclcpp::SubscriptionBase::SharedPtr subscription</div><div class="ttdoc">ROS 2 subscription to the sensor topic that provides data.</div><div class="ttdef"><b>Definition</b> Perceptions.hpp:72</div></div>
-<div class="ttc" id="astructeasynav_1_1PerceptionPtr_html_adbcc140c5deeb62932f1d7d03464ad76"><div class="ttname"><a href="structeasynav_1_1PerceptionPtr.html#adbcc140c5deeb62932f1d7d03464ad76">easynav::PerceptionPtr::perception</a></div><div class="ttdeci">PerceptionBasePtr perception</div><div class="ttdoc">Shared pointer to the current perception object.</div><div class="ttdef"><b>Definition</b> Perceptions.hpp:69</div></div>
+<div class="ttc" id="anamespaceeasynav_html_a4d10e036523aceea280b71de936e1c41"><div class="ttname"><a href="namespaceeasynav.html#a4d10e036523aceea280b71de936e1c41">easynav::PerceptionBasePtr</a></div><div class="ttdeci">std::shared_ptr&lt; PerceptionBase &gt; PerceptionBasePtr</div><div class="ttdoc">Shared pointer alias to PerceptionBase.</div><div class="ttdef"><b>Definition</b> Perceptions.hpp:64</div></div>
+<div class="ttc" id="anamespaceeasynav_html_a85608546062d3c1c397712b595f181fd"><div class="ttname"><a href="namespaceeasynav.html#a85608546062d3c1c397712b595f181fd">easynav::get_perceptions</a></div><div class="ttdeci">std::vector&lt; std::shared_ptr&lt; T &gt; &gt; get_perceptions(const std::vector&lt; PerceptionBasePtr &gt; &amp;src)</div><div class="ttdoc">Extracts a homogeneous collection of perceptions of type T from a heterogeneous vector.</div><div class="ttdef"><b>Definition</b> Perceptions.hpp:77</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

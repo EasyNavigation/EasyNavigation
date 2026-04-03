@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Easy Navigation: easynav_common/src/easynav_common/types/ImagePerception.cpp File Reference</title>
+<title>Easy Navigation: easynav_sensors/src/easynav_sensors/types/ImagePerception.cpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -70,7 +70,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a href="dir_44416c254a438fcc2b63460fcfa852ae.html">easynav_common</a></li><li class="navelem"><a href="dir_f4a00d2fd6254a3b3ba8fc648b59f4a8.html">src</a></li><li class="navelem"><a href="dir_48c3d5000dd7fbf48751f287c4a8b102.html">easynav_common</a></li><li class="navelem"><a href="dir_57d0e61da5ad79ec48f5fbe5db019d08.html">types</a></li>  </ul>
+<li class="navelem"><a href="dir_614ab350d9e5a7622e6a48999ce2a386.html">easynav_sensors</a></li><li class="navelem"><a href="dir_8d3f450507a794cfad7326fa4eda2832.html">src</a></li><li class="navelem"><a href="dir_3b5c75facfa19e3db87f631be4b7cca3.html">easynav_sensors</a></li><li class="navelem"><a href="dir_26e7718f37d94c7d678d289f420c288f.html">types</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div id="doc-content">
@@ -86,35 +86,65 @@ $(function() {
 <code>#include &quot;sensor_msgs/msg/image.hpp&quot;</code><br />
 <code>#include &quot;rclcpp/time.hpp&quot;</code><br />
 <code>#include &quot;rclcpp_lifecycle/lifecycle_node.hpp&quot;</code><br />
-<code>#include &quot;<a class="el" href="ImagePerception_8hpp_source.html">easynav_common/types/ImagePerception.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="ImagePerception_8hpp_source.html">easynav_sensors/types/ImagePerception.hpp</a>&quot;</code><br />
+<code>#include &quot;pluginlib/class_list_macros.hpp&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for ImagePerception.cpp:</div>
 <div class="dyncontent">
-<div class="center"><img src="ImagePerception_8cpp__incl.png" border="0" usemap="#aeasynav__common_2src_2easynav__common_2types_2ImagePerception_8cpp" loading="lazy" alt=""/></div>
-<map name="aeasynav__common_2src_2easynav__common_2types_2ImagePerception_8cpp" id="aeasynav__common_2src_2easynav__common_2types_2ImagePerception_8cpp">
-<area shape="rect" title=" " alt="" coords="475,5,640,61"/>
-<area shape="rect" title=" " alt="" coords="5,294,59,320"/>
-<area shape="poly" title=" " alt="" coords="475,50,355,72,220,105,158,125,103,148,61,172,34,199,26,218,24,239,27,278,22,279,18,238,21,217,30,196,57,168,101,143,156,120,219,100,354,67,474,44"/>
-<area shape="rect" title=" " alt="" coords="389,205,550,231"/>
-<area shape="poly" title=" " alt="" coords="547,63,484,192,479,190,542,60"/>
-<area shape="rect" title=" " alt="" coords="676,116,868,142"/>
-<area shape="poly" title=" " alt="" coords="620,59,732,107,729,112,618,64"/>
-<area shape="rect" title=" " alt="" coords="479,294,588,320"/>
-<area shape="poly" title=" " alt="" coords="583,60,598,83,609,108,620,144,624,175,621,204,609,240,591,266,568,287,565,283,587,262,604,237,616,203,619,175,614,146,604,110,593,85,579,63"/>
-<area shape="rect" title=" " alt="" coords="189,286,350,327"/>
-<area shape="poly" title=" " alt="" coords="570,61,582,99,589,147,585,196,578,219,565,240,552,251,533,261,484,278,425,290,366,299,365,294,424,285,483,273,531,257,549,247,561,237,573,217,580,195,583,147,576,100,565,62"/>
-<area shape="rect" href="ImagePerception_8hpp.html" title="Defines data structures and utilities for representing and processing image perceptions." alt="" coords="222,109,383,150"/>
-<area shape="poly" title=" " alt="" coords="485,64,371,106,369,101,483,59"/>
-<area shape="poly" title=" " alt="" coords="222,135,180,141,136,153,95,172,59,200,47,217,39,238,34,279,28,278,34,236,42,215,55,196,92,167,134,148,179,136,222,130"/>
-<area shape="poly" title=" " alt="" coords="342,148,434,195,432,200,339,153"/>
-<area shape="poly" title=" " alt="" coords="302,151,278,272,273,271,296,150"/>
-<area shape="rect" title=" " alt="" coords="307,205,365,231"/>
-<area shape="poly" title=" " alt="" coords="313,149,328,190,323,192,308,151"/>
-<area shape="rect" href="Perceptions_8hpp.html" title="Defines data structures and utilities for representing and processing sensor perceptions." alt="" coords="70,198,231,238"/>
-<area shape="poly" title=" " alt="" coords="269,153,199,192,197,188,267,148"/>
-<area shape="poly" title=" " alt="" coords="125,241,62,287,59,282,122,237"/>
-<area shape="poly" title=" " alt="" coords="232,235,465,287,464,293,231,240"/>
-<area shape="poly" title=" " alt="" coords="179,237,232,275,229,279,176,241"/>
+<div class="center"><img src="ImagePerception_8cpp__incl.png" border="0" usemap="#aeasynav__sensors_2src_2easynav__sensors_2types_2ImagePerception_8cpp" loading="lazy" alt=""/></div>
+<map name="aeasynav__sensors_2src_2easynav__sensors_2types_2ImagePerception_8cpp" id="aeasynav__sensors_2src_2easynav__sensors_2types_2ImagePerception_8cpp">
+<area shape="rect" title=" " alt="" coords="661,5,822,61"/>
+<area shape="rect" title=" " alt="" coords="5,375,59,401"/>
+<area shape="poly" title=" " alt="" coords="660,41,554,53,425,80,358,100,291,127,229,160,171,200,130,239,95,284,47,363,42,360,91,281,126,236,168,196,226,155,289,122,356,95,423,74,553,47,660,35"/>
+<area shape="rect" title=" " alt="" coords="542,205,703,231"/>
+<area shape="poly" title=" " alt="" coords="726,63,641,193,637,190,722,60"/>
+<area shape="rect" title=" " alt="" coords="830,116,1021,142"/>
+<area shape="poly" title=" " alt="" coords="796,59,890,107,887,112,793,64"/>
+<area shape="rect" title=" " alt="" coords="737,294,847,320"/>
+<area shape="poly" title=" " alt="" coords="751,61,763,108,791,278,786,279,757,110,746,62"/>
+<area shape="rect" title=" " alt="" coords="551,286,713,327"/>
+<area shape="poly" title=" " alt="" coords="747,61,748,99,746,144,737,193,718,240,702,261,682,279,679,275,698,258,714,237,732,192,740,144,743,98,741,62"/>
+<area shape="rect" href="ImagePerception_8hpp.html" title="Defines data structures and utilities for representing and processing image perceptions." alt="" coords="377,109,535,150"/>
+<area shape="poly" title=" " alt="" coords="661,64,531,106,529,101,660,59"/>
+<area shape="rect" title=" " alt="" coords="1046,109,1173,150"/>
+<area shape="poly" title=" " alt="" coords="823,53,1031,105,1030,111,822,58"/>
+<area shape="poly" title=" " alt="" coords="377,143,297,163,256,179,218,200,184,230,165,260,146,293,117,329,66,368,63,364,113,325,142,290,160,257,180,226,214,195,253,174,295,158,376,137"/>
+<area shape="poly" title=" " alt="" coords="495,148,587,195,585,200,493,153"/>
+<area shape="poly" title=" " alt="" coords="451,151,442,193,443,216,452,237,464,248,484,259,539,279,537,284,482,264,461,252,447,240,438,217,436,193,445,150"/>
+<area shape="rect" title=" " alt="" coords="461,205,518,231"/>
+<area shape="poly" title=" " alt="" coords="466,149,482,190,477,192,461,151"/>
+<area shape="rect" href="Perceptions_8hpp.html" title="Defines data structures and utilities for representing and processing sensor perceptions." alt="" coords="228,198,385,238"/>
+<area shape="poly" title=" " alt="" coords="423,152,355,192,352,187,421,148"/>
+<area shape="poly" title=" " alt="" coords="290,241,243,284,181,329,127,357,74,376,72,371,124,352,179,325,239,280,286,237"/>
+<area shape="poly" title=" " alt="" coords="386,228,571,256,726,284,738,287,737,292,725,289,570,262,385,233"/>
+<area shape="poly" title=" " alt="" coords="382,236,544,279,543,284,380,242"/>
+<area shape="rect" href="NavState_8hpp.html" title="A blackboard&#45;like structure to hold the current state of the navigation system." alt="" coords="366,286,527,327"/>
+<area shape="poly" title=" " alt="" coords="340,237,403,276,401,280,337,241"/>
+<area shape="poly" title=" " alt="" coords="366,322,233,345,74,377,73,372,232,339,365,317"/>
+<area shape="rect" title=" " alt="" coords="945,375,1055,401"/>
+<area shape="poly" title=" " alt="" coords="528,322,540,324,648,340,733,349,930,372,929,377,732,355,647,345,540,330,527,327"/>
+<area shape="rect" title=" " alt="" coords="1079,375,1182,401"/>
+<area shape="poly" title=" " alt="" coords="528,322,540,324,685,342,800,349,916,356,1063,372,1063,377,915,362,800,355,685,347,540,330,527,328"/>
+<area shape="rect" title=" " alt="" coords="1206,375,1274,401"/>
+<area shape="poly" title=" " alt="" coords="528,322,540,324,638,336,721,342,864,346,1008,351,1092,359,1191,372,1190,377,1092,364,1008,356,864,351,721,347,638,341,540,330,527,328"/>
+<area shape="rect" title=" " alt="" coords="82,375,139,401"/>
+<area shape="poly" title=" " alt="" coords="367,328,155,377,154,372,365,322"/>
+<area shape="rect" title=" " alt="" coords="163,375,240,401"/>
+<area shape="poly" title=" " alt="" coords="386,330,255,372,253,367,385,325"/>
+<area shape="rect" title=" " alt="" coords="264,375,333,401"/>
+<area shape="poly" title=" " alt="" coords="411,330,336,370,333,365,408,325"/>
+<area shape="rect" title=" " alt="" coords="357,375,438,401"/>
+<area shape="poly" title=" " alt="" coords="437,329,415,363,411,360,432,326"/>
+<area shape="rect" title=" " alt="" coords="462,375,533,401"/>
+<area shape="poly" title=" " alt="" coords="461,326,484,360,479,363,457,329"/>
+<area shape="rect" title=" " alt="" coords="557,375,635,401"/>
+<area shape="poly" title=" " alt="" coords="485,325,561,365,559,370,483,330"/>
+<area shape="rect" title=" " alt="" coords="659,375,738,401"/>
+<area shape="poly" title=" " alt="" coords="510,325,646,367,644,372,509,330"/>
+<area shape="rect" title=" " alt="" coords="763,375,829,401"/>
+<area shape="poly" title=" " alt="" coords="528,322,748,372,747,377,527,328"/>
+<area shape="rect" title=" " alt="" coords="853,375,920,401"/>
+<area shape="poly" title=" " alt="" coords="528,322,540,324,688,347,838,372,837,377,687,352,540,330,527,327"/>
 </map>
 </div>
 </div><table class="memberdecls">

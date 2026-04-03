@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Easy Navigation: easynav_common/src/easynav_common/types/IMUPerception.cpp File Reference</title>
+<title>Easy Navigation: easynav_sensors/src/easynav_sensors/types/IMUPerception.cpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -70,7 +70,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a href="dir_44416c254a438fcc2b63460fcfa852ae.html">easynav_common</a></li><li class="navelem"><a href="dir_f4a00d2fd6254a3b3ba8fc648b59f4a8.html">src</a></li><li class="navelem"><a href="dir_48c3d5000dd7fbf48751f287c4a8b102.html">easynav_common</a></li><li class="navelem"><a href="dir_57d0e61da5ad79ec48f5fbe5db019d08.html">types</a></li>  </ul>
+<li class="navelem"><a href="dir_614ab350d9e5a7622e6a48999ce2a386.html">easynav_sensors</a></li><li class="navelem"><a href="dir_8d3f450507a794cfad7326fa4eda2832.html">src</a></li><li class="navelem"><a href="dir_3b5c75facfa19e3db87f631be4b7cca3.html">easynav_sensors</a></li><li class="navelem"><a href="dir_26e7718f37d94c7d678d289f420c288f.html">types</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div id="doc-content">
@@ -85,33 +85,63 @@ $(function() {
 <code>#include &quot;sensor_msgs/msg/imu.hpp&quot;</code><br />
 <code>#include &quot;rclcpp/time.hpp&quot;</code><br />
 <code>#include &quot;rclcpp_lifecycle/lifecycle_node.hpp&quot;</code><br />
-<code>#include &quot;<a class="el" href="IMUPerception_8hpp_source.html">easynav_common/types/IMUPerception.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="IMUPerception_8hpp_source.html">easynav_sensors/types/IMUPerception.hpp</a>&quot;</code><br />
+<code>#include &quot;pluginlib/class_list_macros.hpp&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for IMUPerception.cpp:</div>
 <div class="dyncontent">
-<div class="center"><img src="IMUPerception_8cpp__incl.png" border="0" usemap="#aeasynav__common_2src_2easynav__common_2types_2IMUPerception_8cpp" loading="lazy" alt=""/></div>
-<map name="aeasynav__common_2src_2easynav__common_2types_2IMUPerception_8cpp" id="aeasynav__common_2src_2easynav__common_2types_2IMUPerception_8cpp">
-<area shape="rect" title=" " alt="" coords="395,5,560,61"/>
-<area shape="rect" title=" " alt="" coords="5,294,59,320"/>
-<area shape="poly" title=" " alt="" coords="394,39,304,50,253,61,202,76,153,97,107,124,67,158,34,199,26,218,24,239,27,278,22,279,18,238,21,217,30,196,63,154,104,120,151,92,201,71,252,56,303,45,394,34"/>
-<area shape="rect" title=" " alt="" coords="389,205,566,231"/>
-<area shape="poly" title=" " alt="" coords="480,61,480,189,475,189,475,61"/>
-<area shape="rect" title=" " alt="" coords="487,294,596,320"/>
-<area shape="poly" title=" " alt="" coords="562,56,597,77,625,108,641,142,646,173,640,204,625,240,605,267,580,287,577,283,601,263,620,237,635,202,640,173,636,143,620,110,594,81,559,61"/>
-<area shape="rect" title=" " alt="" coords="189,286,350,327"/>
-<area shape="poly" title=" " alt="" coords="511,60,547,97,580,143,591,168,596,193,593,217,581,240,567,252,547,263,493,279,430,292,366,300,366,295,429,287,492,274,545,258,564,248,577,237,588,216,590,193,586,169,575,146,543,100,507,63"/>
-<area shape="rect" href="IMUPerception_8hpp.html" title="Defines data structures and utilities for representing and processing IMU perceptions." alt="" coords="222,109,383,150"/>
-<area shape="poly" title=" " alt="" coords="428,64,354,104,351,99,426,59"/>
-<area shape="poly" title=" " alt="" coords="222,135,180,141,136,153,95,172,59,200,47,217,39,238,34,279,28,278,34,236,42,215,55,196,92,167,134,148,179,136,222,130"/>
-<area shape="poly" title=" " alt="" coords="343,148,441,196,438,200,341,153"/>
-<area shape="poly" title=" " alt="" coords="302,151,278,272,273,271,296,150"/>
-<area shape="rect" title=" " alt="" coords="307,205,365,231"/>
-<area shape="poly" title=" " alt="" coords="313,149,328,190,323,192,308,151"/>
-<area shape="rect" href="Perceptions_8hpp.html" title="Defines data structures and utilities for representing and processing sensor perceptions." alt="" coords="70,198,231,238"/>
-<area shape="poly" title=" " alt="" coords="269,153,199,192,197,188,267,148"/>
-<area shape="poly" title=" " alt="" coords="125,241,62,287,59,282,122,237"/>
-<area shape="poly" title=" " alt="" coords="232,235,472,287,471,293,231,240"/>
-<area shape="poly" title=" " alt="" coords="179,237,232,275,229,279,176,241"/>
+<div class="center"><img src="IMUPerception_8cpp__incl.png" border="0" usemap="#aeasynav__sensors_2src_2easynav__sensors_2types_2IMUPerception_8cpp" loading="lazy" alt=""/></div>
+<map name="aeasynav__sensors_2src_2easynav__sensors_2types_2IMUPerception_8cpp" id="aeasynav__sensors_2src_2easynav__sensors_2types_2IMUPerception_8cpp">
+<area shape="rect" title=" " alt="" coords="629,5,790,61"/>
+<area shape="rect" title=" " alt="" coords="5,375,59,401"/>
+<area shape="poly" title=" " alt="" coords="629,41,525,53,401,80,336,101,273,127,213,160,159,200,121,239,89,284,46,362,41,360,84,281,117,236,156,196,211,155,271,122,335,96,399,75,524,48,628,35"/>
+<area shape="rect" title=" " alt="" coords="526,205,703,231"/>
+<area shape="poly" title=" " alt="" coords="698,63,630,193,625,190,693,60"/>
+<area shape="rect" title=" " alt="" coords="737,294,847,320"/>
+<area shape="poly" title=" " alt="" coords="728,60,750,108,777,201,791,278,786,279,771,202,746,110,723,62"/>
+<area shape="rect" title=" " alt="" coords="551,286,713,327"/>
+<area shape="poly" title=" " alt="" coords="720,61,729,98,734,143,732,192,718,239,703,261,684,279,680,275,699,258,714,237,727,192,729,144,723,99,715,62"/>
+<area shape="rect" href="IMUPerception_8hpp.html" title="Defines data structures and utilities for representing and processing IMU perceptions." alt="" coords="361,109,519,150"/>
+<area shape="poly" title=" " alt="" coords="632,64,512,106,510,101,631,59"/>
+<area shape="rect" title=" " alt="" coords="830,109,957,150"/>
+<area shape="poly" title=" " alt="" coords="764,59,843,99,840,104,761,64"/>
+<area shape="poly" title=" " alt="" coords="362,141,280,161,239,178,202,200,171,230,155,260,139,293,113,329,65,368,62,364,109,325,135,290,150,257,167,226,198,196,237,173,279,156,361,136"/>
+<area shape="poly" title=" " alt="" coords="481,148,578,196,576,200,478,153"/>
+<area shape="poly" title=" " alt="" coords="435,151,425,193,427,216,435,237,450,249,474,261,537,282,536,287,472,266,447,254,431,240,422,218,420,193,429,150"/>
+<area shape="rect" title=" " alt="" coords="445,205,502,231"/>
+<area shape="poly" title=" " alt="" coords="450,149,466,190,461,192,445,151"/>
+<area shape="rect" href="Perceptions_8hpp.html" title="Defines data structures and utilities for representing and processing sensor perceptions." alt="" coords="212,198,369,238"/>
+<area shape="poly" title=" " alt="" coords="407,152,339,192,336,187,405,148"/>
+<area shape="poly" title=" " alt="" coords="275,241,231,284,173,329,123,356,75,375,73,371,121,351,171,325,227,280,271,237"/>
+<area shape="poly" title=" " alt="" coords="370,228,563,256,726,284,739,287,738,292,725,289,562,261,370,233"/>
+<area shape="poly" title=" " alt="" coords="369,236,540,279,539,285,368,242"/>
+<area shape="rect" href="NavState_8hpp.html" title="A blackboard&#45;like structure to hold the current state of the navigation system." alt="" coords="366,286,527,327"/>
+<area shape="poly" title=" " alt="" coords="327,237,400,276,397,281,325,241"/>
+<area shape="poly" title=" " alt="" coords="366,322,233,345,74,377,73,372,232,339,365,317"/>
+<area shape="rect" title=" " alt="" coords="945,375,1055,401"/>
+<area shape="poly" title=" " alt="" coords="528,322,540,324,648,340,733,349,930,372,929,377,732,355,647,345,540,330,527,327"/>
+<area shape="rect" title=" " alt="" coords="1079,375,1182,401"/>
+<area shape="poly" title=" " alt="" coords="528,322,540,324,685,342,800,349,916,356,1063,372,1063,377,915,362,800,355,685,347,540,330,527,328"/>
+<area shape="rect" title=" " alt="" coords="1206,375,1274,401"/>
+<area shape="poly" title=" " alt="" coords="528,322,540,324,638,336,721,342,864,346,1008,351,1092,359,1191,372,1190,377,1092,364,1008,356,864,351,721,347,638,341,540,330,527,328"/>
+<area shape="rect" title=" " alt="" coords="82,375,139,401"/>
+<area shape="poly" title=" " alt="" coords="367,328,155,377,154,372,365,322"/>
+<area shape="rect" title=" " alt="" coords="163,375,240,401"/>
+<area shape="poly" title=" " alt="" coords="386,330,255,372,253,367,385,325"/>
+<area shape="rect" title=" " alt="" coords="264,375,333,401"/>
+<area shape="poly" title=" " alt="" coords="411,330,336,370,333,365,408,325"/>
+<area shape="rect" title=" " alt="" coords="357,375,438,401"/>
+<area shape="poly" title=" " alt="" coords="437,329,415,363,411,360,432,326"/>
+<area shape="rect" title=" " alt="" coords="462,375,533,401"/>
+<area shape="poly" title=" " alt="" coords="461,326,484,360,479,363,457,329"/>
+<area shape="rect" title=" " alt="" coords="557,375,635,401"/>
+<area shape="poly" title=" " alt="" coords="485,325,561,365,559,370,483,330"/>
+<area shape="rect" title=" " alt="" coords="659,375,738,401"/>
+<area shape="poly" title=" " alt="" coords="510,325,646,367,644,372,509,330"/>
+<area shape="rect" title=" " alt="" coords="763,375,829,401"/>
+<area shape="poly" title=" " alt="" coords="528,322,748,372,747,377,527,328"/>
+<area shape="rect" title=" " alt="" coords="853,375,920,401"/>
+<area shape="poly" title=" " alt="" coords="528,322,540,324,688,347,838,372,837,377,687,352,540,330,527,327"/>
 </map>
 </div>
 </div><table class="memberdecls">

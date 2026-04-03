@@ -10,6 +10,8 @@
 <area shape="poly" id="edge7_Node000000_Node000004" title=" " alt="" coords="125,149,177,157,176,162,124,154"/>
 <area shape="rect" id="Node000005" href="$classeasynav_1_1SensorsNode.html" title="ROS 2 lifecycle node that manages sensor fusion in Easy Navigation." alt="" coords="175,203,275,228"/>
 <area shape="poly" id="edge8_Node000000_Node000005" title=" " alt="" coords="98,160,159,189,185,200,183,204,157,194,96,165"/>
-<area shape="rect" id="Node000006" href="$classeasynav_1_1SystemNode.html" title="ROS 2 lifecycle node coordinating all Easy Navigation components." alt="" coords="177,252,273,278"/>
-<area shape="poly" id="edge9_Node000000_Node000006" title=" " alt="" coords="80,165,115,203,159,239,180,249,177,254,156,243,111,207,77,169"/>
+<area shape="rect" id="Node000007" href="$classeasynav_1_1SystemNode.html" title="ROS 2 lifecycle node coordinating all Easy Navigation components." alt="" coords="177,252,273,278"/>
+<area shape="poly" id="edge10_Node000000_Node000007" title=" " alt="" coords="80,165,115,203,159,239,180,249,177,254,156,243,111,207,77,169"/>
+<area shape="rect" id="Node000006" href="$classSensorsNodeForTesting.html" title="Subclass of SensorsNode that exposes the protected groups_ and handler_list_ for unit testing." alt="" coords="340,203,502,228"/>
+<area shape="poly" id="edge9_Node000005_Node000006" title=" " alt="" coords="291,213,340,213,340,218,291,218"/>
 </map>
