@@ -119,6 +119,10 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">ROS 2 lifecycle node that manages map-related plugins in Easy Navigation.  <a href="classeasynav_1_1MapsManagerNode.html#details">More...</a><br /></td></tr>
 <tr class="memitem:NavState" id="r_NavState"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="classeasynav_1_1NavState.html">NavState</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A generic, type-safe, thread-safe blackboard to hold runtime state.  <a href="classeasynav_1_1NavState.html#details">More...</a><br /></td></tr>
+<tr class="memitem:OdometryPerception" id="r_OdometryPerception"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="classeasynav_1_1OdometryPerception.html">OdometryPerception</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a single odometry perception from a sensor.  <a href="classeasynav_1_1OdometryPerception.html#details">More...</a><br /></td></tr>
+<tr class="memitem:OdometryPerceptionHandler" id="r_OdometryPerceptionHandler"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="classeasynav_1_1OdometryPerceptionHandler.html">OdometryPerceptionHandler</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles the creation and updating of <a class="el" href="classeasynav_1_1OdometryPerception.html" title="Represents a single odometry perception from a sensor.">OdometryPerception</a> instances from nav_msgs::msg::Odometry messages.  <a href="classeasynav_1_1OdometryPerceptionHandler.html#details">More...</a><br /></td></tr>
 <tr class="memitem:PerceptionBase" id="r_PerceptionBase"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="classeasynav_1_1PerceptionBase.html">PerceptionBase</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Abstract base class for representing a single sensor perception.  <a href="classeasynav_1_1PerceptionBase.html#details">More...</a><br /></td></tr>
 <tr class="memitem:PerceptionHandler" id="r_PerceptionHandler"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="classeasynav_1_1PerceptionHandler.html">PerceptionHandler</a></td></tr>
@@ -156,6 +160,8 @@ Typedefs</h2></td></tr>
 <tr class="memdesc:a1c0d797bf0eab57f4ca85e9beeddc340"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alias for a vector of shared pointers to <a class="el" href="classeasynav_1_1ImagePerception.html" title="Represents a single image perception from a sensor.">ImagePerception</a> objects.  <br /></td></tr>
 <tr class="memitem:a8372f717c9057205b1a5627b39714c97" id="r_a8372f717c9057205b1a5627b39714c97"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#a8372f717c9057205b1a5627b39714c97">IMUPerceptions</a></td></tr>
 <tr class="memdesc:a8372f717c9057205b1a5627b39714c97"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alias for a vector of shared pointers to <a class="el" href="classeasynav_1_1IMUPerception.html" title="Represents a single IMU perception from a sensor.">IMUPerception</a> objects.  <br /></td></tr>
+<tr class="memitem:a6d5bd0e09103d931b92bf09552390aa7" id="r_a6d5bd0e09103d931b92bf09552390aa7"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#a6d5bd0e09103d931b92bf09552390aa7">OdometryPerceptions</a></td></tr>
+<tr class="memdesc:a6d5bd0e09103d931b92bf09552390aa7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alias for a vector of shared pointers to <a class="el" href="classeasynav_1_1OdometryPerception.html" title="Represents a single odometry perception from a sensor.">OdometryPerception</a> objects.  <br /></td></tr>
 <tr class="memitem:a4d10e036523aceea280b71de936e1c41" id="r_a4d10e036523aceea280b71de936e1c41"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#a4d10e036523aceea280b71de936e1c41">PerceptionBasePtr</a> = std::shared_ptr&lt;<a class="el" href="classeasynav_1_1PerceptionBase.html">PerceptionBase</a>&gt;</td></tr>
 <tr class="memdesc:a4d10e036523aceea280b71de936e1c41"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shared pointer alias to <a class="el" href="classeasynav_1_1PerceptionBase.html" title="PerceptionBase">PerceptionBase</a>.  <br /></td></tr>
 <tr class="memitem:aa83db8e6a9c3d5f8bff1fe325cf9e99a" id="r_aa83db8e6a9c3d5f8bff1fe325cf9e99a"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#aa83db8e6a9c3d5f8bff1fe325cf9e99a">PointPerceptions</a></td></tr>
@@ -180,6 +186,8 @@ Functions</h2></td></tr>
 <tr class="memdesc:aba5d8b0cc3e993bba05193176d8e52e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the latest timestamp among a set of image-based perceptions.  <br /></td></tr>
 <tr class="memitem:abf2e1d1aa75148c0196d9be12f2c9ca5" id="r_abf2e1d1aa75148c0196d9be12f2c9ca5"><td class="memItemLeft">rclcpp::Time&#160;</td><td class="memItemRight"><a class="el" href="#abf2e1d1aa75148c0196d9be12f2c9ca5">get_latest_imu_perceptions_stamp</a> (const <a class="el" href="#a8372f717c9057205b1a5627b39714c97">IMUPerceptions</a> &amp;perceptions)</td></tr>
 <tr class="memdesc:abf2e1d1aa75148c0196d9be12f2c9ca5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the latest timestamp among a set of IMU perceptions.  <br /></td></tr>
+<tr class="memitem:ae62c28879855d52fbb5e48e976d4c306" id="r_ae62c28879855d52fbb5e48e976d4c306"><td class="memItemLeft">rclcpp::Time&#160;</td><td class="memItemRight"><a class="el" href="#ae62c28879855d52fbb5e48e976d4c306">get_latest_odometry_perceptions_stamp</a> (const <a class="el" href="#a6d5bd0e09103d931b92bf09552390aa7">OdometryPerceptions</a> &amp;perceptions)</td></tr>
+<tr class="memdesc:ae62c28879855d52fbb5e48e976d4c306"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the latest timestamp among a set of odometry perceptions.  <br /></td></tr>
 <tr class="memitem:a41c264598339537f447072e0e490fb6f" id="r_a41c264598339537f447072e0e490fb6f"><td class="memItemLeft">rclcpp::Time&#160;</td><td class="memItemRight"><a class="el" href="#a41c264598339537f447072e0e490fb6f">get_latest_point_perceptions_stamp</a> (const <a class="el" href="#aa83db8e6a9c3d5f8bff1fe325cf9e99a">PointPerceptions</a> &amp;perceptions)</td></tr>
 <tr class="memdesc:a41c264598339537f447072e0e490fb6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the latest timestamp among a set of point-based perceptions.  <br /></td></tr>
 <tr class="memitem:a85608546062d3c1c397712b595f181fd" id="r_a85608546062d3c1c397712b595f181fd"><td class="memTemplParams" colspan="2">template&lt;typename T = PerceptionBase&gt; </td></tr>
@@ -285,6 +293,25 @@ Variables</h2></td></tr>
 <div class="line">std::vector&lt;std::shared_ptr&lt;IMUPerception&gt;&gt;</div>
 </div><!-- fragment -->
 <p>Alias for a vector of shared pointers to <a class="el" href="classeasynav_1_1IMUPerception.html" title="Represents a single IMU perception from a sensor.">IMUPerception</a> objects. </p>
+<p>The container can represent a time-ordered or batched collection, depending on producer logic. </p>
+
+</div>
+</div>
+<a id="a6d5bd0e09103d931b92bf09552390aa7" name="a6d5bd0e09103d931b92bf09552390aa7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6d5bd0e09103d931b92bf09552390aa7">&#9670;&#160;</a></span>OdometryPerceptions</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="#a6d5bd0e09103d931b92bf09552390aa7">OdometryPerceptions</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line"> </div>
+<div class="line">std::vector&lt;std::shared_ptr&lt;OdometryPerception&gt;&gt;</div>
+</div><!-- fragment -->
+<p>Alias for a vector of shared pointers to <a class="el" href="classeasynav_1_1OdometryPerception.html" title="Represents a single odometry perception from a sensor.">OdometryPerception</a> objects. </p>
 <p>The container can represent a time-ordered or batched collection, depending on producer logic. </p>
 
 </div>
@@ -559,6 +586,32 @@ Variables</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">perceptions</td><td>Container of IMU perceptions. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The most recent timestamp found in <code class="param">perceptions</code>, or a default-constructed <code>rclcpp::Time</code> if <code class="param">perceptions</code> is empty. </dd></dl>
+
+</div>
+</div>
+<a id="ae62c28879855d52fbb5e48e976d4c306" name="ae62c28879855d52fbb5e48e976d4c306"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae62c28879855d52fbb5e48e976d4c306">&#9670;&#160;</a></span>get_latest_odometry_perceptions_stamp()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">rclcpp::Time get_latest_odometry_perceptions_stamp </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="#a6d5bd0e09103d931b92bf09552390aa7">OdometryPerceptions</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>perceptions</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieves the latest timestamp among a set of odometry perceptions. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">perceptions</td><td>Container of odometry perceptions. </td></tr>
   </table>
   </dd>
 </dl>

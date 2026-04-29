@@ -93,19 +93,21 @@ Inheritance diagram for PerceptionHandler:</div>
 <div class="dyncontent">
 <div class="center"><img src="classeasynav_1_1PerceptionHandler__inherit__graph.png" border="0" usemap="#aPerceptionHandler_inherit__map" loading="lazy" alt="Inheritance graph"/></div>
 <map name="aPerceptionHandler_inherit__map" id="aPerceptionHandler_inherit__map">
-<area shape="rect" title="Abstract base class for pluginlib&#45;based sensor perception handlers." alt="" coords="5,129,134,155"/>
+<area shape="rect" title="Abstract base class for pluginlib&#45;based sensor perception handlers." alt="" coords="5,153,134,179"/>
 <area shape="rect" href="classDummyHandler.html" title=" " alt="" coords="225,5,336,31"/>
-<area shape="poly" title=" " alt="" coords="90,116,129,76,180,40,224,24,226,29,183,45,133,80,94,119"/>
+<area shape="poly" title=" " alt="" coords="85,138,124,88,151,62,180,40,224,23,226,28,183,45,154,66,128,91,89,142"/>
 <area shape="rect" href="classeasynav_1_1DetectionsPerceptionsHandler.html" title="Handles the creation and updating of DetectionsPerceptions instances from sensor_msgs::msg::Image mes..." alt="" coords="182,55,379,80"/>
-<area shape="poly" title=" " alt="" coords="109,120,181,89,216,78,218,83,183,94,111,124"/>
+<area shape="poly" title=" " alt="" coords="97,142,135,114,181,89,211,78,212,83,183,94,138,119,100,146"/>
 <area shape="rect" href="classeasynav_1_1GNSSPerceptionHandler.html" title="Handles the creation and updating of GNSSPerception instances from sensor_msgs::msg::NavSatFix messag..." alt="" coords="197,104,364,130"/>
-<area shape="poly" title=" " alt="" coords="149,130,196,124,197,130,149,135"/>
+<area shape="poly" title=" " alt="" coords="142,147,222,128,223,133,143,152"/>
 <area shape="rect" href="classeasynav_1_1IMUPerceptionHandler.html" title="Handles the creation and updating of IMUPerception instances from sensor_msgs::msg::Imu messages." alt="" coords="204,153,357,179"/>
-<area shape="poly" title=" " alt="" coords="149,148,204,155,203,160,148,154"/>
+<area shape="poly" title=" " alt="" coords="149,164,203,164,203,169,149,169"/>
 <area shape="rect" href="classeasynav_1_1ImagePerceptionHandler.html" title="Handles the creation and updating of ImagePerception instances from sensor_msgs::msg::Image messages." alt="" coords="198,203,362,228"/>
-<area shape="poly" title=" " alt="" coords="112,159,183,189,218,199,216,205,181,194,110,164"/>
-<area shape="rect" href="classeasynav_1_1PointPerceptionHandler.html" title="PerceptionHandler implementation for sensors producing point&#45;based data." alt="" coords="201,252,360,278"/>
-<area shape="poly" title=" " alt="" coords="94,165,133,203,183,238,208,249,206,254,180,243,130,207,90,169"/>
+<area shape="poly" title=" " alt="" coords="143,181,223,199,222,205,142,186"/>
+<area shape="rect" href="classeasynav_1_1OdometryPerceptionHandler.html" title="Handles the creation and updating of OdometryPerception instances from nav_msgs::msg::Odometry messag..." alt="" coords="188,252,372,278"/>
+<area shape="poly" title=" " alt="" coords="100,186,138,214,183,238,212,249,211,254,181,243,135,218,97,191"/>
+<area shape="rect" href="classeasynav_1_1PointPerceptionHandler.html" title="PerceptionHandler implementation for sensors producing point&#45;based data." alt="" coords="201,301,360,327"/>
+<area shape="poly" title=" " alt="" coords="89,191,128,241,154,266,183,288,205,298,203,303,180,292,151,270,124,244,85,194"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
@@ -214,7 +216,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>True if new data was stored (to trigger processing). </dd></dl>
 
-<p>Reimplemented in <a class="el" href="classDummyHandler.html#a96630d027829fc94a87c8877891cc98f">DummyHandler</a>, <a class="el" href="classeasynav_1_1DetectionsPerceptionsHandler.html#ab754973962e667e1887672dd27b4d697">DetectionsPerceptionsHandler</a>, <a class="el" href="classeasynav_1_1GNSSPerceptionHandler.html#ab754973962e667e1887672dd27b4d697">GNSSPerceptionHandler</a>, <a class="el" href="classeasynav_1_1ImagePerceptionHandler.html#ab754973962e667e1887672dd27b4d697">ImagePerceptionHandler</a>, <a class="el" href="classeasynav_1_1IMUPerceptionHandler.html#ab754973962e667e1887672dd27b4d697">IMUPerceptionHandler</a>, and <a class="el" href="classeasynav_1_1PointPerceptionHandler.html#ab754973962e667e1887672dd27b4d697">PointPerceptionHandler</a>.</p>
+<p>Reimplemented in <a class="el" href="classDummyHandler.html#a96630d027829fc94a87c8877891cc98f">DummyHandler</a>, <a class="el" href="classeasynav_1_1DetectionsPerceptionsHandler.html#ab754973962e667e1887672dd27b4d697">DetectionsPerceptionsHandler</a>, <a class="el" href="classeasynav_1_1GNSSPerceptionHandler.html#ab754973962e667e1887672dd27b4d697">GNSSPerceptionHandler</a>, <a class="el" href="classeasynav_1_1ImagePerceptionHandler.html#ab754973962e667e1887672dd27b4d697">ImagePerceptionHandler</a>, <a class="el" href="classeasynav_1_1IMUPerceptionHandler.html#ab754973962e667e1887672dd27b4d697">IMUPerceptionHandler</a>, <a class="el" href="classeasynav_1_1OdometryPerceptionHandler.html#ab754973962e667e1887672dd27b4d697">OdometryPerceptionHandler</a>, and <a class="el" href="classeasynav_1_1PointPerceptionHandler.html#ab754973962e667e1887672dd27b4d697">PointPerceptionHandler</a>.</p>
 
 </div>
 </div>
@@ -353,7 +355,7 @@ Protected Attributes</h2></td></tr>
 <p>Optional post-initialization hook for subclasses. </p>
 <p>Here, the handler must reserve memory to store the perception data and create any Subscription or similar objects to read the data. </p>
 
-<p>Reimplemented in <a class="el" href="classDummyHandler.html#ac9d1795b6cf8a4da7bf9b33f783db911">DummyHandler</a>, <a class="el" href="classeasynav_1_1DetectionsPerceptionsHandler.html#ac9d1795b6cf8a4da7bf9b33f783db911">DetectionsPerceptionsHandler</a>, <a class="el" href="classeasynav_1_1GNSSPerceptionHandler.html#ac9d1795b6cf8a4da7bf9b33f783db911">GNSSPerceptionHandler</a>, <a class="el" href="classeasynav_1_1ImagePerceptionHandler.html#ac9d1795b6cf8a4da7bf9b33f783db911">ImagePerceptionHandler</a>, <a class="el" href="classeasynav_1_1IMUPerceptionHandler.html#ac9d1795b6cf8a4da7bf9b33f783db911">IMUPerceptionHandler</a>, and <a class="el" href="classeasynav_1_1PointPerceptionHandler.html#ac9d1795b6cf8a4da7bf9b33f783db911">PointPerceptionHandler</a>.</p>
+<p>Reimplemented in <a class="el" href="classDummyHandler.html#ac9d1795b6cf8a4da7bf9b33f783db911">DummyHandler</a>, <a class="el" href="classeasynav_1_1DetectionsPerceptionsHandler.html#ac9d1795b6cf8a4da7bf9b33f783db911">DetectionsPerceptionsHandler</a>, <a class="el" href="classeasynav_1_1GNSSPerceptionHandler.html#ac9d1795b6cf8a4da7bf9b33f783db911">GNSSPerceptionHandler</a>, <a class="el" href="classeasynav_1_1ImagePerceptionHandler.html#ac9d1795b6cf8a4da7bf9b33f783db911">ImagePerceptionHandler</a>, <a class="el" href="classeasynav_1_1IMUPerceptionHandler.html#ac9d1795b6cf8a4da7bf9b33f783db911">IMUPerceptionHandler</a>, <a class="el" href="classeasynav_1_1OdometryPerceptionHandler.html#ac9d1795b6cf8a4da7bf9b33f783db911">OdometryPerceptionHandler</a>, and <a class="el" href="classeasynav_1_1PointPerceptionHandler.html#ac9d1795b6cf8a4da7bf9b33f783db911">PointPerceptionHandler</a>.</p>
 
 </div>
 </div>

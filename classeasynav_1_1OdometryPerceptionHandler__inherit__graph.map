@@ -1,0 +1,5 @@
+<map id="OdometryPerceptionHandler" name="OdometryPerceptionHandler">
+<area shape="rect" id="Node000001" title="Handles the creation and updating of OdometryPerception instances from nav_msgs::msg::Odometry messag..." alt="" coords="5,79,190,105"/>
+<area shape="rect" id="Node000002" href="$classeasynav_1_1PerceptionHandler.html" title="Abstract base class for pluginlib&#45;based sensor perception handlers." alt="" coords="33,5,162,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="100,46,100,79,95,79,95,46"/>
+</map>
