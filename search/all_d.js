@@ -20,7 +20,7 @@ var searchData=
   ['plannernodetestcase_17',['PlannerNodeTestCase',['../classPlannerNodeTestCase.html',1,'']]],
   ['plugin_5ftests_2ecpp_18',['plugin_tests.cpp',['../plugin__tests_8cpp.html',1,'']]],
   ['plugintestcase_19',['PluginTestCase',['../classPluginTestCase.html',1,'']]],
-  ['pointperception_20',['PointPerception',['../classeasynav_1_1PointPerception.html',1,'PointPerception'],['../classeasynav_1_1PointPerception.html#a3ea4a9606e35197a0179a0bb585e4b1c',1,'easynav::PointPerception::PointPerception()']]],
+  ['pointperception_20',['PointPerception',['../classeasynav_1_1PointPerception.html',1,'PointPerception'],['../classeasynav_1_1PointPerception.html#a3ea4a9606e35197a0179a0bb585e4b1c',1,'easynav::PointPerception::PointPerception()'],['../classeasynav_1_1PointPerception.html#ab8c0857dcea6fca214ef52d4b689e736',1,'easynav::PointPerception::PointPerception(const PointPerception &amp;other)']]],
   ['pointperception_2ecpp_21',['PointPerception.cpp',['../PointPerception_8cpp.html',1,'']]],
   ['pointperception_2ehpp_22',['PointPerception.hpp',['../PointPerception_8hpp.html',1,'']]],
   ['pointperceptionbuffertype_23',['PointPerceptionBufferType',['../structeasynav_1_1PointPerceptionBufferType.html',1,'easynav']]],

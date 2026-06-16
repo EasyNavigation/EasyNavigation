@@ -1,20 +1,22 @@
 <map id="PointPerception" name="PointPerception">
-<area shape="rect" id="Node000001" title="Concrete perception class for 3D point cloud data." alt="" coords="509,232,622,258"/>
+<area shape="rect" id="Node000001" title="Concrete perception class for 3D point cloud data." alt="" coords="509,253,622,279"/>
 <area shape="rect" id="Node000002" href="$classeasynav_1_1PerceptionBase.html" title="Abstract base class for representing a single sensor perception." alt="" coords="210,152,324,178"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="334,180,515,229,514,234,332,185"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="339,179,411,198,486,224,542,250,539,255,484,229,409,203,338,184"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="7,95,57,120"/>
-<area shape="poly" id="edge9_Node000001_Node000003" title=" " alt="" coords="72,100,83,100,147,100,246,109,323,121,397,146,486,189,548,229,545,234,484,194,395,151,322,127,245,114,147,105,83,105,73,106"/>
+<area shape="poly" id="edge9_Node000001_Node000003" title=" " alt="" coords="72,100,83,100,147,100,247,107,326,117,362,127,400,141,441,161,487,189,526,221,555,251,551,255,522,225,483,194,438,166,398,146,361,132,325,123,246,112,147,105,83,105,73,106"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="73,119,83,123,210,152,209,157,82,128,71,124"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="5,5,59,31"/>
-<area shape="poly" id="edge8_Node000001_Node000004" title=" " alt="" coords="75,17,133,22,206,32,286,48,364,73,429,103,487,147,529,191,558,230,554,233,524,194,483,151,427,108,362,78,285,53,205,37,132,27,74,22"/>
+<area shape="poly" id="edge8_Node000001_Node000004" title=" " alt="" coords="74,17,147,24,258,40,305,52,364,73,430,101,456,118,487,144,511,172,532,201,560,252,556,254,528,204,507,175,483,148,453,122,428,106,362,78,303,57,256,45,146,29,74,22"/>
 <area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="66,38,172,111,241,149,238,154,169,115,63,42"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="9,209,55,235"/>
-<area shape="poly" id="edge7_Node000001_Node000005" title=" " alt="" coords="70,221,508,240,508,245,70,226"/>
+<area shape="poly" id="edge7_Node000001_Node000005" title=" " alt="" coords="70,223,509,259,508,264,70,228"/>
 <area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="69,211,210,176,212,181,71,216"/>
 <area shape="rect" id="Node000006" title=" " alt="" coords="223,293,310,319"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="326,304,402,300,444,293,484,284,516,271,543,256,546,260,518,276,486,289,445,299,403,305,326,310"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="326,301,402,295,485,284,517,277,518,282,485,289,402,300,326,306"/>
 <area shape="rect" id="Node000007" title=" " alt="" coords="174,349,360,375"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="375,373,431,368,458,361,484,350,510,330,531,305,557,257,561,259,535,308,513,334,486,354,460,366,432,373,375,378"/>
-<area shape="rect" id="Node000008" href="$classeasynav_1_1CircularBuffer.html" title=" " alt="" coords="171,399,363,440"/>
-<area shape="poly" id="edge10_Node000001_Node000008" title=" " alt="" coords="378,430,433,423,459,414,484,402,501,387,516,369,539,329,552,288,560,257,565,259,558,290,543,331,520,372,505,391,486,406,462,419,434,428,379,435"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="375,367,430,361,484,344,506,331,526,313,554,278,558,281,530,316,509,335,486,349,432,366,375,372"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="239,403,295,428"/>
+<area shape="poly" id="edge10_Node000001_Node000008" title=" " alt="" coords="311,420,350,423,395,422,441,413,484,395,512,369,534,337,549,305,558,279,563,280,554,307,539,340,516,373,486,399,443,418,396,427,350,428,311,425"/>
+<area shape="rect" id="Node000009" href="$classeasynav_1_1CircularBuffer.html" title=" " alt="" coords="171,452,363,493"/>
+<area shape="poly" id="edge11_Node000001_Node000009" title=" " alt="" coords="378,482,433,474,460,465,483,451,503,433,519,411,542,362,555,315,561,279,566,280,560,316,547,364,524,414,507,437,487,455,462,470,435,479,379,487"/>
 </map>
