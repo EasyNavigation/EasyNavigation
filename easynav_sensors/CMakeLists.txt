@@ -47,6 +47,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include/${PROJECT_NAME}>
   ${PCL_INCLUDE_DIRS}
+  ${pcl_conversions_INCLUDE_DIRS}
 )
 target_link_libraries(${PROJECT_NAME} PUBLIC
   rclcpp::rclcpp
@@ -54,7 +55,6 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
   easynav_common::easynav_common
   tf2_ros::tf2_ros
   tf2_geometry_msgs::tf2_geometry_msgs
-  pcl_conversions::pcl_conversions
   cv_bridge::cv_bridge
   pluginlib::pluginlib
   ${sensor_msgs_TARGETS}
