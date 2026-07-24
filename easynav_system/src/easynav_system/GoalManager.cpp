@@ -80,11 +80,21 @@ GoalManager::GoalManager(
   parent_node_->declare_parameter("position_tolerance", goal_tolerance_.position);
   parent_node_->declare_parameter("height_tolerance", goal_tolerance_.height);
   parent_node_->declare_parameter("angle_tolerance", goal_tolerance_.yaw);
+  parent_node_->declare_parameter("update_frequency", update_frequency_);
   parent_node_->get_parameter("allow_preempt_goal", allow_preempt_goal_);
   parent_node_->get_parameter("position_tolerance", goal_tolerance_.position);
   parent_node_->get_parameter("height_tolerance", goal_tolerance_.height);
   parent_node_->get_parameter("angle_tolerance", goal_tolerance_.yaw);
+  parent_node_->get_parameter("update_frequency", update_frequency_);
+  if (update_frequency_ <= 0.0) {
+    RCLCPP_WARN(
+      parent_node_->get_logger(),
+      "Parameter 'update_frequency' must be > 0.0 (got %.3f); falling back to 20.0",
+      update_frequency_);
+    update_frequency_ = 20.0;
+  }
 
+  update_period_ = rclcpp::Duration::from_seconds(1.0 / update_frequency_);
   // Expose initial goal tolerances in NavState so controllers can reuse them
   nav_state.set("goal_tolerance.position", goal_tolerance_.position);
   nav_state.set("goal_tolerance.height", goal_tolerance_.height);
@@ -345,15 +355,28 @@ GoalManager::update(NavState & nav_state)
   feedback.current_pose.pose = odom.pose.pose;
   feedback.navigation_time = parent_node_->now() - nav_start_time_;
 
-  const auto & first_goal = goals_.goals.front().pose;
+  // Copy (not reference): check_goals() below may erase the front goal, which would
+  // otherwise leave this dangling.
+  const auto first_goal = goals_.goals.front().pose;
   feedback.distance_to_goal = calculate_distance_xy(robot_pose, first_goal);
 
   // ToDo[@fmrico]: Complete feedback info: estimated_time_remaining and distance_covered
 
-  RCLCPP_DEBUG(parent_node_->get_logger(), "Sending navigation feedback");
+  // Throttle only the periodic FEEDBACK / GoalManagerInfo publishing so these topics
+  // aren't saturated. The nav_state bookkeeping below (goals, navigation_state) must run
+  // every cycle regardless, since the planner reacts to it as soon as a new goal's
+  // timestamp is newer than its last planned one (see SystemNode::system_cycle()); delaying
+  // that sync here would make the planner compute a path from stale/empty goals.
+  const auto now = parent_node_->now();
+  const bool should_publish = first_update_ || (now - last_update_time_) >= update_period_;
 
-  control_pub_->publish(feedback);
-  *last_control_ = feedback;
+  if (should_publish) {
+    RCLCPP_DEBUG(parent_node_->get_logger(), "Sending navigation feedback");
+    control_pub_->publish(feedback);
+    *last_control_ = feedback;
+    first_update_ = false;
+    last_update_time_ = now;
+  }
 
   check_goals(robot_pose, goal_tolerance_);
 
@@ -375,7 +398,7 @@ GoalManager::update(NavState & nav_state)
     nav_state.set("navigation_state", state_);
   }
 
-  if (info_pub_->get_subscription_count() > 0) {
+  if (should_publish && info_pub_->get_subscription_count() > 0) {
     easynav_interfaces::msg::GoalManagerInfo msg;
     msg.status = static_cast<int>(get_state());
     msg.goals = get_goals();

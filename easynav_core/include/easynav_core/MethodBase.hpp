@@ -133,7 +133,7 @@ public:
 
 private:
   /// @brief Shared pointer to the parent lifecycle node.
-  std::shared_ptr<rclcpp_lifecycle::LifecycleNode> parent_node_ {nullptr};
+  std::weak_ptr<rclcpp_lifecycle::LifecycleNode> parent_node_;
 
   /// @brief Name assigned to the plugin.
   std::string plugin_name_;

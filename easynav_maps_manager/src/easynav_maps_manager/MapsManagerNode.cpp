@@ -38,24 +38,18 @@ MapsManagerNode::MapsManagerNode(
 
 MapsManagerNode::~MapsManagerNode()
 {
-  if (get_current_state().id() != lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE) {
+  if (get_current_state().id() == lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE) {
     trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_ACTIVE_SHUTDOWN);
   }
-  if (get_current_state().id() != lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE) {
+  if (get_current_state().id() == lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE) {
     trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_INACTIVE_SHUTDOWN);
   }
-  if (get_current_state().id() != lifecycle_msgs::msg::State::PRIMARY_STATE_UNCONFIGURED) {
+  if (get_current_state().id() == lifecycle_msgs::msg::State::PRIMARY_STATE_UNCONFIGURED) {
     trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_UNCONFIGURED_SHUTDOWN);
   }
 
-  std::vector<std::string> map_types;
-  declare_parameter("map_types", map_types);
-  for (const auto & map_type : map_types) {
-    maps_manager_loader_->unloadLibraryForClass(map_type);
-  }
-  for (auto & map_manager : maps_managers_) {
-    map_manager = nullptr;
-  }
+  maps_managers_.clear();
+  maps_manager_loader_.reset();
 }
 
 using CallbackReturnT = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;

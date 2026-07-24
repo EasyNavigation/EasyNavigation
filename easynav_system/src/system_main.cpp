@@ -84,6 +84,14 @@ int main(int argc, char ** argv)
     system_node->declare_parameter("use_real_time", use_real_time);
     system_node->get_parameter("use_real_time", use_real_time);
 
+    // Get rt and nonrt rates
+    double rt_freq = 200.0;
+    system_node->declare_parameter("rt_freq", rt_freq);
+    system_node->get_parameter("rt_freq", rt_freq);
+    double freq = 200.0;
+    system_node->declare_parameter("freq", freq);
+    system_node->get_parameter("freq", freq);
+
     // Get spin duration timeout for both threads
     double spin_time_rt = 0.001;
     system_node->declare_parameter("spin_time_rt", spin_time_rt);
@@ -124,7 +132,7 @@ int main(int argc, char ** argv)
 
         tf2_ros::TransformListener tf_listener(*tf_buffer, tf_node, true);
 
-        rclcpp::WallRate rate(200);
+        rclcpp::WallRate rate(rt_freq);
         while (!stop.load(std::memory_order_relaxed)) {
           if (system_node->get_current_state().id() ==
           lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE)
@@ -140,7 +148,7 @@ int main(int argc, char ** argv)
       });
 
     // Non-RT loop
-    rclcpp::WallRate rate(200);
+    rclcpp::WallRate rate(freq);
     while (!stop.load(std::memory_order_relaxed)) {
 
       if (system_node->get_current_state().id() ==

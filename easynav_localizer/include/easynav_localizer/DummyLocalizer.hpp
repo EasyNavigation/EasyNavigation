@@ -66,9 +66,6 @@ public:
   virtual void update(NavState & nav_state) override;
 
 private:
-  /// @brief Internal pose placeholder.
-  nav_msgs::msg::Odometry robot_pose_;
-
   std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
 
   double cycle_time_rt_ {0.0};

@@ -41,7 +41,7 @@ void DummyController::update_rt([[maybe_unused]] NavState & nav_state)
 
   // Compute the current command...
   cmd_vel_.header.stamp = get_node()->now();
-  cmd_vel_.header.frame_id = tf_info.robot_frame;
+  cmd_vel_.header.frame_id = tf_info.robot_footprint_frame;
   cmd_vel_.twist.linear.x = 0.0;
   cmd_vel_.twist.linear.y = 0.0;
   cmd_vel_.twist.linear.z = 0.0;

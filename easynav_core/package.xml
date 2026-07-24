@@ -20,6 +20,7 @@
 
   <depend>rclcpp_lifecycle</depend>
   <depend>easynav_common</depend>
+  <depend>easynav_sensors</depend>
   <depend>visualization_msgs</depend>
   <depend>tf2_ros</depend>
   <depend>pcl_ros</depend>

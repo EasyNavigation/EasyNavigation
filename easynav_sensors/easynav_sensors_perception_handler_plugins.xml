@@ -1,0 +1,54 @@
+<class_libraries>
+  <library path="easynav_sensors">
+    <class name="easynav_sensors/PointPerceptionHandler"
+           type="easynav::PointPerceptionHandler"
+           base_class_type="easynav::PerceptionHandler">
+      <description>
+        Handler for point-cloud sensors. Supports sensor_msgs/msg/PointCloud2
+        and sensor_msgs/msg/LaserScan message types. Perceptions are stored
+        in NavState under the "points" group (or a custom group).
+      </description>
+    </class>
+    <class name="easynav_sensors/IMUPerceptionHandler"
+           type="easynav::IMUPerceptionHandler"
+           base_class_type="easynav::PerceptionHandler">
+      <description>
+        Handler for IMU sensors. Supports sensor_msgs/msg/Imu message type.
+        Perceptions are stored in NavState under the "imu" group.
+      </description>
+    </class>
+    <class name="easynav_sensors/GNSSPerceptionHandler"
+           type="easynav::GNSSPerceptionHandler"
+           base_class_type="easynav::PerceptionHandler">
+      <description>
+        Handler for GNSS/GPS sensors. Supports sensor_msgs/msg/NavSatFix message type.
+        Perceptions are stored in NavState under the "gnss" group.
+      </description>
+    </class>
+    <class name="easynav_sensors/OdometryPerceptionHandler"
+           type="easynav::OdometryPerceptionHandler"
+           base_class_type="easynav::PerceptionHandler">
+      <description>
+        Handler for odometry sensors. Supports nav_msgs/msg/Odometry message type.
+        Perceptions are stored in NavState under the "odom" group.
+      </description>
+    </class>
+    <class name="easynav_sensors/ImagePerceptionHandler"
+           type="easynav::ImagePerceptionHandler"
+           base_class_type="easynav::PerceptionHandler">
+      <description>
+        Handler for image sensors. Supports sensor_msgs/msg/Image message type.
+        Perceptions are stored in NavState under the "image" group.
+      </description>
+    </class>
+    <class name="easynav_sensors/DetectionsPerceptionHandler"
+           type="easynav::DetectionsPerceptionsHandler"
+           base_class_type="easynav::PerceptionHandler">
+      <description>
+        Handler for 3D object detection sensors. Supports
+        vision_msgs/msg/Detection3DArray message type. Perceptions are stored
+        in NavState under the "detections" group.
+      </description>
+    </class>
+  </library>
+</class_libraries>

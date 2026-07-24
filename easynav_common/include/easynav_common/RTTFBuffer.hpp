@@ -59,6 +59,7 @@ public:
       tf_info_.map_frame = tf_info_.tf_prefix + "/" + tf_info_.map_frame;
       tf_info_.odom_frame = tf_info_.tf_prefix + "/" + tf_info_.odom_frame;
       tf_info_.robot_frame = tf_info_.tf_prefix + "/" + tf_info_.robot_frame;
+      tf_info_.robot_footprint_frame = tf_info_.tf_prefix + "/" + tf_info_.robot_footprint_frame;
       tf_info_.world_frame = tf_info_.tf_prefix + "/" + tf_info_.world_frame;
     }
   }
