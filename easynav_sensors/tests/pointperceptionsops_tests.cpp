@@ -17,28 +17,124 @@
 #include <memory>
 #include <vector>
 #include <cmath>
+#include <thread>
+#include <chrono>
 
 #include "tf2_ros/transform_listener.hpp"
 
-#include "easynav_common/types/PointPerception.hpp"
+#include "easynav_sensors/types/PointPerception.hpp"
 #include "easynav_common/RTTFBuffer.hpp"
 
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 
 
-class PerceptionsOpsTest : public ::testing::Test
+namespace
 {
-protected:
-  void SetUp()
+
+class RclcppTestEnvironment : public ::testing::Environment
+{
+public:
+  void SetUp() override
   {
-    rclcpp::init(0, nullptr);
+    if (!rclcpp::ok()) {
+      rclcpp::init(0, nullptr);
+    }
   }
 
-  void TearDown()
+  void TearDown() override
   {
-    rclcpp::shutdown();
+    if (rclcpp::ok()) {
+      rclcpp::shutdown();
+    }
   }
+};
+
+/// Global ROS 2 init/shutdown for this test binary.
+::testing::Environment * const g_rclcpp_env =
+  ::testing::AddGlobalTestEnvironment(new RclcppTestEnvironment());
+
+/**
+ * \brief Small helper to use TF2 safely in unit tests.
+ *
+ * This helper avoids the TransformListener internal spinning thread by default,
+ * which prevents intermittent hangs during destruction (pthread_join/futex).
+ *
+ * Usage:
+ *   TfTestContext tf_ctx;
+ *   auto stamp = tf.node()->now();
+ *   tf.buffer()->setTransform(...);
+ */
+class TfTestContext
+{
+public:
+  explicit TfTestContext(const std::string & node_name = "tf_test_node", bool with_listener = false)
+  : node_(std::make_shared<rclcpp_lifecycle::LifecycleNode>(node_name)),
+    // IMPORTANT: RTTFBuffer::getInstance() returns a singleton raw pointer.
+    // Do not let a std::shared_ptr delete it, or subsequent tests will hit UAF.
+    tf_buffer_(
+      easynav::RTTFBuffer::getInstance(node_->get_clock()),
+      [](easynav::RTTFBuffer *) {
+        // no-op deleter (singleton lifetime is managed elsewhere)
+      })
+  {
+    if (with_listener) {
+      // Disable TransformListener internal thread; tests control spinning explicitly if needed.
+      tf_listener_ = std::make_unique<tf2_ros::TransformListener>(*tf_buffer_, node_,
+                                                                                      /*spin_thread=*/
+          false);
+      exec_ = std::make_unique<rclcpp::executors::SingleThreadedExecutor>();
+      exec_->add_node(node_->get_node_base_interface());
+    }
+  }
+
+  std::shared_ptr<rclcpp_lifecycle::LifecycleNode> node() const {return node_;}
+  std::shared_ptr<easynav::RTTFBuffer> buffer() const {return tf_buffer_;}
+
+  /// Spin callbacks for a bounded time (only useful when constructed with with_listener=true).
+  void spin_some_for(std::chrono::milliseconds max_duration)
+  {
+    if (!exec_) {
+      return;
+    }
+    const auto deadline = std::chrono::steady_clock::now() + max_duration;
+    while (std::chrono::steady_clock::now() < deadline) {
+      exec_->spin_some();
+      std::this_thread::sleep_for(std::chrono::milliseconds(2));
+    }
+  }
+
+  /// Wait for a transform to be available (bounded). Returns true if available before timeout.
+  bool wait_for_transform(
+    const std::string & target_frame,
+    const std::string & source_frame,
+    const rclcpp::Time & stamp,
+    std::chrono::milliseconds timeout)
+  {
+    const auto deadline = std::chrono::steady_clock::now() + timeout;
+    while (std::chrono::steady_clock::now() < deadline) {
+      if (tf_buffer_->canTransform(target_frame, source_frame, stamp)) {
+        return true;
+      }
+      if (exec_) {
+        exec_->spin_some();
+      }
+      std::this_thread::sleep_for(std::chrono::milliseconds(2));
+    }
+    return false;
+  }
+
+private:
+  std::shared_ptr<rclcpp_lifecycle::LifecycleNode> node_;
+  std::shared_ptr<easynav::RTTFBuffer> tf_buffer_;
+  std::unique_ptr<tf2_ros::TransformListener> tf_listener_;
+  std::unique_ptr<rclcpp::executors::SingleThreadedExecutor> exec_;
+};
+
+}  // namespace
+
+class PerceptionsOpsTest : public ::testing::Test
+{
 };
 
 
@@ -140,9 +236,9 @@ TEST(PerceptionsOpsViewTests, DownsampleTest)
 /// brief Fuse test (basic TF transform with identity)
 TEST_F(PerceptionsOpsTest, FuseOperation)
 {
-  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_fuse_node");
-  auto tf_buffer = easynav::RTTFBuffer::getInstance(node->get_clock());
-  tf2_ros::TransformListener tf_listener(*tf_buffer);
+  TfTestContext tf_ctx;
+  auto node = tf_ctx.node();
+  auto tf_buffer = tf_ctx.buffer();
 
   rclcpp::Time stamp = node->now();
 
@@ -326,9 +422,10 @@ TEST(PerceptionsOpsViewCtor, FromOneOfManyPerceptions_UseOneAndOperate)
 
 TEST_F(PerceptionsOpsTest, FromSinglePerception_AddAndFuseWithTF)
 {
-  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_ctor_add_fuse");
-  auto tf_buffer = easynav::RTTFBuffer::getInstance(node->get_clock());
-  tf2_ros::TransformListener tf_listener(*tf_buffer);
+  TfTestContext tf_ctx;
+  auto node = tf_ctx.node();
+  auto tf_buffer = tf_ctx.buffer();
+
   rclcpp::Time stamp = node->now();
 
   easynav::PointPerception base;
@@ -345,16 +442,23 @@ TEST_F(PerceptionsOpsTest, FromSinglePerception_AddAndFuseWithTF)
   auto & view2 = view.add(other, "sensorB", stamp);
 
   // Register TFs
-  geometry_msgs::msg::TransformStamped tA, tB;
+  geometry_msgs::msg::TransformStamped tOdom, tA, tB;
+
+  tOdom.header.stamp = stamp;
+  tOdom.header.frame_id = "odom";
+  tOdom.child_frame_id = "base_link";
+  tf_buffer->setTransform(tOdom, "default_authority", false);
+
+
   tA.header.stamp = stamp;
-  tA.header.frame_id = "odom";
+  tA.header.frame_id = "base_link";
   tA.child_frame_id = "sensorA";
   tA.transform.translation.x = 1.0;
   tA.transform.rotation.w = 1.0;
   tf_buffer->setTransform(tA, "default_authority", false);
 
   tB.header.stamp = stamp;
-  tB.header.frame_id = "odom";
+  tB.header.frame_id = "base_link";
   tB.child_frame_id = "sensorB";
   tB.transform.translation.x = -2.0;
   tB.transform.rotation.w = 1.0;
@@ -369,9 +473,10 @@ TEST_F(PerceptionsOpsTest, FromSinglePerception_AddAndFuseWithTF)
 
 TEST_F(PerceptionsOpsTest, FromSinglePerception_AddAndFuseWithTFDense)
 {
-  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_ctor_add_fuse");
-  auto tf_buffer = easynav::RTTFBuffer::getInstance(node->get_clock());
-  tf2_ros::TransformListener tf_listener(*tf_buffer);
+  TfTestContext tf_ctx;
+  auto node = tf_ctx.node();
+  auto tf_buffer = tf_ctx.buffer();
+
   rclcpp::Time stamp = node->now();
 
   easynav::PointPerception base;
@@ -568,9 +673,10 @@ TEST_F(PerceptionsOpsTest, CollapseDenseLidarPerformance)
 
 TEST_F(PerceptionsOpsTest, All_pipeline)
 {
-  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_ctor_add_fuse");
-  auto tf_buffer = easynav::RTTFBuffer::getInstance(node->get_clock());
-  tf2_ros::TransformListener tf_listener(*tf_buffer);
+  TfTestContext tf_ctx;
+  auto node = tf_ctx.node();
+  auto tf_buffer = tf_ctx.buffer();
+
   rclcpp::Time stamp = node->now();
 
   easynav::PointPerception base;
@@ -739,20 +845,20 @@ TEST(PerceptionsOpsViewTests, CollapseEager_NonOwningView_Ignored)
 
 TEST_F(PerceptionsOpsTest, FilterPostFuse_Lazy_AppliesInTargetFrame)
 {
-  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_filter_postfuse_lazy");
-  auto tf_buffer = easynav::RTTFBuffer::getInstance(node->get_clock());
-  tf2_ros::TransformListener tf_listener(*tf_buffer);
+  TfTestContext tf_ctx;
+  auto node = tf_ctx.node();
+  auto tf_buffer = tf_ctx.buffer();
 
   rclcpp::Time stamp = node->now();
 
   // TF: odom -> sensor (x + 1.0)
-  geometry_msgs::msg::TransformStamped tf;
-  tf.header.stamp = stamp;
-  tf.header.frame_id = "odom";
-  tf.child_frame_id = "sensor";
-  tf.transform.translation.x = 1.0;
-  tf.transform.rotation.w = 1.0;
-  tf_buffer->setTransform(tf, "default_authority", false);
+  geometry_msgs::msg::TransformStamped tf_msg;
+  tf_msg.header.stamp = stamp;
+  tf_msg.header.frame_id = "odom";
+  tf_msg.child_frame_id = "sensor";
+  tf_msg.transform.translation.x = 1.0;
+  tf_msg.transform.rotation.w = 1.0;
+  tf_buffer->setTransform(tf_msg, "default_authority", false);
 
   easynav::PointPerception p;
   p.valid = true;
@@ -776,20 +882,20 @@ TEST_F(PerceptionsOpsTest, FilterPostFuse_Lazy_AppliesInTargetFrame)
 
 TEST_F(PerceptionsOpsTest, FilterPostFuse_Eager_AppliesInTargetFrame)
 {
-  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_filter_postfuse_eager");
-  auto tf_buffer = easynav::RTTFBuffer::getInstance(node->get_clock());
-  tf2_ros::TransformListener tf_listener(*tf_buffer);
+  TfTestContext tf_ctx;
+  auto node = tf_ctx.node();
+  auto tf_buffer = tf_ctx.buffer();
 
   rclcpp::Time stamp = node->now();
 
   // TF: odom -> sensor (x + 1.0)
-  geometry_msgs::msg::TransformStamped tf;
-  tf.header.stamp = stamp;
-  tf.header.frame_id = "odom";
-  tf.child_frame_id = "sensor";
-  tf.transform.translation.x = 1.0;
-  tf.transform.rotation.w = 1.0;
-  tf_buffer->setTransform(tf, "default_authority", false);
+  geometry_msgs::msg::TransformStamped tf_msg;
+  tf_msg.header.stamp = stamp;
+  tf_msg.header.frame_id = "odom";
+  tf_msg.child_frame_id = "sensor";
+  tf_msg.transform.translation.x = 1.0;
+  tf_msg.transform.rotation.w = 1.0;
+  tf_buffer->setTransform(tf_msg, "default_authority", false);
 
   easynav::PointPerception p;
   p.valid = true;
@@ -811,20 +917,20 @@ TEST_F(PerceptionsOpsTest, FilterPostFuse_Eager_AppliesInTargetFrame)
 
 TEST_F(PerceptionsOpsTest, Filter_PreAndPostFuse_EagerCombination)
 {
-  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_filter_pre_post_fuse");
-  auto tf_buffer = easynav::RTTFBuffer::getInstance(node->get_clock());
-  tf2_ros::TransformListener tf_listener(*tf_buffer);
+  TfTestContext tf_ctx;
+  auto node = tf_ctx.node();
+  auto tf_buffer = tf_ctx.buffer();
 
   rclcpp::Time stamp = node->now();
 
   // TF: odom -> sensor (x + 1.0)
-  geometry_msgs::msg::TransformStamped tf;
-  tf.header.stamp = stamp;
-  tf.header.frame_id = "odom";
-  tf.child_frame_id = "sensor";
-  tf.transform.translation.x = 1.0;
-  tf.transform.rotation.w = 1.0;
-  tf_buffer->setTransform(tf, "default_authority", false);
+  geometry_msgs::msg::TransformStamped tf_msg;
+  tf_msg.header.stamp = stamp;
+  tf_msg.header.frame_id = "odom";
+  tf_msg.child_frame_id = "sensor";
+  tf_msg.transform.translation.x = 1.0;
+  tf_msg.transform.rotation.w = 1.0;
+  tf_buffer->setTransform(tf_msg, "default_authority", false);
 
   easynav::PointPerception p;
   p.valid = true;
@@ -867,6 +973,85 @@ TEST(PerceptionsOpsViewTests, CollapseLazy_DoesNotAffectIntermediateFilter)
   // so both points are discarded.
   view.filter({NAN, NAN, 1.0}, {NAN, NAN, 1.0});
 
+  auto cloud = view.as_points();
+  EXPECT_EQ(cloud.size(), 0u);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Empty input tests — nothing must throw or crash when the view has no data
+// ─────────────────────────────────────────────────────────────────────────────
+
+TEST(PerceptionsOpsViewEmpty, EmptyVectorAsPoints)
+{
+  easynav::PointPerceptions empty;
+  easynav::PointPerceptionsOpsView view(empty);
+
+  auto cloud = view.as_points();
+  EXPECT_EQ(cloud.size(), 0u);
+}
+
+TEST(PerceptionsOpsViewEmpty, EmptyVectorDownsample)
+{
+  easynav::PointPerceptions empty;
+  easynav::PointPerceptionsOpsView view(empty);
+
+  view.downsample(0.1);
+  auto cloud = view.as_points();
+  EXPECT_EQ(cloud.size(), 0u);
+}
+
+TEST(PerceptionsOpsViewEmpty, EmptyVectorFilter)
+{
+  easynav::PointPerceptions empty;
+  easynav::PointPerceptionsOpsView view(empty);
+
+  view.filter({-1.0, -1.0, NAN}, {1.0, 1.0, NAN});
+  auto cloud = view.as_points();
+  EXPECT_EQ(cloud.size(), 0u);
+}
+
+TEST(PerceptionsOpsViewEmpty, EmptyVectorCollapse)
+{
+  easynav::PointPerceptions empty;
+  easynav::PointPerceptionsOpsView view(empty);
+
+  view.collapse({NAN, NAN, 0.0});
+  auto cloud = view.as_points();
+  EXPECT_EQ(cloud.size(), 0u);
+}
+
+TEST(PerceptionsOpsViewEmpty, EmptyVectorFullPipeline)
+{
+  // Mirrors the pattern used by SerestController::closest_obstacle_distance
+  easynav::PointPerceptions empty;
+  easynav::PointPerceptionsOpsView view(empty);
+
+  view.downsample(0.3)
+  .filter({-5.0, -5.0, NAN}, {5.0, 5.0, 2.0})
+  .collapse({NAN, NAN, 0.1})
+  .downsample(0.3);
+
+  auto cloud = view.as_points();
+  EXPECT_EQ(cloud.size(), 0u);
+}
+
+TEST(PerceptionsOpsViewEmpty, EmptyVectorGetPerceptions)
+{
+  easynav::PointPerceptions empty;
+  easynav::PointPerceptionsOpsView view(empty);
+
+  const auto & percs = view.get_perceptions();
+  EXPECT_TRUE(percs.empty());
+}
+
+TEST(PerceptionsOpsViewEmpty, NullptrEntriesInVector)
+{
+  // A vector with nullptrs should not crash — handled by the !pptr guard
+  easynav::PointPerceptions perceptions;
+  perceptions.push_back(nullptr);
+  perceptions.push_back(nullptr);
+
+  easynav::PointPerceptionsOpsView view(perceptions);
   auto cloud = view.as_points();
   EXPECT_EQ(cloud.size(), 0u);
 }

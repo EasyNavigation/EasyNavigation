@@ -7,6 +7,7 @@ endif()
 
 find_package(ament_cmake REQUIRED)
 find_package(easynav_common REQUIRED)
+find_package(easynav_sensors REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
 find_package(visualization_msgs REQUIRED)
 find_package(tf2_ros REQUIRED)
@@ -27,6 +28,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 )
 target_link_libraries(${PROJECT_NAME} PUBLIC
   easynav_common::easynav_common
+  easynav_sensors::easynav_sensors
   rclcpp_lifecycle::rclcpp_lifecycle
   tf2_ros::tf2_ros
   tf2_geometry_msgs::tf2_geometry_msgs
@@ -64,6 +66,7 @@ ament_export_targets(export_${PROJECT_NAME})
 
 ament_export_dependencies(
   easynav_common
+  easynav_sensors
   rclcpp_lifecycle
   visualization_msgs
   tf2_ros

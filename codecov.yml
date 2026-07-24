@@ -1,0 +1,22 @@
+coverage:
+  status:
+    project:
+      default:
+        target: auto
+        threshold: 1%
+    patch:
+      default:
+        target: auto
+
+ignore:
+  - "ros_ws/build"
+  - "ros_ws/install"
+  - "ros_ws/src/ThirdParty"
+  - "**/vendor/**"
+  - "**/vendor"
+  - "easynav_tools/easynav_tools/vendor"
+  - "ros_ws/src/**/EasyNavigation/easynav_tools/vendor"
+  - "easynav_tools/vendor"
+
+fixes:
+  - "ros_ws/src/EasyNavigation/::"

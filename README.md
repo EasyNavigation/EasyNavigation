@@ -1,9 +1,11 @@
 # EasyNavigation
 
 [![rolling](https://github.com/EasyNavigation/EasyNavigation/actions/workflows/rolling.yaml/badge.svg?branch=rolling)](https://github.com/EasyNavigation/EasyNavigation/actions/workflows/rolling.yaml)
+[![lyrical](https://github.com/EasyNavigation/EasyNavigation/actions/workflows/lyrical.yaml/badge.svg?branch=lyrical)](https://github.com/EasyNavigation/EasyNavigation/actions/workflows/lyrical.yaml)
 [![kilted](https://github.com/EasyNavigation/EasyNavigation/actions/workflows/kilted.yaml/badge.svg?branch=kilted)](https://github.com/EasyNavigation/EasyNavigation/actions/workflows/kilted.yaml)
 [![jazzy](https://github.com/EasyNavigation/EasyNavigation/actions/workflows/jazzy.yaml/badge.svg?branch=jazzy)](https://github.com/EasyNavigation/EasyNavigation/actions/workflows/jazzy.yaml)
 [![humble](https://github.com/EasyNavigation/EasyNavigation/actions/workflows/humble.yaml/badge.svg?branch=humble)](https://github.com/EasyNavigation/EasyNavigation/actions/workflows/humble.yaml)
+[![codecov](https://codecov.io/github/fmrico/EasyNavigation/graph/badge.svg?token=SHG3PH6CBJ)](https://codecov.io/github/fmrico/EasyNavigation)
 
 Web: [https://easynavigation.github.io](https://easynavigation.github.io/)
 
@@ -19,7 +21,7 @@ Doxygen documentation: [https://EasyNavigation.github.io/EasyNavigation/](https:
 🚀 **Lightweight and simple to deploy**, using a single binary and a parameter file for configuration.  
 🧪 **Simulation-ready**, thanks to a rich collection of PlayGrounds with different robots and environments.
 
-EasyNav is developed by the **[Intelligent Robotics Lab](https://intelligentroboticslab.gsyc.urjc.es/)** at **Universidad Rey Juan Carlos**, and aims to be a flexible, extensible, and practical alternative to existing ROS 2 navigation stacks such as **Nav2**.
+EasyNav is developed by the **[Intelligent Robotics Lab](https://intelligentroboticslab.gsyc.urjc.es/)** at **Universidad Rey Juan Carlos**, and aims to be a flexible, extensible, and practical alternative to existing ROS 2 navigation stacks such as **Nav2**. 
 
 ## 📦 Main Repositories
 

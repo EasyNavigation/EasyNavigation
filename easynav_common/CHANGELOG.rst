@@ -2,12 +2,12 @@
 Changelog for package easynav_common
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-0.2.2 (2025-12-18)
+0.3.2 (2025-12-18)
 ------------------
 * Hotfix: Remove remaining C++20/23 features
 * Contributors: Francisco Miguel Moreno
 
-0.2.1 (2025-12-17)
+0.3.1 (2025-12-17)
 ------------------
 * Downgrade from C++23 features
 * Remove std::expected from MethodBase::initialize interface
@@ -15,9 +15,8 @@ Changelog for package easynav_common
 * Unify TF configuration
 * Contributors: Francisco Martín Rico, Francisco Miguel Moreno
 
-0.2.0 (2025-12-01)
+0.3.0 (2025-12-01)
 ------------------
-* Merge rolling into jazzy
 * Add vision_msgs/msg/Detection3DArray perception
 * Cleanup unused headers
 * Reshape execution and sensor handling
@@ -29,9 +28,14 @@ Changelog for package easynav_common
 * Lazy update in PointPerceptions
 * Allow using yaets tracing macros from outside the easynav namespace
 * Add namespace to yaets tracing macro
+* Allow using yaets tracing macros from outside the easynav namespace
 * GNSS Support
 * Add missing dependencies
 * Contributors: Francisco Martín Rico, Francisco Miguel Moreno
+
+0.2.0 (2025-12-01)
+------------------
+* Merge rolling into jazzy
 
 0.1.4 (2025-10-16)
 ------------------

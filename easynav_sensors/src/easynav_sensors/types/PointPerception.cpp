@@ -17,6 +17,14 @@
 #include <vector>
 #include <optional>
 
+#include <execinfo.h>
+
+#include <cxxabi.h>
+
+#include <cstdlib>
+#include <sstream>
+#include <chrono>
+
 #include "pcl_conversions/pcl_conversions.h"
 
 #include "pcl/point_cloud.h"
@@ -30,61 +38,127 @@
 #include "rclcpp/time.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 
-#include "easynav_common/types/PointPerception.hpp"
+#include "easynav_sensors/types/PointPerception.hpp"
 #include "easynav_common/RTTFBuffer.hpp"
 
 namespace easynav
 {
 
-rclcpp::SubscriptionBase::SharedPtr
-PointPerceptionHandler::create_subscription(
-  rclcpp_lifecycle::LifecycleNode & node,
-  const std::string & topic,
-  const std::string & type,
-  std::shared_ptr<PerceptionBase> target,
-  rclcpp::CallbackGroup::SharedPtr cb_group)
+std::string
+backtrace_to_string(std::size_t max_frames = 64, std::size_t skip = 0)
 {
-  auto options = rclcpp::SubscriptionOptions();
-  options.callback_group = cb_group;
+  std::ostringstream oss;
 
-  if (type == "sensor_msgs/msg/PointCloud2") {
-    return node.create_subscription<sensor_msgs::msg::PointCloud2>(
-      topic, rclcpp::QoS(1),
-      [target](const sensor_msgs::msg::PointCloud2::SharedPtr msg)
-      {
-        auto typed = std::dynamic_pointer_cast<PointPerception>(target);
-
-        pcl::fromROSMsg(*msg, typed->pending_cloud_);
-        typed->pending_frame_ = msg->header.frame_id;
-        typed->pending_stamp_ = msg->header.stamp;
-        typed->pending_available_ = true;
-
-        typed->integrate_pending_perceptions();
-      },
-      options);
+  if (max_frames == 0) {
+    return {};
   }
 
-  if (type == "sensor_msgs/msg/LaserScan") {
-    return node.create_subscription<sensor_msgs::msg::LaserScan>(
-      topic, rclcpp::SensorDataQoS().reliable(),
-      [target](const sensor_msgs::msg::LaserScan::SharedPtr msg)
-      {
-        auto typed = std::dynamic_pointer_cast<PointPerception>(target);
-
-        convert(*msg, typed->pending_cloud_);
-        typed->pending_frame_ = msg->header.frame_id;
-        typed->pending_stamp_ = msg->header.stamp;
-        typed->pending_available_ = true;
-
-        typed->integrate_pending_perceptions();
-      },
-      options);
+  std::vector<void *> frames(max_frames);
+  const int count = ::backtrace(frames.data(), static_cast<int>(frames.size()));
+  if (count <= 0) {
+    return {};
   }
 
-  throw std::runtime_error(
-    "Unsupported message type for PointPerceptionHandler [" + type + "]");
+  char ** symbols = ::backtrace_symbols(frames.data(), count);
+  if (!symbols) {
+    return {};
+  }
+
+  const std::size_t start = std::min<std::size_t>(skip, static_cast<std::size_t>(count));
+  for (std::size_t i = start; i < static_cast<std::size_t>(count); ++i) {
+    // Try to demangle a function name if present in the symbol string.
+    // Typical format: <binary>(<mangled>+0x...)[0x...]
+    std::string line = symbols[i] ? symbols[i] : "";
+
+    const auto lparen = line.find('(');
+    const auto plus = line.find('+', lparen == std::string::npos ? 0 : lparen);
+    if (lparen != std::string::npos && plus != std::string::npos && lparen + 1 < plus) {
+      const std::string mangled = line.substr(lparen + 1, plus - (lparen + 1));
+
+      int status = 0;
+      char * demangled = abi::__cxa_demangle(mangled.c_str(), nullptr, nullptr, &status);
+      if (status == 0 && demangled) {
+        line.replace(lparen + 1, mangled.size(), demangled);
+      }
+      std::free(demangled);
+    }
+
+    oss << "  [" << (i - start) << "] " << line << "\n";
+  }
+
+  std::free(symbols);
+  return oss.str();
 }
 
+void PointPerceptionHandler::on_initialize()
+{
+  // Create the perception data instance
+  perception_data_ = std::make_shared<PointPerception>();
+
+  // Get sensor parameters
+  auto node = get_node();
+  std::string topic, msg_type;
+
+  if (!node->has_parameter(get_sensor_name() + ".topic")) {
+    node->declare_parameter(get_sensor_name() + ".topic", std::string{});
+  }
+  if (!node->has_parameter(get_sensor_name() + ".type")) {
+    node->declare_parameter(get_sensor_name() + ".type", std::string{});
+  }
+
+  node->get_parameter(get_sensor_name() + ".topic", topic);
+  node->get_parameter(get_sensor_name() + ".type", msg_type);
+
+  // Setup subscription
+  auto options = rclcpp::SubscriptionOptions();
+  options.callback_group = get_realtime_cbg();
+
+  const auto clock_type = node->get_clock()->get_clock_type();
+
+  if (msg_type == "sensor_msgs/msg/PointCloud2") {
+    perception_sub_ = node->create_subscription<sensor_msgs::msg::PointCloud2>(
+      topic, rclcpp::QoS(1),
+      [this, clock_type](const sensor_msgs::msg::PointCloud2::SharedPtr msg)
+      {
+        pcl::PointCloud<pcl::PointXYZ> pending_cloud;
+        pcl::fromROSMsg(*msg, pending_cloud);
+        perception_data_->set_pending_cloud(
+          std::move(pending_cloud),
+          std::string(msg->header.frame_id),
+          rclcpp::Time(msg->header.stamp, clock_type));
+        perception_data_->integrate_pending_perceptions();
+      },
+      options);
+  } else if (msg_type == "sensor_msgs/msg/LaserScan") {
+    perception_sub_ = node->create_subscription<sensor_msgs::msg::LaserScan>(
+      topic, rclcpp::SensorDataQoS().reliable(),
+      [this, clock_type](const sensor_msgs::msg::LaserScan::SharedPtr msg)
+      {
+        pcl::PointCloud<pcl::PointXYZ> pending_cloud;
+        convert(*msg, pending_cloud);
+        perception_data_->set_pending_cloud(
+          std::move(pending_cloud),
+          std::string(msg->header.frame_id),
+          rclcpp::Time(msg->header.stamp, clock_type));
+        perception_data_->integrate_pending_perceptions();
+      },
+      options);
+  } else {
+    throw std::runtime_error(
+    "Unsupported message type for PointPerceptionHandler [" + msg_type + "]");
+  }
+
+}
+
+bool PointPerceptionHandler::cycle_rt(std::shared_ptr<NavState> nav_state)
+{
+  // Store the perception in the NavState
+  nav_state->set(get_sensor_name(), perception_data_);
+  // Check if there was new data to trigger process and reset new_data state
+  const bool should_trigger = perception_data_->new_data;
+  perception_data_->new_data = false;
+  return should_trigger;
+}
 
 void
 convert(const sensor_msgs::msg::LaserScan & scan, pcl::PointCloud<pcl::PointXYZ> & pc)
@@ -543,8 +617,55 @@ PointPerceptionsOpsView::as_points(int idx) const
 
 
 PointPerceptionsOpsView &
-PointPerceptionsOpsView::fuse(const std::string & target_frame)
+PointPerceptionsOpsView::fuse(const std::string & target_frame, bool exact_time)
 {
+  rclcpp::Time unused_stamp;
+  return fuse(target_frame, unused_stamp, exact_time);
+}
+
+PointPerceptionsOpsView &
+PointPerceptionsOpsView::fuse(
+  const std::string & target_frame, rclcpp::Time & stamp,
+  bool exact_time)
+{
+  auto update_latest_stamp = [&](const rclcpp::Time & candidate) {
+      if (candidate.nanoseconds() == 0) {
+        return;
+      }
+
+      if (stamp.nanoseconds() == 0) {
+        stamp = rclcpp::Time(candidate.nanoseconds(), candidate.get_clock_type());
+        return;
+      }
+
+      if (stamp.get_clock_type() == candidate.get_clock_type()) {
+        if (candidate > stamp) {
+          stamp = candidate;
+        }
+        return;
+      }
+
+      // Mixed clock types: avoid throwing. We cannot strictly order times from
+      // different time sources, but we still want a stable “latest” stamp output.
+      if (candidate.nanoseconds() > stamp.nanoseconds()) {
+        stamp = rclcpp::Time(candidate.nanoseconds(), stamp.get_clock_type());
+      }
+    };
+
+  auto allow_backtrace_now = []() {
+      static std::chrono::steady_clock::time_point last_bt =
+        std::chrono::steady_clock::time_point{};
+
+      const auto now = std::chrono::steady_clock::now();
+      constexpr auto min_period = std::chrono::seconds(5);
+
+      if (last_bt.time_since_epoch().count() == 0 || (now - last_bt) > min_period) {
+        last_bt = now;
+        return true;
+      }
+      return false;
+    };
+
   has_target_frame_ = true;
   target_frame_ = target_frame;
 
@@ -560,9 +681,14 @@ PointPerceptionsOpsView::fuse(const std::string & target_frame)
 
   for (std::size_t i = 0; i < n; ++i) {
     auto & pptr = perceptions_[i];
+    if (!pptr) {
+      tf_valid_[i] = false;
+      continue;
+    }
+
     pptr->integrate_pending_perceptions();
 
-    if (!pptr || !pptr->valid || pptr->data.empty()) {
+    if (!pptr->valid || pptr->data.empty()) {
       tf_valid_[i] = false;
       continue;
     }
@@ -573,17 +699,60 @@ PointPerceptionsOpsView::fuse(const std::string & target_frame)
     }
 
     try {
-      auto tf_msg = tf_buffer->lookupTransform(
-        target_frame_, pptr->frame_id,
-        tf2_ros::fromMsg(pptr->stamp),
-        tf2::durationFromSec(0.0));
+      bool used_fallback_latest_tf = false;
+      const auto query_time = exact_time ? tf2_ros::fromMsg(pptr->stamp) : tf2::TimePointZero;
+
+      geometry_msgs::msg::TransformStamped tf_msg;
+      try {
+        tf_msg = tf_buffer->lookupTransform(
+          target_frame_, pptr->frame_id,
+          query_time,
+          tf2::durationFromSec(0.0));
+      } catch (const tf2::TransformException & ex) {
+        // Common in RT loops: exact-time request is a few ms ahead of the latest TF.
+        // Fall back to latest TF rather than dropping the perception.
+        if (exact_time) {
+          const std::string what = ex.what();
+          if (what.find("extrapolation") != std::string::npos &&
+            what.find("future") != std::string::npos)
+          {
+            tf_msg = tf_buffer->lookupTransform(
+              target_frame_, pptr->frame_id,
+              tf2::TimePointZero,
+              tf2::durationFromSec(0.0));
+            used_fallback_latest_tf = true;
+          } else {
+            throw;
+          }
+        } else {
+          throw;
+        }
+      }
+
+      if (exact_time && !used_fallback_latest_tf) {
+        update_latest_stamp(pptr->stamp);
+      } else {
+        update_latest_stamp(rclcpp::Time(tf_msg.header.stamp, pptr->stamp.get_clock_type()));
+      }
 
       tf2::fromMsg(tf_msg.transform, tf_transforms_[i]);
       tf_valid_[i] = true;
     } catch (const tf2::TransformException & ex) {
-      RCLCPP_WARN(
-        rclcpp::get_logger("PointPerceptionsOpsView"),
-        "TF lookup failed in fuse(): %s", ex.what());
+      auto logger = rclcpp::get_logger("PointPerceptionsOpsView");
+
+      if (allow_backtrace_now()) {
+        const std::string bt = backtrace_to_string(64, 1);
+        if (!bt.empty()) {
+          RCLCPP_WARN(
+            logger,
+            "TF lookup failed in fuse(): %s\nBacktrace:\n%s",
+            ex.what(), bt.c_str());
+        } else {
+          RCLCPP_WARN(logger, "TF lookup failed in fuse(): %s", ex.what());
+        }
+      } else {
+        RCLCPP_WARN(logger, "TF lookup failed in fuse(): %s", ex.what());
+      }
       tf_valid_[i] = false;
     }
   }
@@ -625,10 +794,35 @@ PointPerceptionsOpsView::add(
   return *this;
 }
 
-
-PointPerceptions get_point_perceptions(std::vector<PerceptionPtr> & perceptionptr)
+rclcpp::Time get_latest_point_perceptions_stamp(const PointPerceptions & perceptions)
 {
-  return get_perceptions<PointPerception>(perceptionptr);
+  auto is_newer = [](const rclcpp::Time & a, const rclcpp::Time & b) {
+      if (a.get_clock_type() == b.get_clock_type()) {
+        return a > b;
+      }
+      // Fall back to raw nanoseconds ordering to avoid throwing when clocks differ.
+      return a.nanoseconds() > b.nanoseconds();
+    };
+
+  rclcpp::Time latest_stamp;
+  bool inited = false;
+
+  for (const auto & perception : perceptions) {
+    if (!inited || is_newer(perception->stamp, latest_stamp)) {
+      latest_stamp = perception->stamp;
+      inited = true;
+    }
+  }
+  return latest_stamp;
+}
+
+rclcpp::Time
+PointPerceptionsOpsView::get_latest_stamp() const
+{
+  return get_latest_point_perceptions_stamp(perceptions_);
 }
 
 }  // namespace easynav
+
+#include "pluginlib/class_list_macros.hpp"
+PLUGINLIB_EXPORT_CLASS(easynav::PointPerceptionHandler, easynav::PerceptionHandler)

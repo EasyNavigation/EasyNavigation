@@ -53,6 +53,7 @@ TEST_F(SystemTFInfoTest, SystemNodePropagatesFrameParametersNoNS)
   const std::string map_frame = "my_map";
   const std::string odom_frame = "my_odom";
   const std::string robot_frame = "my_base";
+  const std::string robot_footprint_frame = "my_footprint";
   const std::string world_frame = "my_earth";
   const std::string tf_prefix = "";
 
@@ -61,6 +62,7 @@ TEST_F(SystemTFInfoTest, SystemNodePropagatesFrameParametersNoNS)
   // SystemNode::on_configure().
   system_node->set_parameter({"tf_prefix", tf_prefix});
   system_node->set_parameter({"robot_frame", robot_frame});
+  system_node->set_parameter({"robot_footprint_frame", robot_footprint_frame});
   system_node->set_parameter({"odom_frame", odom_frame});
   system_node->set_parameter({"map_frame", map_frame});
   system_node->set_parameter({"world_frame", world_frame});
@@ -69,6 +71,7 @@ TEST_F(SystemTFInfoTest, SystemNodePropagatesFrameParametersNoNS)
   easynav::TFInfo expected_tf;
   expected_tf.tf_prefix = tf_prefix;
   expected_tf.robot_frame = robot_frame;
+  expected_tf.robot_footprint_frame = robot_footprint_frame;
   expected_tf.odom_frame = odom_frame;
   expected_tf.map_frame = map_frame;
   expected_tf.world_frame = world_frame;
@@ -84,6 +87,7 @@ TEST_F(SystemTFInfoTest, SystemNodePropagatesFrameParametersNoNS)
 
   EXPECT_EQ(actual_tf.tf_prefix, expected_tf.tf_prefix);
   EXPECT_EQ(actual_tf.robot_frame, expected_tf.robot_frame);
+  EXPECT_EQ(actual_tf.robot_footprint_frame, expected_tf.robot_footprint_frame);
   EXPECT_EQ(actual_tf.odom_frame, expected_tf.odom_frame);
   EXPECT_EQ(actual_tf.map_frame, expected_tf.map_frame);
 }
@@ -98,6 +102,7 @@ TEST_F(SystemTFInfoTest, SystemNodePropagatesFrameParametersWithNS)
   const std::string map_frame = "my_map";
   const std::string odom_frame = "my_odom";
   const std::string robot_frame = "my_base";
+  const std::string robot_footprint_frame = "my_footprint";
   const std::string world_frame = "my_earth";
   const std::string tf_prefix = "robot1";
 
@@ -106,6 +111,7 @@ TEST_F(SystemTFInfoTest, SystemNodePropagatesFrameParametersWithNS)
   // SystemNode::on_configure().
   system_node->set_parameter({"tf_prefix", tf_prefix});
   system_node->set_parameter({"robot_frame", robot_frame});
+  system_node->set_parameter({"robot_footprint_frame", robot_footprint_frame});
   system_node->set_parameter({"odom_frame", odom_frame});
   system_node->set_parameter({"map_frame", map_frame});
   system_node->set_parameter({"world_frame", world_frame});
@@ -114,6 +120,7 @@ TEST_F(SystemTFInfoTest, SystemNodePropagatesFrameParametersWithNS)
   easynav::TFInfo expected_tf;
   expected_tf.tf_prefix = tf_prefix;
   expected_tf.robot_frame = expected_tf.tf_prefix + "/" + robot_frame;
+  expected_tf.robot_footprint_frame = expected_tf.tf_prefix + "/" + robot_footprint_frame;
   expected_tf.odom_frame = expected_tf.tf_prefix + "/" + odom_frame;
   expected_tf.map_frame = expected_tf.tf_prefix + "/" + map_frame;
   expected_tf.world_frame = expected_tf.tf_prefix + "/" + world_frame;
@@ -129,6 +136,7 @@ TEST_F(SystemTFInfoTest, SystemNodePropagatesFrameParametersWithNS)
 
   EXPECT_EQ(actual_tf.tf_prefix, expected_tf.tf_prefix);
   EXPECT_EQ(actual_tf.robot_frame, expected_tf.robot_frame);
+  EXPECT_EQ(actual_tf.robot_footprint_frame, expected_tf.robot_footprint_frame);
   EXPECT_EQ(actual_tf.odom_frame, expected_tf.odom_frame);
   EXPECT_EQ(actual_tf.map_frame, expected_tf.map_frame);
 }

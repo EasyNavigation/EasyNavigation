@@ -1342,3 +1342,81 @@ TEST_F(GoalManagerTestCase, two_clients)
   ASSERT_EQ(gm_client1->get_state(), easynav::GoalManagerClient::State::IDLE);
   ASSERT_EQ(gm_client2->get_state(), easynav::GoalManagerClient::State::IDLE);
 }
+
+TEST_F(GoalManagerTestCase, default_update_frequency)
+{
+  auto nav_state = std::make_shared<easynav::NavState>();
+  auto system_node = rclcpp_lifecycle::LifecycleNode::make_shared("system_node");
+
+  auto gm_server = easynav::GoalManager::make_shared(*nav_state, system_node);
+
+  double freq = 0.0;
+  ASSERT_TRUE(system_node->get_parameter("update_frequency", freq));
+  ASSERT_DOUBLE_EQ(freq, 20.0);
+}
+
+TEST_F(GoalManagerTestCase, update_respects_frequency_limit)
+{
+  auto nav_state = std::make_shared<easynav::NavState>();
+  nav_state->set("robot_pose", nav_msgs::msg::Odometry());
+
+  auto client_node = rclcpp::Node::make_shared("client_node");
+
+  // Use a non-default frequency to prove the parameter actually drives the gating.
+  const double test_frequency = 10.0;
+  auto system_node = rclcpp_lifecycle::LifecycleNode::make_shared(
+    "system_node",
+    rclcpp::NodeOptions().parameter_overrides(
+      {rclcpp::Parameter("update_frequency", test_frequency)}));
+
+  rclcpp::executors::SingleThreadedExecutor exe;
+  exe.add_node(client_node);
+  exe.add_node(system_node->get_node_base_interface());
+
+  int feedback_count = 0;
+  auto control_sub = client_node->create_subscription<easynav_interfaces::msg::NavigationControl>(
+    "easynav_control", 100,
+    [&feedback_count](easynav_interfaces::msg::NavigationControl::UniquePtr msg) {
+      if (msg->type == easynav_interfaces::msg::NavigationControl::FEEDBACK) {
+        feedback_count++;
+      }
+    });
+
+  auto pose_pub = client_node->create_publisher<geometry_msgs::msg::PoseStamped>(
+    "goal_pose", 100);
+
+  auto gm_server = easynav::GoalManager::make_shared(*nav_state, system_node);
+
+  geometry_msgs::msg::PoseStamped goal;
+  goal.header.frame_id = "map";
+  goal.header.stamp = system_node->now();
+  goal.pose.position.x = 1000.0;  // Far enough to never be reached during the test.
+
+  pose_pub->publish(goal);
+
+  // Warm-up: get GoalManager into ACTIVE state.
+  rclcpp::Rate warmup_rate(test_frequency);
+  auto start = system_node->now();
+  while (system_node->now() - start < 500ms) {
+    gm_server->update(*nav_state);
+    exe.spin_some();
+    warmup_rate.sleep();
+  }
+
+  ASSERT_EQ(gm_server->get_state(), easynav::GoalManager::State::ACTIVE);
+
+  // Hammer update() as fast as possible; only test_frequency executions per second
+  // should actually go through and publish feedback.
+  feedback_count = 0;
+  const auto window = 600ms;
+  start = system_node->now();
+  while (system_node->now() - start < window) {
+    gm_server->update(*nav_state);
+    exe.spin_some();
+  }
+
+  const int expected = static_cast<int>(
+    test_frequency * std::chrono::duration<double>(window).count());
+  ASSERT_GE(feedback_count, expected - 2);
+  ASSERT_LE(feedback_count, expected + 2);
+}

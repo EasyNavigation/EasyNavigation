@@ -10,20 +10,20 @@ It is organized into **six-month plans**, updated regularly to reflect current p
 These are the main development goals for the current semester.  
 Each item is numbered (`RD###`) for easier reference and tracking.
 
-- [ ] **RD001:** Display test coverage levels in all repositories and increase them to at least **90%**
-- [ ] **RD002:** Implement and validate a **GPS-based Localizer plugin**, tested in outdoor environments
-- [ ] **RD003:** Develop the **MPC Controller plugin** for **differential-drive robots**
+- [x] **RD001:** Display test coverage levels in all repositories and increase them to at least **70%**
+- [x] **RD002:** Implement and validate a **GPS-based Localizer plugin**, tested in outdoor environments
+- [x] **RD003:** Develop the **MPC Controller plugin** for **differential-drive robots**
 - [ ] **RD004:** Develop the **MPC Controller plugin** for **Ackermann-steered robots**
 - [ ] **RD005:** Develop the **MPC Controller plugin** for **omnidirectional robots**
-- [ ] **RD006:** Integrate **LLM-based analysis** for runtime execution review and improvement suggestions
+- [ ] ~~**RD006:** Integrate **LLM-based analysis** for runtime execution review and improvement suggestions~~
 - [ ] **RD007:** Create **Test Case plugins** for **underwater robots**
 - [ ] **RD008:** Create **Test Case plugins** for **aerial robots**
-- [ ] **RD009:** Add **route-based navigation tools** for predefined path execution
-- [ ] **RD010:** Perform release of **EasyNav**, **Yaets**, **easynav_plugins**, and **NavMap** for **ROS 2 Kilted**
-- [ ] **RD011:** Perform release of **EasyNav**, **Yaets**, **easynav_plugins**, and **NavMap** for **ROS 2 Jazzy**
-- [ ] **RD012:** Perform release of **EasyNav**, **Yaets**, **easynav_plugins**, and **NavMap** for **ROS 2 Humble**
-- [ ] **RD013:** Perform release of **EasyNav**, **Yaets**, **easynav_plugins**, and **NavMap** for **ROS 2 Rolling**
-- [ ] **RD014:** Complete and consolidate documentation with **HowTos** and **API references**
+- [x] **RD009:** Add **route-based navigation tools** for predefined path execution
+- [x] **RD010:** Perform release of **EasyNav**, **Yaets**, **easynav_plugins**, and **NavMap** for **ROS 2 Kilted**
+- [x] **RD011:** Perform release of **EasyNav**, **Yaets**, **easynav_plugins**, and **NavMap** for **ROS 2 Jazzy**
+- [ ] ~~**RD012:** Perform release of **EasyNav**, **Yaets**, **easynav_plugins**, and **NavMap** for **ROS 2 Humble**~~
+- [ ] ~~**RD013:** Perform release of **EasyNav**, **Yaets**, **easynav_plugins**, and **NavMap** for **ROS 2 Rolling**~~
+- [x] **RD014:** Complete and consolidate documentation with **HowTos** and **API references**
 - [ ] **RD015:** Write the EasyNav reference paper
 - [ ] **RD016:** Write the NavMap reference paper
 

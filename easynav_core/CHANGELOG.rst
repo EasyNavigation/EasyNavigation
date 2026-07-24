@@ -2,17 +2,28 @@
 Changelog for package easynav_core
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-0.2.2 (2025-12-18)
+0.3.2 (2025-12-18)
 ------------------
 * Hotfix: Remove remaining C++20/23 features
 * Contributors: Francisco Miguel Moreno
 
-0.2.1 (2025-12-17)
+0.3.1 (2025-12-17)
 ------------------
 * Downgrade from C++23 features
 * Remove std::expected from MethodBase::initialize interface
 * TF Refactor
 * Unify TF configuration
+* Contributors: Francisco Martín Rico, Francisco Miguel Moreno
+
+0.3.0 (2025-12-01)
+------------------
+* Add README.md with base classes description
+* Set collision checker disabled by default
+* Cleanup unused headers
+* Reshape execution and sensor handling
+* Add warning when exceeding the target cycle time
+* Finished collision checker
+* Reset method execution time when triggered
 * Contributors: Francisco Martín Rico, Francisco Miguel Moreno
 
 0.2.0 (2025-12-01)
@@ -21,10 +32,6 @@ Changelog for package easynav_core
 * Remove unused include and random
 * Set collision checker disabled by default
 * Cleanup unused headers
-* Add warning when exceeding the target cycle time
-* Finished collision checker
-* Reset method execution time when triggered
-* Contributors: Francisco Martín Rico, Francisco Miguel Moreno
 
 0.1.4 (2025-10-16)
 ------------------

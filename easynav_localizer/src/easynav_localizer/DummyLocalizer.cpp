@@ -51,8 +51,6 @@ void DummyLocalizer::update_rt([[maybe_unused]] NavState & nav_state)
   RTTFBuffer::getInstance()->setTransform(tf_msg, "easynav", false);
   // tf_broadcaster_->sendTransform(tf_msg);
 
-  nav_state.set("robot_pose", robot_pose_);
-
   // Busy wait to simulate processing time
   while (chr::duration<double>(chr::steady_clock::now() - start).count() < cycle_time_rt_) {}
 }
@@ -71,8 +69,6 @@ void DummyLocalizer::update([[maybe_unused]] NavState & nav_state)
 
   RTTFBuffer::getInstance()->setTransform(tf_msg, "easynav", false);
   // tf_broadcaster_->sendTransform(tf_msg);
-
-  nav_state.set("robot_pose", robot_pose_);
 
   // Busy wait to simulate processing time
   while (chr::duration<double>(chr::steady_clock::now() - start).count() < cycle_time_nort_) {}

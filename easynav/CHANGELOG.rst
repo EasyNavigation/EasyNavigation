@@ -2,6 +2,17 @@
 Changelog for package easynav
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.3.2 (2025-12-18)
+------------------
+
+0.3.1 (2025-12-17)
+------------------
+
+0.3.0 (2025-12-01)
+------------------
+* Merge rolling into kilted and fix build issues
+* Contributors: Francisco Martín Rico, Francisco Miguel Moreno
+
 0.2.2 (2025-12-18)
 ------------------
 

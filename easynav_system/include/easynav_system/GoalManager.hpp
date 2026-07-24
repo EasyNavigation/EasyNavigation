@@ -163,6 +163,18 @@ private:
   /// @brief Timestamp when the current navigation started.
   rclcpp::Time nav_start_time_;
 
+  /// @brief Maximum frequency (Hz) at which FEEDBACK / GoalManagerInfo is published.
+  double update_frequency_ {20.0};
+
+  /// @brief Minimum period between consecutive FEEDBACK / GoalManagerInfo publications.
+  rclcpp::Duration update_period_ {0, 0};
+
+  /// @brief Timestamp of the last FEEDBACK / GoalManagerInfo publication.
+  rclcpp::Time last_update_time_;
+
+  /// @brief Whether feedback/info has been published at least once.
+  bool first_update_ {true};
+
   /// @brief Handle new goal request and populate the response.
   void accept_request(
     const easynav_interfaces::msg::NavigationControl & msg,

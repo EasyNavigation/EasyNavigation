@@ -2,12 +2,12 @@
 Changelog for package easynav_maps_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-0.2.2 (2025-12-18)
+0.3.2 (2025-12-18)
 ------------------
 * Hotfix: Remove remaining C++20/23 features
 * Contributors: Francisco Miguel Moreno
 
-0.2.1 (2025-12-17)
+0.3.1 (2025-12-17)
 ------------------
 * Downgrade from C++23 features
 * Remove std::expected from MethodBase::initialize interface
@@ -15,11 +15,17 @@ Changelog for package easynav_maps_manager
 * Unify TF configuration
 * Contributors: Francisco Martín Rico, Francisco Miguel Moreno
 
+0.3.0 (2025-12-01)
+------------------
+* Merge rolling features into kilted
+* Cleanup unused headers
+* Reshape execution and sensor handling
+* Make dummies' fake processing time independent from clock source
+* Contributors: Francisco Martín Rico, Francisco Miguel Moreno
+
 0.2.0 (2025-12-01)
 ------------------
 * Cleanup unused headers
-* Make dummies' fake processing time independent from clock source
-* Contributors: Francisco Martín Rico, Francisco Miguel Moreno
 
 0.1.4 (2025-10-16)
 ------------------
