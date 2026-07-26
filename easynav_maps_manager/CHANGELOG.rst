@@ -2,8 +2,8 @@
 Changelog for package easynav_maps_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.4.1 (2026-07-26)
+------------------
 * Merge rolling (coverage changes) into refactor_perception
 * Fix test bug in plugin class loader
 * fix(tests): fix node destructors and add comprehensive tests for controller/planner/localizer/maps_manager

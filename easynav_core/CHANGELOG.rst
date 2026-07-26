@@ -2,8 +2,8 @@
 Changelog for package easynav_core
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.4.1 (2026-07-26)
+------------------
 * get_by_type and get_to_vector in NavState
 * Merge rolling (coverage changes) into refactor_perception
 * Refactor PerceptionHandler

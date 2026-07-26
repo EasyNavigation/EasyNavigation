@@ -2,8 +2,8 @@
 Changelog for package easynav_localizer
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.4.1 (2026-07-26)
+------------------
 * Register Odometry printer in base LocalizerNode
 * Remove nav_state write from dummy localizer
 * Merge rolling (coverage changes) into refactor_perception

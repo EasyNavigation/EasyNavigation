@@ -2,8 +2,8 @@
 Changelog for package easynav_controller
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.4.1 (2026-07-26)
+------------------
 * Merge rolling (coverage changes) into refactor_perception
   Increase coverage
 * fix(tests): fix node destructors and add comprehensive tests for controller/planner/localizer/maps_manager

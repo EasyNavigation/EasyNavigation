@@ -2,8 +2,8 @@
 Changelog for package easynav_sensors
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.4.1 (2026-07-26)
+------------------
 * Merge remote-tracking branch 'origin/rolling' into rolling
 * Prevent possible race condition in PointPerceptions
 * Fix out-of-bounds error in SensorsNode

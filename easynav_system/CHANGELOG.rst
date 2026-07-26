@@ -2,8 +2,8 @@
 Changelog for package easynav_system
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.4.1 (2026-07-26)
+------------------
 * Limit GoalManager publication freq
 * New parameters for system node -> freq and rt_freq
 * Perception types and ops to easynav_sensors

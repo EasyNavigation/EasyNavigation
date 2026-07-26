@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="3">
   <name>easynav_support_py</name>
-  <version>0.3.2</version>
+  <version>0.4.1</version>
   <description>Support utilities for EasyNav in Python: GoalManagerClient and tests.</description>
 
   <maintainer email="fmrico@gmail.com">Francisco Martín Rico</maintainer>
