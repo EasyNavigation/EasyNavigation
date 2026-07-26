@@ -2,6 +2,28 @@
 Changelog for package easynav_common
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Added get_no_group in NavState
+* get_by_type and get_to_vector in NavState
+* Add default group. Add debug info
+* Fix bug in NavState when updating an existing key via pointer
+* Refactor PerceptionHandler
+  PerceptionHandler now represents a single sensor input, not a sensor group
+* Perception types and ops to easynav_sensors
+* Fix segfault in some cases and reduce extrapolation to the future
+* GPLv3 -> Apache 2.0
+  API to get perception times
+* Add the option to get the fuse() efective timestamp
+* Improve navstate print including the time
+* Add exact_time parameter to fuse to use the last TF if false
+* Adjust process time to input times
+* Fix TF stucks
+* Get last ime of the perceptions in a view
+* Set robot_frame as default for the perception pipeline
+* Add a bas_footprint frame in TFInfo
+* Contributors: Francisco Martín Rico, Francisco Miguel Moreno
+
 0.3.2 (2025-12-18)
 ------------------
 * Hotfix: Remove remaining C++20/23 features

@@ -2,6 +2,17 @@
 Changelog for package easynav_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Try fix Python tests
+* Add default group. Add debug info
+* Merge rolling (coverage changes) into refactor_perception
+* Increase coverage
+* GPLv3 -> Apache 2.0
+* Update changelogs and bump version
+* Merge rolling into kilted and fix build issues
+* Contributors: Francisco Martín Rico, Francisco Miguel Moreno, jagutic
+
 0.3.2 (2025-12-18)
 ------------------
 
