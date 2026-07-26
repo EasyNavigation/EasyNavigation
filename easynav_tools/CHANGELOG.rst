@@ -2,8 +2,8 @@
 Changelog for package easynav_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.4.0 (2026-07-26)
+------------------
 * Try fix Python tests
 * Add default group. Add debug info
 * Merge rolling (coverage changes) into refactor_perception

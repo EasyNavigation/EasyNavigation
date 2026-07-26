@@ -2,8 +2,8 @@
 Changelog for package easynav_maps_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.4.0 (2026-07-26)
+------------------
 * Fix test bug in plugin class loader
 * fix(tests): fix node destructors and add comprehensive tests for controller/planner/localizer/maps_manager
   - Fix != to == in lifecycle transition guards in all 4 node destructors

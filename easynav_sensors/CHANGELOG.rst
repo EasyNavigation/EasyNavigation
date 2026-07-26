@@ -2,8 +2,8 @@
 Changelog for package easynav_sensors
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.4.0 (2026-07-26)
+------------------
 * Prevent possible race condition in PointPerceptions
 * Fix out-of-bounds error in SensorsNode
 * Add Odometry perception handler to sensors

@@ -2,8 +2,8 @@
 Changelog for package easynav_support_py
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.4.0 (2026-07-26)
+------------------
 * Merge remote-tracking branch 'origin/rolling' into rolling
 * Try fix Python tests
 * GPLv3 -> Apache 2.0

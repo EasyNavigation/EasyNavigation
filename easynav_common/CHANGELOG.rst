@@ -2,8 +2,8 @@
 Changelog for package easynav_common
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.4.0 (2026-07-26)
+------------------
 * Added get_no_group in NavState
 * get_by_type and get_to_vector in NavState
 * Add default group. Add debug info

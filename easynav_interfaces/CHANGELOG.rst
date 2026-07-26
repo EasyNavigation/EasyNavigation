@@ -2,8 +2,8 @@
 Changelog for package easynav_interfaces
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.4.0 (2026-07-26)
+------------------
 * GPLv3 -> Apache 2.0
 * Contributors: Francisco Martín Rico, Francisco Miguel Moreno
 

@@ -2,8 +2,8 @@
 Changelog for package easynav_core
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.4.0 (2026-07-26)
+------------------
 * get_by_type and get_to_vector in NavState
 * Refactor PerceptionHandler
   PerceptionHandler now represents a single sensor input, not a sensor group
