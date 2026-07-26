@@ -2,6 +2,33 @@
 Changelog for package easynav_sensors
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge remote-tracking branch 'origin/rolling' into rolling
+* Prevent possible race condition in PointPerceptions
+* Fix out-of-bounds error in SensorsNode
+* Add Odometry perception handler to sensors
+* Fix bug when using multiple sensors
+* Updating tests
+* Added get_no_group in NavState
+* get_by_type and get_to_vector in NavState
+* Add default group. Add debug info
+* PerceptionHandler: Store parent node as weak_ptr
+* Merge rolling (coverage changes) into refactor_perception
+* Refactor PerceptionHandler
+  PerceptionHandler now represents a single sensor input, not a sensor group
+* Increase coverage
+* Configure failure propagation
+* Mantain Perception Handler per sensor
+* Add sensors' PerceptionHandler as plugins
+* Merge branch 'rolling' into refactor_perception
+* Perception types and ops to easynav_sensors
+* GPLv3 -> Apache 2.0
+* Improve navstate print including the time
+* Update tests
+* Add a base_footprint frame in TFInfo
+* Contributors: Francisco Martín Rico, Francisco Miguel Moreno, jagutic
+
 0.3.2 (2025-12-18)
 ------------------
 * Hotfix: Remove remaining C++20/23 features
