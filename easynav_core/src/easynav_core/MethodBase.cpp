@@ -70,9 +70,9 @@ MethodBase::isTime2RunRT()
   if (cycle_time >= target_cycle_time) {
     if (cycle_time > 1.5 * target_cycle_time) {
       RCLCPP_WARN_THROTTLE(
-          node->get_logger(), *node->get_clock(), 2000,
-          "[%s] RT cycle time exceeded target by more than 1.5x (%.3f s > %.3f s)",
-          plugin_name_.c_str(), cycle_time, target_cycle_time);
+        node->get_logger(), *node->get_clock(), 2000,
+        "[%s] RT cycle time exceeded target by more than 1.5x (%.3f s > %.3f s)",
+        plugin_name_.c_str(), cycle_time, target_cycle_time);
     }
     rt_last_ts_ = now;
     return true;

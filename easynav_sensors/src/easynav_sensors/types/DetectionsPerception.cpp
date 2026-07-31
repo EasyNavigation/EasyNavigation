@@ -51,8 +51,9 @@ void DetectionsPerceptionsHandler::on_initialize()
   const auto clock_type = node->get_clock()->get_clock_type();
 
   if (msg_type != "vision_msgs/msg/Detection3DArray") {
-    throw std::runtime_error("Unsupported message type for DetectionsPerceptionsHandler: " +
-        msg_type);
+    throw std::runtime_error(
+            "Unsupported message type for DetectionsPerceptionsHandler: " +
+            msg_type);
   }
 
   perception_sub_ = node->create_subscription<vision_msgs::msg::Detection3DArray>(

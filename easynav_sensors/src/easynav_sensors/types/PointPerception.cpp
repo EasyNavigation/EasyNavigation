@@ -145,7 +145,7 @@ void PointPerceptionHandler::on_initialize()
       options);
   } else {
     throw std::runtime_error(
-    "Unsupported message type for PointPerceptionHandler [" + msg_type + "]");
+            "Unsupported message type for PointPerceptionHandler [" + msg_type + "]");
   }
 
 }
@@ -280,8 +280,8 @@ PointPerceptionsOpsView::filter(
     has_post_filter_ = true;
 
     auto fill_bounds = [](const std::vector<double> & src,
-      double dst[3],
-      bool used[3]) {
+        double dst[3],
+        bool used[3]) {
         for (int k = 0; k < 3; ++k) {
           if (static_cast<std::size_t>(k) < src.size() && !std::isnan(src[k])) {
             used[k] = true;

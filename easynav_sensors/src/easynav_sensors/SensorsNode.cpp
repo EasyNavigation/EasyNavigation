@@ -109,14 +109,16 @@ SensorsNode::on_configure([[maybe_unused]] const rclcpp_lifecycle::State & state
       auto it = type_to_plugin_.find(msg_type);
       if (it != type_to_plugin_.end()) {
         plugin = it->second;
-        RCLCPP_INFO(get_logger(),
+        RCLCPP_INFO(
+          get_logger(),
           "Auto-detected plugin [%s] for sensor [%s] from type [%s]",
           plugin.c_str(), sensor_id.c_str(), msg_type.c_str());
       }
     }
 
     if (plugin.empty()) {
-      RCLCPP_ERROR(get_logger(),
+      RCLCPP_ERROR(
+        get_logger(),
         "Cannot configure sensor [%s]: no 'plugin' parameter and type [%s] is not recognized. "
         "Add 'plugin: <plugin_name>' to the sensor parameters.",
         sensor_id.c_str(), msg_type.c_str());
@@ -128,7 +130,8 @@ SensorsNode::on_configure([[maybe_unused]] const rclcpp_lifecycle::State & state
     try {
       handler = handler_loader_->createSharedInstance(plugin);
     } catch (const pluginlib::PluginlibException & ex) {
-      RCLCPP_ERROR(get_logger(),
+      RCLCPP_ERROR(
+        get_logger(),
         "Failed to load perception handler plugin [%s] for sensor [%s]: %s",
         plugin.c_str(), sensor_id.c_str(), ex.what());
       return CallbackReturnT::FAILURE;
@@ -151,7 +154,8 @@ SensorsNode::on_configure([[maybe_unused]] const rclcpp_lifecycle::State & state
       groups_[group].emplace_back(handler->get_sensor_name());
     }
 
-    RCLCPP_INFO(get_logger(),
+    RCLCPP_INFO(
+      get_logger(),
       "Configured sensor [%s] with plugin [%s] on topic [%s] in group [%s]",
       sensor_id.c_str(), plugin.c_str(), topic.c_str(), group.c_str());
   }

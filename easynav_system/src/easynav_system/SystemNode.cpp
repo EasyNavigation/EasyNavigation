@@ -104,7 +104,7 @@ SystemNode::on_configure(const rclcpp_lifecycle::State & state)
   RTTFBuffer::getInstance()->set_tf_info(tf_info);
   RCLCPP_INFO(
     get_logger(),
-      "EasyNav configured with TFInfo: prefix='%s', map='%s', odom='%s', robot='%s', footprint='%s', world='%s'",
+    "EasyNav configured with TFInfo: prefix='%s', map='%s', odom='%s', robot='%s', footprint='%s', world='%s'",
     tf_info.tf_prefix.c_str(), tf_info.map_frame.c_str(),
     tf_info.odom_frame.c_str(), tf_info.robot_frame.c_str(),
     tf_info.robot_footprint_frame.c_str(), tf_info.world_frame.c_str());

@@ -109,7 +109,7 @@ public:
                 << " points in frame [" << perception.frame_id
                 << "] with ts " << perception.stamp.seconds() << "\n";
             return ret.str();
-        });
+          });
         return true;
       }();
   }
@@ -257,12 +257,12 @@ public:
       bool has_tf = false;
       try {
         has_tf = tf_buffer.canTransform(
-        robot_frame,
-        item.frame,
-        tf2_ros::fromMsg(item.stamp),
-        tf2::durationFromSec(0.0));
+          robot_frame,
+          item.frame,
+          tf2_ros::fromMsg(item.stamp),
+          tf2::durationFromSec(0.0));
       } catch (...) {
-      // Any TF exception is treated as "no valid TF" for this item.
+        // Any TF exception is treated as "no valid TF" for this item.
         has_tf = false;
       }
 

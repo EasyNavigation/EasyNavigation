@@ -325,7 +325,7 @@ GoalManager::update(NavState & nav_state)
     nav_state.set("navigation_state", state_);
   }
 
-   // Keep published tolerances in sync with current parameters
+  // Keep published tolerances in sync with current parameters
   nav_state.set("goal_tolerance.position", goal_tolerance_.position);
   nav_state.set("goal_tolerance.height", goal_tolerance_.height);
   nav_state.set("goal_tolerance.yaw", goal_tolerance_.yaw);
