@@ -15,7 +15,7 @@
 
 #include <string>
 
-#include "cv_bridge/cv_bridge.hpp"
+#include "cv_bridge/cv_bridge.h"
 #include "sensor_msgs/msg/image.hpp"
 
 #include "rclcpp/time.hpp"

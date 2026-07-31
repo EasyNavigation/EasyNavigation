@@ -25,7 +25,7 @@
 #include <string>
 #include <vector>
 
-#include "cv_bridge/cv_bridge.hpp"
+#include "cv_bridge/cv_bridge.h"
 
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 
