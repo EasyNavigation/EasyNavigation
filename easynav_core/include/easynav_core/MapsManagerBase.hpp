@@ -19,8 +19,6 @@
 #ifndef EASYNAV_CORE__MAPSMANAGERBASE_HPP_
 #define EASYNAV_CORE__MAPSMANAGERBASE_HPP_
 
-#include "nav_msgs/msg/odometry.hpp"
-
 #include "easynav_common/types/NavState.hpp"
 #include "easynav_core/MethodBase.hpp"
 

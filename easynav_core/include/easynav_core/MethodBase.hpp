@@ -20,7 +20,7 @@
 #define EASYNAV_CORE__METHODBASE_HPP_
 
 #include <memory>
-#include <expected>
+
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 
 namespace easynav
@@ -49,22 +49,19 @@ public:
    *
    * @param parent_node Shared pointer to the parent lifecycle node.
    * @param plugin_name Name of the plugin (used for parameters and logging).
-   * @return std::expected<void, std::string> indicating success or failure.
+   * @throws std::runtime_error on initialization failure.
    */
-  virtual std::expected<void, std::string>
-  initialize(
+  virtual void initialize(
     const std::shared_ptr<rclcpp_lifecycle::LifecycleNode> parent_node,
-    const std::string & plugin_name,
-    const std::string & tf_prefix = "");
+    const std::string & plugin_name);
 
   /**
    * @brief Hook for custom setup logic in derived classes.
    *
    * Called from initialize(). Can be overridden to implement extra initialization steps.
-   *
-   * @return std::expected<void, std::string> indicating success or failure.
+   * @throws std::runtime_error on initialization failure.
    */
-  virtual std::expected<void, std::string> on_initialize() {return {};}
+  virtual void on_initialize() {}
 
   /**
    * @brief Get a shared pointer to the parent lifecycle node.
@@ -81,14 +78,6 @@ public:
    */
   [[nodiscard]] const std::string &
   get_plugin_name() const;
-
-  /**
-   * @brief Get the TF namespace.
-   *
-   * @return TF namespace with a trailing "/".
-   */
-  [[nodiscard]] const std::string &
-  get_tf_prefix() const;
 
   /**
    * @brief Check whether it is time to run a real-time update.
@@ -144,13 +133,10 @@ public:
 
 private:
   /// @brief Shared pointer to the parent lifecycle node.
-  std::shared_ptr<rclcpp_lifecycle::LifecycleNode> parent_node_ {nullptr};
+  std::weak_ptr<rclcpp_lifecycle::LifecycleNode> parent_node_;
 
   /// @brief Name assigned to the plugin.
   std::string plugin_name_;
-
-  /// @brief TF Namespace.
-  std::string tf_prefix_;
 
   /// @brief Desired real-time and non-RT loop frequencies in Hz.
   float rt_frequency_, frequency_;

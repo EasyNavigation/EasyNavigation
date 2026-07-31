@@ -19,7 +19,6 @@
 #ifndef EASYNAV_PLANNER__DUMMYMAPMANAGER_HPP_
 #define EASYNAV_PLANNER__DUMMYMAPMANAGER_HPP_
 
-#include <expected>
 #include "easynav_core/MapsManagerBase.hpp"
 
 namespace easynav
@@ -42,9 +41,8 @@ public:
 
   /**
    * @brief Initialize the plugin.
-   * @return Success or error message.
    */
-  virtual std::expected<void, std::string> on_initialize() override;
+  virtual void on_initialize() override;
 
   /**
    * @brief Dummy update method.

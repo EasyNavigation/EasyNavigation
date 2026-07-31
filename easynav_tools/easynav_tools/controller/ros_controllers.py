@@ -173,7 +173,7 @@ class GoalManagerInfoProcessor():
         status_line = f'Status: [{s_color}]{s_label}[/{s_color}]'
 
         pos_ok = (msg.position_distance <= msg.position_tolerance)
-        ang_ok = (msg.angle_distance <= msg.angle_tolerance)
+        ang_ok = (abs(msg.angle_distance) <= msg.angle_tolerance)
 
         if pos_ok:
             pos_line = (

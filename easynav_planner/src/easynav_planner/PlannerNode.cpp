@@ -16,15 +16,12 @@
 /// \file
 /// \brief Implementation of the PlannerNode class.
 
-#include "nav_msgs/msg/path.hpp"
 #include "pluginlib/class_loader.hpp"
 
 #include "lifecycle_msgs/msg/transition.hpp"
 #include "lifecycle_msgs/msg/state.hpp"
 
 #include "easynav_planner/PlannerNode.hpp"
-#include "easynav_core/PlannerMethodBase.hpp"
-#include "easynav_common/YTSession.hpp"
 
 namespace easynav
 {
@@ -42,37 +39,39 @@ PlannerNode::PlannerNode(
 
 PlannerNode::~PlannerNode()
 {
-  if (get_current_state().id() != lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE) {
+  if (get_current_state().id() == lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE) {
     trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_ACTIVE_SHUTDOWN);
   }
-  if (get_current_state().id() != lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE) {
+  if (get_current_state().id() == lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE) {
     trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_INACTIVE_SHUTDOWN);
   }
-  if (get_current_state().id() != lifecycle_msgs::msg::State::PRIMARY_STATE_UNCONFIGURED) {
+  if (get_current_state().id() == lifecycle_msgs::msg::State::PRIMARY_STATE_UNCONFIGURED) {
     trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_UNCONFIGURED_SHUTDOWN);
   }
 
+  planner_method_ = nullptr;
   std::vector<std::string> planner_types;
   get_parameter("planner_types", planner_types);
   for (const auto & planner_type : planner_types) {
-    planner_loader_->unloadLibraryForClass(planner_type);
+    std::string plugin;
+    if (has_parameter(planner_type + ".plugin")) {
+      get_parameter(planner_type + ".plugin", plugin);
+      try {
+        planner_loader_->unloadLibraryForClass(plugin);
+      } catch (const std::exception &) {
+      }
+    }
   }
-  planner_method_ = nullptr;
 }
 
 using CallbackReturnT = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
 
 CallbackReturnT
-PlannerNode::on_configure(const rclcpp_lifecycle::State & state)
+PlannerNode::on_configure([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
-  (void)state;
-
   std::vector<std::string> planner_types;
   declare_parameter("planner_types", planner_types);
   get_parameter("planner_types", planner_types);
-
-  std::string tf_prefix;
-  get_parameter("tf_prefix", tf_prefix);
 
   if (planner_types.size() > 1) {
     RCLCPP_ERROR(
@@ -93,14 +92,12 @@ PlannerNode::on_configure(const rclcpp_lifecycle::State & state)
 
       planner_method_ = planner_loader_->createSharedInstance(plugin);
 
-      auto result = planner_method_->initialize(
-        shared_from_this(), planner_type,
-        tf_prefix);
-
-      if (!result) {
+      try {
+        planner_method_->initialize(shared_from_this(), planner_type);
+      } catch (const std::runtime_error & e) {
         RCLCPP_ERROR(
           get_logger(),
-          "Unable to initialize [%s]. Error: %s", plugin.c_str(), result.error().c_str());
+          "Unable to initialize [%s]. Error: %s", plugin.c_str(), e.what());
         return CallbackReturnT::FAILURE;
       }
 
@@ -119,39 +116,32 @@ PlannerNode::on_configure(const rclcpp_lifecycle::State & state)
 }
 
 CallbackReturnT
-PlannerNode::on_activate(const rclcpp_lifecycle::State & state)
+PlannerNode::on_activate([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
-  (void)state;
-
   return CallbackReturnT::SUCCESS;
 }
 
 CallbackReturnT
-PlannerNode::on_deactivate(const rclcpp_lifecycle::State & state)
+PlannerNode::on_deactivate([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
-  (void)state;
-
   return CallbackReturnT::SUCCESS;
 }
 
 CallbackReturnT
-PlannerNode::on_cleanup(const rclcpp_lifecycle::State & state)
+PlannerNode::on_cleanup([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
-  (void)state;
   return CallbackReturnT::SUCCESS;
 }
 
 CallbackReturnT
-PlannerNode::on_shutdown(const rclcpp_lifecycle::State & state)
+PlannerNode::on_shutdown([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
-  (void)state;
   return CallbackReturnT::SUCCESS;
 }
 
 CallbackReturnT
-PlannerNode::on_error(const rclcpp_lifecycle::State & state)
+PlannerNode::on_error([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
-  (void)state;
   return CallbackReturnT::SUCCESS;
 }
 
