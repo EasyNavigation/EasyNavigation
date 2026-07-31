@@ -2,7 +2,7 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>easynav_planner</name>
-  <version>0.1.4</version>
+  <version>0.4.0</version>
   <description>Easy Navigation: Planner package.</description>
 
   <maintainer email="fmrico@gmail.com">Francisco Martín Rico</maintainer>
@@ -21,6 +21,7 @@
   <depend>rclcpp</depend>
   <depend>rclcpp_lifecycle</depend>
   <depend>easynav_core</depend>
+  <depend>easynav_common</depend>
   <depend>pluginlib</depend>
   <depend>nav_msgs</depend>
   <depend>lifecycle_msgs</depend>

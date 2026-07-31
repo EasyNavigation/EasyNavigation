@@ -1,0 +1,47 @@
+name: lyrical
+
+on:
+  pull_request:
+    branches:
+      - lyrical
+  push:
+    branches:
+      - lyrical
+  schedule:
+      - cron: '0 0 * * 6'
+  workflow_dispatch:
+jobs:
+  build-and-test:
+    runs-on: ubuntu-26.04
+    container:
+      image: ghcr.io/ros-tooling/setup-ros-docker/setup-ros-docker-ubuntu-resolute-ros-lyrical-ros-base:master
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: lyrical
+      - name: build and test
+        uses: ros-tooling/action-ros-ci@0.4.8
+        with:
+          package-name: easynav_common easynav_controller easynav_core easynav_interfaces easynav_localizer easynav_maps_manager easynav_planner easynav_sensors easynav_system easynav_support_py easynav_tools
+          target-ros2-distro: lyrical
+          vcs-repo-file-url: ${GITHUB_WORKSPACE}/.github/thirdparty.repos
+          colcon-defaults: |
+            {
+              "build": {
+                "mixin": ["coverage-gcc", "coverage-pytest"]
+              },
+              "test": {
+                "mixin": ["coverage-pytest"],
+                "parallel-workers": 1
+              }
+            }
+          colcon-mixin-repository: https://raw.githubusercontent.com/colcon/colcon-mixin-repository/b8436aa16c0bdbc01081b12caa253cbf16e0fb82/index.yaml
+      - name: Codecov
+        uses: codecov/codecov-action@v5.5.3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ros_ws/lcov/total_coverage.info,ros_ws/coveragepy/.coverage
+          flags: unittests
+          slug: fmrico/EasyNavigation
+          name: codecov-umbrella
+          fail_ci_if_error: false

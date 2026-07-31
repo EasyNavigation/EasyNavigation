@@ -16,12 +16,8 @@
 /// \file
 /// \brief Implementation of the abstract base class PlannerMethodBase.
 
-#include "nav_msgs/msg/path.hpp"
-
 #include "easynav_common/types/NavState.hpp"
 #include "easynav_common/YTSession.hpp"
-
-#include "easynav_core/MethodBase.hpp"
 
 #include "easynav_core/PlannerMethodBase.hpp"
 
@@ -33,6 +29,10 @@ PlannerMethodBase::internal_update(NavState & nav_state)
 {
   if (isTime2Run()) {
     EASYNAV_TRACE_EVENT;
+
+    // Save last execution time, even if triggered
+    setRun();
+
     update(nav_state);
   }
 }

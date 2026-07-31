@@ -16,12 +16,8 @@
 /// \file
 /// \brief Implementation of the abstract base class MapsManagerBase.
 
-#include "nav_msgs/msg/odometry.hpp"
-
 #include "easynav_common/types/NavState.hpp"
 #include "easynav_common/YTSession.hpp"
-
-#include "easynav_core/MethodBase.hpp"
 
 #include "easynav_core/MapsManagerBase.hpp"
 
@@ -32,7 +28,10 @@ void
 MapsManagerBase::internal_update(NavState & nav_state)
 {
   if (isTime2Run()) {
-    EASYNAV_TRACE_EVENT;
+    EASYNAV_TRACE_NAMED_EVENT("MapsManagerBase::internal_update [" + get_plugin_name() + "]");
+
+    // Save last execution time, even if triggered
+    setRun();
 
     update(nav_state);
   }

@@ -16,88 +16,29 @@
 /// \file
 /// \brief Implementation of the SensorsNode class.
 
-#include <tuple>
-#include <string_view>
+#include <string>
 #include <vector>
 #include <unordered_map>
 
-#include "rclcpp/rclcpp.hpp"
-#include "rclcpp/macros.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 
 #include "lifecycle_msgs/msg/transition.hpp"
 #include "lifecycle_msgs/msg/state.hpp"
 
-#include "sensor_msgs/msg/laser_scan.hpp"
 #include "sensor_msgs/msg/point_cloud2.hpp"
 
 #include "easynav_sensors/SensorsNode.hpp"
-#include "easynav_common/YTSession.hpp"
 
-#include "easynav_common/types/ImagePerception.hpp"
-#include "easynav_common/types/PointPerception.hpp"
-#include "easynav_common/types/IMUPerception.hpp"
+#include "easynav_sensors/types/ImagePerception.hpp"
+#include "easynav_sensors/types/PointPerception.hpp"
+#include "easynav_sensors/types/IMUPerception.hpp"
+#include "easynav_sensors/types/GNSSPerception.hpp"
+#include "easynav_sensors/types/DetectionsPerception.hpp"
+#include "easynav_common/RTTFBuffer.hpp"
 
 namespace easynav
 {
 
-using Registry = std::tuple<
-  easynav::ImagePerception,
-  easynav::IMUPerception,
-  easynav::PointPerception
->;
-
-namespace
-{
-static std::unordered_map<std::string, std::string> g_group_alias;
-}
-
-inline std::string
-resolve_group_from_msg([[maybe_unused]] std::string_view msg_type, std::true_type)
-{
-  return {};
-}
-
-template<std::size_t I = 0>
-std::string resolve_group_from_msg(std::string_view msg_type)
-{
-  if constexpr (I == std::tuple_size_v<Registry>) {
-    return {};
-  } else {
-    using P = std::tuple_element_t<I, Registry>;
-    if (P::supports_msg_type(msg_type)) {
-      return std::string(P::default_group_);
-    }
-    return resolve_group_from_msg<I + 1>(msg_type);
-  }
-}
-
-template<std::size_t I = 0>
-bool set_by_group(
-  const std::string & group,
-  const std::vector<easynav::PerceptionPtr> & src,
-  ::easynav::NavState & ns)
-{
-  if constexpr (I >= std::tuple_size_v<Registry>) {
-    return false;
-  } else {
-    using P = std::tuple_element_t<I, Registry>;
-
-    const bool match_direct = (group == P::default_group_);
-    const bool match_alias =
-      (!match_direct) &&
-      (g_group_alias.find(group) != g_group_alias.end()) &&
-      (g_group_alias[group] == P::default_group_);
-
-    if (match_direct || match_alias) {
-      ns.set(group, get_perceptions<P>(src));
-      return true;
-    }
-    return set_by_group<I + 1>(group, src, ns);
-  }
-}
-
-using namespace std::chrono_literals;
 
 SensorsNode::SensorsNode(const rclcpp::NodeOptions & options)
 : LifecycleNode("sensors_node", options)
@@ -115,53 +56,18 @@ SensorsNode::SensorsNode(const rclcpp::NodeOptions & options)
     declare_parameter("forget_time", 1.0);
   }
 
-  if (!has_parameter("perception_default_frame")) {
-    perception_default_frame_ = "odom";
-    declare_parameter("perception_default_frame", perception_default_frame_);
-  }
+  handler_loader_ = std::make_unique<pluginlib::ClassLoader<PerceptionHandler>>(
+    "easynav_sensors", "easynav::PerceptionHandler");
 
-  ::easynav::NavState::register_printer<easynav::PointPerceptions>(
-    [](const easynav::PointPerceptions & perceptions) {
-      std::ostringstream ret;
-      ret << "PointPerception " << perceptions.size() << " with:\n";
-      for (const auto & perception : perceptions) {
-        ret << "\t[" << static_cast<const void *>(perception.get()) << "] --> "
-            << perception->data.size() << " points in frame [" << perception->frame_id
-            << "] with ts " << perception->stamp.seconds() << "\n";
-      }
-      return ret.str();
-    });
-
-  ::easynav::NavState::register_printer<easynav::ImagePerceptions>(
-    [](const easynav::ImagePerceptions & perceptions) {
-      std::ostringstream ret;
-      ret << "ImagePerceptions " << perceptions.size() << " with:\n";
-      for (const auto & perception : perceptions) {
-        ret << "\t[" << static_cast<const void *>(perception.get()) << "] --> "
-            << "Image (" << perception->data.cols << " x  " << perception->data.rows << ")"
-            << "] with ts " << perception->stamp.seconds() << "\n";
-      }
-      return ret.str();
-    });
-
-  ::easynav::NavState::register_printer<easynav::IMUPerceptions>(
-    [](const easynav::IMUPerceptions & perceptions) {
-      std::ostringstream ret;
-      ret << "IMUPerceptions " << perceptions.size() << " with:\n";
-      for (const auto & perception : perceptions) {
-        ret << "\t[" << static_cast<const void *>(perception.get()) << "] --> "
-            << "IMUPerception linear acc = (" <<
-          perception->data.linear_acceleration.x << ", " <<
-          perception->data.linear_acceleration.y << ", " <<
-          perception->data.linear_acceleration.z << ")\n";
-      }
-      return ret.str();
-    });
-
-
-  register_handler(std::make_shared<PointPerceptionHandler>());
-  register_handler(std::make_shared<ImagePerceptionHandler>());
-  register_handler(std::make_shared<IMUPerceptionHandler>());
+  type_to_plugin_ = {
+    {"sensor_msgs/msg/PointCloud2", "easynav_sensors/PointPerceptionHandler"},
+    {"sensor_msgs/msg/LaserScan", "easynav_sensors/PointPerceptionHandler"},
+    {"sensor_msgs/msg/Imu", "easynav_sensors/IMUPerceptionHandler"},
+    {"sensor_msgs/msg/NavSatFix", "easynav_sensors/GNSSPerceptionHandler"},
+    {"nav_msgs/msg/Odometry", "easynav_sensors/OdometryPerceptionHandler"},
+    {"sensor_msgs/msg/Image", "easynav_sensors/ImagePerceptionHandler"},
+    {"vision_msgs/msg/Detection3DArray", "easynav_sensors/DetectionsPerceptionHandler"},
+  };
 }
 
 SensorsNode::~SensorsNode()
@@ -174,68 +80,80 @@ SensorsNode::~SensorsNode()
 
 using CallbackReturnT = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
 CallbackReturnT
-SensorsNode::on_configure(const rclcpp_lifecycle::State & state)
+SensorsNode::on_configure([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
-  (void)state;
-
-  g_group_alias.clear();
-
   std::vector<std::string> sensors;
   get_parameter("sensors", sensors);
   get_parameter("forget_time", forget_time_);
-  get_parameter("perception_default_frame", perception_default_frame_);
-
-  get_parameter("tf_prefix", tf_prefix_);
 
   for (const auto & sensor_id : sensors) {
-    std::string topic, msg_type, group;
+    std::string topic, msg_type, plugin;
 
     if (!has_parameter(sensor_id + ".topic")) {
-      declare_parameter(sensor_id + ".topic", topic);
+      declare_parameter(sensor_id + ".topic", std::string{});
     }
     if (!has_parameter(sensor_id + ".type")) {
-      declare_parameter(sensor_id + ".type", msg_type);
+      declare_parameter(sensor_id + ".type", std::string{});
+    }
+    if (!has_parameter(sensor_id + ".plugin")) {
+      declare_parameter(sensor_id + ".plugin", std::string{});
     }
 
     get_parameter(sensor_id + ".topic", topic);
     get_parameter(sensor_id + ".type", msg_type);
+    get_parameter(sensor_id + ".plugin", plugin);
 
-    group = resolve_group_from_msg(msg_type);
-
-    if (!has_parameter(sensor_id + ".group")) {
-      declare_parameter(sensor_id + ".group", group);
-    }
-
-    get_parameter(sensor_id + ".group", group);
-
-    auto handler_it = handlers_.find(group);
-    if (handler_it == handlers_.end()) {
-      const std::string canonical = resolve_group_from_msg(msg_type);
-      if (!canonical.empty()) {
-        auto hit2 = handlers_.find(canonical);
-        if (hit2 != handlers_.end()) {
-          handlers_[group] = hit2->second;
-          g_group_alias[group] = canonical;
-          handler_it = handlers_.find(group);
-          RCLCPP_INFO(
-            get_logger(),
-            "Aliased group '%s' -> '%s' for type '%s'",
-            group.c_str(), canonical.c_str(), msg_type.c_str());
-        }
+    // Auto-detect plugin from the built-in type→plugin table when not explicitly given.
+    // An explicit 'plugin:' on one sensor never changes the default for other sensors.
+    if (plugin.empty()) {
+      auto it = type_to_plugin_.find(msg_type);
+      if (it != type_to_plugin_.end()) {
+        plugin = it->second;
+        RCLCPP_INFO(get_logger(),
+          "Auto-detected plugin [%s] for sensor [%s] from type [%s]",
+          plugin.c_str(), sensor_id.c_str(), msg_type.c_str());
       }
     }
 
-    if (handler_it == handlers_.end()) {
-      RCLCPP_WARN(get_logger(), "No handler for group [%s]", group.c_str());
-      continue;
+    if (plugin.empty()) {
+      RCLCPP_ERROR(get_logger(),
+        "Cannot configure sensor [%s]: no 'plugin' parameter and type [%s] is not recognized. "
+        "Add 'plugin: <plugin_name>' to the sensor parameters.",
+        sensor_id.c_str(), msg_type.c_str());
+      return CallbackReturnT::FAILURE;
     }
 
-    auto ptr = handler_it->second->create(sensor_id);
-    auto sub = handler_it->second->create_subscription(
-      *this, topic, msg_type, ptr,
-      realtime_cbg_);
+    // Load the handler plugin for this sensor
+    std::shared_ptr<PerceptionHandler> handler;
+    try {
+      handler = handler_loader_->createSharedInstance(plugin);
+    } catch (const pluginlib::PluginlibException & ex) {
+      RCLCPP_ERROR(get_logger(),
+        "Failed to load perception handler plugin [%s] for sensor [%s]: %s",
+        plugin.c_str(), sensor_id.c_str(), ex.what());
+      return CallbackReturnT::FAILURE;
+    }
 
-    perceptions_[group].emplace_back(PerceptionPtr{ptr, sub});
+    handler->initialize(shared_from_this(), realtime_cbg_, sensor_id);
+
+    std::string group = "";
+    if (!has_parameter(sensor_id + ".group")) {
+      declare_parameter(sensor_id + ".group", "");
+    }
+    get_parameter(sensor_id + ".group", group);
+
+    // Store the handler and add sensor to the group
+    handler_list_.push_back(handler);
+    // Store group only if specified (if param exists)
+    if (group != "") {
+      // TODO: This assumes that the handler uses the sensor name to write in the
+      // NavState and it assumes it sets only one value
+      groups_[group].emplace_back(handler->get_sensor_name());
+    }
+
+    RCLCPP_INFO(get_logger(),
+      "Configured sensor [%s] with plugin [%s] on topic [%s] in group [%s]",
+      sensor_id.c_str(), plugin.c_str(), topic.c_str(), group.c_str());
   }
 
   return CallbackReturnT::SUCCESS;
@@ -290,62 +208,63 @@ SensorsNode::get_real_time_cbg()
 }
 
 bool
-SensorsNode::cycle_rt(std::shared_ptr<NavState> nav_state, bool trigger)
+SensorsNode::cycle_rt(
+  std::shared_ptr<NavState> nav_state,
+  [[maybe_unused]] bool trigger)
 {
-  (void)trigger;
-
   bool trigger_perceptions = false;
-
-  for (auto & group_perceptions : perceptions_) {
-    for (auto & p : group_perceptions.second) {
-      trigger_perceptions = trigger_perceptions || p.perception->new_data;
-      p.perception->new_data = false;
-    }
-
-    if (!set_by_group(group_perceptions.first, group_perceptions.second, *nav_state)) {
-      RCLCPP_WARN(
-        get_logger(), "No perception handler for group [%s]",
-        group_perceptions.first.c_str());
-    }
+  // Run handlers' cycle and check if there is new sensor data o trigger perceptions
+  for (auto & handler : handler_list_) {
+    const bool trigger = handler->cycle_rt(nav_state);
+    trigger_perceptions = trigger_perceptions || trigger;
   }
 
   return trigger_perceptions;
 }
 
 void
-SensorsNode::cycle(std::shared_ptr<NavState> nav_state)
+SensorsNode::cycle([[maybe_unused]] std::shared_ptr<NavState> nav_state)
 {
-  for (auto & group_perceptions : perceptions_) {
-    for (auto & p : group_perceptions.second) {
-      if (p.perception->valid && (now() - p.perception->stamp).seconds() > forget_time_) {
-        p.perception->valid = false;
-      }
+  // Initialize groups in the NavState
+  if (!groups_initialized) {
+    for (const auto & group : groups_) {
+      RCLCPP_INFO(
+        get_logger(),
+        "Initializing sensor group [%s] in NavState",
+        group.first.c_str()
+      );
+      nav_state->set_group(group.first, group.second);
     }
-    if (!set_by_group(group_perceptions.first, group_perceptions.second, *nav_state)) {
-      RCLCPP_WARN(
-        get_logger(), "No perception handler for group [%s]",
-        group_perceptions.first.c_str());
-    }
+    groups_initialized = true;
   }
 
-  if (percept_pub_->get_subscription_count() > 0) {
-    auto fused = PointPerceptionsOpsView(get_point_perceptions(perceptions_["points"]))
-      .fuse(tf_prefix_ + perception_default_frame_);
+  const auto & points_perceptions = nav_state->get_by_type<PointPerception>();
 
-    auto fused_points = fused->as_points();
+  if (percept_pub_->get_subscription_count() > 0 && !points_perceptions.empty()) {
+    PointPerceptionsOpsView fused_view(std::move(points_perceptions));
+
+    const auto & tf_info = easynav::RTTFBuffer::getInstance()->get_tf_info();
+    const std::string & robot_footprint_frame = tf_info.robot_footprint_frame;
+
+    fused_view.fuse(robot_footprint_frame);
+    auto fused_points = fused_view.as_points();
+
+    // Skip empty point clouds
+    if (fused_points.empty()) {
+      return;
+    }
 
     auto msg = points_to_rosmsg(fused_points);
-    msg.header.frame_id = tf_prefix_ + perception_default_frame_;
-    msg.header.stamp = fused->get_perceptions()[0]->stamp;
+    msg.header.frame_id = robot_footprint_frame;
+    const auto & percs = fused_view.get_perceptions();
+    if (!percs.empty() && percs[0]) {
+      msg.header.stamp = percs[0]->stamp;
+    } else {
+      msg.header.stamp = now();
+    }
 
     percept_pub_->publish(msg);
   }
-}
-
-void
-SensorsNode::register_handler(std::shared_ptr<PerceptionHandler> handler)
-{
-  handlers_[handler->group()] = handler;
 }
 
 }  // namespace easynav

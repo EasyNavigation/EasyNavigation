@@ -33,9 +33,10 @@ BASE_CLASSES = {
     'controller': {'title': 'controller plugins', 'base': 'easynav::ControllerMethodBase'},
     'costmap_filters': {'title': 'costmap filters', 'base': 'easynav::CostmapFilter'},
     'navmap_filters': {'title': 'navmap filters', 'base': 'easynav::navmap::NavMapFilter'},
+    'sensors': {'title': 'sensor perception handlers', 'base': 'easynav::PerceptionHandler'},
 }
 CATEGORY_ORDER = ['mapsmanager', 'localizer', 'planner', 'controller', 'costmap_filters',
-                  'navmap_filters']
+                  'navmap_filters', 'sensors']
 
 
 def _ament_index_roots() -> List[str]:
@@ -193,6 +194,8 @@ class PluginsVerb(VerbExtension):
                             help='Only show costmap filters.')
         parser.add_argument('--navmap-filters', action='store_true',
                             help='Only show navmap filters.')
+        parser.add_argument('--sensors', action='store_true',
+                            help='Only show sensor perception handler plugins.')
 
         # Output options
         parser.add_argument('--show-xml', action='store_true',
@@ -218,6 +221,7 @@ class PluginsVerb(VerbExtension):
             'controller': args.controller,
             'costmap_filters': args.costmap_filters,
             'navmap_filters': args.navmap_filters,
+            'sensors': args.sensors,
         }
         if not any(selected.values()):
             for k in selected:

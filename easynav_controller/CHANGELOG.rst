@@ -2,6 +2,42 @@
 Changelog for package easynav_controller
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.4.0 (2026-07-26)
+------------------
+  Increase coverage
+* fix(tests): fix node destructors and add comprehensive tests for controller/planner/localizer/maps_manager
+  - Fix != to == in lifecycle transition guards in all 4 node destructors
+  - Fix MapsManagerNode destructor: declare_parameter -> get_parameter with has_parameter guard
+  - Fix unloadLibraryForClass to use actual plugin class name (from .plugin param) not sensor name
+  - Null method/manager pointers before calling unload to avoid ClassLoader SIGSEGV
+  - Expand inline catch blocks to satisfy uncrustify style
+  - Add 11 tests for ControllerNode, 11 for PlannerNode, 12 for LocalizerNode, 10 for MapsManagerNode
+  - All tests cover: node name, lifecycle transitions, plugin loading success/failure, cycle methods
+* GPLv3 -> Apache 2.0
+* Improve navstate print including the time
+* Add a bas_footprint frame in TFInfo
+* Contributors: Francisco Martín Rico, Francisco Miguel Moreno
+
+0.3.2 (2025-12-18)
+------------------
+* Hotfix: Remove remaining C++20/23 features
+* Contributors: Francisco Miguel Moreno
+
+0.3.1 (2025-12-17)
+------------------
+* Downgrade from C++23 features
+* Remove std::expected from MethodBase::initialize interface
+* TF Refactor
+* Unify TF configuration
+* Contributors: Francisco Martín Rico, Francisco Miguel Moreno
+
+0.3.0 (2025-12-01)
+------------------
+* Cleanup unused headers
+* Reshape execution and sensor handling
+* Make dummies' fake processing time independent from clock source
+* Contributors: Francisco Martín Rico, Francisco Miguel Moreno
+
 0.1.4 (2025-10-16)
 ------------------
 * Merge kilted version bump into rolling

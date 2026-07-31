@@ -2,6 +2,42 @@
 Changelog for package easynav_system
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.4.0 (2026-07-26)
+------------------
+* Limit GoalManager publication freq
+* New parameters for system node -> freq and rt_freq
+* GPLv3 -> Apache 2.0
+* Improve navstate print including the time
+* Add a base_footprint frame in TFInfo
+* Merge rolling into kilted and fix build issues
+* Contributors: Francisco Martín Rico, Francisco Miguel Moreno, jagutic
+
+0.3.2 (2025-12-18)
+------------------
+* Hotfix: Remove remaining C++20/23 features
+* Contributors: Francisco Miguel Moreno
+
+0.3.1 (2025-12-17)
+------------------
+* Goal tolerances to the nav_state
+* TF Refactor
+* Unify TF configuration
+* Contributors: Francisco Martín Rico, Francisco Miguel Moreno
+
+0.3.0 (2025-12-01)
+------------------
+* Merge rolling features into kilted
+* Set collision checker disabled by default
+* Cleanup unused headers
+* Reshape execution and sensor handling
+* Change spin_some to spin_all. Add param for max spin time
+* Dedicated thread for TF updates
+* Fix TF compilation warnings
+* GoalManager: Split position tolerance into x/y and height
+* Remove use_sim_time param from tf node left in `#59 <https://github.com/EasyNavigation/EasyNavigation/issues/59>`_
+* Fix block
+* Contributors: Francisco Martín Rico, Francisco Miguel Moreno
+
 0.1.4 (2025-10-16)
 ------------------
 * Fix compilation errors in jazzy

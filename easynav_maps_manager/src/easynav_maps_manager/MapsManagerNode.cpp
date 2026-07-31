@@ -16,16 +16,12 @@
 /// \file
 /// \brief Implementation of the MapsManagerNode class.
 
-#include "rclcpp/rclcpp.hpp"
-#include "rclcpp/macros.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 
 #include "lifecycle_msgs/msg/transition.hpp"
 #include "lifecycle_msgs/msg/state.hpp"
 
 #include "easynav_maps_manager/MapsManagerNode.hpp"
-#include "easynav_core/MapsManagerBase.hpp"
-#include "easynav_common/YTSession.hpp"
 
 namespace easynav
 {
@@ -42,39 +38,28 @@ MapsManagerNode::MapsManagerNode(
 
 MapsManagerNode::~MapsManagerNode()
 {
-  if (get_current_state().id() != lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE) {
+  if (get_current_state().id() == lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE) {
     trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_ACTIVE_SHUTDOWN);
   }
-  if (get_current_state().id() != lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE) {
+  if (get_current_state().id() == lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE) {
     trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_INACTIVE_SHUTDOWN);
   }
-  if (get_current_state().id() != lifecycle_msgs::msg::State::PRIMARY_STATE_UNCONFIGURED) {
+  if (get_current_state().id() == lifecycle_msgs::msg::State::PRIMARY_STATE_UNCONFIGURED) {
     trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_UNCONFIGURED_SHUTDOWN);
   }
 
-  std::vector<std::string> map_types;
-  declare_parameter("map_types", map_types);
-  for (const auto & map_type : map_types) {
-    maps_manager_loader_->unloadLibraryForClass(map_type);
-  }
-  for (auto & map_manager : maps_managers_) {
-    map_manager = nullptr;
-  }
+  maps_managers_.clear();
+  maps_manager_loader_.reset();
 }
 
 using CallbackReturnT = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
 
 CallbackReturnT
-MapsManagerNode::on_configure(const rclcpp_lifecycle::State & state)
+MapsManagerNode::on_configure([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
-  (void)state;
-
   std::vector<std::string> map_types;
   declare_parameter("map_types", map_types);
   get_parameter("map_types", map_types);
-
-  std::string tf_prefix;
-  get_parameter("tf_prefix", tf_prefix);
 
   for (const auto & map_type : map_types) {
     std::string plugin;
@@ -89,12 +74,11 @@ MapsManagerNode::on_configure(const rclcpp_lifecycle::State & state)
       std::shared_ptr<MapsManagerBase> instance;
       instance = maps_manager_loader_->createSharedInstance(plugin);
 
-      auto result = instance->initialize(shared_from_this(), map_type, tf_prefix);
-
-      if (!result) {
-        RCLCPP_ERROR(
-          get_logger(),
-          "Unable to initialize [%s]. Error: %s", plugin.c_str(), result.error().c_str());
+      try {
+        instance->initialize(shared_from_this(), map_type);
+      } catch (const std::runtime_error & e) {
+        RCLCPP_ERROR(get_logger(),
+          "Unable to initialize [%s]. Error: %s", plugin.c_str(), e.what());
         return CallbackReturnT::FAILURE;
       }
 
@@ -115,39 +99,32 @@ MapsManagerNode::on_configure(const rclcpp_lifecycle::State & state)
 }
 
 CallbackReturnT
-MapsManagerNode::on_activate(const rclcpp_lifecycle::State & state)
+MapsManagerNode::on_activate([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
-  (void)state;
-
   return CallbackReturnT::SUCCESS;
 }
 
 CallbackReturnT
-MapsManagerNode::on_deactivate(const rclcpp_lifecycle::State & state)
+MapsManagerNode::on_deactivate([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
-  (void)state;
-
   return CallbackReturnT::SUCCESS;
 }
 
 CallbackReturnT
-MapsManagerNode::on_cleanup(const rclcpp_lifecycle::State & state)
+MapsManagerNode::on_cleanup([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
-  (void)state;
   return CallbackReturnT::SUCCESS;
 }
 
 CallbackReturnT
-MapsManagerNode::on_shutdown(const rclcpp_lifecycle::State & state)
+MapsManagerNode::on_shutdown([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
-  (void)state;
   return CallbackReturnT::SUCCESS;
 }
 
 CallbackReturnT
-MapsManagerNode::on_error(const rclcpp_lifecycle::State & state)
+MapsManagerNode::on_error([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
-  (void)state;
   return CallbackReturnT::SUCCESS;
 }
 

@@ -2,7 +2,7 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>easynav_core</name>
-  <version>0.1.4</version>
+  <version>0.4.0</version>
   <description>Easy Navigation: Abstract interfaces for easynav plugins.</description>
 
   <maintainer email="fmrico@gmail.com">Francisco Martín Rico</maintainer>
@@ -20,6 +20,11 @@
 
   <depend>rclcpp_lifecycle</depend>
   <depend>easynav_common</depend>
+  <depend>easynav_sensors</depend>
+  <depend>visualization_msgs</depend>
+  <depend>tf2_ros</depend>
+  <depend>pcl_ros</depend>
+  <depend>tf2_geometry_msgs</depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>

@@ -42,15 +42,15 @@ public:
   SINGLETON_DEFINITIONS(YTSession)
 };
 
+}  // namespace easynav
+
 #ifdef EASYNAV_DEBUG_WITH_YAETS
-  #define EASYNAV_TRACE_EVENT TRACE_EVENT(YTSession::get())
-  #define EASYNAV_TRACE_NAMED_EVENT(name) yaets::TraceGuard guard(YTSession::get(), name);
+  #define EASYNAV_TRACE_EVENT TRACE_EVENT(easynav::YTSession::get())
+  #define EASYNAV_TRACE_NAMED_EVENT(name) yaets::TraceGuard guard(easynav::YTSession::get(), name);
 #else
   #define EASYNAV_TRACE_EVENT ((void)0)
   #define EASYNAV_TRACE_NAMED_EVENT(name) ((void)0)
 #endif
-
-}  // namespace easynav
 
 
 #endif  // EASYNAV_COMMON_TYPES__YTSESSION_HPP_

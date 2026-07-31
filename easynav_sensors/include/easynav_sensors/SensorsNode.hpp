@@ -19,17 +19,17 @@
 #ifndef EASYNAV_SENSORS__SENSORNODE_HPP_
 #define EASYNAV_SENSORS__SENSORNODE_HPP_
 
+#include <unordered_map>
+
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp/macros.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 
-#include "tf2_ros/buffer.hpp"
-#include "tf2_ros/transform_listener.hpp"
-
 #include "sensor_msgs/msg/point_cloud2.hpp"
 
-#include "easynav_common/types/Perceptions.hpp"
+#include "easynav_sensors/types/Perceptions.hpp"
 #include "easynav_common/types/NavState.hpp"
+#include "pluginlib/class_loader.hpp"
 
 namespace easynav
 {
@@ -39,6 +39,8 @@ namespace easynav
  * @brief ROS 2 lifecycle node that manages sensor fusion in Easy Navigation.
  *
  * Collects, transforms, and publishes fused perception data from multiple sources.
+ * Sensor handlers are loaded at runtime as pluginlib plugins, allowing users to add
+ * new sensor types without modifying this node.
  */
 class SensorsNode : public rclcpp_lifecycle::LifecycleNode
 {
@@ -115,7 +117,11 @@ public:
    */
   void cycle(std::shared_ptr<NavState> nav_state);
 
-  void register_handler(std::shared_ptr<PerceptionHandler> handler);
+protected:
+  /// @brief Sensor groups (set as group of keys in the NavState)
+  std::map<std::string, std::vector<std::string>> groups_;
+  /// @brief vector of PerceptionHandler instances
+  std::vector<std::shared_ptr<PerceptionHandler>> handler_list_;
 
 private:
   /// @brief Callback group for real-time operations.
@@ -131,15 +137,21 @@ private:
   double forget_time_;
 
   /// @brief Target frame for perception fusion.
-  std::string perception_default_frame_;
-
-  /// @brief TF Namespace
   std::string tf_prefix_;
 
-  std::shared_ptr<NavState> nav_state_;
+  /// @brief A flag to initialize groups in the NavState just once
+  bool groups_initialized = false;
 
-  std::map<std::string, std::vector<PerceptionPtr>> perceptions_;
-  std::map<std::string, std::shared_ptr<PerceptionHandler>> handlers_;
+  /// @brief Pluginlib class loader for PerceptionHandler plugins.
+  std::unique_ptr<pluginlib::ClassLoader<PerceptionHandler>> handler_loader_;
+
+  /// @brief Map from ROS message type string to the built-in default plugin name.
+  /// Initialised once in the constructor with the five standard handlers.
+  /// An explicit 'plugin:' parameter on any sensor only affects that sensor;
+  /// it never modifies this table, so other sensors of the same type always
+  /// fall back to the built-in default when 'plugin:' is omitted.
+  std::unordered_map<std::string, std::string> type_to_plugin_;
+
 };
 
 }  // namespace easynav

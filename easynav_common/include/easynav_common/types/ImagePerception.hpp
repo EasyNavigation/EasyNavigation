@@ -25,12 +25,9 @@
 
 #include <string>
 #include <vector>
-#include <optional>
 
-#include "cv_bridge/cv_bridge.h"
-#include "sensor_msgs/msg/image.hpp"
+#include "cv_bridge/cv_bridge.hpp"
 
-#include "rclcpp/time.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 
 #include "easynav_common/types/Perceptions.hpp"

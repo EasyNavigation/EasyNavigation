@@ -20,7 +20,6 @@
 #define EASYNAV_SYSTEM__GOALMANAGERCLIENT_HPP_
 
 #include "rclcpp/rclcpp.hpp"
-#include "rclcpp_lifecycle/lifecycle_node.hpp"
 
 #include "easynav_interfaces/msg/navigation_control.hpp"
 #include "geometry_msgs/msg/pose_stamped.hpp"

@@ -19,7 +19,6 @@
 #ifndef EASYNAV_LOCALIZER__DUMMYLOCALIZER_HPP_
 #define EASYNAV_LOCALIZER__DUMMYLOCALIZER_HPP_
 
-#include <expected>
 #include "nav_msgs/msg/odometry.hpp"
 #include "easynav_core/LocalizerMethodBase.hpp"
 #include "tf2_ros/transform_broadcaster.hpp"
@@ -45,10 +44,8 @@ public:
 
   /**
    * @brief Plugin-specific initialization logic.
-   *
-   * @return Success or an error message.
    */
-  virtual std::expected<void, std::string> on_initialize() override;
+  virtual void on_initialize() override;
 
   /**
    * @brief Update the localization using the current navigation state.
@@ -69,9 +66,6 @@ public:
   virtual void update(NavState & nav_state) override;
 
 private:
-  /// @brief Internal pose placeholder.
-  nav_msgs::msg::Odometry robot_pose_;
-
   std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
 
   double cycle_time_rt_ {0.0};

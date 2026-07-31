@@ -17,16 +17,17 @@
 #define EASYNAV_COMMON_TYPES__RTTFBUFFER_HPP_
 
 #include "easynav_common/Singleton.hpp"
+#include "easynav_common/types/TFInfo.hpp"
 
 #include "tf2_ros/buffer.hpp"
-#include "rclcpp/rclcpp.hpp"
 
 namespace easynav
 {
 
 /**
  * @class RTTFBuffer
- * @brief Provides functionality for RTTFBuffer.
+ * @brief Provides functionality for RTTFBuffer. It also provides the TFInfo with the
+ *  frames convention used across EasyNav.
  */
 class RTTFBuffer : public tf2_ros::Buffer, public Singleton<RTTFBuffer>
 {
@@ -43,6 +44,28 @@ public:
       "You should be creating this RTTFBuffer with your clock."
       "Using default clock RCL_ROS_TIME");
   }
+
+  const TFInfo & get_tf_info() const
+  {
+    return tf_info_;
+  }
+
+  void set_tf_info(const TFInfo & tf_info)
+  {
+    tf_info_ = tf_info;
+
+    // Apply tf_prefix to all frames
+    if (tf_info_.tf_prefix != "") {
+      tf_info_.map_frame = tf_info_.tf_prefix + "/" + tf_info_.map_frame;
+      tf_info_.odom_frame = tf_info_.tf_prefix + "/" + tf_info_.odom_frame;
+      tf_info_.robot_frame = tf_info_.tf_prefix + "/" + tf_info_.robot_frame;
+      tf_info_.robot_footprint_frame = tf_info_.tf_prefix + "/" + tf_info_.robot_footprint_frame;
+      tf_info_.world_frame = tf_info_.tf_prefix + "/" + tf_info_.world_frame;
+    }
+  }
+
+private:
+  TFInfo tf_info_;
 
   SINGLETON_DEFINITIONS(RTTFBuffer)
 };

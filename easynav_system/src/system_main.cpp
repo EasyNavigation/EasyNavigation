@@ -23,9 +23,11 @@
 
 #include "easynav_system/SystemNode.hpp"
 #include "easynav_common/RTTFBuffer.hpp"
+#include "easynav_common/YTSession.hpp"
 
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
+#include "tf2_ros/transform_listener.hpp"
 
 using namespace std::chrono_literals;
 
@@ -49,7 +51,6 @@ int main(int argc, char ** argv)
       system_node->get_node_base_interface());
 
     auto tf_node = rclcpp::Node::make_shared("tf_node");
-    exe_rt.add_node(tf_node);
 
     auto tf_clock = std::make_shared<rclcpp::Clock>(RCL_STEADY_TIME);
     auto tf_buffer = easynav::RTTFBuffer::getInstance(tf_clock);
@@ -85,6 +86,31 @@ int main(int argc, char ** argv)
     system_node->declare_parameter("use_real_time", use_real_time);
     system_node->get_parameter("use_real_time", use_real_time);
 
+    // Get rt and nonrt rates
+    double rt_freq = 200.0;
+    system_node->declare_parameter("rt_freq", rt_freq);
+    system_node->get_parameter("rt_freq", rt_freq);
+    double freq = 200.0;
+    system_node->declare_parameter("freq", freq);
+    system_node->get_parameter("freq", freq);
+
+    // Get spin duration timeout for both threads
+    double spin_time_rt = 0.001;
+    system_node->declare_parameter("spin_time_rt", spin_time_rt);
+    system_node->get_parameter("spin_time_rt", spin_time_rt);
+    double spin_time_nort = 0.001;
+    system_node->declare_parameter("spin_time_nort", spin_time_nort);
+    system_node->get_parameter("spin_time_nort", spin_time_nort);
+
+    // Convert spin timeouts from seconds to nanoseconds and cast to chrono type
+    const auto spin_duration_rt = std::chrono::duration_cast<std::chrono::nanoseconds>(
+      std::chrono::duration<double>(spin_time_rt)
+    );
+
+    const auto spin_duration_nort = std::chrono::duration_cast<std::chrono::nanoseconds>(
+      std::chrono::duration<double>(spin_time_nort)
+    );
+
     // Cooperative shutdown on SIGINT
     rclcpp::on_shutdown(
       [&]() {
@@ -108,23 +134,25 @@ int main(int argc, char ** argv)
           RCLCPP_INFO(system_node->get_logger(), "Selected NO Real-Time");
         }
 
-        // No dedicated spin thread; TF uses exe_rt.
-        tf2_ros::TransformListener tf_listener(*tf_buffer, tf_node, /*spin_thread=*/ false);
+        tf2_ros::TransformListener tf_listener(*tf_buffer, tf_node, true);
 
-        rclcpp::WallRate rate(100);
+        rclcpp::WallRate rate(rt_freq);
         while (!stop.load(std::memory_order_relaxed)) {
           if (system_node->get_current_state().id() ==
           lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE)
           {
             system_node->system_cycle_rt();
           }
-          exe_rt.spin_some(std::chrono::milliseconds(1));
+          {
+            EASYNAV_TRACE_NAMED_EVENT("easynav_system::spin_rt");
+            exe_rt.spin_all(spin_duration_rt);
+          }
           rate.sleep();
         }
       });
 
     // Non-RT loop
-    rclcpp::WallRate rate(100);
+    rclcpp::WallRate rate(freq);
     while (!stop.load(std::memory_order_relaxed)) {
 
       if (system_node->get_current_state().id() ==
@@ -132,8 +160,10 @@ int main(int argc, char ** argv)
       {
         system_node->system_cycle();
       }
-
-      exe_nort.spin_some(std::chrono::milliseconds(1));
+      {
+        EASYNAV_TRACE_NAMED_EVENT("easynav_system::spin_nort");
+        exe_nort.spin_all(spin_duration_nort);
+      }
       rate.sleep();
     }
 
