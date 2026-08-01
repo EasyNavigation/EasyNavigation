@@ -27,12 +27,6 @@
 
 #include <string>
 
-#include "sensor_msgs/msg/laser_scan.hpp"
-#include "sensor_msgs/msg/point_cloud2.hpp"
-
-#include "pcl/point_cloud.h"
-#include "pcl/point_types.h"
-
 #include "rclcpp/time.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 

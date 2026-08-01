@@ -19,7 +19,6 @@
 #ifndef EASYNAV_CONTROLLER__DUMMYCONTROLLER_HPP_
 #define EASYNAV_CONTROLLER__DUMMYCONTROLLER_HPP_
 
-#include <expected>
 #include "geometry_msgs/msg/twist_stamped.hpp"
 
 #include "easynav_core/ControllerMethodBase.hpp"
@@ -45,12 +44,8 @@ public:
    *
    * This method is called once during the configuration phase of the controller node,
    * and can be optionally overridden by derived classes to perform custom setup logic.
-   *
-   * @return std::expected<void, std::string> Returns an expected object:
-   *         - `void` if initialization was successful,
-   *         - a `std::string` containing an error message if initialization failed.
    */
-  virtual std::expected<void, std::string> on_initialize() override;
+  virtual void on_initialize() override;
 
   /**
    * @brief Run the control method and update the control command.

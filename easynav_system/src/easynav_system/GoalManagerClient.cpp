@@ -63,6 +63,12 @@ GoalManagerClient::control_callback(easynav_interfaces::msg::NavigationControl::
       break;
     case State::SENT_GOAL:
       switch (msg->type) {
+        case easynav_interfaces::msg::NavigationControl::FEEDBACK:
+          RCLCPP_DEBUG(
+            node_->get_logger(),
+            "Getting navigation feedback while waiting for acceptance");
+          last_feedback_ = *msg;
+          break;
         case easynav_interfaces::msg::NavigationControl::ACCEPT:
           RCLCPP_DEBUG(node_->get_logger(), "Goal accepted. Navigating");
           state_ = State::ACCEPTED_AND_NAVIGATING;

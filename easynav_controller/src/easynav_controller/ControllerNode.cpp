@@ -23,7 +23,6 @@
 #include "lifecycle_msgs/msg/state.hpp"
 
 #include "easynav_controller/ControllerNode.hpp"
-#include "easynav_common/YTSession.hpp"
 
 namespace easynav
 {
@@ -43,7 +42,9 @@ ControllerNode::ControllerNode(
     [](const geometry_msgs::msg::TwistStamped & twist) {
       std::ostringstream ret;
 
-      ret << "Twist with (" << twist.twist.linear.x << ", " << twist.twist.linear.y << ", " <<
+      ret << "{ " << rclcpp::Time(twist.header.stamp).seconds() << "} Twist with (" <<
+        twist.twist.linear.x << ", " <<
+        twist.twist.linear.y << ", " <<
         twist.twist.linear.z << ") (" << twist.twist.angular.x << ", " <<
         twist.twist.angular.y << ", " << twist.twist.angular.z << ")";
 
@@ -54,38 +55,40 @@ ControllerNode::ControllerNode(
 
 ControllerNode::~ControllerNode()
 {
-  if (get_current_state().id() != lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE) {
+  if (get_current_state().id() == lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE) {
     trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_ACTIVE_SHUTDOWN);
   }
-  if (get_current_state().id() != lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE) {
+  if (get_current_state().id() == lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE) {
     trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_INACTIVE_SHUTDOWN);
   }
-  if (get_current_state().id() != lifecycle_msgs::msg::State::PRIMARY_STATE_UNCONFIGURED) {
+  if (get_current_state().id() == lifecycle_msgs::msg::State::PRIMARY_STATE_UNCONFIGURED) {
     trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_UNCONFIGURED_SHUTDOWN);
   }
 
+  controller_method_ = nullptr;
   std::vector<std::string> controller_types;
   get_parameter("controller_types", controller_types);
   for (const auto & controller_type : controller_types) {
-    controller_loader_->unloadLibraryForClass(controller_type);
+    std::string plugin;
+    if (has_parameter(controller_type + ".plugin")) {
+      get_parameter(controller_type + ".plugin", plugin);
+      try {
+        controller_loader_->unloadLibraryForClass(plugin);
+      } catch (const std::exception &) {
+      }
+    }
   }
-  controller_method_ = nullptr;
 }
 
 
 using CallbackReturnT = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
 
 CallbackReturnT
-ControllerNode::on_configure(const rclcpp_lifecycle::State & state)
+ControllerNode::on_configure([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
-  (void)state;
-
   std::vector<std::string> controller_types;
   declare_parameter("controller_types", controller_types);
   get_parameter("controller_types", controller_types);
-
-  std::string tf_prefix;
-  get_parameter("tf_prefix", tf_prefix);
 
   if (controller_types.size() > 1) {
     RCLCPP_ERROR(
@@ -106,14 +109,12 @@ ControllerNode::on_configure(const rclcpp_lifecycle::State & state)
 
       controller_method_ = controller_loader_->createSharedInstance(plugin);
 
-      auto result = controller_method_->initialize(
-        shared_from_this(), controller_type,
-        tf_prefix);
-
-      if (!result) {
+      try {
+        controller_method_->initialize(shared_from_this(), controller_type);
+      } catch (const std::runtime_error & e) {
         RCLCPP_ERROR(
           get_logger(),
-          "Unable to initialize [%s]. Error: %s", plugin.c_str(), result.error().c_str());
+          "Unable to initialize [%s]. Error: %s", plugin.c_str(), e.what());
         return CallbackReturnT::FAILURE;
       }
 
@@ -132,39 +133,32 @@ ControllerNode::on_configure(const rclcpp_lifecycle::State & state)
 }
 
 CallbackReturnT
-ControllerNode::on_activate(const rclcpp_lifecycle::State & state)
+ControllerNode::on_activate([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
-  (void)state;
-
   return CallbackReturnT::SUCCESS;
 }
 
 CallbackReturnT
-ControllerNode::on_deactivate(const rclcpp_lifecycle::State & state)
+ControllerNode::on_deactivate([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
-  (void)state;
-
   return CallbackReturnT::SUCCESS;
 }
 
 CallbackReturnT
-ControllerNode::on_cleanup(const rclcpp_lifecycle::State & state)
+ControllerNode::on_cleanup([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
-  (void)state;
   return CallbackReturnT::SUCCESS;
 }
 
 CallbackReturnT
-ControllerNode::on_shutdown(const rclcpp_lifecycle::State & state)
+ControllerNode::on_shutdown([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
-  (void)state;
   return CallbackReturnT::SUCCESS;
 }
 
 CallbackReturnT
-ControllerNode::on_error(const rclcpp_lifecycle::State & state)
+ControllerNode::on_error([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
-  (void)state;
   return CallbackReturnT::SUCCESS;
 }
 

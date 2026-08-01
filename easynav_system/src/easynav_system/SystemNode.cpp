@@ -19,20 +19,16 @@
 #include "lifecycle_msgs/msg/transition.hpp"
 #include "lifecycle_msgs/msg/state.hpp"
 
-#include "easynav_system/SystemNode.hpp"
-
 #include "easynav_controller/ControllerNode.hpp"
 #include "easynav_localizer/LocalizerNode.hpp"
 #include "easynav_maps_manager/MapsManagerNode.hpp"
 #include "easynav_planner/PlannerNode.hpp"
 #include "easynav_sensors/SensorsNode.hpp"
 #include "easynav_common/YTSession.hpp"
-#include "easynav_common/types/PointPerception.hpp"
+#include "easynav_sensors/types/PointPerception.hpp"
+#include "easynav_common/RTTFBuffer.hpp"
 
-#include "rclcpp/rclcpp.hpp"
-#include "rclcpp/macros.hpp"
-#include "rclcpp_lifecycle/lifecycle_node.hpp"
-
+#include "easynav_system/SystemNode.hpp"
 
 namespace easynav
 {
@@ -46,28 +42,15 @@ SystemNode::SystemNode(const rclcpp::NodeOptions & options)
 
   nav_state_ = std::make_shared<NavState>();
 
-  NavState::register_printer<PointPerceptions>(
-    [](const PointPerceptions & perceptions) {
-      std::ostringstream ret;
-      ret << "PointPerception " << perceptions.size() << " with:\n";
-      for (const auto & perception : perceptions) {
-        ret << "\t[" << static_cast<const void *>(perception.get()) << "] --> "
-            << perception->data.size() << " points in frame [" << perception->frame_id
-            << "] with ts " << perception->stamp.seconds() << "\n";
-      }
-      return ret.str();
-    });
-
-
   NavState::register_printer<nav_msgs::msg::Goals>(
     [](const nav_msgs::msg::Goals & goals) {
-      std::string ret = "Goals " + std::to_string(goals.goals.size()) + " with :\n";
+      std::ostringstream ret;
+      ret << "{ " << rclcpp::Time(goals.header.stamp).seconds() << " } Goals " <<
+        goals.goals.size() << " with :\n";
       for (const auto & goal : goals.goals) {
-        std::string p_str = "\t--> (" + std::to_string(goal.pose.position.x) + ", " +
-        std::to_string(goal.pose.position.y) + ")\n";
-        ret = ret + p_str;
+        ret << "\t--> (" << goal.pose.position.x << ", " << goal.pose.position.y << ")\n";
       }
-      return ret;
+      return ret.str();
     });
 
   controller_node_ = ControllerNode::make_shared();
@@ -76,9 +59,15 @@ SystemNode::SystemNode(const rclcpp::NodeOptions & options)
   planner_node_ = PlannerNode::make_shared();
   sensors_node_ = SensorsNode::make_shared();
 
-  declare_parameter<std::string>("tf_prefix", "");
   declare_parameter<bool>("use_cmd_vel_stamped", use_cmd_vel_stamped_);
 
+  TFInfo tf_info;
+  declare_parameter<std::string>("tf_prefix", tf_info.tf_prefix);
+  declare_parameter<std::string>("robot_frame", tf_info.robot_frame);
+  declare_parameter<std::string>("robot_footprint_frame", tf_info.robot_footprint_frame);
+  declare_parameter<std::string>("odom_frame", tf_info.odom_frame);
+  declare_parameter<std::string>("map_frame", tf_info.map_frame);
+  declare_parameter<std::string>("world_frame", tf_info.world_frame);
   // get_logger().set_level(rclcpp::Logger::Level::Debug);
 }
 
@@ -102,18 +91,25 @@ SystemNode::on_configure(const rclcpp_lifecycle::State & state)
 {
   (void)state;
 
+  TFInfo tf_info;
   get_parameter<bool>("use_cmd_vel_stamped", use_cmd_vel_stamped_);
+  get_parameter("robot_frame", tf_info.robot_frame);
+  get_parameter("robot_footprint_frame", tf_info.robot_footprint_frame);
+  get_parameter("odom_frame", tf_info.odom_frame);
+  get_parameter("map_frame", tf_info.map_frame);
+  get_parameter("world_frame", tf_info.world_frame);
 
-  std::string tf_prefix;
-  get_parameter("tf_prefix", tf_prefix);
-  if (tf_prefix != "") {
-    tf_prefix = tf_prefix + "/";
-  }
+  get_parameter("tf_prefix", tf_info.tf_prefix);
+
+  RTTFBuffer::getInstance()->set_tf_info(tf_info);
+  RCLCPP_INFO(
+    get_logger(),
+    "EasyNav configured with TFInfo: prefix='%s', map='%s', odom='%s', robot='%s', footprint='%s', world='%s'",
+    tf_info.tf_prefix.c_str(), tf_info.map_frame.c_str(),
+    tf_info.odom_frame.c_str(), tf_info.robot_frame.c_str(),
+    tf_info.robot_footprint_frame.c_str(), tf_info.world_frame.c_str());
 
   for (auto & system_node : get_system_nodes()) {
-    system_node.second.node_ptr->declare_parameter<std::string>("tf_prefix", "");
-    system_node.second.node_ptr->set_parameter({"tf_prefix", tf_prefix});
-
     RCLCPP_INFO(get_logger(), "Configuring [%s]", system_node.first.c_str());
     system_node.second.node_ptr->trigger_transition(
       lifecycle_msgs::msg::Transition::TRANSITION_CONFIGURE);
@@ -251,8 +247,8 @@ SystemNode::system_cycle()
   maps_manager_node_->cycle(nav_state_);
   goal_manager_->update(*nav_state_);
 
-  rclcpp::Time goals_ts(goal_manager_->get_goals().header.stamp);
   rclcpp::Time planner_ts = planner_node_->get_last_execution_ts();
+  rclcpp::Time goals_ts(goal_manager_->get_goals().header.stamp, planner_ts.get_clock_type());
 
   planner_node_->cycle(nav_state_, planner_ts < goals_ts);
 

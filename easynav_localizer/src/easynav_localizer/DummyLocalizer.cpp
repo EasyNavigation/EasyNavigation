@@ -16,7 +16,6 @@
 /// \file
 /// \brief Implementation of the DummyLocalizer class.
 
-#include <expected>
 #include "easynav_localizer/DummyLocalizer.hpp"
 
 #include "easynav_common/RTTFBuffer.hpp"
@@ -24,7 +23,7 @@
 namespace easynav
 {
 
-std::expected<void, std::string> DummyLocalizer::on_initialize()
+void DummyLocalizer::on_initialize()
 {
   auto node = get_node();
   const auto & plugin_name = get_plugin_name();
@@ -35,41 +34,44 @@ std::expected<void, std::string> DummyLocalizer::on_initialize()
   node->get_parameter<double>(plugin_name + ".cycle_time_nort", cycle_time_nort_);
 
   tf_broadcaster_ = std::make_unique<tf2_ros::TransformBroadcaster>(get_node());
-
-  return {};
 }
 
 void DummyLocalizer::update_rt([[maybe_unused]] NavState & nav_state)
 {
-  auto start = get_node()->now();
-  while ((get_node()->now() - start).seconds() < cycle_time_rt_) {}
+  namespace chr = std::chrono;
+  auto start = chr::steady_clock::now();
+
+  const auto & tf_info = easynav::RTTFBuffer::getInstance()->get_tf_info();
 
   geometry_msgs::msg::TransformStamped tf_msg;
   tf_msg.header.stamp = get_node()->now();
-  tf_msg.header.frame_id = get_tf_prefix() + "map";
-  tf_msg.child_frame_id = get_tf_prefix() + "odom";
+  tf_msg.header.frame_id = tf_info.map_frame;
+  tf_msg.child_frame_id = tf_info.odom_frame;
 
   RTTFBuffer::getInstance()->setTransform(tf_msg, "easynav", false);
   // tf_broadcaster_->sendTransform(tf_msg);
 
-  nav_state.set("robot_pose", robot_pose_);
+  // Busy wait to simulate processing time
+  while (chr::duration<double>(chr::steady_clock::now() - start).count() < cycle_time_rt_) {}
 }
 
 void DummyLocalizer::update([[maybe_unused]] NavState & nav_state)
 {
-  auto start = get_node()->now();
-  while ((get_node()->now() - start).seconds() < cycle_time_nort_) {}
+  namespace chr = std::chrono;
+  auto start = chr::steady_clock::now();
 
+  const auto & tf_info = easynav::RTTFBuffer::getInstance()->get_tf_info();
 
   geometry_msgs::msg::TransformStamped tf_msg;
   tf_msg.header.stamp = get_node()->now();
-  tf_msg.header.frame_id = get_tf_prefix() + "map";
-  tf_msg.child_frame_id = get_tf_prefix() + "odom";
+  tf_msg.header.frame_id = tf_info.map_frame;
+  tf_msg.child_frame_id = tf_info.odom_frame;
 
   RTTFBuffer::getInstance()->setTransform(tf_msg, "easynav", false);
   // tf_broadcaster_->sendTransform(tf_msg);
 
-  nav_state.set("robot_pose", robot_pose_);
+  // Busy wait to simulate processing time
+  while (chr::duration<double>(chr::steady_clock::now() - start).count() < cycle_time_nort_) {}
 }
 
 }  // namespace easynav

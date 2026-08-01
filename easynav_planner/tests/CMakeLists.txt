@@ -1,0 +1,4 @@
+ament_add_gtest(planner_node_tests planner_node_tests.cpp)
+target_link_libraries(planner_node_tests
+  easynav_planner
+)

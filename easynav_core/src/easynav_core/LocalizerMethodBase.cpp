@@ -16,12 +16,8 @@
 /// \file
 /// \brief Implementation of the abstract base class LocalizerMethodBase.
 
-#include "nav_msgs/msg/odometry.hpp"
-
 #include "easynav_common/types/NavState.hpp"
 #include "easynav_common/YTSession.hpp"
-
-#include "easynav_core/MethodBase.hpp"
 
 #include "easynav_core/LocalizerMethodBase.hpp"
 
@@ -34,7 +30,11 @@ LocalizerMethodBase::internal_update_rt(NavState & nav_state, bool trigger)
   if (isTime2RunRT() || trigger) {
     EASYNAV_TRACE_EVENT;
 
+    // Save last execution time, even if triggered
+    setRunRT();
+
     update_rt(nav_state);
+
     return true;
   } else {
     return false;
@@ -45,7 +45,10 @@ void
 LocalizerMethodBase::internal_update(NavState & nav_state)
 {
   if (isTime2Run()) {
+
     EASYNAV_TRACE_EVENT;
+    // Save last execution time, even if triggered
+    setRun();
 
     update(nav_state);
   }
