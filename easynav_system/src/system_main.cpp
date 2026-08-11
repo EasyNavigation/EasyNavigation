@@ -61,8 +61,6 @@ int main(int argc, char ** argv)
   std::signal(SIGINT, handle_shutdown_signal);
   std::signal(SIGTERM, handle_shutdown_signal);
 
-  std::atomic_bool & stop = g_stop;
-
   std::thread rt_thread;
   {
     // Executors live in this scope and will be destroyed after join().
