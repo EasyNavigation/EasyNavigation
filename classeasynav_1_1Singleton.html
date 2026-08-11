@@ -119,6 +119,7 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:af49757e19ecd10cba2575b788ca6046f" id="r_af49757e19ecd10cba2575b788ca6046f"><td class="memTemplParams" colspan="2">template&lt;typename ... Args&gt; </td></tr>
 <tr class="memitem:af49757e19ecd10cba2575b788ca6046f template"><td class="memItemLeft">static C *&#160;</td><td class="memItemRight"><a class="el" href="#af49757e19ecd10cba2575b788ca6046f">getInstance</a> (Args &amp;&amp;... args)</td></tr>
 <tr class="memitem:a932098eab97158326f0fe7a8283b319f" id="r_a932098eab97158326f0fe7a8283b319f"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="#a932098eab97158326f0fe7a8283b319f">removeInstance</a> ()</td></tr>
+<tr class="memdesc:a932098eab97158326f0fe7a8283b319f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroy the current instance, if any; the next <a class="el" href="#af49757e19ecd10cba2575b788ca6046f">getInstance()</a>/get() call creates a fresh one.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pro-methods" class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -319,6 +320,9 @@ template&lt;class C&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Destroy the current instance, if any; the next <a class="el" href="#af49757e19ecd10cba2575b788ca6046f">getInstance()</a>/get() call creates a fresh one. </p>
+<dl class="section warning"><dt>Warning</dt><dd>Only safe to call when no other thread may still be dereferencing a <code>C*</code> obtained from an earlier <a class="el" href="#af49757e19ecd10cba2575b788ca6046f">getInstance()</a>/get() call &ndash; that pointer's lifetime is tied to the destroyed instance, and no amount of locking here can protect a caller who is already holding and using it (the lock only serializes this class's own instance_/mutex_ bookkeeping against concurrent <a class="el" href="#af49757e19ecd10cba2575b788ca6046f">getInstance()</a>/ <a class="el" href="#a932098eab97158326f0fe7a8283b319f" title="Destroy the current instance, if any; the next getInstance()/get() call creates a fresh one.">removeInstance()</a> calls). Intended for sequential use, e.g. resetting singleton state between test cases, not for tearing down an instance while it may still be in use elsewhere. </dd></dl>
 
 </div>
 </div>

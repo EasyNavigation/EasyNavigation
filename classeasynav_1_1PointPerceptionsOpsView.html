@@ -128,8 +128,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a2357342b9a992e1b819af4994c528180"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a new perception to the current view.  <br /></td></tr>
 <tr class="memitem:a805d236592ccedb4d00c893bbf797bcd" id="r_a805d236592ccedb4d00c893bbf797bcd"><td class="memItemLeft">pcl::PointCloud&lt; pcl::PointXYZ &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a805d236592ccedb4d00c893bbf797bcd">as_points</a> () const</td></tr>
 <tr class="memdesc:a805d236592ccedb4d00c893bbf797bcd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves all selected points across perceptions as a single concatenated cloud.  <br /></td></tr>
-<tr class="memitem:a94c012d5f2d51299d766adc087103ef7" id="r_a94c012d5f2d51299d766adc087103ef7"><td class="memItemLeft">const pcl::PointCloud&lt; pcl::PointXYZ &gt; &amp;&#160;</td><td class="memItemRight"><a class="el" href="#a94c012d5f2d51299d766adc087103ef7">as_points</a> (int idx) const</td></tr>
-<tr class="memdesc:a94c012d5f2d51299d766adc087103ef7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the filtered point cloud for a specific perception.  <br /></td></tr>
 <tr class="memitem:ab017857ff9f9d36cc58ca71a32aeaf23" id="r_ab017857ff9f9d36cc58ca71a32aeaf23"><td class="memItemLeft"><a class="el" href="#aa7a7f47c3b772956f68daddc01115a40">PointPerceptionsOpsView</a> &amp;&#160;</td><td class="memItemRight"><a class="el" href="#ab017857ff9f9d36cc58ca71a32aeaf23">collapse</a> (const std::vector&lt; double &gt; &amp;collapse_dims, bool lazy=true)</td></tr>
 <tr class="memdesc:ab017857ff9f9d36cc58ca71a32aeaf23"><td class="mdescLeft">&#160;</td><td class="mdescRight">Collapses dimensions to fixed values (for example, projection onto a plane).  <br /></td></tr>
 <tr class="memitem:a1f623939c1f8af3760267fc88ce3e8e6" id="r_a1f623939c1f8af3760267fc88ce3e8e6"><td class="memItemLeft"><a class="el" href="#aa7a7f47c3b772956f68daddc01115a40">PointPerceptionsOpsView</a> &amp;&#160;</td><td class="memItemRight"><a class="el" href="#a1f623939c1f8af3760267fc88ce3e8e6">downsample</a> (double resolution)</td></tr>
@@ -349,7 +347,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="a805d236592ccedb4d00c893bbf797bcd" name="a805d236592ccedb4d00c893bbf797bcd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a805d236592ccedb4d00c893bbf797bcd">&#9670;&#160;</a></span>as_points() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a805d236592ccedb4d00c893bbf797bcd">&#9670;&#160;</a></span>as_points()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -365,32 +363,6 @@ Public Member Functions</h2></td></tr>
 
 <p>Retrieves all selected points across perceptions as a single concatenated cloud. </p>
 <dl class="section return"><dt>Returns</dt><dd>Concatenated point cloud. </dd></dl>
-
-</div>
-</div>
-<a id="a94c012d5f2d51299d766adc087103ef7" name="a94c012d5f2d51299d766adc087103ef7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a94c012d5f2d51299d766adc087103ef7">&#9670;&#160;</a></span>as_points() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const pcl::PointCloud&lt; pcl::PointXYZ &gt; &amp; as_points </td>
-          <td>(</td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>idx</em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Retrieves the filtered point cloud for a specific perception. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">idx</td><td>Index of the target perception in the underlying container. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Const reference to the filtered point cloud. </dd></dl>
 
 </div>
 </div>

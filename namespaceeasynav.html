@@ -231,10 +231,10 @@ Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a76e3d54d282b01dd9dd17b2dc4564c24" id="r_a76e3d54d282b01dd9dd17b2dc4564c24"><td class="memTemplParams" colspan="2">template&lt;class C&gt; </td></tr>
-<tr class="memitem:a76e3d54d282b01dd9dd17b2dc4564c24 template"><td class="memItemLeft">std::once_flag&#160;</td><td class="memItemRight"><a class="el" href="#a76e3d54d282b01dd9dd17b2dc4564c24">Singleton&lt; C &gt;::init_flag_</a></td></tr>
 <tr class="memitem:af63183b88c39f568dffa0d77e441e468" id="r_af63183b88c39f568dffa0d77e441e468"><td class="memTemplParams" colspan="2">template&lt;class C&gt; </td></tr>
 <tr class="memitem:af63183b88c39f568dffa0d77e441e468 template"><td class="memItemLeft">std::unique_ptr&lt; C &gt;&#160;</td><td class="memItemRight"><a class="el" href="#af63183b88c39f568dffa0d77e441e468">Singleton&lt; C &gt;::instance_</a> = nullptr</td></tr>
+<tr class="memitem:aea6f80498fbc28235e7a690b577c46fd" id="r_aea6f80498fbc28235e7a690b577c46fd"><td class="memTemplParams" colspan="2">template&lt;class C&gt; </td></tr>
+<tr class="memitem:aea6f80498fbc28235e7a690b577c46fd template"><td class="memItemLeft">std::mutex&#160;</td><td class="memItemRight"><a class="el" href="#aea6f80498fbc28235e7a690b577c46fd">Singleton&lt; C &gt;::mutex_</a></td></tr>
 </table>
 <a name="doc-typedef-members" id="doc-typedef-members"></a><h2 id="header-doc-typedef-members" class="groupheader">Typedef Documentation</h2>
 <a id="ad09d90f1fe35c9e2f2fd7fc1902312f4" name="ad09d90f1fe35c9e2f2fd7fc1902312f4"></a>
@@ -818,22 +818,6 @@ template&lt;typename T = PerceptionBase&gt; </div>
 </div>
 </div>
 <a name="doc-var-members" id="doc-var-members"></a><h2 id="header-doc-var-members" class="groupheader">Variable Documentation</h2>
-<a id="a76e3d54d282b01dd9dd17b2dc4564c24" name="a76e3d54d282b01dd9dd17b2dc4564c24"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a76e3d54d282b01dd9dd17b2dc4564c24">&#9670;&#160;</a></span>Singleton&lt; C &gt;::init_flag_</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class C&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">std::once_flag <a class="el" href="classeasynav_1_1Singleton.html">Singleton</a>&lt; C &gt;::init_flag_</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="af63183b88c39f568dffa0d77e441e468" name="af63183b88c39f568dffa0d77e441e468"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af63183b88c39f568dffa0d77e441e468">&#9670;&#160;</a></span>Singleton&lt; C &gt;::instance_</h2>
 
@@ -844,6 +828,22 @@ template&lt;class C&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">std::unique_ptr&lt;C&gt; <a class="el" href="classeasynav_1_1Singleton.html">Singleton</a>&lt; C &gt;::instance_ = nullptr</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aea6f80498fbc28235e7a690b577c46fd" name="aea6f80498fbc28235e7a690b577c46fd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aea6f80498fbc28235e7a690b577c46fd">&#9670;&#160;</a></span>Singleton&lt; C &gt;::mutex_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class C&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::mutex <a class="el" href="classeasynav_1_1Singleton.html">Singleton</a>&lt; C &gt;::mutex_</td>
         </tr>
       </table>
 </div><div class="memdoc">
