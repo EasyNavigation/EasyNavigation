@@ -169,16 +169,6 @@ public:
     return true;
   }
 
-  /// \brief Get a const reference to the newest element without removing it.
-  const T & latest_ref() const
-  {
-    std::lock_guard<std::mutex> lock(mutex_);
-
-    const std::size_t newest_index =
-      (head_ + capacity_ - 1) % capacity_;
-    return buffer_[newest_index];
-  }
-
   // DEBUG ONLY: raw access to slots
   struct DebugSlotView
   {
