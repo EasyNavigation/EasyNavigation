@@ -16,6 +16,8 @@
 #ifndef EASYNAV_COMMON_TYPES__RTTFBUFFER_HPP_
 #define EASYNAV_COMMON_TYPES__RTTFBUFFER_HPP_
 
+#include <mutex>
+
 #include "easynav_common/Singleton.hpp"
 #include "easynav_common/types/TFInfo.hpp"
 
@@ -44,13 +46,21 @@ public:
       "Using default clock RCL_ROS_TIME");
   }
 
-  const TFInfo & get_tf_info() const
+  /// @brief Returns a snapshot of the current TFInfo.
+  ///
+  /// Returned by value (copy taken while `tf_info_mutex_` is held): this is read
+  /// continuously from both the RT and non-RT threads while `set_tf_info()` can be
+  /// called from either during a reconfigure, so a returned reference into `tf_info_`
+  /// would be exposed to a concurrent unsynchronized write (torn/dangling strings).
+  TFInfo get_tf_info() const
   {
+    std::lock_guard<std::mutex> lock(tf_info_mutex_);
     return tf_info_;
   }
 
   void set_tf_info(const TFInfo & tf_info)
   {
+    std::lock_guard<std::mutex> lock(tf_info_mutex_);
     tf_info_ = tf_info;
 
     // Apply tf_prefix to all frames
@@ -65,6 +75,7 @@ public:
 
 private:
   TFInfo tf_info_;
+  mutable std::mutex tf_info_mutex_;
 
   SINGLETON_DEFINITIONS(RTTFBuffer)
 };
