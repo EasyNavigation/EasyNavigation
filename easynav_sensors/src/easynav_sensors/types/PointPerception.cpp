@@ -559,63 +559,6 @@ PointPerceptionsOpsView::as_points() const
   return out;
 }
 
-const pcl::PointCloud<pcl::PointXYZ> &
-PointPerceptionsOpsView::as_points(int idx) const
-{
-  tmp_single_cloud_.clear();
-  tmp_single_cloud_.height = 1;
-  tmp_single_cloud_.is_dense = false;
-
-  if (idx < 0 || static_cast<std::size_t>(idx) >= perceptions_.size()) {
-    tmp_single_cloud_.width = 0;
-    return tmp_single_cloud_;
-  }
-
-  const std::size_t i = static_cast<std::size_t>(idx);
-  const auto & pptr = perceptions_[i];
-  const auto & idx_list = indices_[i].indices;
-
-  if (!pptr || !pptr->valid || pptr->data.empty() || idx_list.empty()) {
-    tmp_single_cloud_.width = 0;
-    return tmp_single_cloud_;
-  }
-
-  const auto & cloud = pptr->data;
-
-  const bool has_tf = has_target_frame_ &&
-    tf_valid_.size() == perceptions_.size() &&
-    tf_valid_[i];
-
-  for (int id : idx_list) {
-    if (id < 0 || static_cast<std::size_t>(id) >= cloud.size()) {
-      continue;
-    }
-
-    const auto & src = cloud[id];
-    tf2::Vector3 p(src.x, src.y, src.z);
-
-    if (has_tf) {
-      p = tf_transforms_[i] * p;
-    }
-
-    pcl::PointXYZ dst(
-      static_cast<float>(p.x()),
-      static_cast<float>(p.y()),
-      static_cast<float>(p.z()));
-
-    if (collapse_x_) {dst.x = collapse_val_x_;}
-    if (collapse_y_) {dst.y = collapse_val_y_;}
-    if (collapse_z_) {dst.z = collapse_val_z_;}
-
-    tmp_single_cloud_.points.push_back(dst);
-  }
-
-  tmp_single_cloud_.width =
-    static_cast<uint32_t>(tmp_single_cloud_.points.size());
-  return tmp_single_cloud_;
-}
-
-
 PointPerceptionsOpsView &
 PointPerceptionsOpsView::fuse(const std::string & target_frame, bool exact_time)
 {

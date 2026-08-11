@@ -180,12 +180,6 @@ public:
     data.points.resize(size);
   }
 
-  /// \brief Retrieves the most recent buffered perception (independently of it has a valid TF) without removing it from the buffer.
-  const PointPerceptionBufferType & get_last_perception() const
-  {
-    return buffer.latest_ref();
-  }
-
   void integrate_pending_perceptions()
   {
     std::lock_guard<std::mutex> lock(mutex_);
@@ -499,11 +493,6 @@ public:
   /// \return Concatenated point cloud.
   pcl::PointCloud<pcl::PointXYZ> as_points() const;
 
-  /// \brief Retrieves the filtered point cloud for a specific perception.
-  /// \param idx Index of the target perception in the underlying container.
-  /// \return Const reference to the filtered point cloud.
-  const pcl::PointCloud<pcl::PointXYZ> & as_points(int idx) const;
-
   /// \brief Configures fusion of all perceptions into a common frame.
   ///
   /// This method does not immediately build a fused point cloud. Instead, it stores the target frame
@@ -589,9 +578,6 @@ private:
   double post_max_[3] {0.0, 0.0, 0.0};
   bool use_post_min_[3] {false, false, false};
   bool use_post_max_[3] {false, false, false};
-
-  // Temporary storage for as_points(int)
-  mutable pcl::PointCloud<pcl::PointXYZ> tmp_single_cloud_;
 };
 
 }  // namespace easynav
