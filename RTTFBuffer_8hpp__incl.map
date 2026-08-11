@@ -1,17 +1,18 @@
 <map id="easynav_common/include/easynav_common/RTTFBuffer.hpp" name="easynav_common/include/easynav_common/RTTFBuffer.hpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="221,5,446,46"/>
-<area shape="rect" id="Node000002" href="$Singleton_8hpp.html" title=" " alt="" coords="20,102,228,127"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="287,49,168,98,166,93,285,44"/>
-<area shape="rect" id="Node000006" href="$TFInfo_8hpp.html" title=" " alt="" coords="253,94,414,135"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="336,47,336,78,331,78,331,47"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="438,102,560,127"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="372,44,464,92,461,96,370,49"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="5,183,73,208"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="113,130,65,174,61,170,110,126"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="96,183,152,208"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="127,128,127,167,122,167,122,128"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="176,183,227,208"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="138,126,181,170,178,173,134,129"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="307,183,360,208"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="336,135,336,167,331,167,331,135"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="152,5,377,46"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,183,62,208"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="152,39,122,47,94,59,68,75,46,96,37,112,32,130,32,167,26,167,27,130,32,110,42,92,65,71,91,54,120,42,150,34"/>
+<area shape="rect" id="Node000003" href="$Singleton_8hpp.html" title=" " alt="" coords="56,102,264,127"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="242,49,188,94,184,90,239,44"/>
+<area shape="rect" id="Node000006" href="$TFInfo_8hpp.html" title=" " alt="" coords="289,94,450,135"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="290,44,336,82,332,86,286,49"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="474,102,596,127"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="327,44,483,94,482,99,325,49"/>
+<area shape="poly" id="edge4_Node000003_Node000002" title=" " alt="" coords="142,130,67,176,64,172,140,125"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="98,183,166,208"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="158,128,144,169,139,167,153,127"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="190,183,242,208"/>
+<area shape="poly" id="edge5_Node000003_Node000005" title=" " alt="" coords="171,126,201,168,197,171,167,129"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="343,183,396,208"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="372,135,372,167,367,167,367,135"/>
 </map>
