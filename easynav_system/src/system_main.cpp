@@ -12,6 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <csignal>
+#include <cstdint>
+#include <cstdlib>
 #include <string>
 #include <atomic>
 #include <thread>
@@ -30,11 +33,34 @@
 
 using namespace std::chrono_literals;
 
+namespace
+{
+std::atomic_bool g_stop{false};
+std::atomic<int64_t> g_shutdown_requested_at_ns{0};
+
+void handle_shutdown_signal(int /*signum*/)
+{
+  constexpr int64_t kDebounceNs = 1'000'000'000;  // 1s
+  const int64_t now_ns = std::chrono::steady_clock::now().time_since_epoch().count();
+
+  int64_t expected = 0;
+  if (g_shutdown_requested_at_ns.compare_exchange_strong(expected, now_ns,
+    std::memory_order_relaxed))
+  {
+    g_stop.store(true, std::memory_order_relaxed);
+  } else if (now_ns - expected > kDebounceNs) {
+    std::_Exit(1);
+  }
+}
+}  // namespace
+
 int main(int argc, char ** argv)
 {
-  rclcpp::init(argc, argv);
+  rclcpp::init(argc, argv, rclcpp::InitOptions(), rclcpp::SignalHandlerOptions::None);
+  std::signal(SIGINT, handle_shutdown_signal);
+  std::signal(SIGTERM, handle_shutdown_signal);
 
-  std::atomic_bool stop{false};
+  std::atomic_bool & stop = g_stop;
 
   std::thread rt_thread;
   {
@@ -108,13 +134,6 @@ int main(int argc, char ** argv)
       std::chrono::duration<double>(spin_time_nort)
     );
 
-    // Cooperative shutdown on SIGINT
-    rclcpp::on_shutdown([&](){
-        stop.store(true, std::memory_order_relaxed);
-        exe_rt.cancel();
-        exe_nort.cancel();
-    });
-
     // RT thread
     rt_thread = std::thread(
       [&, tf_node, tf_buffer, system_node, use_real_time]() {
@@ -167,15 +186,6 @@ int main(int argc, char ** argv)
     exe_rt.cancel();
     exe_nort.cancel();
 
-    // Wait for the RT thread to finish *before* exe_rt/exe_nort/system_node (and
-    // everything system_node owns, transitively down to every plugin's
-    // pluginlib::ClassLoader) are destroyed below. The RT thread's lambda captured
-    // system_node by value and calls exe_rt.spin_all() every cycle; joining it here,
-    // still inside this scope, guarantees it has released its own copy and stopped
-    // touching the executor before this thread's destructors run. Without this, the
-    // two threads race to release the last reference to system_node, so its final
-    // teardown (and every plugin instance vs. ClassLoader destruction order within
-    // it) can happen from either thread in an unspecified order.
     if (rt_thread.joinable()) {
       rt_thread.join();
     }
