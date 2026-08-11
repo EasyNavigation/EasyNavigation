@@ -139,6 +139,29 @@ class TestGoalManagerClientUnit(unittest.TestCase):
             lambda: self.client.get_state() == ClientState.NAVIGATION_FAILED, timeout=2.0)
         self.assertTrue(ok, 'Expected NAVIGATION_FAILED after FAILED')
 
+    def test_unexpected_message_while_accepted_and_navigating(self):
+        # Regression test: _on_control()'s ACCEPTED_AND_NAVIGATING branch used to build
+        # its error log with `'...%d...%s' % msg.type, msg.status_message` — a missing
+        # tuple, so the string formatting itself raised TypeError (not enough arguments
+        # for format string) inside the subscription callback the moment an
+        # unrecognized message.type arrived in this state. ERROR is not handled by the
+        # ACCEPTED_AND_NAVIGATING branch (only FEEDBACK/FINISHED/FAILED/CANCELLED are),
+        # so it exercises the previously-broken `case _:` path.
+        self.client.send_goals(self.goals)
+        self._publish_and_wait(
+            self._srv_msg(NavigationControl.ACCEPT),
+            lambda: self.client.get_state() == ClientState.ACCEPTED_AND_NAVIGATING)
+
+        try:
+            ok = self._publish_and_wait(
+                self._srv_msg(NavigationControl.ERROR, 'unexpected'),
+                lambda: self.client.get_state() == ClientState.ERROR)
+        except TypeError as e:
+            self.fail(f'_on_control() raised {e!r} handling an unexpected message type')
+
+        self.assertTrue(ok, 'Expected ERROR after an unrecognized message type')
+        self.assertEqual(self.client.get_result().status_message, 'unexpected')
+
     def test_preempt_local(self):
         self.client.send_goals(self.goals)
         self._publish_and_wait(

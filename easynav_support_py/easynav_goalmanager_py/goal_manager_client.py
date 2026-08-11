@@ -225,7 +225,7 @@ class GoalManagerClient:
                         case _:
                             self.node.get_logger().error(
                                 'State ACCEPTED_AND_NAVIGATING; Unexpected message: "%d": "%s"' %
-                                msg.type, msg.status_message)
+                                (msg.type, msg.status_message))
                             self.last_result = msg
                             self.state = ClientState.ERROR
                 case _:
