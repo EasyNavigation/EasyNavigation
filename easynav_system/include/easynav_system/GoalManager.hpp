@@ -190,6 +190,12 @@ private:
 
   /// @brief Internal goal state.
   State state_ {State::IDLE};
+
+  /// @brief Value of "navigation_state" as last pushed to NavState by this class
+  /// (the sole writer of that key). Lets update() detect whether state_ has since
+  /// diverged without reading the key back from NavState (a lock + copy) just to
+  /// compare it against a value only this class ever wrote.
+  State last_synced_navigation_state_ {State::IDLE};
 };
 
 }  // namespace easynav

@@ -114,8 +114,6 @@ ControllerMethodBase::is_inminent_collision(NavState & nav_state)
   const auto & tf_info = easynav::RTTFBuffer::getInstance()->get_tf_info();
   const auto & robot_frame = tf_info.robot_frame;
 
-  if (perceptions.empty()) {return false;}
-
   const double vx = twist.twist.linear.x;
   const double vy = twist.twist.linear.y;
   const double wz = twist.twist.angular.z;

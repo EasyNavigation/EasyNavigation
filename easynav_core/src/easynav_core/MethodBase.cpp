@@ -63,6 +63,13 @@ MethodBase::isTime2RunRT()
 {
   auto node = parent_node_.lock();
   if (!node) {return false;}
+  if (rt_frequency_ <= 0.0f) {
+    RCLCPP_WARN_THROTTLE(
+      node->get_logger(), *node->get_clock(), 2000,
+      "[%s] RT cycle disabled: rt_frequency is %.3f (check the plugin's config)",
+      plugin_name_.c_str(), rt_frequency_);
+    return false;
+  }
   const auto now = node->now();
   const double target_cycle_time = 1.0 / rt_frequency_;
   const double cycle_time = (now - rt_last_ts_).seconds();
@@ -85,6 +92,13 @@ MethodBase::isTime2Run()
 {
   auto node = parent_node_.lock();
   if (!node) {return false;}
+  if (frequency_ <= 0.0f) {
+    RCLCPP_WARN_THROTTLE(
+      node->get_logger(), *node->get_clock(), 2000,
+      "[%s] cycle disabled: frequency is %.3f (check the plugin's config)",
+      plugin_name_.c_str(), frequency_);
+    return false;
+  }
   const auto now = node->now();
   const double target_cycle_time = 1.0 / frequency_;
   const double cycle_time = (now - last_ts_).seconds();
