@@ -1,0 +1,7 @@
+<map id="PerceptionLockingTestCase" name="PerceptionLockingTestCase">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,102,191,128"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="40,5,87,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="76,45,96,100,91,102,70,47"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="111,5,157,31"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="126,47,105,102,100,100,121,45"/>
+</map>

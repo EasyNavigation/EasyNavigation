@@ -166,9 +166,9 @@ document.addEventListener('DOMContentLoaded', () => {
 <div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>private:</div>
 <div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>  rclcpp::CallbackGroup::SharedPtr realtime_cbg_;</div>
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span></div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>  <a class="code hl_namespace" href="namespacestd.html">std</a>::shared_ptr&lt;LocalizerMethodBase&gt; localizer_method_ {<span class="keyword">nullptr</span>};</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>  <a class="code hl_namespace" href="namespacestd.html">std</a>::unique_ptr&lt;pluginlib::ClassLoader&lt;<a class="code hl_namespace" href="namespaceeasynav.html">easynav</a>::LocalizerMethodBase&gt;&gt; localizer_loader_;</div>
 <div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span></div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>  std::unique_ptr&lt;pluginlib::ClassLoader&lt;easynav::LocalizerMethodBase&gt;&gt; localizer_loader_;</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>  <a class="code hl_namespace" href="namespacestd.html">std</a>::shared_ptr&lt;LocalizerMethodBase&gt; localizer_method_ {<span class="keyword">nullptr</span>};</div>
 <div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>};</div>
 </div>
 <div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span> </div>

@@ -1,7 +1,7 @@
 <map id="DetectionsPerception" name="DetectionsPerception">
-<area shape="rect" id="Node000001" title=" " alt="" coords="158,219,303,245"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="222,219,367,245"/>
 <area shape="rect" id="Node000002" href="$classeasynav_1_1PerceptionBase.html" title="Abstract base class for representing a single sensor perception." alt="" coords="50,122,163,148"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="136,155,216,216,213,221,133,160"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="145,153,272,216,269,221,143,158"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="5,5,56,31"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="38,45,46,72,59,97,86,120,82,124,55,100,41,74,33,47"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="80,5,133,31"/>
@@ -9,7 +9,9 @@
 <area shape="rect" id="Node000005" title=" " alt="" coords="173,5,218,31"/>
 <area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="193,47,184,74,169,100,154,114,137,124,134,119,150,109,164,97,179,72,188,45"/>
 <area shape="rect" id="Node000006" title=" " alt="" coords="187,122,274,148"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="233,163,233,218,228,218,228,163"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="232,163,234,179,240,194,252,207,266,216,263,221,248,211,235,196,229,180,226,164"/>
 <area shape="rect" id="Node000007" title=" " alt="" coords="299,122,421,148"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="353,164,344,181,331,197,310,211,287,221,285,216,307,206,327,193,340,178,349,161"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="351,164,333,197,311,220,307,217,328,193,347,161"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="445,122,501,148"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="446,159,384,197,330,221,328,216,381,193,443,154"/>
 </map>

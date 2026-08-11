@@ -134,13 +134,15 @@ Collaboration diagram for SensorsNode:</div>
 <div class="dyncontent">
 <div class="center"><img src="classeasynav_1_1SensorsNode__coll__graph.png" border="0" usemap="#aSensorsNode_coll__map" loading="lazy" alt="Collaboration graph"/></div>
 <map name="aSensorsNode_coll__map" id="aSensorsNode_coll__map">
-<area shape="rect" title="ROS 2 lifecycle node that manages sensor fusion in Easy Navigation." alt="" coords="372,63,472,88"/>
+<area shape="rect" title="ROS 2 lifecycle node that manages sensor fusion in Easy Navigation." alt="" coords="390,99,490,124"/>
 <area shape="rect" title=" " alt="" coords="72,5,176,31"/>
-<area shape="poly" title=" " alt="" coords="192,20,268,29,348,45,391,59,389,65,347,50,267,34,192,25"/>
+<area shape="poly" title=" " alt="" coords="192,21,276,34,322,46,367,61,398,78,424,96,421,100,395,82,365,66,321,51,275,40,191,26"/>
 <area shape="rect" title=" " alt="" coords="48,55,200,96"/>
-<area shape="poly" title=" " alt="" coords="215,73,371,73,371,78,215,78"/>
-<area shape="rect" title=" " alt="" coords="5,120,243,161"/>
-<area shape="poly" title=" " alt="" coords="257,121,347,101,389,86,391,91,348,106,258,126"/>
+<area shape="poly" title=" " alt="" coords="216,83,389,103,389,108,216,89"/>
+<area shape="rect" title=" " alt="" coords="44,120,204,175"/>
+<area shape="poly" title=" " alt="" coords="219,142,291,137,365,128,392,122,393,128,366,133,291,142,219,148"/>
+<area shape="rect" title=" " alt="" coords="5,199,243,240"/>
+<area shape="poly" title=" " alt="" coords="257,202,312,188,364,168,398,147,424,123,428,127,401,151,367,173,314,193,259,207"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -179,6 +181,8 @@ Protected Attributes</h2></td></tr>
 <tr class="memdesc:a59cb16a31a60e4647d2d387702be1294"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sensor groups (set as group of keys in the <a class="el" href="classeasynav_1_1NavState.html" title="A generic, type-safe, thread-safe blackboard to hold runtime state.">NavState</a>).  <br /></td></tr>
 <tr class="memitem:ad18a77ce454474ea2d382022a9703d92" id="r_ad18a77ce454474ea2d382022a9703d92"><td class="memItemLeft">std::vector&lt; std::shared_ptr&lt; <a class="el" href="classPerceptionHandler.html">PerceptionHandler</a> &gt; &gt;&#160;</td><td class="memItemRight"><a class="el" href="#ad18a77ce454474ea2d382022a9703d92">handler_list_</a></td></tr>
 <tr class="memdesc:ad18a77ce454474ea2d382022a9703d92"><td class="mdescLeft">&#160;</td><td class="mdescRight">vector of <a class="el" href="classeasynav_1_1PerceptionHandler.html" title="Abstract base class for pluginlib-based sensor perception handlers.">PerceptionHandler</a> instances  <br /></td></tr>
+<tr class="memitem:abb724bbd5a99d8c76989244c0b6d9c7a" id="r_abb724bbd5a99d8c76989244c0b6d9c7a"><td class="memItemLeft">std::unique_ptr&lt; pluginlib::ClassLoader&lt; <a class="el" href="classPerceptionHandler.html">PerceptionHandler</a> &gt; &gt;&#160;</td><td class="memItemRight"><a class="el" href="#abb724bbd5a99d8c76989244c0b6d9c7a">handler_loader_</a></td></tr>
+<tr class="memdesc:abb724bbd5a99d8c76989244c0b6d9c7a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pluginlib class loader for <a class="el" href="classeasynav_1_1PerceptionHandler.html" title="Abstract base class for pluginlib-based sensor perception handlers.">PerceptionHandler</a> plugins.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>ROS 2 lifecycle node that manages sensor fusion in Easy Navigation. </p>
@@ -523,6 +527,31 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>vector of <a class="el" href="classeasynav_1_1PerceptionHandler.html" title="Abstract base class for pluginlib-based sensor perception handlers.">PerceptionHandler</a> instances </p>
+
+</div>
+</div>
+<a id="abb724bbd5a99d8c76989244c0b6d9c7a" name="abb724bbd5a99d8c76989244c0b6d9c7a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb724bbd5a99d8c76989244c0b6d9c7a">&#9670;&#160;</a></span>handler_loader_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt;pluginlib::ClassLoader&lt;<a class="el" href="classPerceptionHandler.html">PerceptionHandler</a>&gt; &gt; handler_loader_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Pluginlib class loader for <a class="el" href="classeasynav_1_1PerceptionHandler.html" title="Abstract base class for pluginlib-based sensor perception handlers.">PerceptionHandler</a> plugins. </p>
+<p>Declared before <a class="el" href="#ad18a77ce454474ea2d382022a9703d92" title="handler_list_">handler_list_</a> so it is destroyed <em>after</em> it: members are destroyed in reverse declaration order, and each handler instance's vtable/code lives inside the shared library this loader dlopen()s. Destroying the loader (and therefore dlclose()-ing the library) before the instances would make their destructors call into unloaded code. </p>
 
 </div>
 </div>

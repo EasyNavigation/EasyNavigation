@@ -1,7 +1,7 @@
 <map id="GNSSPerception" name="GNSSPerception">
-<area shape="rect" id="Node000001" title="Represents a single GNSS perception from a sensor." alt="" coords="170,219,291,245"/>
+<area shape="rect" id="Node000001" title="Represents a single GNSS perception from a sensor." alt="" coords="231,219,352,245"/>
 <area shape="rect" id="Node000002" href="$classeasynav_1_1PerceptionBase.html" title="Abstract base class for representing a single sensor perception." alt="" coords="50,122,163,148"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="136,155,216,216,213,221,133,160"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="145,153,222,193,269,216,266,221,220,197,143,158"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="5,5,56,31"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="38,45,46,72,59,97,86,120,82,124,55,100,41,74,33,47"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="80,5,133,31"/>
@@ -9,7 +9,9 @@
 <area shape="rect" id="Node000005" title=" " alt="" coords="173,5,218,31"/>
 <area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="193,47,184,74,169,100,154,114,137,124,134,119,150,109,164,97,179,72,188,45"/>
 <area shape="rect" id="Node000006" title=" " alt="" coords="187,122,274,148"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="233,163,233,218,228,218,228,163"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="229,163,229,179,234,194,246,207,261,216,258,221,242,211,230,196,224,180,223,164"/>
 <area shape="rect" id="Node000007" title=" " alt="" coords="313,122,396,148"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="349,164,340,181,327,197,307,211,285,221,282,216,304,206,323,193,335,178,344,161"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="346,164,327,197,307,221,302,217,323,193,341,161"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="420,122,476,148"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="426,161,377,197,328,221,325,216,374,193,423,156"/>
 </map>

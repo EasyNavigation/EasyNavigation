@@ -107,6 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
+<a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classeasynav_1_1ImagePerception-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">ImagePerception Class Reference</div></div>
 </div><!--header-->
@@ -131,9 +132,9 @@ Collaboration diagram for ImagePerception:</div>
 <div class="dyncontent">
 <div class="center"><img src="classeasynav_1_1ImagePerception__coll__graph.png" border="0" usemap="#aImagePerception_coll__map" loading="lazy" alt="Collaboration graph"/></div>
 <map name="aImagePerception_coll__map" id="aImagePerception_coll__map">
-<area shape="rect" title="Represents a single image perception from a sensor." alt="" coords="171,219,290,245"/>
+<area shape="rect" title="Represents a single image perception from a sensor." alt="" coords="232,219,352,245"/>
 <area shape="rect" href="classeasynav_1_1PerceptionBase.html" title="Abstract base class for representing a single sensor perception." alt="" coords="50,122,163,148"/>
-<area shape="poly" title=" " alt="" coords="136,155,216,216,213,221,133,160"/>
+<area shape="poly" title=" " alt="" coords="145,153,222,193,269,216,266,221,220,197,143,158"/>
 <area shape="rect" title=" " alt="" coords="5,5,56,31"/>
 <area shape="poly" title=" " alt="" coords="38,45,46,72,59,97,86,120,82,124,55,100,41,74,33,47"/>
 <area shape="rect" title=" " alt="" coords="80,5,133,31"/>
@@ -141,15 +142,25 @@ Collaboration diagram for ImagePerception:</div>
 <area shape="rect" title=" " alt="" coords="173,5,218,31"/>
 <area shape="poly" title=" " alt="" coords="193,47,184,74,169,100,154,114,137,124,134,119,150,109,164,97,179,72,188,45"/>
 <area shape="rect" title=" " alt="" coords="187,122,274,148"/>
-<area shape="poly" title=" " alt="" coords="233,163,233,218,228,218,228,163"/>
+<area shape="poly" title=" " alt="" coords="229,163,229,179,234,194,246,207,261,216,258,221,242,211,230,196,224,180,223,164"/>
 <area shape="rect" title=" " alt="" coords="333,122,376,148"/>
-<area shape="poly" title=" " alt="" coords="349,164,340,181,327,197,307,211,285,221,282,216,304,206,323,193,335,178,344,161"/>
+<area shape="poly" title=" " alt="" coords="346,164,327,197,307,221,302,217,323,193,341,161"/>
+<area shape="rect" title=" " alt="" coords="400,122,456,148"/>
+<area shape="poly" title=" " alt="" coords="413,162,377,197,331,221,329,216,374,193,409,158"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a24fff13e8446bf6dbf267b2783e3c88a" id="r_a24fff13e8446bf6dbf267b2783e3c88a"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a24fff13e8446bf6dbf267b2783e3c88a">consume_new_data</a> ()</td></tr>
+<tr class="memdesc:a24fff13e8446bf6dbf267b2783e3c88a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Atomically reads and clears <a class="el" href="classeasynav_1_1PerceptionBase.html#a5a4ba60143c31271df0f72bf0e503876" title="new_data">new_data</a>.  <br /></td></tr>
 <tr class="memitem:a741e987b136295f8e5c7bfd88aac14d7" id="r_a741e987b136295f8e5c7bfd88aac14d7"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a741e987b136295f8e5c7bfd88aac14d7">ImagePerception</a> ()</td></tr>
+<tr class="memitem:afbab8ebdd2225dfa9ac1012b3c9855db" id="r_afbab8ebdd2225dfa9ac1012b3c9855db"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#afbab8ebdd2225dfa9ac1012b3c9855db">ImagePerception</a> (const ImagePerception &amp;other)</td></tr>
+<tr class="memitem:abfa2f4259419073935d50d6173ac27de" id="r_abfa2f4259419073935d50d6173ac27de"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#abfa2f4259419073935d50d6173ac27de">mark_invalid</a> (const rclcpp::Time &amp;msg_stamp, const std::string &amp;msg_frame_id)</td></tr>
+<tr class="memdesc:abfa2f4259419073935d50d6173ac27de"><td class="mdescLeft">&#160;</td><td class="mdescRight">Atomically records a failed decode: updates stamp/frame_id, marks invalid, and leaves <a class="el" href="#abe65ed70273e2d45240309031209a6b2" title="data">data</a> untouched (matches the pre-existing behavior on cv_bridge exceptions).  <br /></td></tr>
+<tr class="memitem:a31ee9c5204250cbbc7314a05c2c6cf70" id="r_a31ee9c5204250cbbc7314a05c2c6cf70"><td class="memItemLeft"><a class="el" href="#a741e987b136295f8e5c7bfd88aac14d7">ImagePerception</a> &amp;&#160;</td><td class="memItemRight"><a class="el" href="#a31ee9c5204250cbbc7314a05c2c6cf70">operator=</a> (const <a class="el" href="#a741e987b136295f8e5c7bfd88aac14d7">ImagePerception</a> &amp;other)</td></tr>
+<tr class="memitem:adef257db5e08a078a5bd0b214a453195" id="r_adef257db5e08a078a5bd0b214a453195"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#adef257db5e08a078a5bd0b214a453195">set_data</a> (cv::Mat &amp;&amp;image, const rclcpp::Time &amp;msg_stamp, const std::string &amp;msg_frame_id)</td></tr>
+<tr class="memdesc:adef257db5e08a078a5bd0b214a453195"><td class="mdescLeft">&#160;</td><td class="mdescRight">Atomically overwrites stamp/frame_id/data with a successfully decoded image and marks the perception valid.  <br /></td></tr>
 <tr class="inherit_header pub_methods_classeasynav_1_1PerceptionBase"><td colspan="2">Public Member Functions inherited from <a class="el" href="classeasynav_1_1PerceptionBase.html">PerceptionBase</a></td></tr>
 <tr class="memitem:a05127c1d4439d2afa8dcf4230e2a177c pub_methods_classeasynav_1_1PerceptionBase" id="r_a05127c1d4439d2afa8dcf4230e2a177c"><td class="memItemLeft">virtual&#160;</td><td class="memItemRight"><a class="el" href="classeasynav_1_1PerceptionBase.html#a05127c1d4439d2afa8dcf4230e2a177c">~PerceptionBase</a> ()=default</td></tr>
 </table><table class="memberdecls">
@@ -176,13 +187,17 @@ Public Attributes</h2></td></tr>
 Static Public Attributes</h2></td></tr>
 <tr class="memitem:a6a1aeb48d08927d795eb04f9f9800e49" id="r_a6a1aeb48d08927d795eb04f9f9800e49"><td class="memItemLeft">static constexpr std::string_view&#160;</td><td class="memItemRight"><a class="el" href="#a6a1aeb48d08927d795eb04f9f9800e49">default_group_</a> = &quot;image&quot;</td></tr>
 <tr class="memdesc:a6a1aeb48d08927d795eb04f9f9800e49"><td class="mdescLeft">&#160;</td><td class="mdescRight">Group identifier for image perceptions.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pro-attribs" class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
+Protected Attributes</h2></td></tr>
+<tr class="memitem:a281b5ec791338d4378e22ef44a51b4a1" id="r_a281b5ec791338d4378e22ef44a51b4a1"><td class="memItemLeft">std::mutex&#160;</td><td class="memItemRight"><a class="el" href="#a281b5ec791338d4378e22ef44a51b4a1">mutex_</a></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Represents a single image perception from a sensor. </p>
 <p>Inherits from <a class="el" href="classeasynav_1_1PerceptionBase.html" title="Abstract base class for representing a single sensor perception.">PerceptionBase</a> and stores an OpenCV image (cv::Mat) along with metadata such as timestamp and frame_id. </p>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a741e987b136295f8e5c7bfd88aac14d7" name="a741e987b136295f8e5c7bfd88aac14d7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a741e987b136295f8e5c7bfd88aac14d7">&#9670;&#160;</a></span>ImagePerception()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a741e987b136295f8e5c7bfd88aac14d7">&#9670;&#160;</a></span>ImagePerception() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -198,7 +213,113 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="afbab8ebdd2225dfa9ac1012b3c9855db" name="afbab8ebdd2225dfa9ac1012b3c9855db"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afbab8ebdd2225dfa9ac1012b3c9855db">&#9670;&#160;</a></span>ImagePerception() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">ImagePerception </td>
+          <td>(</td>
+          <td class="paramtype">const ImagePerception &amp;</td>          <td class="paramname"><span class="paramname"><em>other</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a id="a24fff13e8446bf6dbf267b2783e3c88a" name="a24fff13e8446bf6dbf267b2783e3c88a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a24fff13e8446bf6dbf267b2783e3c88a">&#9670;&#160;</a></span>consume_new_data()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool consume_new_data </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Atomically reads and clears <a class="el" href="classeasynav_1_1PerceptionBase.html#a5a4ba60143c31271df0f72bf0e503876" title="new_data">new_data</a>. </p>
+<dl class="section return"><dt>Returns</dt><dd>The value of <a class="el" href="classeasynav_1_1PerceptionBase.html#a5a4ba60143c31271df0f72bf0e503876" title="new_data">new_data</a> before it was cleared. </dd></dl>
+
+</div>
+</div>
+<a id="abfa2f4259419073935d50d6173ac27de" name="abfa2f4259419073935d50d6173ac27de"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abfa2f4259419073935d50d6173ac27de">&#9670;&#160;</a></span>mark_invalid()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void mark_invalid </td>
+          <td>(</td>
+          <td class="paramtype">const rclcpp::Time &amp;</td>          <td class="paramname"><span class="paramname"><em>msg_stamp</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>msg_frame_id</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Atomically records a failed decode: updates stamp/frame_id, marks invalid, and leaves <a class="el" href="#abe65ed70273e2d45240309031209a6b2" title="data">data</a> untouched (matches the pre-existing behavior on cv_bridge exceptions). </p>
+
+</div>
+</div>
+<a id="a31ee9c5204250cbbc7314a05c2c6cf70" name="a31ee9c5204250cbbc7314a05c2c6cf70"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a31ee9c5204250cbbc7314a05c2c6cf70">&#9670;&#160;</a></span>operator=()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a741e987b136295f8e5c7bfd88aac14d7">ImagePerception</a> &amp; operator= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="#a741e987b136295f8e5c7bfd88aac14d7">ImagePerception</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>other</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="adef257db5e08a078a5bd0b214a453195" name="adef257db5e08a078a5bd0b214a453195"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adef257db5e08a078a5bd0b214a453195">&#9670;&#160;</a></span>set_data()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void set_data </td>
+          <td>(</td>
+          <td class="paramtype">cv::Mat &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>image</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const rclcpp::Time &amp;</td>          <td class="paramname"><span class="paramname"><em>msg_stamp</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>msg_frame_id</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Atomically overwrites stamp/frame_id/data with a successfully decoded image and marks the perception valid. </p>
+<p>Guards against a concurrent copy (e.g. via <code><a class="el" href="classeasynav_1_1NavState.html#af40d4eec15bd7b7627c803b9e881f3fc" title="Retrieves a snapshot copy of the stored value of type T for key.">NavState::get_safe()</a></code>) observing a partially-updated object while this handler's RT-thread callback is writing. </p>
+
+</div>
+</div>
 <a id="a395ec0562b61d102dc90ab55595ac76e" name="a395ec0562b61d102dc90ab55595ac76e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a395ec0562b61d102dc90ab55595ac76e">&#9670;&#160;</a></span>supports_msg_type()</h2>
 
@@ -272,6 +393,28 @@ Static Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Group identifier for image perceptions. </p>
+
+</div>
+</div>
+<a id="a281b5ec791338d4378e22ef44a51b4a1" name="a281b5ec791338d4378e22ef44a51b4a1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a281b5ec791338d4378e22ef44a51b4a1">&#9670;&#160;</a></span>mutex_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::mutex mutex_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel mutable">mutable</span><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>

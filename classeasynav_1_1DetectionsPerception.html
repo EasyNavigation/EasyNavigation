@@ -107,6 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
+<a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classeasynav_1_1DetectionsPerception-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">DetectionsPerception Class Reference</div></div>
 </div><!--header-->
@@ -128,9 +129,9 @@ Collaboration diagram for DetectionsPerception:</div>
 <div class="dyncontent">
 <div class="center"><img src="classeasynav_1_1DetectionsPerception__coll__graph.png" border="0" usemap="#aDetectionsPerception_coll__map" loading="lazy" alt="Collaboration graph"/></div>
 <map name="aDetectionsPerception_coll__map" id="aDetectionsPerception_coll__map">
-<area shape="rect" title=" " alt="" coords="158,219,303,245"/>
+<area shape="rect" title=" " alt="" coords="222,219,367,245"/>
 <area shape="rect" href="classeasynav_1_1PerceptionBase.html" title="Abstract base class for representing a single sensor perception." alt="" coords="50,122,163,148"/>
-<area shape="poly" title=" " alt="" coords="136,155,216,216,213,221,133,160"/>
+<area shape="poly" title=" " alt="" coords="145,153,272,216,269,221,143,158"/>
 <area shape="rect" title=" " alt="" coords="5,5,56,31"/>
 <area shape="poly" title=" " alt="" coords="38,45,46,72,59,97,86,120,82,124,55,100,41,74,33,47"/>
 <area shape="rect" title=" " alt="" coords="80,5,133,31"/>
@@ -138,15 +139,23 @@ Collaboration diagram for DetectionsPerception:</div>
 <area shape="rect" title=" " alt="" coords="173,5,218,31"/>
 <area shape="poly" title=" " alt="" coords="193,47,184,74,169,100,154,114,137,124,134,119,150,109,164,97,179,72,188,45"/>
 <area shape="rect" title=" " alt="" coords="187,122,274,148"/>
-<area shape="poly" title=" " alt="" coords="233,163,233,218,228,218,228,163"/>
+<area shape="poly" title=" " alt="" coords="232,163,234,179,240,194,252,207,266,216,263,221,248,211,235,196,229,180,226,164"/>
 <area shape="rect" title=" " alt="" coords="299,122,421,148"/>
-<area shape="poly" title=" " alt="" coords="353,164,344,181,331,197,310,211,287,221,285,216,307,206,327,193,340,178,349,161"/>
+<area shape="poly" title=" " alt="" coords="351,164,333,197,311,220,307,217,328,193,347,161"/>
+<area shape="rect" title=" " alt="" coords="445,122,501,148"/>
+<area shape="poly" title=" " alt="" coords="446,159,384,197,330,221,328,216,381,193,443,154"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a24fff13e8446bf6dbf267b2783e3c88a" id="r_a24fff13e8446bf6dbf267b2783e3c88a"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a24fff13e8446bf6dbf267b2783e3c88a">consume_new_data</a> ()</td></tr>
+<tr class="memdesc:a24fff13e8446bf6dbf267b2783e3c88a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Atomically reads and clears <a class="el" href="classeasynav_1_1PerceptionBase.html#a5a4ba60143c31271df0f72bf0e503876" title="new_data">new_data</a>.  <br /></td></tr>
 <tr class="memitem:a5da93803685e7665e04616f32a94a96f" id="r_a5da93803685e7665e04616f32a94a96f"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a5da93803685e7665e04616f32a94a96f">DetectionsPerception</a> ()</td></tr>
+<tr class="memitem:ab9c64335861b7e6cfa9810364d10db50" id="r_ab9c64335861b7e6cfa9810364d10db50"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#ab9c64335861b7e6cfa9810364d10db50">DetectionsPerception</a> (const DetectionsPerception &amp;other)</td></tr>
+<tr class="memitem:abe5e75d20050cd9172be18047d249ba7" id="r_abe5e75d20050cd9172be18047d249ba7"><td class="memItemLeft"><a class="el" href="#a5da93803685e7665e04616f32a94a96f">DetectionsPerception</a> &amp;&#160;</td><td class="memItemRight"><a class="el" href="#abe5e75d20050cd9172be18047d249ba7">operator=</a> (const <a class="el" href="#a5da93803685e7665e04616f32a94a96f">DetectionsPerception</a> &amp;other)</td></tr>
+<tr class="memitem:aefe22826699bc12c506f0ee774a08cb2" id="r_aefe22826699bc12c506f0ee774a08cb2"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#aefe22826699bc12c506f0ee774a08cb2">set_data</a> (const vision_msgs::msg::Detection3DArray &amp;msg, const rclcpp::Time &amp;msg_stamp, const std::string &amp;msg_frame_id)</td></tr>
+<tr class="memdesc:aefe22826699bc12c506f0ee774a08cb2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Atomically overwrites stamp/frame_id/data/valid from the subscription callback.  <br /></td></tr>
 <tr class="inherit_header pub_methods_classeasynav_1_1PerceptionBase"><td colspan="2">Public Member Functions inherited from <a class="el" href="classeasynav_1_1PerceptionBase.html">PerceptionBase</a></td></tr>
 <tr class="memitem:a05127c1d4439d2afa8dcf4230e2a177c pub_methods_classeasynav_1_1PerceptionBase" id="r_a05127c1d4439d2afa8dcf4230e2a177c"><td class="memItemLeft">virtual&#160;</td><td class="memItemRight"><a class="el" href="classeasynav_1_1PerceptionBase.html#a05127c1d4439d2afa8dcf4230e2a177c">~PerceptionBase</a> ()=default</td></tr>
 </table><table class="memberdecls">
@@ -173,10 +182,14 @@ Public Attributes</h2></td></tr>
 Static Public Attributes</h2></td></tr>
 <tr class="memitem:a6a1aeb48d08927d795eb04f9f9800e49" id="r_a6a1aeb48d08927d795eb04f9f9800e49"><td class="memItemLeft">static constexpr std::string_view&#160;</td><td class="memItemRight"><a class="el" href="#a6a1aeb48d08927d795eb04f9f9800e49">default_group_</a> = &quot;detections&quot;</td></tr>
 <tr class="memdesc:a6a1aeb48d08927d795eb04f9f9800e49"><td class="mdescLeft">&#160;</td><td class="mdescRight">Group identifier for image perceptions.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pro-attribs" class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
+Protected Attributes</h2></td></tr>
+<tr class="memitem:a281b5ec791338d4378e22ef44a51b4a1" id="r_a281b5ec791338d4378e22ef44a51b4a1"><td class="memItemLeft">std::mutex&#160;</td><td class="memItemRight"><a class="el" href="#a281b5ec791338d4378e22ef44a51b4a1">mutex_</a></td></tr>
 </table>
 <a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a5da93803685e7665e04616f32a94a96f" name="a5da93803685e7665e04616f32a94a96f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5da93803685e7665e04616f32a94a96f">&#9670;&#160;</a></span>DetectionsPerception()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a5da93803685e7665e04616f32a94a96f">&#9670;&#160;</a></span>DetectionsPerception() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -192,7 +205,90 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="ab9c64335861b7e6cfa9810364d10db50" name="ab9c64335861b7e6cfa9810364d10db50"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab9c64335861b7e6cfa9810364d10db50">&#9670;&#160;</a></span>DetectionsPerception() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">DetectionsPerception </td>
+          <td>(</td>
+          <td class="paramtype">const DetectionsPerception &amp;</td>          <td class="paramname"><span class="paramname"><em>other</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a id="a24fff13e8446bf6dbf267b2783e3c88a" name="a24fff13e8446bf6dbf267b2783e3c88a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a24fff13e8446bf6dbf267b2783e3c88a">&#9670;&#160;</a></span>consume_new_data()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool consume_new_data </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Atomically reads and clears <a class="el" href="classeasynav_1_1PerceptionBase.html#a5a4ba60143c31271df0f72bf0e503876" title="new_data">new_data</a>. </p>
+<dl class="section return"><dt>Returns</dt><dd>The value of <a class="el" href="classeasynav_1_1PerceptionBase.html#a5a4ba60143c31271df0f72bf0e503876" title="new_data">new_data</a> before it was cleared. </dd></dl>
+
+</div>
+</div>
+<a id="abe5e75d20050cd9172be18047d249ba7" name="abe5e75d20050cd9172be18047d249ba7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abe5e75d20050cd9172be18047d249ba7">&#9670;&#160;</a></span>operator=()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a5da93803685e7665e04616f32a94a96f">DetectionsPerception</a> &amp; operator= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="#a5da93803685e7665e04616f32a94a96f">DetectionsPerception</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>other</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aefe22826699bc12c506f0ee774a08cb2" name="aefe22826699bc12c506f0ee774a08cb2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aefe22826699bc12c506f0ee774a08cb2">&#9670;&#160;</a></span>set_data()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void set_data </td>
+          <td>(</td>
+          <td class="paramtype">const vision_msgs::msg::Detection3DArray &amp;</td>          <td class="paramname"><span class="paramname"><em>msg</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const rclcpp::Time &amp;</td>          <td class="paramname"><span class="paramname"><em>msg_stamp</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>msg_frame_id</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Atomically overwrites stamp/frame_id/data/valid from the subscription callback. </p>
+<p>Guards against a concurrent copy (e.g. via <code><a class="el" href="classeasynav_1_1NavState.html#af40d4eec15bd7b7627c803b9e881f3fc" title="Retrieves a snapshot copy of the stored value of type T for key.">NavState::get_safe()</a></code>) observing a partially-updated object while this handler's RT-thread callback is writing. </p>
+
+</div>
+</div>
 <a id="a395ec0562b61d102dc90ab55595ac76e" name="a395ec0562b61d102dc90ab55595ac76e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a395ec0562b61d102dc90ab55595ac76e">&#9670;&#160;</a></span>supports_msg_type()</h2>
 
@@ -265,6 +361,28 @@ Static Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Group identifier for image perceptions. </p>
+
+</div>
+</div>
+<a id="a281b5ec791338d4378e22ef44a51b4a1" name="a281b5ec791338d4378e22ef44a51b4a1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a281b5ec791338d4378e22ef44a51b4a1">&#9670;&#160;</a></span>mutex_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::mutex mutex_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel mutable">mutable</span><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
