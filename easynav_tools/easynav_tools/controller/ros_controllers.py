@@ -252,10 +252,16 @@ def _discover_log_path(pid: int | None = None) -> str | None:
     if pid is not None:
         return f'/tmp/easynav_{pid}.log'
 
-    candidates = glob.glob(_LOG_GLOB)
-    if not candidates:
+    dated_candidates = []
+    for path in glob.glob(_LOG_GLOB):
+        try:
+            dated_candidates.append((os.path.getmtime(path), path))
+        except FileNotFoundError:
+            # Deleted/rotated between glob() and getmtime(); skip it.
+            continue
+    if not dated_candidates:
         return None
-    return max(candidates, key=os.path.getmtime)
+    return max(dated_candidates)[1]
 
 
 # -------- Running stats (Welford) --------

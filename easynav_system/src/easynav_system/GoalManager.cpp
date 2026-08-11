@@ -142,6 +142,7 @@ GoalManager::accept_request(
   RCLCPP_DEBUG(parent_node_->get_logger(), "Accepted navigation request");
 
   goals_ = msg.goals;
+  goals_synced_empty_ = false;
 
   current_client_id_ = msg.user_id;
   response.status_message = "Goal accepted";
@@ -329,9 +330,10 @@ GoalManager::update(NavState & nav_state)
   nav_state.set("goal_tolerance.yaw", goal_tolerance_.yaw);
 
   if (state_ == State::IDLE) {
-    if (!goals_.goals.empty()) {
+    if (!goals_synced_empty_) {
       goals_ = nav_msgs::msg::Goals();
       nav_state.set("goals", goals_);
+      goals_synced_empty_ = true;
     }
     return;
   }

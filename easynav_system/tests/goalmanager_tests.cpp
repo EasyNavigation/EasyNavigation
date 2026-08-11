@@ -607,6 +607,14 @@ TEST_F(GoalManagerTestCase, simple_nav_node)
   req_goals = gm_server->get_goals();
   ASSERT_TRUE(req_goals.goals.empty());
 
+  // NavState's "goals" must also reflect the cancellation, not just the server's
+  // internal goals_ member -- CANCEL clears goals_ synchronously in the callback,
+  // before update() ever sees the transition, so a guard keyed off goals_.goals
+  // alone would skip republishing and leave NavState stuck on the last non-empty
+  // value.
+  const auto nav_state_goals = nav_state->get<nav_msgs::msg::Goals>("goals");
+  ASSERT_TRUE(nav_state_goals.goals.empty());
+
   last_control = gm_client->get_last_control();
   last_feedback = gm_client->get_feedback();
   last_result = gm_client->get_result();

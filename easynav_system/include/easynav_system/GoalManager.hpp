@@ -192,10 +192,12 @@ private:
   State state_ {State::IDLE};
 
   /// @brief Value of "navigation_state" as last pushed to NavState by this class
-  /// (the sole writer of that key). Lets update() detect whether state_ has since
-  /// diverged without reading the key back from NavState (a lock + copy) just to
-  /// compare it against a value only this class ever wrote.
+  /// (the sole writer of that key).
   State last_synced_navigation_state_ {State::IDLE};
+
+  /// @brief True once NavState's "goals" has been synced to an empty Goals() since
+  /// the last time goals_ became non-empty (see accept_request()).
+  bool goals_synced_empty_ {true};
 };
 
 }  // namespace easynav

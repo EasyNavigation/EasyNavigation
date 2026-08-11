@@ -32,8 +32,8 @@ class TimeStatsVerb(VerbExtension):
         parser.add_argument(
             '--pid', type=int, default=None,
             help='PID of the EasyNav process to read stats from. Defaults to '
-                 'auto-discovering the most recently started instance; only needed '
-                 'when more than one EasyNav process is running on this host.')
+                 'auto-discovering the most recently modified /tmp/easynav_<pid>.log; '
+                 'only needed when more than one EasyNav process is running on this host.')
 
     def main(self, *, args):
         try:

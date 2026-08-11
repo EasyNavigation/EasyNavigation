@@ -16,6 +16,7 @@
 /// \brief Implementation of the base class MethodBase used in plugin-based EasyNav method components.
 
 #include <memory>
+#include <stdexcept>
 
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 
@@ -40,6 +41,13 @@ MethodBase::initialize(
   parent_node->get_parameter(plugin_name + ".rt_freq", rt_frequency_);
   parent_node->get_parameter(plugin_name + ".freq", frequency_);
 
+  if (rt_frequency_ <= 0.0f || frequency_ <= 0.0f) {
+    throw std::runtime_error(
+            "[" + plugin_name + "] Invalid frequency configuration: rt_freq=" +
+            std::to_string(rt_frequency_) + ", freq=" + std::to_string(frequency_) +
+            " (both must be > 0.0)");
+  }
+
   last_ts_ = parent_node->now();
   rt_last_ts_ = parent_node->now();
 
@@ -63,13 +71,6 @@ MethodBase::isTime2RunRT()
 {
   auto node = parent_node_.lock();
   if (!node) {return false;}
-  if (rt_frequency_ <= 0.0f) {
-    RCLCPP_WARN_THROTTLE(
-      node->get_logger(), *node->get_clock(), 2000,
-      "[%s] RT cycle disabled: rt_frequency is %.3f (check the plugin's config)",
-      plugin_name_.c_str(), rt_frequency_);
-    return false;
-  }
   const auto now = node->now();
   const double target_cycle_time = 1.0 / rt_frequency_;
   const double cycle_time = (now - rt_last_ts_).seconds();
@@ -92,13 +93,6 @@ MethodBase::isTime2Run()
 {
   auto node = parent_node_.lock();
   if (!node) {return false;}
-  if (frequency_ <= 0.0f) {
-    RCLCPP_WARN_THROTTLE(
-      node->get_logger(), *node->get_clock(), 2000,
-      "[%s] cycle disabled: frequency is %.3f (check the plugin's config)",
-      plugin_name_.c_str(), frequency_);
-    return false;
-  }
   const auto now = node->now();
   const double target_cycle_time = 1.0 / frequency_;
   const double cycle_time = (now - last_ts_).seconds();
