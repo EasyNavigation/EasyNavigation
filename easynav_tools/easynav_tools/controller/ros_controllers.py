@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import glob
 import math
 import os
 import re
@@ -234,8 +235,33 @@ class NavStateProcessor():
 
 
 # ---------- Time stats config ----------
-_LOG_PATH = '/tmp/easynav.log'
+# Each EasyNav process writes its own /tmp/easynav_<pid>.log (a single shared
+# /tmp/easynav.log broke with multiple concurrent instances on the same host).
+_LOG_GLOB = '/tmp/easynav_*.log'
 _LOG_RE = re.compile(r'^(?P<name>\S+)\s+(?P<start>\d+)\s+(?P<end>\d+)\s*$')
+
+
+def _discover_log_path(pid: int | None = None) -> str | None:
+    """Resolve the trace-log path for a running EasyNav instance.
+
+    With an explicit pid, targets that instance directly. Otherwise, auto-discovers
+    among currently-present /tmp/easynav_<pid>.log files, picking the most recently
+    modified one if more than one EasyNav instance is running. Returns None if no
+    pid was given and no log file exists yet (e.g. EasyNav hasn't started).
+    """
+    if pid is not None:
+        return f'/tmp/easynav_{pid}.log'
+
+    dated_candidates = []
+    for path in glob.glob(_LOG_GLOB):
+        try:
+            dated_candidates.append((os.path.getmtime(path), path))
+        except FileNotFoundError:
+            # Deleted/rotated between glob() and getmtime(); skip it.
+            continue
+    if not dated_candidates:
+        return None
+    return max(dated_candidates)[1]
 
 
 # -------- Running stats (Welford) --------
@@ -276,8 +302,9 @@ def _sort_key_suffix(full: str) -> tuple[str, str]:
 
 class LogReader:
 
-    def __init__(self):
+    def __init__(self, pid: int | None = None):
         # ---- Time stats state (tailing the log) ----
+        self._log_path = _discover_log_path(pid)
         self._log_fh = None
         self._log_inode = None
         self._log_pos = 0
@@ -285,8 +312,15 @@ class LogReader:
 
     def _open_log_if_needed(self) -> None:
         """Open the log file if available, preserving position; handle rotation/truncation."""
+        if self._log_path is None:
+            # No pid was given and no instance was running yet at construction time;
+            # keep looking in case one has started since.
+            self._log_path = _discover_log_path()
+            if self._log_path is None:
+                return
+
         try:
-            st = os.stat(_LOG_PATH)
+            st = os.stat(self._log_path)
         except FileNotFoundError:
             # file missing: close if we had it
             if self._log_fh:
@@ -301,7 +335,7 @@ class LogReader:
 
         if self._log_fh is None:
             # first open: read from start to accumulate history
-            self._log_fh = open(_LOG_PATH, 'r', encoding='utf-8', errors='ignore')
+            self._log_fh = open(self._log_path, 'r', encoding='utf-8', errors='ignore')
             self._log_inode = st.st_ino
             self._log_pos = 0
             return
@@ -315,7 +349,7 @@ class LogReader:
                     self._log_fh.close()
                 except Exception:
                     pass
-                self._log_fh = open(_LOG_PATH, 'r', encoding='utf-8', errors='ignore')
+                self._log_fh = open(self._log_path, 'r', encoding='utf-8', errors='ignore')
                 self._log_inode = st.st_ino
                 self._log_pos = 0
         except Exception:
@@ -376,7 +410,7 @@ class LogReader:
         rows = []
         for full_name, d in sorted(self._ts_stats.items(), key=lambda kv: _sort_key_suffix(kv[0])):
             short = _shorten_name(full_name)
-            exec_mean, exec_std = d['exec'].as_tuple()            # μs
+            exec_mean, exec_std = d['exec'].as_tuple()            # ms
             elap_mean, elap_std = d['elapsed'].as_tuple()         # ms
             freq_mean, freq_std = d['freq'].as_tuple()            # Hz
             rows.append((short, (exec_mean, exec_std),

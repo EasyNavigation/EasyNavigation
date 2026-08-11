@@ -153,6 +153,7 @@ GoalManager::accept_request(
   RCLCPP_DEBUG(node->get_logger(), "Accepted navigation request");
 
   goals_ = msg.goals;
+  goals_synced_empty_ = false;
 
   current_client_id_ = msg.user_id;
   response.status_message = "Goal accepted";
@@ -271,7 +272,7 @@ GoalManager::set_finished()
   if (!node) {return;}
 
   state_ = State::IDLE;
-  goals_.goals.clear();
+  goals_ = nav_msgs::msg::Goals();
 
   easynav_interfaces::msg::NavigationControl response;
   response = *last_control_;
@@ -292,7 +293,7 @@ GoalManager::set_error(const std::string & reason)
   if (!node) {return;}
 
   state_ = State::IDLE;
-  goals_.goals.clear();
+  goals_ = nav_msgs::msg::Goals();
 
   easynav_interfaces::msg::NavigationControl response;
   response = *last_control_;
@@ -313,7 +314,7 @@ GoalManager::set_failed(const std::string & reason)
   if (!node) {return;}
 
   state_ = State::IDLE;
-  goals_.goals.clear();
+  goals_ = nav_msgs::msg::Goals();
 
   easynav_interfaces::msg::NavigationControl response;
   response = *last_control_;
@@ -344,8 +345,9 @@ GoalManager::comanded_pose_callback(geometry_msgs::msg::PoseStamped::UniquePtr m
 void
 GoalManager::update(NavState & nav_state)
 {
-  if (nav_state.get_safe<State>("navigation_state") != state_) {
+  if (last_synced_navigation_state_ != state_) {
     nav_state.set("navigation_state", state_);
+    last_synced_navigation_state_ = state_;
   }
 
    // Keep published tolerances in sync with current parameters
@@ -354,8 +356,11 @@ GoalManager::update(NavState & nav_state)
   nav_state.set("goal_tolerance.yaw", goal_tolerance_.yaw);
 
   if (state_ == State::IDLE) {
-    goals_ = nav_msgs::msg::Goals();
-    nav_state.set("goals", goals_);
+    if (!goals_synced_empty_) {
+      goals_ = nav_msgs::msg::Goals();
+      nav_state.set("goals", goals_);
+      goals_synced_empty_ = true;
+    }
     return;
   }
 
@@ -367,7 +372,8 @@ GoalManager::update(NavState & nav_state)
     return;
   }
 
-  const auto robot_pose = nav_state.get_safe<nav_msgs::msg::Odometry>("robot_pose").pose.pose;
+  const auto odom = nav_state.get_safe<nav_msgs::msg::Odometry>("robot_pose");
+  const auto & robot_pose = odom.pose.pose;
 
   easynav_interfaces::msg::NavigationControl feedback;
   feedback.type = easynav_interfaces::msg::NavigationControl::FEEDBACK;
@@ -375,8 +381,6 @@ GoalManager::update(NavState & nav_state)
   feedback.seq = last_control_->seq + 1;
   feedback.user_id = id_;
   feedback.nav_current_user_id = current_client_id_;
-
-  const auto & odom = nav_state.get_safe<nav_msgs::msg::Odometry>("robot_pose");
 
   feedback.goals = goals_;
   feedback.current_pose.header = odom.header;
@@ -422,8 +426,9 @@ GoalManager::update(NavState & nav_state)
     set_finished();
   }
 
-  if (nav_state.get_safe<State>("navigation_state") != state_) {
+  if (last_synced_navigation_state_ != state_) {
     nav_state.set("navigation_state", state_);
+    last_synced_navigation_state_ = state_;
   }
 
   if (should_publish && info_pub_->get_subscription_count() > 0) {

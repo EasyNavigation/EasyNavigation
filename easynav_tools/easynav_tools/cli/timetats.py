@@ -29,10 +29,15 @@ class TimeStatsVerb(VerbExtension):
     def add_arguments(self, parser, cli_name):
         add_arguments(parser)
         parser.add_argument('--duration', type=float, default=5000.0, help='Seconds to run')
+        parser.add_argument(
+            '--pid', type=int, default=None,
+            help='PID of the EasyNav process to read stats from. Defaults to '
+                 'auto-discovering the most recently modified /tmp/easynav_<pid>.log; '
+                 'only needed when more than one EasyNav process is running on this host.')
 
     def main(self, *, args):
         try:
-            log_reader = LogReader()
+            log_reader = LogReader(pid=args.pid)
 
             t_end = time.time() + args.duration
             while time.time() < t_end:

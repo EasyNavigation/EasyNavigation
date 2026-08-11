@@ -48,7 +48,6 @@ class GoalManagerClient:
         self.node = node
 
         self.id = self.node.get_name() + '_goal_manager_client'
-        self.id = self.node.get_name() + '_goal_manager_client'
 
         self.control_topic = 'easynav_control'
         self.goal_topic = 'goal_pose'
@@ -182,7 +181,7 @@ class GoalManagerClient:
                             self.state = ClientState.ERROR
                         case _:
                             self.node.get_logger().error(
-                                'State SENT_PREEMPT; Unexpected message: "%d": "%s"' %
+                                'State SENT_GOAL; Unexpected message: "%d": "%s"' %
                                 (msg.type, msg.status_message))
                             self.state = ClientState.ERROR
                 case ClientState.SENT_PREEMPT:

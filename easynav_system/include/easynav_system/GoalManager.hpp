@@ -194,6 +194,14 @@ private:
 
   /// @brief Internal goal state.
   State state_ {State::IDLE};
+
+  /// @brief Value of "navigation_state" as last pushed to NavState by this class
+  /// (the sole writer of that key).
+  State last_synced_navigation_state_ {State::IDLE};
+
+  /// @brief True once NavState's "goals" has been synced to an empty Goals() since
+  /// the last time goals_ became non-empty (see accept_request()).
+  bool goals_synced_empty_ {true};
 };
 
 }  // namespace easynav

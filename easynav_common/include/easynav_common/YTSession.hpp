@@ -16,6 +16,10 @@
 #ifndef EASYNAV_COMMON_TYPES__YTSESSION_HPP_
 #define EASYNAV_COMMON_TYPES__YTSESSION_HPP_
 
+#include <unistd.h>
+
+#include <string>
+
 #include "easynav_common/Singleton.hpp"
 
 #include "yaets/tracing.hpp"
@@ -31,7 +35,7 @@ class YTSession : public yaets::TraceSession, public Singleton<YTSession>
 {
 public:
   explicit YTSession()
-  : yaets::TraceSession("/tmp/easynav.log")
+  : yaets::TraceSession(log_path())
   {}
 
   ~YTSession()
@@ -40,6 +44,13 @@ public:
   }
 
   SINGLETON_DEFINITIONS(YTSession)
+
+private:
+  /// \brief Per-process trace log path: /tmp/easynav_<pid>.log.
+  static std::string log_path()
+  {
+    return "/tmp/easynav_" + std::to_string(::getpid()) + ".log";
+  }
 };
 
 }  // namespace easynav

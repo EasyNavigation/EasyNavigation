@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <cmath>
 #include <string>
 #include <vector>
 #include <optional>
@@ -410,9 +411,9 @@ PointPerceptionsOpsView::downsample(double resolution)
       const float z_val = collapse_z_ ? collapse_val_z_ : pt.z;
 
       VoxelKey key{
-        static_cast<int>(pt.x * inv_res),
-        static_cast<int>(pt.y * inv_res),
-        static_cast<int>(z_val * inv_res)};
+        static_cast<int>(std::floor(pt.x * inv_res)),
+        static_cast<int>(std::floor(pt.y * inv_res)),
+        static_cast<int>(std::floor(z_val * inv_res))};
 
       if (voxel_set.insert(key).second) {
         indices[write_idx++] = idx;
