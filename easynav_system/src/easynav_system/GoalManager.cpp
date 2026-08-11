@@ -200,7 +200,7 @@ GoalManager::control_callback(easynav_interfaces::msg::NavigationControl::Unique
             RCLCPP_DEBUG(node->get_logger(),
               "Rejected navigation request (unable to preempt)");
 
-            response.status_message = "Goal rejected; unable to preemp current active goal";
+            response.status_message = "Goal rejected; unable to preempt current active goal";
             response.type = easynav_interfaces::msg::NavigationControl::REJECT;
             response.nav_current_user_id = msg->user_id;
           }

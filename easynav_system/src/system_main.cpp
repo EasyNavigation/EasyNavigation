@@ -41,7 +41,8 @@ std::atomic<int64_t> g_shutdown_requested_at_ns{0};
 void handle_shutdown_signal(int /*signum*/)
 {
   constexpr int64_t kDebounceNs = 1'000'000'000;  // 1s
-  const int64_t now_ns = std::chrono::steady_clock::now().time_since_epoch().count();
+  const int64_t now_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(
+    std::chrono::steady_clock::now().time_since_epoch()).count();
 
   int64_t expected = 0;
   if (g_shutdown_requested_at_ns.compare_exchange_strong(expected, now_ns,
