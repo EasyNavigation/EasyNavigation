@@ -126,8 +126,18 @@ public:
   );
 
 private:
+  /// @brief Locks \ref parent_node_, returning nullptr if the owning SystemNode has
+  /// already been destroyed.
+  rclcpp_lifecycle::LifecycleNode::SharedPtr get_node() const;
+
   /// @brief Lifecycle node.
-  rclcpp_lifecycle::LifecycleNode::SharedPtr parent_node_;
+  ///
+  /// Held as a weak_ptr, not a shared_ptr: GoalManager is itself owned (by shared_ptr)
+  /// by the SystemNode passed here via shared_from_this() at construction. A strong
+  /// shared_ptr back to it would form a reference cycle (SystemNode -> GoalManager ->
+  /// SystemNode) that never reaches a zero refcount, so SystemNode — and everything it
+  /// owns, down to every plugin loaded via pluginlib — would never be destructed.
+  std::weak_ptr<rclcpp_lifecycle::LifecycleNode> parent_node_;
 
   /// @brief Goal tolerance (translation and rotation).
   GoalTolerance goal_tolerance_ {};

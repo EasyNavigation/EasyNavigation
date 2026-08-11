@@ -166,12 +166,19 @@ int main(int argc, char ** argv)
     stop.store(true, std::memory_order_relaxed);
     exe_rt.cancel();
     exe_nort.cancel();
-  }
 
-
-  // Wait the RT thread to finish before shutting down ROS.
-  if (rt_thread.joinable()) {
-    rt_thread.join();
+    // Wait for the RT thread to finish *before* exe_rt/exe_nort/system_node (and
+    // everything system_node owns, transitively down to every plugin's
+    // pluginlib::ClassLoader) are destroyed below. The RT thread's lambda captured
+    // system_node by value and calls exe_rt.spin_all() every cycle; joining it here,
+    // still inside this scope, guarantees it has released its own copy and stopped
+    // touching the executor before this thread's destructors run. Without this, the
+    // two threads race to release the last reference to system_node, so its final
+    // teardown (and every plugin instance vs. ClassLoader destruction order within
+    // it) can happen from either thread in an unspecified order.
+    if (rt_thread.joinable()) {
+      rt_thread.join();
+    }
   }
 
   rclcpp::shutdown();
