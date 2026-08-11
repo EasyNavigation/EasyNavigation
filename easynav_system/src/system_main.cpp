@@ -150,7 +150,7 @@ int main(int argc, char ** argv)
         tf2_ros::TransformListener tf_listener(*tf_buffer, *tf_node, true);
 
         rclcpp::WallRate rate(rt_freq);
-        while (!stop.load(std::memory_order_relaxed)) {
+        while (!g_stop.load(std::memory_order_relaxed)) {
           if (system_node->get_current_state().id() ==
           lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE)
           {
@@ -166,7 +166,7 @@ int main(int argc, char ** argv)
 
     // Non-RT loop
     rclcpp::WallRate rate(freq);
-    while (!stop.load(std::memory_order_relaxed)) {
+    while (!g_stop.load(std::memory_order_relaxed)) {
 
       if (system_node->get_current_state().id() ==
         lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE)
@@ -181,7 +181,7 @@ int main(int argc, char ** argv)
     }
 
     // Ensure stop flag visible and cancel executors (idempotent)
-    stop.store(true, std::memory_order_relaxed);
+    g_stop.store(true, std::memory_order_relaxed);
     exe_rt.cancel();
     exe_nort.cancel();
 
