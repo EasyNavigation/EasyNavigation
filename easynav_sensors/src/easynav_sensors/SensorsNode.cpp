@@ -71,7 +71,7 @@ SensorsNode::SensorsNode(const rclcpp::NodeOptions & options)
 
 SensorsNode::~SensorsNode()
 {
-  if (get_current_state().id() == lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE) {
+  if (get_current_state().id() != lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE) {
     trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_ACTIVE_SHUTDOWN);
   }
 }

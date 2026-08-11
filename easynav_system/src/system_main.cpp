@@ -12,9 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <csignal>
-#include <cstdint>
-#include <cstdlib>
 #include <string>
 #include <atomic>
 #include <thread>
@@ -33,33 +30,11 @@
 
 using namespace std::chrono_literals;
 
-namespace
-{
-std::atomic_bool g_stop{false};
-std::atomic<int64_t> g_shutdown_requested_at_ns{0};
-
-void handle_shutdown_signal(int /*signum*/)
-{
-  constexpr int64_t kDebounceNs = 1'000'000'000;  // 1s
-  const int64_t now_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(
-    std::chrono::steady_clock::now().time_since_epoch()).count();
-
-  int64_t expected = 0;
-  if (g_shutdown_requested_at_ns.compare_exchange_strong(expected, now_ns,
-    std::memory_order_relaxed))
-  {
-    g_stop.store(true, std::memory_order_relaxed);
-  } else if (now_ns - expected > kDebounceNs) {
-    std::_Exit(1);
-  }
-}
-}  // namespace
-
 int main(int argc, char ** argv)
 {
-  rclcpp::init(argc, argv, rclcpp::InitOptions(), rclcpp::SignalHandlerOptions::None);
-  std::signal(SIGINT, handle_shutdown_signal);
-  std::signal(SIGTERM, handle_shutdown_signal);
+  rclcpp::init(argc, argv);
+
+  std::atomic_bool stop{false};
 
   std::thread rt_thread;
   {
@@ -133,6 +108,13 @@ int main(int argc, char ** argv)
       std::chrono::duration<double>(spin_time_nort)
     );
 
+    // Cooperative shutdown on SIGINT
+    rclcpp::on_shutdown([&](){
+        stop.store(true, std::memory_order_relaxed);
+        exe_rt.cancel();
+        exe_nort.cancel();
+    });
+
     // RT thread
     rt_thread = std::thread(
       [&, tf_node, tf_buffer, system_node, use_real_time]() {
@@ -184,10 +166,12 @@ int main(int argc, char ** argv)
     stop.store(true, std::memory_order_relaxed);
     exe_rt.cancel();
     exe_nort.cancel();
+  }
 
-    if (rt_thread.joinable()) {
-      rt_thread.join();
-    }
+
+  // Wait the RT thread to finish before shutting down ROS.
+  if (rt_thread.joinable()) {
+    rt_thread.join();
   }
 
   rclcpp::shutdown();
