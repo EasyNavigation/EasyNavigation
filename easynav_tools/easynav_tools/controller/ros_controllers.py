@@ -75,6 +75,10 @@ NC_TYPE_MAP: dict[int, tuple[str, str]] = {
     6: ('CANCEL',    'yellow'),
     7: ('CANCELLED', 'yellow'),
     8: ('ERROR',     'red'),
+    9: ('PAUSE',     'yellow'),
+    10: ('RESUME',   'green'),
+    11: ('PAUSED',   'yellow'),
+    12: ('RESUMED',  'green'),
 }
 
 

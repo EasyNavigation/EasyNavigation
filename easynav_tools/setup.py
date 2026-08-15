@@ -41,6 +41,8 @@ setup(
             'nav_state = easynav_tools.cli.nav_state:NavStateVerb',
             'timestats = easynav_tools.cli.timetats:TimeStatsVerb',
             'plugins = easynav_tools.cli.plugins:PluginsVerb',
+            'pause = easynav_tools.cli.pause:PauseVerb',
+            'resume = easynav_tools.cli.resume:ResumeVerb',
         ],
     },
 )

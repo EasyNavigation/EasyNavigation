@@ -1428,3 +1428,285 @@ TEST_F(GoalManagerTestCase, update_respects_frequency_limit)
   ASSERT_GE(feedback_count, expected - 2);
   ASSERT_LE(feedback_count, expected + 2);
 }
+
+TEST_F(GoalManagerTestCase, PauseAndResumeCycle)
+{
+  auto nav_state = std::make_shared<easynav::NavState>();
+  nav_state->set("robot_pose", nav_msgs::msg::Odometry());
+
+  auto client_node = rclcpp::Node::make_shared("client_node");
+  auto system_node = rclcpp_lifecycle::LifecycleNode::make_shared("system_node");
+
+  rclcpp::executors::SingleThreadedExecutor exe;
+  exe.add_node(client_node);
+  exe.add_node(system_node->get_node_base_interface());
+
+  auto gm_client = easynav::GoalManagerClient::make_shared(client_node);
+  auto gm_server = easynav::GoalManager::make_shared(*nav_state, system_node);
+
+  ASSERT_FALSE(gm_server->is_paused());
+  ASSERT_TRUE(nav_state->has("navigation_paused"));
+  ASSERT_FALSE(nav_state->get_safe<bool>("navigation_paused"));
+  ASSERT_FALSE(gm_client->is_paused());
+
+  geometry_msgs::msg::PoseStamped goal;
+  goal.header.frame_id = "map";
+  goal.header.stamp = client_node->now();
+  goal.pose.position.x = 5.0;
+
+  gm_client->send_goal(goal);
+
+  rclcpp::Rate rate(20);
+  auto start = client_node->now();
+  while (client_node->now() - start < 400ms) {
+    gm_server->update(*nav_state);
+    exe.spin_some();
+    rate.sleep();
+  }
+
+  ASSERT_EQ(gm_client->get_state(), easynav::GoalManagerClient::State::ACCEPTED_AND_NAVIGATING);
+
+  gm_client->pause();
+
+  start = client_node->now();
+  while (client_node->now() - start < 400ms) {
+    gm_server->update(*nav_state);
+    exe.spin_some();
+    rate.sleep();
+  }
+
+  ASSERT_TRUE(gm_server->is_paused());
+  ASSERT_TRUE(nav_state->get_safe<bool>("navigation_paused"));
+  ASSERT_TRUE(gm_client->is_paused());
+  // Pausing must not touch the navigation/goal state itself.
+  ASSERT_EQ(gm_server->get_state(), easynav::GoalManager::State::ACTIVE);
+  ASSERT_EQ(gm_client->get_state(), easynav::GoalManagerClient::State::ACCEPTED_AND_NAVIGATING);
+
+  gm_client->resume();
+
+  start = client_node->now();
+  while (client_node->now() - start < 400ms) {
+    gm_server->update(*nav_state);
+    exe.spin_some();
+    rate.sleep();
+  }
+
+  ASSERT_FALSE(gm_server->is_paused());
+  ASSERT_FALSE(nav_state->get_safe<bool>("navigation_paused"));
+  ASSERT_FALSE(gm_client->is_paused());
+  ASSERT_EQ(gm_client->get_state(), easynav::GoalManagerClient::State::ACCEPTED_AND_NAVIGATING);
+}
+
+TEST_F(GoalManagerTestCase, PauseRejectedWhenIdle)
+{
+  auto nav_state = std::make_shared<easynav::NavState>();
+  nav_state->set("robot_pose", nav_msgs::msg::Odometry());
+
+  auto client_node = rclcpp::Node::make_shared("client_node");
+  auto system_node = rclcpp_lifecycle::LifecycleNode::make_shared("system_node");
+
+  rclcpp::executors::SingleThreadedExecutor exe;
+  exe.add_node(client_node);
+  exe.add_node(system_node->get_node_base_interface());
+
+  easynav_interfaces::msg::NavigationControl last_control;
+  auto control_sub = client_node->create_subscription<easynav_interfaces::msg::NavigationControl>(
+    "easynav_control", 100,
+    [&last_control](easynav_interfaces::msg::NavigationControl::UniquePtr msg) {
+      last_control = *msg;
+    });
+  auto control_pub = client_node->create_publisher<easynav_interfaces::msg::NavigationControl>(
+    "easynav_control", 100);
+
+  auto gm_server = easynav::GoalManager::make_shared(*nav_state, system_node);
+
+  ASSERT_EQ(gm_server->get_state(), easynav::GoalManager::State::IDLE);
+
+  easynav_interfaces::msg::NavigationControl pause_msg;
+  pause_msg.type = easynav_interfaces::msg::NavigationControl::PAUSE;
+  pause_msg.user_id = "some_client";
+  control_pub->publish(pause_msg);
+
+  rclcpp::Rate rate(20);
+  auto start = client_node->now();
+  while (client_node->now() - start < 400ms) {
+    gm_server->update(*nav_state);
+    exe.spin_some();
+    rate.sleep();
+  }
+
+  ASSERT_EQ(last_control.type, easynav_interfaces::msg::NavigationControl::REJECT);
+  ASSERT_FALSE(gm_server->is_paused());
+  ASSERT_FALSE(nav_state->get_safe<bool>("navigation_paused"));
+}
+
+TEST_F(GoalManagerTestCase, PauseAcceptedFromThirdPartyClient)
+{
+  // Unlike CANCEL, PAUSE/RESUME are not restricted to the goal's owner: an
+  // operator tool or a fleet-level conflict monitor -- represented here by
+  // gm_client2, which never sent any goal of its own -- must be able to
+  // pause/resume whatever navigation client_node1 currently has active.
+  auto nav_state = std::make_shared<easynav::NavState>();
+  nav_state->set("robot_pose", nav_msgs::msg::Odometry());
+
+  auto client_node1 = rclcpp::Node::make_shared("client_node1");
+  auto client_node2 = rclcpp::Node::make_shared("client_node2");
+  auto system_node = rclcpp_lifecycle::LifecycleNode::make_shared("system_node");
+
+  rclcpp::executors::SingleThreadedExecutor exe;
+  exe.add_node(client_node1);
+  exe.add_node(client_node2);
+  exe.add_node(system_node->get_node_base_interface());
+
+  auto gm_client1 = easynav::GoalManagerClient::make_shared(client_node1);
+  auto gm_client2 = easynav::GoalManagerClient::make_shared(client_node2);
+  auto gm_server = easynav::GoalManager::make_shared(*nav_state, system_node);
+
+  geometry_msgs::msg::PoseStamped goal;
+  goal.header.frame_id = "map";
+  goal.header.stamp = system_node->now();
+  goal.pose.position.x = 5.0;
+
+  gm_client1->send_goal(goal);
+
+  rclcpp::Rate rate(20);
+  auto start = system_node->now();
+  while (system_node->now() - start < 400ms) {
+    gm_server->update(*nav_state);
+    exe.spin_some();
+    rate.sleep();
+  }
+
+  ASSERT_EQ(gm_client1->get_state(), easynav::GoalManagerClient::State::ACCEPTED_AND_NAVIGATING);
+  ASSERT_EQ(gm_client2->get_state(), easynav::GoalManagerClient::State::IDLE);
+
+  gm_client2->pause();
+
+  start = system_node->now();
+  while (system_node->now() - start < 400ms) {
+    gm_server->update(*nav_state);
+    exe.spin_some();
+    rate.sleep();
+  }
+
+  ASSERT_TRUE(gm_server->is_paused());
+  ASSERT_TRUE(nav_state->get_safe<bool>("navigation_paused"));
+  ASSERT_TRUE(gm_client2->is_paused());
+  // The requester's own goal-ownership state must stay untouched.
+  ASSERT_EQ(gm_client2->get_state(), easynav::GoalManagerClient::State::IDLE);
+  // The owning client is not the one who paused, but the effect is still global.
+  ASSERT_EQ(gm_client1->get_state(), easynav::GoalManagerClient::State::ACCEPTED_AND_NAVIGATING);
+
+  gm_client2->resume();
+
+  start = system_node->now();
+  while (system_node->now() - start < 400ms) {
+    gm_server->update(*nav_state);
+    exe.spin_some();
+    rate.sleep();
+  }
+
+  ASSERT_FALSE(gm_server->is_paused());
+  ASSERT_FALSE(nav_state->get_safe<bool>("navigation_paused"));
+  ASSERT_FALSE(gm_client2->is_paused());
+}
+
+TEST_F(GoalManagerTestCase, PauseFlagResetOnCancelAndFinish)
+{
+  auto nav_state = std::make_shared<easynav::NavState>();
+  nav_state->set("robot_pose", nav_msgs::msg::Odometry());
+
+  auto client_node = rclcpp::Node::make_shared("client_node");
+  auto system_node = rclcpp_lifecycle::LifecycleNode::make_shared("system_node");
+
+  rclcpp::executors::SingleThreadedExecutor exe;
+  exe.add_node(client_node);
+  exe.add_node(system_node->get_node_base_interface());
+
+  auto gm_client = easynav::GoalManagerClient::make_shared(client_node);
+  auto gm_server = easynav::GoalManager::make_shared(*nav_state, system_node);
+
+  geometry_msgs::msg::PoseStamped goal;
+  goal.header.frame_id = "map";
+  goal.header.stamp = client_node->now();
+  goal.pose.position.x = 5.0;
+
+  gm_client->send_goal(goal);
+
+  rclcpp::Rate rate(20);
+  auto start = client_node->now();
+  while (client_node->now() - start < 400ms) {
+    gm_server->update(*nav_state);
+    exe.spin_some();
+    rate.sleep();
+  }
+
+  ASSERT_EQ(gm_client->get_state(), easynav::GoalManagerClient::State::ACCEPTED_AND_NAVIGATING);
+
+  gm_client->pause();
+
+  start = client_node->now();
+  while (client_node->now() - start < 400ms) {
+    gm_server->update(*nav_state);
+    exe.spin_some();
+    rate.sleep();
+  }
+
+  ASSERT_TRUE(gm_server->is_paused());
+
+  // Cancelling a paused navigation must clear the pause flag too.
+  gm_client->cancel();
+
+  start = client_node->now();
+  while (client_node->now() - start < 400ms) {
+    gm_server->update(*nav_state);
+    exe.spin_some();
+    rate.sleep();
+  }
+
+  ASSERT_EQ(gm_server->get_state(), easynav::GoalManager::State::IDLE);
+  ASSERT_FALSE(gm_server->is_paused());
+  ASSERT_FALSE(nav_state->get_safe<bool>("navigation_paused"));
+
+  gm_client->reset();
+
+  // A brand new goal must start unpaused.
+  goal.header.stamp = client_node->now();
+  gm_client->send_goal(goal);
+
+  start = client_node->now();
+  while (client_node->now() - start < 400ms) {
+    gm_server->update(*nav_state);
+    exe.spin_some();
+    rate.sleep();
+  }
+
+  ASSERT_EQ(gm_client->get_state(), easynav::GoalManagerClient::State::ACCEPTED_AND_NAVIGATING);
+  ASSERT_FALSE(gm_server->is_paused());
+  ASSERT_FALSE(nav_state->get_safe<bool>("navigation_paused"));
+
+  gm_client->pause();
+
+  start = client_node->now();
+  while (client_node->now() - start < 400ms) {
+    gm_server->update(*nav_state);
+    exe.spin_some();
+    rate.sleep();
+  }
+
+  ASSERT_TRUE(gm_server->is_paused());
+
+  // Finishing a paused navigation must also clear the pause flag.
+  gm_server->set_finished();
+
+  start = client_node->now();
+  while (client_node->now() - start < 400ms) {
+    gm_server->update(*nav_state);
+    exe.spin_some();
+    rate.sleep();
+  }
+
+  ASSERT_EQ(gm_server->get_state(), easynav::GoalManager::State::IDLE);
+  ASSERT_FALSE(gm_server->is_paused());
+  ASSERT_FALSE(nav_state->get_safe<bool>("navigation_paused"));
+}
