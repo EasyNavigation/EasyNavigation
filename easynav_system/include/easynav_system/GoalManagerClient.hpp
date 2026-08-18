@@ -81,6 +81,26 @@ public:
   void cancel();
 
   /**
+   * @brief Pause the currently active EasyNav navigation.
+   *
+   * This request is not restricted to the current goal owner (e.g. operator
+   * tools may pause/resume navigation). EasyNav keeps running its full cycle,
+   * but publishes zero velocity until @ref resume is called.
+   */
+  void pause();
+
+  /**
+   * @brief Resume a previously paused goal.
+   */
+  void resume();
+
+  /**
+   * @brief Whether the currently navigating goal is paused.
+   * @return True if paused.
+   */
+  [[nodiscard]] bool is_paused() const {return paused_;}
+
+  /**
    * @brief Reset internal client state.
    */
   void reset();
@@ -133,6 +153,9 @@ private:
 
   /// @brief Internal state of the client.
   State state_;
+
+  /// @brief Whether the currently navigating goal is paused.
+  bool paused_ {false};
 
   /// @brief Callback for incoming control messages.
   void control_callback(easynav_interfaces::msg::NavigationControl::UniquePtr msg);

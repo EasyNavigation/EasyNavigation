@@ -16,12 +16,14 @@
 from __future__ import annotations
 
 from enum import Enum
+import time
 
 # Interfaces
 from easynav_interfaces.msg import NavigationControl
 from geometry_msgs.msg import PoseStamped
 from nav_msgs.msg import Goals
 
+import rclpy
 from rclpy.node import Node
 from rclpy.qos import QoSProfile
 
@@ -53,6 +55,7 @@ class GoalManagerClient:
         self.goal_topic = 'goal_pose'
 
         self.state = ClientState.IDLE
+        self.paused = False
 
         self.last_control = NavigationControl()
         self.last_feedback = NavigationControl()
@@ -121,6 +124,66 @@ class GoalManagerClient:
 
         self._control_pub.publish(msg)
 
+    def pause(self) -> None:
+        """Pause whatever navigation is currently active.
+
+        Unlike cancel(), this is not restricted to a goal this client itself
+        commanded: any GoalManagerClient may pause/resume the active
+        navigation (e.g. an operator tool or a fleet-level conflict monitor
+        pausing a robot it doesn't own).
+        """
+        self.node.get_logger().debug('Sending navigation pause')
+
+        msg = NavigationControl()
+        msg.type = NavigationControl.PAUSE
+        msg.header = self.last_control.header
+        msg.user_id = self.id
+        msg.seq = self.last_control.seq + 1
+
+        self.node.get_logger().debug('Navigation pause sent')
+
+        self._control_pub.publish(msg)
+
+    def resume(self) -> None:
+        """Resume a previously paused navigation."""
+        self.node.get_logger().debug('Sending navigation resume')
+
+        msg = NavigationControl()
+        msg.type = NavigationControl.RESUME
+        msg.header = self.last_control.header
+        msg.user_id = self.id
+        msg.seq = self.last_control.seq + 1
+
+        self.node.get_logger().debug('Navigation resume sent')
+
+        self._control_pub.publish(msg)
+
+    def is_paused(self) -> bool:
+        """Whether the currently navigating goal is paused."""
+        return self.paused
+
+    def wait_for_server(self, timeout_sec: float = 1.0) -> bool:
+        """Wait until this client is fully matched with a running GoalManager.
+
+        A short-lived client (e.g. a CLI invocation) that publishes right
+        after construction can otherwise lose its very first message -- or
+        the reply to it -- to a pub/sub discovery race, since the remote
+        GoalManager's publisher and subscriber are matched independently and
+        not necessarily at the same time. Waits for both directions.
+        """
+        def matched() -> bool:
+            return (
+                self._control_pub.get_subscription_count() > 0 and
+                self._control_sub.get_publisher_count() > 0
+            )
+
+        end = time.monotonic() + timeout_sec
+        while time.monotonic() < end:
+            if matched():
+                return True
+            rclpy.spin_once(self.node, timeout_sec=0.05)
+        return matched()
+
     def reset(self) -> None:
         """Reset internal client state."""
         if (
@@ -159,6 +222,21 @@ class GoalManagerClient:
 
         self.node.get_logger().debug(
             f'Received a navigation {msg.type} msg with user_id {msg.user_id}')
+
+        # Unlike goal ownership (SENT_GOAL/ACCEPTED_AND_NAVIGATING/...), pause/resume
+        # confirmations can legitimately arrive while this client is IDLE: any
+        # GoalManagerClient may pause/resume whatever navigation is currently active,
+        # not just the one it commanded itself. Handled here, independent of state.
+        if msg.type == NavigationControl.PAUSED:
+            self.node.get_logger().debug('Navigation paused')
+            self.paused = True
+            self.last_control = msg
+            return
+        elif msg.type == NavigationControl.RESUMED:
+            self.node.get_logger().debug('Navigation resumed')
+            self.paused = False
+            self.last_control = msg
+            return
 
         if (
             self.state != ClientState.IDLE and
@@ -212,15 +290,18 @@ class GoalManagerClient:
                             self.node.get_logger().info('Navigation succesfully finished')
                             self.last_result = msg
                             self.state = ClientState.NAVIGATION_FINISHED
+                            self.paused = False
                         case NavigationControl.FAILED:
                             self.node.get_logger().error(
                                 'Navigation with error finished: %s"' % msg.status_message)
                             self.last_result = msg
                             self.state = ClientState.NAVIGATION_FAILED
+                            self.paused = False
                         case NavigationControl.CANCELLED:
                             self.node.get_logger().error('Navigation cancelled')
                             self.last_result = msg
                             self.state = ClientState.NAVIGATION_CANCELLED
+                            self.paused = False
                         case _:
                             self.node.get_logger().error(
                                 'State ACCEPTED_AND_NAVIGATING; Unexpected message: "%d": "%s"' %

@@ -90,6 +90,12 @@ public:
   [[nodiscard]] inline State get_state() const {return state_;}
 
   /**
+   * @brief Whether the current navigation (if any) is currently paused.
+   * @return True if paused.
+   */
+  [[nodiscard]] inline bool is_paused() const {return paused_;}
+
+  /**
    * @brief Mark the current goal as successfully completed.
    */
   void set_finished();
@@ -195,9 +201,17 @@ private:
   /// @brief Internal goal state.
   State state_ {State::IDLE};
 
+  /// @brief Whether the current navigation is paused: EasyNav still runs its
+  /// full cycle, but SystemNode publishes zero velocity while this is true.
+  bool paused_ {false};
+
   /// @brief Value of "navigation_state" as last pushed to NavState by this class
   /// (the sole writer of that key).
   State last_synced_navigation_state_ {State::IDLE};
+
+  /// @brief Value of "navigation_paused" as last pushed to NavState by this
+  /// class (the sole writer of that key).
+  bool last_synced_paused_ {false};
 
   /// @brief True once NavState's "goals" has been synced to an empty Goals() since
   /// the last time goals_ became non-empty (see accept_request()).

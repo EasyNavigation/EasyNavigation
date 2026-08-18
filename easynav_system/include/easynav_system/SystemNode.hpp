@@ -133,6 +133,12 @@ public:
    */
   void system_cycle();
 
+  /**
+   * @brief Access to the shared navigation state (for testing and tools).
+   * @return Shared pointer to the NavState.
+   */
+  [[nodiscard]] std::shared_ptr<NavState> get_nav_state() const {return nav_state_;}
+
 private:
   /// @brief Real-time callback group.
   rclcpp::CallbackGroup::SharedPtr realtime_cbg_;

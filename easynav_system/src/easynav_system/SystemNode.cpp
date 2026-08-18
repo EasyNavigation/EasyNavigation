@@ -223,6 +223,10 @@ SystemNode::system_cycle_rt()
     geometry_msgs::msg::TwistStamped current_cmd_vel;
     current_cmd_vel = nav_state_->get<geometry_msgs::msg::TwistStamped>("cmd_vel");
 
+    if (nav_state_->get_safe<bool>("navigation_paused")) {
+      current_cmd_vel.twist = geometry_msgs::msg::Twist();
+    }
+
     if (trigger_controller) {
       if (use_cmd_vel_stamped_ && vel_pub_stamped_->get_subscription_count()) {
         vel_pub_stamped_->publish(current_cmd_vel);
