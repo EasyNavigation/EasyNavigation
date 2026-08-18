@@ -147,8 +147,14 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ab9991f968ed0004142db909407daf154"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current internal state.  <br /></td></tr>
 <tr class="memitem:aa39a4f81674fe9666d93c1768fb87311" id="r_aa39a4f81674fe9666d93c1768fb87311"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#aa39a4f81674fe9666d93c1768fb87311">GoalManagerClient</a> (rclcpp::Node::SharedPtr node)</td></tr>
 <tr class="memdesc:aa39a4f81674fe9666d93c1768fb87311"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <br /></td></tr>
+<tr class="memitem:aa3bde2742b0e5c8bb77370b03e3d1489" id="r_aa3bde2742b0e5c8bb77370b03e3d1489"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#aa3bde2742b0e5c8bb77370b03e3d1489">is_paused</a> () const</td></tr>
+<tr class="memdesc:aa3bde2742b0e5c8bb77370b03e3d1489"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the currently navigating goal is paused.  <br /></td></tr>
+<tr class="memitem:a7167f5c196fc5e167bfabde1a730e81d" id="r_a7167f5c196fc5e167bfabde1a730e81d"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a7167f5c196fc5e167bfabde1a730e81d">pause</a> ()</td></tr>
+<tr class="memdesc:a7167f5c196fc5e167bfabde1a730e81d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pause the currently active EasyNav navigation.  <br /></td></tr>
 <tr class="memitem:ad20897c5c8bd47f5d4005989bead0e55" id="r_ad20897c5c8bd47f5d4005989bead0e55"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ad20897c5c8bd47f5d4005989bead0e55">reset</a> ()</td></tr>
 <tr class="memdesc:ad20897c5c8bd47f5d4005989bead0e55"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset internal client state.  <br /></td></tr>
+<tr class="memitem:a41de8150eff044a237990c271d57ea27" id="r_a41de8150eff044a237990c271d57ea27"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a41de8150eff044a237990c271d57ea27">resume</a> ()</td></tr>
+<tr class="memdesc:a41de8150eff044a237990c271d57ea27"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resume a previously paused goal.  <br /></td></tr>
 <tr class="memitem:a59905ae9a8aa37cbed4a7d6c23c701bb" id="r_a59905ae9a8aa37cbed4a7d6c23c701bb"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a59905ae9a8aa37cbed4a7d6c23c701bb">send_goal</a> (const geometry_msgs::msg::PoseStamped &amp;goal)</td></tr>
 <tr class="memdesc:a59905ae9a8aa37cbed4a7d6c23c701bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send a single goal to the <a class="el" href="classeasynav_1_1GoalManager.html" title="Handles navigation goals, their lifecycle, and command interface.">GoalManager</a>.  <br /></td></tr>
 <tr class="memitem:a56e2a6e14899715118e7ae5d66b58b71" id="r_a56e2a6e14899715118e7ae5d66b58b71"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a56e2a6e14899715118e7ae5d66b58b71">send_goals</a> (const nav_msgs::msg::Goals &amp;goals)</td></tr>
@@ -351,6 +357,54 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="aa3bde2742b0e5c8bb77370b03e3d1489" name="aa3bde2742b0e5c8bb77370b03e3d1489"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3bde2742b0e5c8bb77370b03e3d1489">&#9670;&#160;</a></span>is_paused()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool is_paused </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Whether the currently navigating goal is paused. </p>
+<dl class="section return"><dt>Returns</dt><dd>True if paused. </dd></dl>
+
+</div>
+</div>
+<a id="a7167f5c196fc5e167bfabde1a730e81d" name="a7167f5c196fc5e167bfabde1a730e81d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7167f5c196fc5e167bfabde1a730e81d">&#9670;&#160;</a></span>pause()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void pause </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Pause the currently active EasyNav navigation. </p>
+<p>This request is not restricted to the current goal owner (e.g. operator tools may pause/resume navigation). EasyNav keeps running its full cycle, but publishes zero velocity until <a class="el" href="#a41de8150eff044a237990c271d57ea27" title="resume">resume</a> is called. </p>
+
+</div>
+</div>
 <a id="ad20897c5c8bd47f5d4005989bead0e55" name="ad20897c5c8bd47f5d4005989bead0e55"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad20897c5c8bd47f5d4005989bead0e55">&#9670;&#160;</a></span>reset()</h2>
 
@@ -367,6 +421,25 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Reset internal client state. </p>
+
+</div>
+</div>
+<a id="a41de8150eff044a237990c271d57ea27" name="a41de8150eff044a237990c271d57ea27"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a41de8150eff044a237990c271d57ea27">&#9670;&#160;</a></span>resume()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void resume </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Resume a previously paused goal. </p>
 
 </div>
 </div>

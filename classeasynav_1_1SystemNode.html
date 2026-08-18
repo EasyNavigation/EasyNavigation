@@ -141,6 +141,8 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a76a94058e57592e7255a930e8e015af7" id="r_a76a94058e57592e7255a930e8e015af7"><td class="memItemLeft">std::shared_ptr&lt; <a class="el" href="classeasynav_1_1NavState.html">NavState</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a76a94058e57592e7255a930e8e015af7">get_nav_state</a> () const</td></tr>
+<tr class="memdesc:a76a94058e57592e7255a930e8e015af7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Access to the shared navigation state (for testing and tools).  <br /></td></tr>
 <tr class="memitem:a8366fef9515c0b0cd47949fbfc018641" id="r_a8366fef9515c0b0cd47949fbfc018641"><td class="memItemLeft">rclcpp::CallbackGroup::SharedPtr&#160;</td><td class="memItemRight"><a class="el" href="#a8366fef9515c0b0cd47949fbfc018641">get_real_time_cbg</a> ()</td></tr>
 <tr class="memdesc:a8366fef9515c0b0cd47949fbfc018641"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the real-time callback group.  <br /></td></tr>
 <tr class="memitem:a514922ffaeaefa826c2d33243b19891f" id="r_a514922ffaeaefa826c2d33243b19891f"><td class="memItemLeft">std::map&lt; std::string, <a class="el" href="structeasynav_1_1SystemNodeInfo.html">SystemNodeInfo</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a514922ffaeaefa826c2d33243b19891f">get_system_nodes</a> ()</td></tr>
@@ -238,6 +240,34 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a id="a76a94058e57592e7255a930e8e015af7" name="a76a94058e57592e7255a930e8e015af7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a76a94058e57592e7255a930e8e015af7">&#9670;&#160;</a></span>get_nav_state()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classeasynav_1_1NavState.html">NavState</a> &gt; get_nav_state </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Access to the shared navigation state (for testing and tools). </p>
+<dl class="section return"><dt>Returns</dt><dd>Shared pointer to the <a class="el" href="classeasynav_1_1NavState.html" title="A generic, type-safe, thread-safe blackboard to hold runtime state.">NavState</a>. </dd></dl>
+
+</div>
+</div>
 <a id="a8366fef9515c0b0cd47949fbfc018641" name="a8366fef9515c0b0cd47949fbfc018641"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8366fef9515c0b0cd47949fbfc018641">&#9670;&#160;</a></span>get_real_time_cbg()</h2>
 

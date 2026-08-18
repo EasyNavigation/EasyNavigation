@@ -138,6 +138,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ab9991f968ed0004142db909407daf154"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get current internal goal state.  <br /></td></tr>
 <tr class="memitem:a431494d38c4bec253ced0cfbe66960d5" id="r_a431494d38c4bec253ced0cfbe66960d5"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a431494d38c4bec253ced0cfbe66960d5">GoalManager</a> (<a class="el" href="classeasynav_1_1NavState.html">NavState</a> &amp;nav_state, rclcpp_lifecycle::LifecycleNode::SharedPtr parent_node)</td></tr>
 <tr class="memdesc:a431494d38c4bec253ced0cfbe66960d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <br /></td></tr>
+<tr class="memitem:aa3bde2742b0e5c8bb77370b03e3d1489" id="r_aa3bde2742b0e5c8bb77370b03e3d1489"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#aa3bde2742b0e5c8bb77370b03e3d1489">is_paused</a> () const</td></tr>
+<tr class="memdesc:aa3bde2742b0e5c8bb77370b03e3d1489"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the current navigation (if any) is currently paused.  <br /></td></tr>
 <tr class="memitem:a80f7c2db5701e01e05b2cedd201475ca" id="r_a80f7c2db5701e01e05b2cedd201475ca"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a80f7c2db5701e01e05b2cedd201475ca">set_error</a> (const std::string &amp;reason)</td></tr>
 <tr class="memdesc:a80f7c2db5701e01e05b2cedd201475ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mark the system as in error state.  <br /></td></tr>
 <tr class="memitem:aba0b434a98a49412f596d6436137a62e" id="r_aba0b434a98a49412f596d6436137a62e"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#aba0b434a98a49412f596d6436137a62e">set_failed</a> (const std::string &amp;reason)</td></tr>
@@ -297,6 +299,34 @@ Public Member Functions</h2></td></tr>
 
 <p>Get current internal goal state. </p>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="#a5d74787dedbc4e11c1ab15bf487e61f8" title="Current internal goal state.">GoalManager::State</a> value. </dd></dl>
+
+</div>
+</div>
+<a id="aa3bde2742b0e5c8bb77370b03e3d1489" name="aa3bde2742b0e5c8bb77370b03e3d1489"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3bde2742b0e5c8bb77370b03e3d1489">&#9670;&#160;</a></span>is_paused()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool is_paused </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Whether the current navigation (if any) is currently paused. </p>
+<dl class="section return"><dt>Returns</dt><dd>True if paused. </dd></dl>
 
 </div>
 </div>

@@ -1,29 +1,31 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" title=" " alt="" coords="5,301,53,327"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,327,53,352"/>
 <area shape="rect" id="Node000001" href="$classControllerNodeTestCase.html" title=" " alt="" coords="114,5,278,31"/>
-<area shape="poly" id="edge38_Node000000_Node000001" title=" " alt="" coords="31,285,55,153,74,85,86,59,99,40,113,30,116,34,103,44,91,61,79,87,60,154,37,286"/>
+<area shape="poly" id="edge38_Node000000_Node000001" title=" " alt="" coords="31,311,39,246,53,166,73,90,85,61,99,40,113,29,116,34,103,44,90,63,78,92,58,167,44,247,36,312"/>
 <area shape="rect" id="Node000002" href="$classGoalManagerTestCase.html" title=" " alt="" coords="119,55,273,80"/>
-<area shape="poly" id="edge39_Node000000_Node000002" title=" " alt="" coords="28,285,32,242,44,190,65,136,80,111,99,90,117,77,120,82,102,93,84,114,69,138,49,191,38,243,34,286"/>
+<area shape="poly" id="edge39_Node000000_Node000002" title=" " alt="" coords="27,311,30,263,40,204,61,143,78,114,99,90,116,77,120,82,102,93,82,117,66,145,45,205,35,264,32,311"/>
 <area shape="rect" id="Node000003" href="$classLocalizerNodeTestCase.html" title=" " alt="" coords="116,104,276,130"/>
-<area shape="poly" id="edge40_Node000000_Node000003" title=" " alt="" coords="31,286,38,252,51,212,71,173,99,139,115,128,118,132,102,143,75,176,56,214,43,253,36,287"/>
+<area shape="poly" id="edge40_Node000000_Node000003" title=" " alt="" coords="30,311,35,272,47,226,67,179,82,158,99,139,115,128,118,132,102,143,86,161,72,182,52,228,40,273,35,311"/>
 <area shape="rect" id="Node000004" href="$classMapsManagerNodeTestCase.html" title=" " alt="" coords="101,153,291,179"/>
-<area shape="poly" id="edge41_Node000000_Node000004" title=" " alt="" coords="36,286,59,236,77,210,99,188,117,177,120,182,102,192,81,213,64,238,41,288"/>
+<area shape="poly" id="edge41_Node000000_Node000004" title=" " alt="" coords="33,311,55,249,74,216,99,188,116,177,119,182,102,192,78,219,60,251,38,313"/>
 <area shape="rect" id="Node000005" href="$classNavStateTest.html" title=" " alt="" coords="145,203,247,228"/>
-<area shape="poly" id="edge42_Node000000_Node000005" title=" " alt="" coords="46,287,69,261,99,237,143,220,145,225,102,242,73,265,50,291"/>
+<area shape="poly" id="edge42_Node000000_Node000005" title=" " alt="" coords="40,311,64,273,80,254,99,237,121,226,144,219,145,224,123,231,102,242,84,257,68,276,45,314"/>
 <area shape="rect" id="Node000006" href="$classPerceptionLockingTestCase.html" title=" " alt="" coords="103,252,288,278"/>
-<area shape="poly" id="edge43_Node000000_Node000006" title=" " alt="" coords="66,298,100,286,137,276,139,281,101,291,68,303"/>
+<area shape="poly" id="edge43_Node000000_Node000006" title=" " alt="" coords="56,314,99,286,128,276,130,281,102,291,59,319"/>
 <area shape="rect" id="Node000007" href="$classPerceptionsOpsTest.html" title=" " alt="" coords="126,301,266,327"/>
-<area shape="poly" id="edge44_Node000000_Node000007" title=" " alt="" coords="68,312,125,312,125,317,68,317"/>
+<area shape="poly" id="edge44_Node000000_Node000007" title=" " alt="" coords="68,331,125,322,125,328,69,336"/>
 <area shape="rect" id="Node000008" href="$classPerceptionsTestCase.html" title=" " alt="" coords="123,351,269,376"/>
-<area shape="poly" id="edge45_Node000000_Node000008" title=" " alt="" coords="68,326,101,337,139,347,137,353,100,342,66,331"/>
+<area shape="poly" id="edge45_Node000000_Node000008" title=" " alt="" coords="68,342,122,350,122,356,68,348"/>
 <area shape="rect" id="Node000009" href="$classPlannerNodeTestCase.html" title=" " alt="" coords="120,400,272,426"/>
-<area shape="poly" id="edge46_Node000000_Node000009" title=" " alt="" coords="50,338,73,364,102,387,125,397,122,402,99,391,69,368,46,341"/>
+<area shape="poly" id="edge46_Node000000_Node000009" title=" " alt="" coords="59,360,102,386,130,397,128,402,99,391,56,364"/>
 <area shape="rect" id="Node000010" href="$classPluginTestCase.html" title=" " alt="" coords="139,449,252,475"/>
-<area shape="poly" id="edge47_Node000000_Node000010" title=" " alt="" coords="41,341,64,390,81,415,102,436,120,446,139,453,138,458,118,451,99,440,77,418,59,393,36,343"/>
+<area shape="poly" id="edge47_Node000000_Node000010" title=" " alt="" coords="45,365,68,402,84,421,102,436,140,452,138,457,99,440,80,424,64,405,40,368"/>
 <area shape="rect" id="Node000011" href="$classSensorsLifecycleTestCase.html" title=" " alt="" coords="107,499,284,524"/>
-<area shape="poly" id="edge48_Node000000_Node000011" title=" " alt="" coords="36,342,43,375,56,414,75,453,102,486,118,496,115,500,99,489,71,456,51,416,38,377,31,343"/>
+<area shape="poly" id="edge48_Node000000_Node000011" title=" " alt="" coords="39,367,60,428,78,459,102,485,119,496,117,500,99,490,74,462,55,430,34,369"/>
 <area shape="rect" id="Node000012" href="$classSensorsNodeTestCase.html" title=" " alt="" coords="118,548,274,574"/>
-<area shape="poly" id="edge49_Node000000_Node000012" title=" " alt="" coords="34,342,38,385,49,437,69,490,84,514,102,535,119,546,116,550,99,539,80,517,65,492,44,439,32,386,28,343"/>
-<area shape="rect" id="Node000013" href="$classSystemTFInfoTest.html" title=" " alt="" coords="131,597,260,623"/>
-<area shape="poly" id="edge50_Node000000_Node000013" title=" " alt="" coords="37,342,60,474,79,541,91,567,103,584,116,594,132,601,130,606,113,599,99,588,86,570,74,543,55,475,31,343"/>
+<area shape="poly" id="edge49_Node000000_Node000012" title=" " alt="" coords="35,367,41,405,52,451,72,496,86,517,102,535,119,546,116,550,99,539,82,520,68,499,47,452,35,406,30,368"/>
+<area shape="rect" id="Node000013" href="$classSystemPauseTest.html" title=" " alt="" coords="132,597,260,623"/>
+<area shape="poly" id="edge50_Node000000_Node000013" title=" " alt="" coords="33,368,35,415,45,473,66,533,82,560,102,584,116,594,132,601,130,606,114,599,99,588,78,563,62,535,40,475,30,415,27,368"/>
+<area shape="rect" id="Node000014" href="$classSystemTFInfoTest.html" title=" " alt="" coords="131,647,260,672"/>
+<area shape="poly" id="edge51_Node000000_Node000014" title=" " alt="" coords="36,368,44,432,58,512,78,586,90,615,103,634,116,644,132,651,130,656,113,648,99,637,85,617,73,588,53,513,39,433,31,368"/>
 </map>

@@ -1,0 +1,7 @@
+<map id="SystemPauseTest" name="SystemPauseTest">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,102,134,128"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="11,5,58,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="47,45,68,100,63,102,42,47"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="83,5,128,31"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="98,47,77,102,72,100,93,45"/>
+</map>

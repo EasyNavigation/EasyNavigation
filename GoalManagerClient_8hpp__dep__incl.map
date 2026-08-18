@@ -1,7 +1,9 @@
 <map id="easynav_system/include/easynav_system/GoalManagerClient.hpp" name="easynav_system/include/easynav_system/GoalManagerClient.hpp">
-<area shape="rect" id="Node000001" title="Declaration of the GoalManagerClient class." alt="" coords="80,5,340,46"/>
+<area shape="rect" id="Node000001" title="Declaration of the GoalManagerClient class." alt="" coords="182,5,442,46"/>
 <area shape="rect" id="Node000002" href="$GoalManagerClient_8cpp.html" title="Implementation of the GoalManager class." alt="" coords="5,94,209,150"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="179,59,139,95,135,91,175,55"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="256,55,167,96,165,91,254,51"/>
 <area shape="rect" id="Node000003" href="$goalmanager__tests_8cpp.html" title=" " alt="" coords="233,102,392,142"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="244,54,293,99,289,103,240,58"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="315,62,315,101,310,101,310,62"/>
+<area shape="rect" id="Node000004" href="$system__pause__tests_8cpp.html" title=" " alt="" coords="416,102,585,142"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="366,51,462,99,460,103,364,56"/>
 </map>

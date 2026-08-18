@@ -13,5 +13,7 @@ var searchData=
   ['imuperceptions_10',['IMUPerceptions',['../namespaceeasynav.html#a8372f717c9057205b1a5627b39714c97',1,'easynav']]],
   ['initialize_11',['initialize',['../classeasynav_1_1PerceptionHandler.html#a380e843c8336262e18110e480d8a85e9',1,'easynav::PerceptionHandler::initialize()'],['../classPerceptionHandler.html#a380e843c8336262e18110e480d8a85e9',1,'PerceptionHandler::initialize()']]],
   ['initialized_12',['initialized',['../classPerceptionLockingTestCase.html#aedeffc7d23da25d52b9a50045189fe2b',1,'PerceptionLockingTestCase::initialized'],['../classPerceptionsTestCase.html#aedeffc7d23da25d52b9a50045189fe2b',1,'PerceptionsTestCase::initialized'],['../classSensorsNodeTestCase.html#aedeffc7d23da25d52b9a50045189fe2b',1,'SensorsNodeTestCase::initialized'],['../classGoalManagerTestCase.html#aedeffc7d23da25d52b9a50045189fe2b',1,'GoalManagerTestCase::initialized']]],
-  ['integrate_5fpending_5fperceptions_13',['integrate_pending_perceptions',['../classeasynav_1_1PointPerception.html#af8124b1de9bcb177570f59cbf6ded6b9',1,'easynav::PointPerception']]]
+  ['initialized_5f_13',['initialized_',['../classSystemPauseTest.html#aef7436a220692b5b863db4e9d8b870a3',1,'SystemPauseTest']]],
+  ['integrate_5fpending_5fperceptions_14',['integrate_pending_perceptions',['../classeasynav_1_1PointPerception.html#af8124b1de9bcb177570f59cbf6ded6b9',1,'easynav::PointPerception']]],
+  ['is_5fpaused_15',['is_paused',['../classeasynav_1_1GoalManager.html#aa3bde2742b0e5c8bb77370b03e3d1489',1,'easynav::GoalManager::is_paused()'],['../classeasynav_1_1GoalManagerClient.html#aa3bde2742b0e5c8bb77370b03e3d1489',1,'easynav::GoalManagerClient::is_paused()']]]
 ];
