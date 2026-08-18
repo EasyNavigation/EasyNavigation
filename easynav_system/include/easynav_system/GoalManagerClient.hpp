@@ -81,10 +81,11 @@ public:
   void cancel();
 
   /**
-   * @brief Pause the currently navigating goal.
+   * @brief Pause the currently active EasyNav navigation.
    *
-   * EasyNav keeps running its full cycle, but publishes zero velocity
-   * until @ref resume is called.
+   * This request is not restricted to the current goal owner (e.g. operator
+   * tools may pause/resume navigation). EasyNav keeps running its full cycle,
+   * but publishes zero velocity until @ref resume is called.
    */
   void pause();
 
