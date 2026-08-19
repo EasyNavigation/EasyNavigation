@@ -179,7 +179,10 @@ class EasyNavTabbedApp(App):
         self._last_twist_text = '—'
         self._last_twiststamped_text = '—'
 
-        self.log_reader = LogReader()
+        # self.node's namespace already reflects any "-r __ns:=..." remap the
+        # TUI was launched with, so the trace log for that same EasyNav
+        # instance is found without a separate --namespace flag.
+        self.log_reader = LogReader(namespace=self.node.get_namespace())
 
     def compose(self) -> ComposeResult:
         yield Tabs(

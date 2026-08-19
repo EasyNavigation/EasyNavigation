@@ -239,22 +239,33 @@ class NavStateProcessor():
 
 
 # ---------- Time stats config ----------
-# Each EasyNav process writes its own /tmp/easynav_<pid>.log (a single shared
-# /tmp/easynav.log broke with multiple concurrent instances on the same host).
-_LOG_GLOB = '/tmp/easynav_*.log'
+# Each EasyNav process writes its own /tmp/easynav_<ns>.log, keyed by ROS
+# namespace rather than PID (a single shared /tmp/easynav.log broke with
+# multiple concurrent instances on the same host; a PID-keyed name made the
+# file unfindable without knowing the PID -- see easynav::YTSession).
+_LOG_GLOB = '/tmp/easynav*.log'
 _LOG_RE = re.compile(r'^(?P<name>\S+)\s+(?P<start>\d+)\s+(?P<end>\d+)\s*$')
 
 
-def _discover_log_path(pid: int | None = None) -> str | None:
+def _namespace_to_log_path(namespace: str) -> str:
+    """Mirror easynav::YTSession::log_path()'s namespace -> filename mapping."""
+    ns = namespace.strip('/')
+    if not ns:
+        return '/tmp/easynav.log'
+    return f'/tmp/easynav_{ns.replace("/", "_")}.log'
+
+
+def _discover_log_path(namespace: str | None = None) -> str | None:
     """Resolve the trace-log path for a running EasyNav instance.
 
-    With an explicit pid, targets that instance directly. Otherwise, auto-discovers
-    among currently-present /tmp/easynav_<pid>.log files, picking the most recently
-    modified one if more than one EasyNav instance is running. Returns None if no
-    pid was given and no log file exists yet (e.g. EasyNav hasn't started).
+    With an explicit namespace, targets that instance directly. Otherwise,
+    auto-discovers among currently-present /tmp/easynav*.log files, picking
+    the most recently modified one if more than one EasyNav instance is
+    running. Returns None if no namespace was given and no log file exists
+    yet (e.g. EasyNav hasn't started).
     """
-    if pid is not None:
-        return f'/tmp/easynav_{pid}.log'
+    if namespace is not None:
+        return _namespace_to_log_path(namespace)
 
     dated_candidates = []
     for path in glob.glob(_LOG_GLOB):
@@ -306,9 +317,9 @@ def _sort_key_suffix(full: str) -> tuple[str, str]:
 
 class LogReader:
 
-    def __init__(self, pid: int | None = None):
+    def __init__(self, namespace: str | None = None):
         # ---- Time stats state (tailing the log) ----
-        self._log_path = _discover_log_path(pid)
+        self._log_path = _discover_log_path(namespace)
         self._log_fh = None
         self._log_inode = None
         self._log_pos = 0
