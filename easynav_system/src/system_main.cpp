@@ -69,6 +69,16 @@ int main(int argc, char ** argv)
 
     auto system_node = easynav::SystemNode::make_shared();
 
+#ifdef EASYNAV_DEBUG_WITH_YAETS
+    // Must run before any EASYNAV_TRACE_EVENT/EASYNAV_TRACE_NAMED_EVENT in
+    // this process (the first such call constructs the YTSession singleton
+    // and its namespace can't be changed afterwards): picks this instance's
+    // trace log ("/tmp/easynav_<ns>.log", or "/tmp/easynav.log" if
+    // unnamespaced) so multiple EasyNav instances don't collide and the
+    // TUI/CLI tools can find the right one by namespace instead of PID.
+    easynav::YTSession::getInstance(std::string(system_node->get_namespace()));
+#endif
+
     exe_nort.add_node(system_node->get_node_base_interface());
     exe_rt.add_callback_group(system_node->get_real_time_cbg(),
                               system_node->get_node_base_interface());
@@ -154,10 +164,11 @@ int main(int argc, char ** argv)
           if (system_node->get_current_state().id() ==
           lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE)
           {
+            EASYNAV_TRACE_NAMED_EVENT("easynav_system::spin_rt=cycle");
             system_node->system_cycle_rt();
           }
           {
-            EASYNAV_TRACE_NAMED_EVENT("easynav_system::spin_rt");
+            EASYNAV_TRACE_NAMED_EVENT("easynav_system::spin_rt=callbacks");
             exe_rt.spin_all(spin_duration_rt);
           }
           rate.sleep();
@@ -171,10 +182,11 @@ int main(int argc, char ** argv)
       if (system_node->get_current_state().id() ==
         lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE)
       {
+        EASYNAV_TRACE_NAMED_EVENT("easynav_system::spin_nort=cycle");
         system_node->system_cycle();
       }
       {
-        EASYNAV_TRACE_NAMED_EVENT("easynav_system::spin_nort");
+        EASYNAV_TRACE_NAMED_EVENT("easynav_system::spin_nort=callbacks");
         exe_nort.spin_all(spin_duration_nort);
       }
       rate.sleep();
