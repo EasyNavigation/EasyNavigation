@@ -123,62 +123,73 @@ document.addEventListener('DOMContentLoaded', () => {
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#ifndef EASYNAV_COMMON_TYPES__YTSESSION_HPP_</span></div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#define EASYNAV_COMMON_TYPES__YTSESSION_HPP_</span></div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &lt;unistd.h&gt;</span></div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &quot;<a class="code" href="Singleton_8hpp.html">easynav_common/Singleton.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &quot;yaets/tracing.hpp&quot;</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceeasynav.html">easynav</a></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>{</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span></div>
-<div class="foldopen" id="foldopen00034" data-start="{" data-end="};">
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="classeasynav_1_1YTSession.html">   34</a></span><span class="keyword">class </span><a class="code hl_function" href="classeasynav_1_1YTSession.html#a31be0c596001be5ae522a9268c283280">YTSession</a> : <span class="keyword">public</span> yaets::TraceSession, <span class="keyword">public</span> <a class="code hl_function" href="classeasynav_1_1Singleton.html#a48d1fc15e788981ec5f7fe3e5c8641d7">Singleton</a>&lt;YTSession&gt;</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>{</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="keyword">public</span>:</div>
-<div class="foldopen" id="foldopen00037" data-start="{" data-end="}">
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="classeasynav_1_1YTSession.html#a31be0c596001be5ae522a9268c283280">   37</a></span>  <span class="keyword">explicit</span> <a class="code hl_function" href="classeasynav_1_1YTSession.html#a31be0c596001be5ae522a9268c283280">YTSession</a>()</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>  : yaets::TraceSession(log_path())</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>  {}</div>
-</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
-<div class="foldopen" id="foldopen00041" data-start="{" data-end="}">
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="classeasynav_1_1YTSession.html#afccea8a77e02010809479a7dd16218ef">   41</a></span>  <a class="code hl_function" href="classeasynav_1_1YTSession.html#afccea8a77e02010809479a7dd16218ef">~YTSession</a>()</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>  {</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    stop();</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  }</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &lt;algorithm&gt;</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &quot;<a class="code" href="Singleton_8hpp.html">easynav_common/Singleton.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &quot;yaets/tracing.hpp&quot;</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceeasynav.html">easynav</a></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>{</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span></div>
+<div class="foldopen" id="foldopen00033" data-start="{" data-end="};">
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="classeasynav_1_1YTSession.html">   33</a></span><span class="keyword">class </span><a class="code hl_function" href="classeasynav_1_1YTSession.html#a2695b9131e703e82ea893cd8c0a37cec">YTSession</a> : <span class="keyword">public</span> yaets::TraceSession, <span class="keyword">public</span> <a class="code hl_function" href="classeasynav_1_1Singleton.html#a48d1fc15e788981ec5f7fe3e5c8641d7">Singleton</a>&lt;YTSession&gt;</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>{</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="keyword">public</span>:</div>
+<div class="foldopen" id="foldopen00042" data-start="{" data-end="}">
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="classeasynav_1_1YTSession.html#a2695b9131e703e82ea893cd8c0a37cec">   42</a></span>  <span class="keyword">explicit</span> <a class="code hl_function" href="classeasynav_1_1YTSession.html#a2695b9131e703e82ea893cd8c0a37cec">YTSession</a>(<span class="keyword">const</span> std::string &amp; ros_namespace = <span class="stringliteral">&quot;&quot;</span>)</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>  : yaets::TraceSession(log_path(ros_namespace))</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  {}</div>
 </div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  <a class="code hl_define" href="Singleton_8hpp.html#af0372c6f11888fb8af91d3a0c10a1899">SINGLETON_DEFINITIONS</a>(<a class="code hl_class" href="classeasynav_1_1YTSession.html">YTSession</a>)</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  <span class="keyword">static</span> std::string log_path()</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>  {</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keywordflow">return</span> <span class="stringliteral">&quot;/tmp/easynav_&quot;</span> + std::to_string(::getpid()) + <span class="stringliteral">&quot;.log&quot;</span>;</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  }</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>};</div>
+<div class="foldopen" id="foldopen00046" data-start="{" data-end="}">
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="classeasynav_1_1YTSession.html#afccea8a77e02010809479a7dd16218ef">   46</a></span>  <a class="code hl_function" href="classeasynav_1_1YTSession.html#afccea8a77e02010809479a7dd16218ef">~YTSession</a>()</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  {</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    stop();</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  }</div>
 </div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>}  <span class="comment">// namespace easynav</span></div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="preprocessor">#ifdef EASYNAV_DEBUG_WITH_YAETS</span></div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="preprocessor">  #define EASYNAV_TRACE_EVENT TRACE_EVENT(easynav::YTSession::get())</span></div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="preprocessor">  #define EASYNAV_TRACE_NAMED_EVENT(name) yaets::TraceGuard guard(easynav::YTSession::get(), name);</span></div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="preprocessor">#else</span></div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno"><a class="line" href="YTSession_8hpp.html#a6937fabb6e5178e0974bb8a8e8fdc495">   62</a></span><span class="preprocessor">  #define EASYNAV_TRACE_EVENT ((void)0)</span></div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno"><a class="line" href="YTSession_8hpp.html#a7a303b11d7d2d05815d05bea14db6303">   63</a></span><span class="preprocessor">  #define EASYNAV_TRACE_NAMED_EVENT(name) ((void)0)</span></div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="preprocessor">#endif  </span><span class="comment">// EASYNAV_COMMON_TYPES__YTSESSION_HPP_</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>  <a class="code hl_define" href="Singleton_8hpp.html#af0372c6f11888fb8af91d3a0c10a1899">SINGLETON_DEFINITIONS</a>(<a class="code hl_class" href="classeasynav_1_1YTSession.html">YTSession</a>)</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>  <span class="keyword">static</span> std::string log_path(<span class="keyword">const</span> std::string &amp; ros_namespace)</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>  {</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    std::string ns = ros_namespace;</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="keywordflow">while</span> (!ns.empty() &amp;&amp; ns.front() == <span class="charliteral">&#39;/&#39;</span>) {</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>      ns.erase(ns.begin());</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    }</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="keywordflow">while</span> (!ns.empty() &amp;&amp; ns.back() == <span class="charliteral">&#39;/&#39;</span>) {</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>      ns.pop_back();</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    }</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    std::replace(ns.begin(), ns.end(), <span class="charliteral">&#39;/&#39;</span>, <span class="charliteral">&#39;_&#39;</span>);</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    <span class="keywordflow">if</span> (ns.empty()) {</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>      <span class="keywordflow">return</span> <span class="stringliteral">&quot;/tmp/easynav.log&quot;</span>;</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    }</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="keywordflow">return</span> <span class="stringliteral">&quot;/tmp/easynav_&quot;</span> + ns + <span class="stringliteral">&quot;.log&quot;</span>;</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>  }</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>};</div>
+</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>}  <span class="comment">// namespace easynav</span></div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span><span class="preprocessor">#ifdef EASYNAV_DEBUG_WITH_YAETS</span></div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span><span class="preprocessor">  #define EASYNAV_TRACE_EVENT TRACE_EVENT(easynav::YTSession::get())</span></div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span><span class="preprocessor">  #define EASYNAV_TRACE_NAMED_EVENT(name) yaets::TraceGuard guard(easynav::YTSession::get(), name);</span></div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span><span class="preprocessor">#else</span></div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno"><a class="line" href="YTSession_8hpp.html#a6937fabb6e5178e0974bb8a8e8fdc495">   84</a></span><span class="preprocessor">  #define EASYNAV_TRACE_EVENT ((void)0)</span></div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno"><a class="line" href="YTSession_8hpp.html#a7a303b11d7d2d05815d05bea14db6303">   85</a></span><span class="preprocessor">  #define EASYNAV_TRACE_NAMED_EVENT(name) ((void)0)</span></div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span> </div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span> </div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span><span class="preprocessor">#endif  </span><span class="comment">// EASYNAV_COMMON_TYPES__YTSESSION_HPP_</span></div>
 <div class="ttc" id="aSingleton_8hpp_html"><div class="ttname"><a href="Singleton_8hpp.html">Singleton.hpp</a></div></div>
 <div class="ttc" id="aSingleton_8hpp_html_af0372c6f11888fb8af91d3a0c10a1899"><div class="ttname"><a href="Singleton_8hpp.html#af0372c6f11888fb8af91d3a0c10a1899">SINGLETON_DEFINITIONS</a></div><div class="ttdeci">#define SINGLETON_DEFINITIONS(ClassName)</div><div class="ttdef"><b>Definition</b> Singleton.hpp:81</div></div>
 <div class="ttc" id="aclasseasynav_1_1Singleton_html_a48d1fc15e788981ec5f7fe3e5c8641d7"><div class="ttname"><a href="classeasynav_1_1Singleton.html#a48d1fc15e788981ec5f7fe3e5c8641d7">easynav::Singleton&lt; YTSession &gt;::Singleton</a></div><div class="ttdeci">Singleton()=default</div></div>
-<div class="ttc" id="aclasseasynav_1_1YTSession_html"><div class="ttname"><a href="classeasynav_1_1YTSession.html">easynav::YTSession</a></div><div class="ttdoc">A Yaets Tracing Session.</div><div class="ttdef"><b>Definition</b> YTSession.hpp:35</div></div>
-<div class="ttc" id="aclasseasynav_1_1YTSession_html_a31be0c596001be5ae522a9268c283280"><div class="ttname"><a href="classeasynav_1_1YTSession.html#a31be0c596001be5ae522a9268c283280">easynav::YTSession::YTSession</a></div><div class="ttdeci">YTSession()</div><div class="ttdef"><b>Definition</b> YTSession.hpp:37</div></div>
-<div class="ttc" id="aclasseasynav_1_1YTSession_html_afccea8a77e02010809479a7dd16218ef"><div class="ttname"><a href="classeasynav_1_1YTSession.html#afccea8a77e02010809479a7dd16218ef">easynav::YTSession::~YTSession</a></div><div class="ttdeci">~YTSession()</div><div class="ttdef"><b>Definition</b> YTSession.hpp:41</div></div>
+<div class="ttc" id="aclasseasynav_1_1YTSession_html"><div class="ttname"><a href="classeasynav_1_1YTSession.html">easynav::YTSession</a></div><div class="ttdoc">A Yaets Tracing Session.</div><div class="ttdef"><b>Definition</b> YTSession.hpp:34</div></div>
+<div class="ttc" id="aclasseasynav_1_1YTSession_html_a2695b9131e703e82ea893cd8c0a37cec"><div class="ttname"><a href="classeasynav_1_1YTSession.html#a2695b9131e703e82ea893cd8c0a37cec">easynav::YTSession::YTSession</a></div><div class="ttdeci">YTSession(const std::string &amp;ros_namespace=&quot;&quot;)</div><div class="ttdef"><b>Definition</b> YTSession.hpp:42</div></div>
+<div class="ttc" id="aclasseasynav_1_1YTSession_html_afccea8a77e02010809479a7dd16218ef"><div class="ttname"><a href="classeasynav_1_1YTSession.html#afccea8a77e02010809479a7dd16218ef">easynav::YTSession::~YTSession</a></div><div class="ttdeci">~YTSession()</div><div class="ttdef"><b>Definition</b> YTSession.hpp:46</div></div>
 <div class="ttc" id="anamespaceeasynav_html"><div class="ttname"><a href="namespaceeasynav.html">easynav</a></div><div class="ttdef"><b>Definition</b> CircularBuffer.hpp:23</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->

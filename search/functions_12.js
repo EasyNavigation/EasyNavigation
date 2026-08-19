@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['ytsession_0',['YTSession',['../classeasynav_1_1YTSession.html#a31be0c596001be5ae522a9268c283280',1,'easynav::YTSession']]]
+  ['ytsession_0',['YTSession',['../classeasynav_1_1YTSession.html#a2695b9131e703e82ea893cd8c0a37cec',1,'easynav::YTSession']]]
 ];
