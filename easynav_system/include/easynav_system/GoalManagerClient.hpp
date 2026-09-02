@@ -112,6 +112,15 @@ public:
   [[nodiscard]] State get_state() const {return state_;}
 
   /**
+  * @brief Check whether another subscriber besides the client is present on the control topic.
+  * @return True if at least one additional control-topic subscriber is detected.
+  */
+  [[nodiscard]] bool is_connected() const
+  {
+    return control_pub_->get_subscription_count() > 1;
+  }
+
+  /**
    * @brief Get the last control message sent or received.
    * @return Reference to the last control message.
    */
