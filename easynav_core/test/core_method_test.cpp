@@ -545,19 +545,6 @@ TEST_F(CoreMethodTestCase, MapsManagerInternalUpdateRunsWhenTimeElapsed)
 // ControllerMethodBase: initialize and internal_update_rt
 // ─────────────────────────────────────────────────────────────────────────────
 
-TEST_F(CoreMethodTestCase, ControllerInitializeDeclaresCollisionParams)
-{
-  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_ctrl_init_node");
-  TrackingController ctrl;
-  ctrl.initialize(node, "ctrl_p");
-
-  // All collision checker parameters should have been declared
-  EXPECT_TRUE(node->has_parameter("colision_checker.active"));
-  EXPECT_TRUE(node->has_parameter("colision_checker.robot_radius"));
-  EXPECT_TRUE(node->has_parameter("colision_checker.brake_acc"));
-  EXPECT_TRUE(node->has_parameter("colision_checker.safety_margin"));
-}
-
 TEST_F(CoreMethodTestCase, ControllerInternalUpdateRtWithTriggerAlwaysRuns)
 {
   auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_ctrl_rt_node");

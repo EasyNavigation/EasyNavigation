@@ -19,7 +19,6 @@
 #define EASYNAV_CORE__CONTROLLERMETHODBASE_HPP_
 
 #include "easynav_common/types/NavState.hpp"
-#include "easynav_core/CollisionChecker.hpp"
 #include "easynav_core/MethodBase.hpp"
 
 namespace easynav
@@ -42,21 +41,6 @@ public:
   virtual ~ControllerMethodBase() = default;
 
   /**
-   * @brief Initialize the controller method.
-   *
-   * Creates required publishers, reads configuration parameters and forwards
-   * initialization to MethodBase.
-   *
-   * @param parent_node Reference to the parent lifecycle node.
-   * @param plugin_name Plugin identifier used for namespacing parameters.
-   * @param tf_prefix Optional TF prefix for frame resolution.
-   * @throws std::runtime_error on initialization failure.
-   */
-  virtual void initialize(
-    const std::shared_ptr<rclcpp_lifecycle::LifecycleNode> parent_node,
-    const std::string & plugin_name);
-
-  /**
    * @brief Helper to run the real-time control method if appropriate.
    *
    * Invokes update_rt() only if the method is due or forced by trigger.
@@ -76,22 +60,6 @@ protected:
    * @param nav_state The current state of the navigation system.
    */
   virtual void update_rt([[maybe_unused]] NavState & nav_state) {}
-
-  /// @brief Enable or disable collision checking.
-  bool collision_checker_active_{false};
-
-  /// @brief Forward-projection collision guard, shared with CollisionSafetyReflex.
-  /// See docs/recoveries_easynav.md, level 0.
-  CollisionChecker collision_checker_;
-
-  /**
-   * @brief Callback executed when a collision is detected.
-   *
-   * The default implementation stops the robot by setting a zero Twist.
-   *
-   * @param nav_state Reference to the navigation state to modify.
-   */
-  virtual void on_inminent_collision(NavState & nav_state);
 };
 
 }  // namespace easynav

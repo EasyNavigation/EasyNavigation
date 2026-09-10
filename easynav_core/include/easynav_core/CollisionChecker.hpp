@@ -38,11 +38,9 @@ namespace easynav
  * @brief Forward-projects the commanded "cmd_vel" against nearby point-cloud perceptions to
  * decide whether continuing would cause a collision within the current braking distance.
  *
- * This is safety-critical, RT-path code, so it exists as a single, reusable implementation
- * instead of being duplicated: it backs both ControllerMethodBase's built-in collision guard
- * (kept for backward compatibility) and the CollisionSafetyReflex plugin, which gates every
- * producer of "cmd_vel" uniformly regardless of which controller or recovery mitigator wrote
- * it (see docs/recoveries_easynav.md, level 0).
+ * Backs the CollisionSafetyReflex plugin, which SystemNode checks on every RT cycle for every
+ * producer of "cmd_vel" — the nominal controller or any future movement recovery mitigator —
+ * regardless of which one wrote it (see docs/recoveries_easynav.md, level 0).
  */
 class CollisionChecker
 {
@@ -54,7 +52,7 @@ public:
    * creates the debug marker publisher on \p node.
    *
    * @param node Owning lifecycle node, used for parameters, the clock, and the publisher.
-   * @param param_prefix Parameter namespace, e.g. "colision_checker" or a plugin instance id.
+   * @param param_prefix Parameter namespace, typically the reflex's plugin instance id.
    */
   void initialize(
     const std::shared_ptr<rclcpp_lifecycle::LifecycleNode> node,
@@ -70,24 +68,6 @@ public:
    * @return True if a collision is predicted within the braking distance.
    */
   bool check(NavState & nav_state);
-
-  /// @brief Robot radius used for safety calculations (m).
-  double robot_radius() const {return robot_radius_;}
-
-  /// @brief Vertical extent of the robot used for filtering (m).
-  double robot_height() const {return robot_height_;}
-
-  /// @brief Minimum Z considered when filtering point clouds (m).
-  double z_min_filter() const {return z_min_filter_;}
-
-  /// @brief Maximum braking deceleration (m/s²).
-  double brake_acc() const {return brake_acc_;}
-
-  /// @brief Safety margin added to the braking distance (m).
-  double safety_margin() const {return safety_margin_;}
-
-  /// @brief Leaf size used to downsample point clouds (m).
-  double downsample_leaf_size() const {return downsample_leaf_size_;}
 
 private:
   void publish_collision_zone_marker(
