@@ -45,6 +45,18 @@ target_link_libraries(dummy_controller PUBLIC
   ${geometry_msgs_TARGETS}
 )
 
+add_library(collision_safety_reflex SHARED
+  src/easynav_controller/CollisionSafetyReflex.cpp
+)
+target_include_directories(collision_safety_reflex PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include/${PROJECT_NAME}>
+)
+target_link_libraries(collision_safety_reflex PUBLIC
+  easynav_core::easynav_core
+  pluginlib::pluginlib
+)
+
 install(
   DIRECTORY include/
   DESTINATION include/${PROJECT_NAME}
@@ -53,6 +65,7 @@ install(
 install(TARGETS
   ${PROJECT_NAME}
   dummy_controller
+  collision_safety_reflex
   EXPORT export_${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
@@ -73,11 +86,13 @@ ament_export_include_directories("include/${PROJECT_NAME}")
 ament_export_libraries(
   ${PROJECT_NAME}
   dummy_controller
+  collision_safety_reflex
 )
 ament_export_targets(export_${PROJECT_NAME})
 
 # Register the control plugins
 pluginlib_export_plugin_description_file(easynav_core easynav_controller_plugins.xml)
+pluginlib_export_plugin_description_file(easynav_core easynav_safety_reflexes_plugins.xml)
 
 ament_export_dependencies(
   rclcpp

@@ -18,6 +18,7 @@ find_package(easynav_sensors)
 find_package(geometry_msgs)
 find_package(tf2_geometry_msgs)
 find_package(tf2)
+find_package(pluginlib REQUIRED)
 
 set(dependencies
   rclcpp::rclcpp
@@ -48,6 +49,7 @@ set(package_dependencies
   tf2_geometry_msgs
   lifecycle_msgs
   tf2
+  pluginlib
 )
 
 include_directories(include)
@@ -72,6 +74,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
   easynav_planner::easynav_planner
   easynav_sensors::easynav_sensors
   tf2_geometry_msgs::tf2_geometry_msgs
+  pluginlib::pluginlib
   ${easynav_interfaces_TARGETS}
   ${geometry_msgs_TARGETS}
   ${sensor_msgs_TARGETS}
@@ -132,5 +135,6 @@ ament_export_dependencies(
   nav_msgs
   tf2_geometry_msgs
   lifecycle_msgs
+  pluginlib
 )
 ament_package()

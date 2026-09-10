@@ -58,6 +58,10 @@ SystemNode::SystemNode(const rclcpp::NodeOptions & options)
   planner_node_ = PlannerNode::make_shared();
   sensors_node_ = SensorsNode::make_shared();
 
+  safety_reflex_loader_ =
+    std::make_unique<pluginlib::ClassLoader<easynav::SafetyReflexBase>>(
+    "easynav_core", "easynav::SafetyReflexBase");
+
   declare_parameter<bool>("use_cmd_vel_stamped", use_cmd_vel_stamped_);
 
   TFInfo tf_info;
@@ -80,6 +84,20 @@ SystemNode::~SystemNode()
   }
   if (get_current_state().id() == lifecycle_msgs::msg::State::PRIMARY_STATE_UNCONFIGURED) {
     trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_UNCONFIGURED_SHUTDOWN);
+  }
+
+  safety_reflexes_.clear();
+  std::vector<std::string> safety_reflex_types;
+  get_parameter("safety_reflex_types", safety_reflex_types);
+  for (const auto & reflex_type : safety_reflex_types) {
+    std::string plugin;
+    if (has_parameter(reflex_type + ".plugin")) {
+      get_parameter(reflex_type + ".plugin", plugin);
+      try {
+        safety_reflex_loader_->unloadLibraryForClass(plugin);
+      } catch (const std::exception &) {
+      }
+    }
   }
 }
 
@@ -122,6 +140,40 @@ SystemNode::on_configure(const rclcpp_lifecycle::State & state)
   }
 
   goal_manager_ = GoalManager::make_shared(*nav_state_, shared_from_this());
+
+  std::vector<std::string> safety_reflex_types;
+  declare_parameter("safety_reflex_types", safety_reflex_types);
+  get_parameter("safety_reflex_types", safety_reflex_types);
+
+  safety_reflexes_.clear();
+  for (const auto & reflex_type : safety_reflex_types) {
+    std::string plugin;
+    declare_parameter(reflex_type + std::string(".plugin"), plugin);
+    get_parameter(reflex_type + std::string(".plugin"), plugin);
+
+    try {
+      RCLCPP_INFO(
+        get_logger(), "Loading SafetyReflexBase %s [%s]", reflex_type.c_str(), plugin.c_str());
+
+      auto reflex = safety_reflex_loader_->createSharedInstance(plugin);
+
+      try {
+        reflex->initialize(shared_from_this(), reflex_type);
+      } catch (const std::runtime_error & e) {
+        RCLCPP_ERROR(
+          get_logger(), "Unable to initialize [%s]. Error: %s", plugin.c_str(), e.what());
+        return CallbackReturnT::FAILURE;
+      }
+
+      safety_reflexes_.push_back(reflex);
+      RCLCPP_INFO(
+        get_logger(), "Loaded SafetyReflexBase %s [%s]", reflex_type.c_str(), plugin.c_str());
+    } catch (pluginlib::PluginlibException & ex) {
+      RCLCPP_ERROR(
+        get_logger(), "Unable to load plugin easynav::SafetyReflexBase. Error: %s", ex.what());
+      return CallbackReturnT::FAILURE;
+    }
+  }
 
   navstate_pub_ = create_publisher<std_msgs::msg::String>(
     "easynav_navstate", 100);
@@ -219,11 +271,20 @@ SystemNode::system_cycle_rt()
   bool trigger = trigger_perceptions || trigger_localization;
   trigger_controller = controller_node_->cycle_rt(nav_state_, trigger);
 
+  // Level-0 safety reflexes: checked every RT cycle, regardless of which controller or
+  // recovery mitigator produced "cmd_vel". See docs/recoveries_easynav.md, level 0.
+  bool reflex_intervened = false;
+  for (auto & reflex : safety_reflexes_) {
+    if (reflex->internal_check_and_mitigate(*nav_state_)) {
+      reflex_intervened = true;
+    }
+  }
+
   if (nav_state_->has("cmd_vel")) {
     geometry_msgs::msg::TwistStamped current_cmd_vel;
     current_cmd_vel = nav_state_->get<geometry_msgs::msg::TwistStamped>("cmd_vel");
 
-    if (trigger_controller) {
+    if (trigger_controller || reflex_intervened) {
       if (use_cmd_vel_stamped_ && vel_pub_stamped_->get_subscription_count()) {
         vel_pub_stamped_->publish(current_cmd_vel);
       }

@@ -1,0 +1,11 @@
+<class_libraries>
+  <library path="collision_safety_reflex">
+    <class name="easynav_controller/CollisionSafetyReflex" type="easynav::CollisionSafetyReflex" base_class_type="easynav::SafetyReflexBase">
+      <description>
+      Level-0 (real-time) safety reflex that stops the robot when the forward-projected
+      "cmd_vel" would cause a collision within the current braking distance. See
+      docs/recoveries_easynav.md, level 0.
+      </description>
+    </class>
+  </library>
+</class_libraries>

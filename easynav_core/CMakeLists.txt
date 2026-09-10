@@ -15,11 +15,13 @@ find_package(tf2_geometry_msgs REQUIRED)
 find_package(PCL REQUIRED COMPONENTS common io)
 
 add_library(${PROJECT_NAME} SHARED
+  src/easynav_core/CollisionChecker.cpp
   src/easynav_core/ControllerMethodBase.cpp
   src/easynav_core/LocalizerMethodBase.cpp
   src/easynav_core/MapsManagerBase.cpp
   src/easynav_core/MethodBase.cpp
   src/easynav_core/PlannerMethodBase.cpp
+  src/easynav_core/SafetyReflexBase.cpp
 )
 target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>

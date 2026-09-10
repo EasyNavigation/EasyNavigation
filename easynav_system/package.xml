@@ -27,6 +27,7 @@
   <depend>easynav_maps_manager</depend>
   <depend>easynav_planner</depend>
   <depend>easynav_sensors</depend>
+  <depend>pluginlib</depend>
 
   <depend>geometry_msgs</depend>
   <depend>sensor_msgs</depend>
