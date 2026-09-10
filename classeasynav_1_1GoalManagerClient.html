@@ -147,6 +147,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ab9991f968ed0004142db909407daf154"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current internal state.  <br /></td></tr>
 <tr class="memitem:aa39a4f81674fe9666d93c1768fb87311" id="r_aa39a4f81674fe9666d93c1768fb87311"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#aa39a4f81674fe9666d93c1768fb87311">GoalManagerClient</a> (rclcpp::Node::SharedPtr node)</td></tr>
 <tr class="memdesc:aa39a4f81674fe9666d93c1768fb87311"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <br /></td></tr>
+<tr class="memitem:accf4ef6f99c7c6194b487ce7b9f45273" id="r_accf4ef6f99c7c6194b487ce7b9f45273"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#accf4ef6f99c7c6194b487ce7b9f45273">is_connected</a> () const</td></tr>
+<tr class="memdesc:accf4ef6f99c7c6194b487ce7b9f45273"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check whether another subscriber besides the client is present on the control topic.  <br /></td></tr>
 <tr class="memitem:aa3bde2742b0e5c8bb77370b03e3d1489" id="r_aa3bde2742b0e5c8bb77370b03e3d1489"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#aa3bde2742b0e5c8bb77370b03e3d1489">is_paused</a> () const</td></tr>
 <tr class="memdesc:aa3bde2742b0e5c8bb77370b03e3d1489"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the currently navigating goal is paused.  <br /></td></tr>
 <tr class="memitem:a7167f5c196fc5e167bfabde1a730e81d" id="r_a7167f5c196fc5e167bfabde1a730e81d"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a7167f5c196fc5e167bfabde1a730e81d">pause</a> ()</td></tr>
@@ -354,6 +356,34 @@ Public Member Functions</h2></td></tr>
 
 <p>Get the current internal state. </p>
 <dl class="section return"><dt>Returns</dt><dd>Current <a class="el" href="#a5d74787dedbc4e11c1ab15bf487e61f8" title="Internal state of the client-side goal manager.">State</a>. </dd></dl>
+
+</div>
+</div>
+<a id="accf4ef6f99c7c6194b487ce7b9f45273" name="accf4ef6f99c7c6194b487ce7b9f45273"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#accf4ef6f99c7c6194b487ce7b9f45273">&#9670;&#160;</a></span>is_connected()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool is_connected </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Check whether another subscriber besides the client is present on the control topic. </p>
+<dl class="section return"><dt>Returns</dt><dd>True if at least one additional control-topic subscriber is detected. </dd></dl>
 
 </div>
 </div>

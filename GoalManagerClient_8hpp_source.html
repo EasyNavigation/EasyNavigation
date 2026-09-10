@@ -174,38 +174,45 @@ document.addEventListener('DOMContentLoaded', () => {
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span></div>
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno"><a class="line" href="classeasynav_1_1GoalManagerClient.html#ab9991f968ed0004142db909407daf154">  112</a></span>  [[nodiscard]] <a class="code hl_enumeration" href="classeasynav_1_1GoalManagerClient.html#a5d74787dedbc4e11c1ab15bf487e61f8">State</a> <a class="code hl_function" href="classeasynav_1_1GoalManagerClient.html#ab9991f968ed0004142db909407daf154">get_state</a>()<span class="keyword"> const </span>{<span class="keywordflow">return</span> state_;}</div>
 <div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span></div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>  [[nodiscard]] <span class="keyword">const</span> easynav_interfaces::msg::NavigationControl &amp; <a class="code hl_function" href="classeasynav_1_1GoalManagerClient.html#a701a1d40354575d541cdf2ae83c21853">get_last_control</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span></div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>  [[nodiscard]] <span class="keyword">const</span> easynav_interfaces::msg::NavigationControl &amp; <a class="code hl_function" href="classeasynav_1_1GoalManagerClient.html#a227df6bbba807c9d97f2df1873f4854c">get_feedback</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span></div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>  [[nodiscard]] <span class="keyword">const</span> easynav_interfaces::msg::NavigationControl &amp; <a class="code hl_function" href="classeasynav_1_1GoalManagerClient.html#a37d4e38e41a7d49a5b5c6f8d4c594f85">get_result</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span> </div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>  rclcpp::Node::SharedPtr node_;</div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span></div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>  rclcpp::Publisher&lt;easynav_interfaces::msg::NavigationControl&gt;::SharedPtr control_pub_;</div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span></div>
-<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>  rclcpp::Subscription&lt;easynav_interfaces::msg::NavigationControl&gt;::SharedPtr control_sub_;</div>
-<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span></div>
-<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>  easynav_interfaces::msg::NavigationControl::UniquePtr last_control_;</div>
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span></div>
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>  easynav_interfaces::msg::NavigationControl last_feedback_;</div>
-<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span></div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>  easynav_interfaces::msg::NavigationControl last_result_;</div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span></div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>  std::string id_;</div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span></div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>  State state_;</div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span></div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>  <span class="keywordtype">bool</span> paused_ {<span class="keyword">false</span>};</div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span></div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>  <span class="keywordtype">void</span> control_callback(easynav_interfaces::msg::NavigationControl::UniquePtr msg);</div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>};</div>
+<div class="foldopen" id="foldopen00118" data-start="{" data-end="}">
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno"><a class="line" href="classeasynav_1_1GoalManagerClient.html#accf4ef6f99c7c6194b487ce7b9f45273">  118</a></span>  [[nodiscard]] <span class="keywordtype">bool</span> <a class="code hl_function" href="classeasynav_1_1GoalManagerClient.html#accf4ef6f99c7c6194b487ce7b9f45273">is_connected</a>()<span class="keyword"> const</span></div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span><span class="keyword">  </span>{</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    <span class="keywordflow">return</span> control_pub_-&gt;get_subscription_count() &gt; 1;</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>  }</div>
 </div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span> </div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>}  <span class="comment">// namespace easynav</span></div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span> </div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span><span class="preprocessor">#endif  </span><span class="comment">// EASYNAV_SYSTEM__GOALMANAGERCLIENT_HPP_</span></div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span></div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>  [[nodiscard]] <span class="keyword">const</span> easynav_interfaces::msg::NavigationControl &amp; <a class="code hl_function" href="classeasynav_1_1GoalManagerClient.html#a701a1d40354575d541cdf2ae83c21853">get_last_control</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span></div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>  [[nodiscard]] <span class="keyword">const</span> easynav_interfaces::msg::NavigationControl &amp; <a class="code hl_function" href="classeasynav_1_1GoalManagerClient.html#a227df6bbba807c9d97f2df1873f4854c">get_feedback</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span></div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>  [[nodiscard]] <span class="keyword">const</span> easynav_interfaces::msg::NavigationControl &amp; <a class="code hl_function" href="classeasynav_1_1GoalManagerClient.html#a37d4e38e41a7d49a5b5c6f8d4c594f85">get_result</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span> </div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>  rclcpp::Node::SharedPtr node_;</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span></div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>  rclcpp::Publisher&lt;easynav_interfaces::msg::NavigationControl&gt;::SharedPtr control_pub_;</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span></div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>  rclcpp::Subscription&lt;easynav_interfaces::msg::NavigationControl&gt;::SharedPtr control_sub_;</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span></div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>  easynav_interfaces::msg::NavigationControl::UniquePtr last_control_;</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span></div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>  easynav_interfaces::msg::NavigationControl last_feedback_;</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span></div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>  easynav_interfaces::msg::NavigationControl last_result_;</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span></div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>  std::string id_;</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span></div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>  State state_;</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span></div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>  <span class="keywordtype">bool</span> paused_ {<span class="keyword">false</span>};</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span></div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>  <span class="keywordtype">void</span> control_callback(easynav_interfaces::msg::NavigationControl::UniquePtr msg);</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>};</div>
+</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span> </div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>}  <span class="comment">// namespace easynav</span></div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span> </div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span><span class="preprocessor">#endif  </span><span class="comment">// EASYNAV_SYSTEM__GOALMANAGERCLIENT_HPP_</span></div>
 <div class="ttc" id="aclasseasynav_1_1GoalManagerClient_html_a02d5fa6b14e221f3012a794b905be166"><div class="ttname"><a href="classeasynav_1_1GoalManagerClient.html#a02d5fa6b14e221f3012a794b905be166">easynav::GoalManagerClient::cancel</a></div><div class="ttdeci">void cancel()</div><div class="ttdoc">Cancel the current goal.</div><div class="ttdef"><b>Definition</b> GoalManagerClient.cpp:239</div></div>
 <div class="ttc" id="aclasseasynav_1_1GoalManagerClient_html_a227df6bbba807c9d97f2df1873f4854c"><div class="ttname"><a href="classeasynav_1_1GoalManagerClient.html#a227df6bbba807c9d97f2df1873f4854c">easynav::GoalManagerClient::get_feedback</a></div><div class="ttdeci">const easynav_interfaces::msg::NavigationControl &amp; get_feedback() const</div><div class="ttdoc">Get the most recent feedback received.</div><div class="ttdef"><b>Definition</b> GoalManagerClient.cpp:178</div></div>
 <div class="ttc" id="aclasseasynav_1_1GoalManagerClient_html_a37d4e38e41a7d49a5b5c6f8d4c594f85"><div class="ttname"><a href="classeasynav_1_1GoalManagerClient.html#a37d4e38e41a7d49a5b5c6f8d4c594f85">easynav::GoalManagerClient::get_result</a></div><div class="ttdeci">const easynav_interfaces::msg::NavigationControl &amp; get_result() const</div><div class="ttdoc">Get the last result message received.</div><div class="ttdef"><b>Definition</b> GoalManagerClient.cpp:184</div></div>
@@ -227,6 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <div class="ttc" id="aclasseasynav_1_1GoalManagerClient_html_aa39a4f81674fe9666d93c1768fb87311"><div class="ttname"><a href="classeasynav_1_1GoalManagerClient.html#aa39a4f81674fe9666d93c1768fb87311">easynav::GoalManagerClient::GoalManagerClient</a></div><div class="ttdeci">GoalManagerClient(rclcpp::Node::SharedPtr node)</div><div class="ttdoc">Constructor.</div><div class="ttdef"><b>Definition</b> GoalManagerClient.cpp:31</div></div>
 <div class="ttc" id="aclasseasynav_1_1GoalManagerClient_html_aa3bde2742b0e5c8bb77370b03e3d1489"><div class="ttname"><a href="classeasynav_1_1GoalManagerClient.html#aa3bde2742b0e5c8bb77370b03e3d1489">easynav::GoalManagerClient::is_paused</a></div><div class="ttdeci">bool is_paused() const</div><div class="ttdoc">Whether the currently navigating goal is paused.</div><div class="ttdef"><b>Definition</b> GoalManagerClient.hpp:101</div></div>
 <div class="ttc" id="aclasseasynav_1_1GoalManagerClient_html_ab9991f968ed0004142db909407daf154"><div class="ttname"><a href="classeasynav_1_1GoalManagerClient.html#ab9991f968ed0004142db909407daf154">easynav::GoalManagerClient::get_state</a></div><div class="ttdeci">State get_state() const</div><div class="ttdoc">Get the current internal state.</div><div class="ttdef"><b>Definition</b> GoalManagerClient.hpp:112</div></div>
+<div class="ttc" id="aclasseasynav_1_1GoalManagerClient_html_accf4ef6f99c7c6194b487ce7b9f45273"><div class="ttname"><a href="classeasynav_1_1GoalManagerClient.html#accf4ef6f99c7c6194b487ce7b9f45273">easynav::GoalManagerClient::is_connected</a></div><div class="ttdeci">bool is_connected() const</div><div class="ttdoc">Check whether another subscriber besides the client is present on the control topic.</div><div class="ttdef"><b>Definition</b> GoalManagerClient.hpp:118</div></div>
 <div class="ttc" id="aclasseasynav_1_1GoalManagerClient_html_ad20897c5c8bd47f5d4005989bead0e55"><div class="ttname"><a href="classeasynav_1_1GoalManagerClient.html#ad20897c5c8bd47f5d4005989bead0e55">easynav::GoalManagerClient::reset</a></div><div class="ttdeci">void reset()</div><div class="ttdoc">Reset internal client state.</div><div class="ttdef"><b>Definition</b> GoalManagerClient.cpp:305</div></div>
 <div class="ttc" id="anamespaceeasynav_html"><div class="ttname"><a href="namespaceeasynav.html">easynav</a></div><div class="ttdef"><b>Definition</b> CircularBuffer.hpp:23</div></div>
 </div><!-- fragment --></div><!-- contents -->

@@ -15,5 +15,6 @@ var searchData=
   ['initialized_12',['initialized',['../classPerceptionLockingTestCase.html#aedeffc7d23da25d52b9a50045189fe2b',1,'PerceptionLockingTestCase::initialized'],['../classPerceptionsTestCase.html#aedeffc7d23da25d52b9a50045189fe2b',1,'PerceptionsTestCase::initialized'],['../classSensorsNodeTestCase.html#aedeffc7d23da25d52b9a50045189fe2b',1,'SensorsNodeTestCase::initialized'],['../classGoalManagerTestCase.html#aedeffc7d23da25d52b9a50045189fe2b',1,'GoalManagerTestCase::initialized']]],
   ['initialized_5f_13',['initialized_',['../classSystemPauseTest.html#aef7436a220692b5b863db4e9d8b870a3',1,'SystemPauseTest']]],
   ['integrate_5fpending_5fperceptions_14',['integrate_pending_perceptions',['../classeasynav_1_1PointPerception.html#af8124b1de9bcb177570f59cbf6ded6b9',1,'easynav::PointPerception']]],
-  ['is_5fpaused_15',['is_paused',['../classeasynav_1_1GoalManager.html#aa3bde2742b0e5c8bb77370b03e3d1489',1,'easynav::GoalManager::is_paused()'],['../classeasynav_1_1GoalManagerClient.html#aa3bde2742b0e5c8bb77370b03e3d1489',1,'easynav::GoalManagerClient::is_paused()']]]
+  ['is_5fconnected_15',['is_connected',['../classeasynav_1_1GoalManagerClient.html#accf4ef6f99c7c6194b487ce7b9f45273',1,'easynav::GoalManagerClient']]],
+  ['is_5fpaused_16',['is_paused',['../classeasynav_1_1GoalManager.html#aa3bde2742b0e5c8bb77370b03e3d1489',1,'easynav::GoalManager::is_paused()'],['../classeasynav_1_1GoalManagerClient.html#aa3bde2742b0e5c8bb77370b03e3d1489',1,'easynav::GoalManagerClient::is_paused()']]]
 ];
