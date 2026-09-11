@@ -43,4 +43,19 @@ MapsManagerBase::internal_update(NavState & nav_state)
   }
 }
 
+bool
+MapsManagerBase::internal_reset(NavState & nav_state)
+{
+  EASYNAV_TRACE_NAMED_EVENT("MapsManagerBase::internal_reset [" + get_plugin_name() + "]");
+
+  try {
+    return reset(nav_state);
+  } catch (const std::exception & e) {
+    RCLCPP_ERROR_THROTTLE(
+      get_node()->get_logger(), *get_node()->get_clock(), 1000,
+      "Exception in reset() of maps manager [%s]: %s", get_plugin_name().c_str(), e.what());
+    return false;
+  }
+}
+
 }  // namespace easynav

@@ -87,6 +87,7 @@ RecoveryManagerNode::~RecoveryManagerNode()
 
   active_mitigation_.reset();
   mitigations_.clear();
+  attempt_counts_.clear();
   std::vector<std::string> mitigation_types;
   get_parameter("mitigation_types", mitigation_types);
   for (const auto & mitigation_type : mitigation_types) {
@@ -143,12 +144,16 @@ RecoveryManagerNode::on_configure([[maybe_unused]] const rclcpp_lifecycle::State
     }
   }
 
+  declare_parameter("max_attempts_per_mitigation", max_attempts_per_mitigation_);
+  get_parameter("max_attempts_per_mitigation", max_attempts_per_mitigation_);
+
   std::vector<std::string> mitigation_types;
   declare_parameter("mitigation_types", mitigation_types);
   get_parameter("mitigation_types", mitigation_types);
 
   active_mitigation_.reset();
   mitigations_.clear();
+  attempt_counts_.clear();
   for (const auto & mitigation_type : mitigation_types) {
     std::string plugin;
     declare_parameter(mitigation_type + std::string(".plugin"), plugin);
@@ -270,17 +275,30 @@ RecoveryManagerNode::try_select_mitigation(NavState & nav_state)
     }
     const auto & status = nav_state.get<diagnostic_msgs::msg::DiagnosticStatus>(key);
     if (status.level == diagnostic_msgs::msg::DiagnosticStatus::OK) {
+      // Resolved: forget how many mitigations have already had a turn for it, so the next
+      // time this diagnostic reappears, escalation starts from the first candidate again.
+      attempt_counts_.erase(key);
       continue;
     }
 
+    auto & counts_for_key = attempt_counts_[key];
     for (auto & mitigation : mitigations_) {
       if (!mitigation->can_handle(status)) {
         continue;
       }
 
+      const auto & name = mitigation->get_plugin_name();
+      if (counts_for_key[name] >= max_attempts_per_mitigation_) {
+        // Already had its turn(s) for this occurrence of this diagnostic: let the next
+        // applicable candidate in mitigation_types order try instead. See the class doc
+        // comment and docs/recoveries_easynav_implementation.md, Fase 4.
+        continue;
+      }
+      ++counts_for_key[name];
+
       RCLCPP_INFO(
-        get_logger(), "Selecting mitigation [%s] for diagnostic [%s]",
-        mitigation->get_plugin_name().c_str(), key.c_str());
+        get_logger(), "Selecting mitigation [%s] for diagnostic [%s] (attempt %d/%d)",
+        name.c_str(), key.c_str(), counts_for_key[name], max_attempts_per_mitigation_);
 
       active_mitigation_ = mitigation;
       active_mitigation_->internal_start(nav_state);

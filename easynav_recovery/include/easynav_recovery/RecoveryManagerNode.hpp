@@ -19,6 +19,8 @@
 #ifndef EASYNAV_RECOVERY__RECOVERYMANAGERNODE_HPP_
 #define EASYNAV_RECOVERY__RECOVERYMANAGERNODE_HPP_
 
+#include <unordered_map>
+
 #include "rclcpp/macros.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 #include "pluginlib/class_loader.hpp"
@@ -47,8 +49,13 @@ namespace easynav
  * It also loads RecoveryMitigationBase plugins ("mitigation_types") and arbitrates between
  * them: at most one is active at a time. Selection here is deliberately simple — the first
  * non-OK diagnostic (in whatever order NavState's "diagnostics" group returns) whose
- * can_handle() a loaded mitigation accepts is selected; there is no retry/cooldown table yet
- * (see docs/recoveries_easynav_implementation.md for what that would add). A mitigation that
+ * can_handle() a loaded mitigation accepts is selected, skipping candidates that have already
+ * had "max_attempts_per_mitigation" turns for that specific diagnostic since it was last OK
+ * (see docs/recoveries_easynav_implementation.md, Fase 4 — this is a partial step towards the
+ * full priority/cooldown table of recoveries_easynav.md §5.6 point 4: it lets a second
+ * candidate escalate after the first one has had its chances for one occurrence of a
+ * diagnostic, but there is still no configurable priority order, no real time-based cooldown,
+ * and no reasoning across different diagnostic codes). A mitigation that
  * requires_control() is cycled from cycle_rt() (RT rate, drives "cmd_vel" via "control_owner");
  * one that does not is cycled from cycle() (non-RT rate) instead.
  */
@@ -163,6 +170,16 @@ private:
 
   /// @brief Currently active mitigation, or nullptr if none.
   std::shared_ptr<RecoveryMitigationBase> active_mitigation_;
+
+  /// @brief Maximum number of times the same mitigation may be selected for the same
+  /// diagnostic (identified by its NavState key) before try_select_mitigation() skips it in
+  /// favor of the next applicable candidate, if any. See the class doc comment.
+  int max_attempts_per_mitigation_ {1};
+
+  /// @brief Per-diagnostic-key attempt counts, keyed by mitigation plugin name. An entry is
+  /// dropped as soon as its diagnostic is observed OK again, so a future recurrence of the
+  /// same diagnostic starts escalation from the first applicable mitigation again.
+  std::unordered_map<std::string, std::unordered_map<std::string, int>> attempt_counts_;
 
   /// @brief Attempts to select and start a mitigation for the current diagnostics, if none is
   /// already active. Extracted from cycle() for readability/testability.
