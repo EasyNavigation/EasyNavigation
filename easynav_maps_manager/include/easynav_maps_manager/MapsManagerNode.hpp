@@ -98,6 +98,16 @@ public:
    */
   void cycle(std::shared_ptr<NavState> nav_state);
 
+  /**
+   * @brief Requests every loaded map manager to reset/clear its data. See
+   * docs/recoveries_easynav.md §5.11 (ClearMapRecovery); called by SystemNode when
+   * "maps_manager_reset_requested" is set in NavState.
+   *
+   * @param nav_state Shared pointer to the navigation state structure.
+   * @return True if at least one loaded map manager actually cleared something.
+   */
+  bool reset(std::shared_ptr<NavState> nav_state);
+
 private:
   /// @brief Plugin loader for map manager implementations.
   std::unique_ptr<pluginlib::ClassLoader<MapsManagerBase>> maps_manager_loader_;

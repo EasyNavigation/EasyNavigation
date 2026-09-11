@@ -208,6 +208,125 @@ TEST_F(RecoveryManagerNodeTestCase, cycle_rt_is_noop_without_a_control_owning_mi
   EXPECT_FALSE(node->cycle_rt(nav_state));
 }
 
+TEST_F(RecoveryManagerNodeTestCase, EscalatesToNextMitigationAfterMaxAttempts)
+{
+  // Fase 4: two candidates for the same diagnostic (both DummyMitigation, always SUCCEEDED on
+  // their first on_cycle() without ever resolving the diagnostic itself, exactly like
+  // ForceReplanRecovery/ClearMapRecovery reacting to a persisting "no_path"). With the default
+  // max_attempts_per_mitigation == 1, mit_a should only ever be selected once for this one
+  // diagnostic before RecoveryManagerNode moves on to mit_b.
+  auto node = std::make_shared<easynav::RecoveryManagerNode>(
+    rclcpp::NodeOptions()
+    .append_parameter_override(
+      "mitigation_types", std::vector<std::string>{"mit_a", "mit_b"})
+    .append_parameter_override(
+      "mit_a.plugin", std::string("easynav_recovery/DummyMitigation"))
+    .append_parameter_override(
+      "mit_b.plugin", std::string("easynav_recovery/DummyMitigation")));
+
+  node->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_CONFIGURE);
+  ASSERT_EQ(
+    node->get_current_state().id(),
+    lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE);
+
+  auto nav_state = std::make_shared<easynav::NavState>();
+  diagnostic_msgs::msg::DiagnosticStatus status;
+  status.level = diagnostic_msgs::msg::DiagnosticStatus::ERROR;
+  nav_state->set("diagnostics.fake", status);
+  nav_state->set_group("diagnostics", {"diagnostics.fake"});
+
+  // Cycle 1: selects mit_a (its first and, per max_attempts_per_mitigation==1, only turn).
+  node->cycle(nav_state);
+  EXPECT_EQ(node->get_active_mitigation_name(), "mit_a");
+
+  // Cycle 2: mit_a's on_cycle() reports SUCCEEDED immediately, so it is stopped and cleared.
+  // The diagnostic itself is still ERROR (nothing in this test resolved it), but no new
+  // selection happens in the same cycle() call that just cleared one.
+  node->cycle(nav_state);
+  EXPECT_TRUE(node->get_active_mitigation_name().empty());
+
+  // Cycle 3: try_select_mitigation() runs again for the still-ERROR diagnostic. mit_a already
+  // had its one attempt for it, so it is skipped in favor of mit_b.
+  node->cycle(nav_state);
+  EXPECT_EQ(node->get_active_mitigation_name(), "mit_b");
+}
+
+TEST_F(RecoveryManagerNodeTestCase, AttemptCountResetsOnceDiagnosticIsOk)
+{
+  auto node = std::make_shared<easynav::RecoveryManagerNode>(
+    rclcpp::NodeOptions()
+    .append_parameter_override(
+      "mitigation_types", std::vector<std::string>{"mit_a", "mit_b"})
+    .append_parameter_override(
+      "mit_a.plugin", std::string("easynav_recovery/DummyMitigation"))
+    .append_parameter_override(
+      "mit_b.plugin", std::string("easynav_recovery/DummyMitigation")));
+
+  node->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_CONFIGURE);
+  ASSERT_EQ(
+    node->get_current_state().id(),
+    lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE);
+
+  auto nav_state = std::make_shared<easynav::NavState>();
+  diagnostic_msgs::msg::DiagnosticStatus status;
+  status.level = diagnostic_msgs::msg::DiagnosticStatus::ERROR;
+  nav_state->set("diagnostics.fake", status);
+  nav_state->set_group("diagnostics", {"diagnostics.fake"});
+
+  node->cycle(nav_state);  // selects + exhausts mit_a's one attempt
+  ASSERT_EQ(node->get_active_mitigation_name(), "mit_a");
+  node->cycle(nav_state);  // mit_a succeeds and is cleared
+  ASSERT_TRUE(node->get_active_mitigation_name().empty());
+
+  // The diagnostic is resolved (OK) before the next occurrence: escalation should restart
+  // from mit_a again instead of continuing on to mit_b.
+  status.level = diagnostic_msgs::msg::DiagnosticStatus::OK;
+  nav_state->set("diagnostics.fake", status);
+  node->cycle(nav_state);  // just observes OK, clears the attempt count, selects nothing
+
+  status.level = diagnostic_msgs::msg::DiagnosticStatus::ERROR;
+  nav_state->set("diagnostics.fake", status);
+  node->cycle(nav_state);
+  EXPECT_EQ(node->get_active_mitigation_name(), "mit_a");
+}
+
+TEST_F(RecoveryManagerNodeTestCase, MaxAttemptsPerMitigationParameterIsHonored)
+{
+  auto node = std::make_shared<easynav::RecoveryManagerNode>(
+    rclcpp::NodeOptions()
+    .append_parameter_override("max_attempts_per_mitigation", 2)
+    .append_parameter_override(
+      "mitigation_types", std::vector<std::string>{"mit_a", "mit_b"})
+    .append_parameter_override(
+      "mit_a.plugin", std::string("easynav_recovery/DummyMitigation"))
+    .append_parameter_override(
+      "mit_b.plugin", std::string("easynav_recovery/DummyMitigation")));
+
+  node->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_CONFIGURE);
+  ASSERT_EQ(
+    node->get_current_state().id(),
+    lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE);
+
+  auto nav_state = std::make_shared<easynav::NavState>();
+  diagnostic_msgs::msg::DiagnosticStatus status;
+  status.level = diagnostic_msgs::msg::DiagnosticStatus::ERROR;
+  nav_state->set("diagnostics.fake", status);
+  nav_state->set_group("diagnostics", {"diagnostics.fake"});
+
+  node->cycle(nav_state);  // mit_a, attempt 1/2
+  EXPECT_EQ(node->get_active_mitigation_name(), "mit_a");
+  node->cycle(nav_state);  // succeeds, cleared
+  ASSERT_TRUE(node->get_active_mitigation_name().empty());
+
+  node->cycle(nav_state);  // mit_a again, attempt 2/2 (still under the limit)
+  EXPECT_EQ(node->get_active_mitigation_name(), "mit_a");
+  node->cycle(nav_state);  // succeeds, cleared
+  ASSERT_TRUE(node->get_active_mitigation_name().empty());
+
+  node->cycle(nav_state);  // mit_a exhausted its 2 attempts: now mit_b
+  EXPECT_EQ(node->get_active_mitigation_name(), "mit_b");
+}
+
 TEST_F(RecoveryManagerNodeTestCase, DiagnosticStatusIsHumanReadableInDebugString)
 {
   // RecoveryManagerNode's constructor registers a NavState printer for
