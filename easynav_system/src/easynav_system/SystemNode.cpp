@@ -22,6 +22,7 @@
 #include "easynav_localizer/LocalizerNode.hpp"
 #include "easynav_maps_manager/MapsManagerNode.hpp"
 #include "easynav_planner/PlannerNode.hpp"
+#include "easynav_recovery/RecoveryManagerNode.hpp"
 #include "easynav_sensors/SensorsNode.hpp"
 #include "easynav_common/YTSession.hpp"
 #include "easynav_sensors/types/PointPerception.hpp"
@@ -57,6 +58,7 @@ SystemNode::SystemNode(const rclcpp::NodeOptions & options)
   maps_manager_node_ = MapsManagerNode::make_shared();
   planner_node_ = PlannerNode::make_shared();
   sensors_node_ = SensorsNode::make_shared();
+  recovery_node_ = RecoveryManagerNode::make_shared();
 
   safety_reflex_loader_ =
     std::make_unique<pluginlib::ClassLoader<easynav::SafetyReflexBase>>(
@@ -269,7 +271,18 @@ SystemNode::system_cycle_rt()
   bool trigger_controller = false;
 
   bool trigger = trigger_perceptions || trigger_localization;
-  trigger_controller = controller_node_->cycle_rt(nav_state_, trigger);
+
+  // "control_owner" (absent/"controller" by default) picks who gets to produce "cmd_vel" this
+  // cycle: the nominal controller, or a control-owning recovery mitigation selected by
+  // RecoveryManagerNode. See docs/recoveries_easynav.md, level 1 ("Cómo toma el control...").
+  const std::string control_owner = nav_state_->has("control_owner") ?
+    nav_state_->get<std::string>("control_owner") : std::string("controller");
+
+  if (control_owner == "controller") {
+    trigger_controller = controller_node_->cycle_rt(nav_state_, trigger);
+  } else {
+    trigger_controller = recovery_node_->cycle_rt(nav_state_);
+  }
 
   // Level-0 safety reflexes: checked every RT cycle, regardless of which controller or
   // recovery mitigator produced "cmd_vel". See docs/recoveries_easynav.md, level 0.
@@ -312,6 +325,10 @@ SystemNode::system_cycle()
 
   planner_node_->cycle(nav_state_, planner_ts < goals_ts);
 
+  // Level-1 recovery evaluation: diagnoses using whatever the cycle above just produced.
+  // See docs/recoveries_easynav.md, level 1.
+  recovery_node_->cycle(nav_state_);
+
   if (navstate_pub_->get_subscription_count() > 0) {
     std_msgs::msg::String msg;
     msg.data = nav_state_->debug_string();
@@ -329,6 +346,7 @@ SystemNode::get_system_nodes()
   ret[maps_manager_node_->get_name()] = {maps_manager_node_, nullptr};
   ret[planner_node_->get_name()] = {planner_node_, nullptr};
   ret[sensors_node_->get_name()] = {sensors_node_, sensors_node_->get_real_time_cbg()};
+  ret[recovery_node_->get_name()] = {recovery_node_, nullptr};
 
   return ret;
 }

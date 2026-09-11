@@ -33,6 +33,7 @@
 #include "easynav_localizer/LocalizerNode.hpp"
 #include "easynav_maps_manager/MapsManagerNode.hpp"
 #include "easynav_planner/PlannerNode.hpp"
+#include "easynav_recovery/RecoveryManagerNode.hpp"
 #include "easynav_sensors/SensorsNode.hpp"
 #include "easynav_system/GoalManager.hpp"
 
@@ -153,6 +154,10 @@ private:
 
   /// @brief Sensors node.
   SensorsNode::SharedPtr sensors_node_;
+
+  /// @brief Recovery manager node: level-1 (deliberative, non-RT) diagnosis.
+  /// See docs/recoveries_easynav.md, level 1.
+  RecoveryManagerNode::SharedPtr recovery_node_;
 
   /// @brief Shared navigation state.
   std::shared_ptr<NavState> nav_state_;

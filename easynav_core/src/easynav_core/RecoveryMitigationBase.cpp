@@ -13,56 +13,68 @@
 // limitations under the License.
 
 /// \file
-/// \brief Implementation of the abstract base class SafetyReflexBase.
+/// \brief Implementation of the abstract base class RecoveryMitigationBase.
 
 #include "geometry_msgs/msg/twist_stamped.hpp"
 
 #include "easynav_common/RTTFBuffer.hpp"
 #include "easynav_common/YTSession.hpp"
 
-#include "easynav_core/SafetyReflexBase.hpp"
+#include "easynav_core/RecoveryMitigationBase.hpp"
 
 namespace easynav
 {
 
-bool
-SafetyReflexBase::internal_check_and_mitigate(NavState & nav_state)
+void
+RecoveryMitigationBase::internal_start(NavState & nav_state)
 {
   EASYNAV_TRACE_EVENT;
-
-  bool triggered = false;
   try {
-    triggered = check(nav_state);
+    on_start(nav_state);
   } catch (const std::exception & e) {
     if (auto node = get_node()) {
       RCLCPP_ERROR_THROTTLE(
         node->get_logger(), *node->get_clock(), 1000,
-        "Exception in check() of safety reflex [%s]: %s -- failing safe (stopping)",
-        get_plugin_name().c_str(), e.what());
+        "Exception in on_start() of mitigation [%s]: %s", get_plugin_name().c_str(), e.what());
     }
-    stop_robot(nav_state);
-    return true;
   }
+}
 
-  if (!triggered) {return false;}
-
+RecoveryStatus
+RecoveryMitigationBase::internal_cycle(NavState & nav_state)
+{
+  EASYNAV_TRACE_EVENT;
   try {
-    mitigate(nav_state);
+    return on_cycle(nav_state);
   } catch (const std::exception & e) {
     if (auto node = get_node()) {
       RCLCPP_ERROR_THROTTLE(
         node->get_logger(), *node->get_clock(), 1000,
-        "Exception in mitigate() of safety reflex [%s]: %s -- failing safe (stopping)",
+        "Exception in on_cycle() of mitigation [%s]: %s -- failing safe (stopping)",
         get_plugin_name().c_str(), e.what());
     }
     stop_robot(nav_state);
+    return RecoveryStatus::FAILED;
   }
-
-  return true;
 }
 
 void
-SafetyReflexBase::stop_robot(NavState & nav_state)
+RecoveryMitigationBase::internal_stop(NavState & nav_state)
+{
+  EASYNAV_TRACE_EVENT;
+  try {
+    on_stop(nav_state);
+  } catch (const std::exception & e) {
+    if (auto node = get_node()) {
+      RCLCPP_ERROR_THROTTLE(
+        node->get_logger(), *node->get_clock(), 1000,
+        "Exception in on_stop() of mitigation [%s]: %s", get_plugin_name().c_str(), e.what());
+    }
+  }
+}
+
+void
+RecoveryMitigationBase::stop_robot(NavState & nav_state)
 {
   geometry_msgs::msg::TwistStamped zero_speed;
   if (auto node = get_node()) {

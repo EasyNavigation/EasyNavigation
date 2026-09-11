@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <algorithm>
 #include <chrono>
 #include <thread>
 
@@ -28,6 +29,8 @@
 #include "easynav_core/MapsManagerBase.hpp"
 #include "easynav_core/ControllerMethodBase.hpp"
 #include "easynav_core/SafetyReflexBase.hpp"
+#include "easynav_core/RecoveryEvaluatorBase.hpp"
+#include "easynav_core/RecoveryMitigationBase.hpp"
 
 class CoreMethodTestCase : public ::testing::Test
 {
@@ -301,6 +304,78 @@ public:
   void on_initialize() override {}
   bool check(easynav::NavState &) override {return true;}
   void mitigate(easynav::NavState &) override {throw std::runtime_error("boom in mitigate");}
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// RecoveryEvaluatorBase mocks (level 1, see docs/recoveries_easynav.md).
+// ─────────────────────────────────────────────────────────────────────────────
+
+class TrackingEvaluator : public easynav::RecoveryEvaluatorBase
+{
+public:
+  int call_count {0};
+
+  void on_initialize() override {}
+  void update(easynav::NavState &) override {call_count++;}
+};
+
+class ThrowingEvaluator : public easynav::RecoveryEvaluatorBase
+{
+public:
+  void on_initialize() override {}
+  void update(easynav::NavState &) override {throw std::runtime_error("boom in evaluator");}
+};
+
+class PublishingEvaluator : public easynav::RecoveryEvaluatorBase
+{
+public:
+  int8_t level_to_publish {diagnostic_msgs::msg::DiagnosticStatus::OK};
+
+  void on_initialize() override {}
+
+  void update(easynav::NavState & nav_state) override
+  {
+    diagnostic_msgs::msg::DiagnosticStatus status;
+    status.level = level_to_publish;
+    status.name = get_plugin_name();
+    publish_diagnostic(nav_state, status);
+  }
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// RecoveryMitigationBase mocks (level 1, see docs/recoveries_easynav.md).
+// ─────────────────────────────────────────────────────────────────────────────
+
+class TrackingMitigation : public easynav::RecoveryMitigationBase
+{
+public:
+  int start_calls {0};
+  int cycle_calls {0};
+  int stop_calls {0};
+  easynav::RecoveryStatus status_to_return {easynav::RecoveryStatus::RUNNING};
+
+  void on_initialize() override {}
+  bool can_handle(const diagnostic_msgs::msg::DiagnosticStatus &) const override {return true;}
+  bool requires_control() const override {return true;}
+
+  void on_start(easynav::NavState &) override {start_calls++;}
+  easynav::RecoveryStatus on_cycle(easynav::NavState &) override
+  {
+    cycle_calls++;
+    return status_to_return;
+  }
+  void on_stop(easynav::NavState &) override {stop_calls++;}
+};
+
+class ThrowingCycleMitigation : public easynav::RecoveryMitigationBase
+{
+public:
+  void on_initialize() override {}
+  bool can_handle(const diagnostic_msgs::msg::DiagnosticStatus &) const override {return true;}
+  easynav::RecoveryStatus on_cycle(easynav::NavState &) override
+  {
+    throw std::runtime_error("boom in mitigation on_cycle");
+  }
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -736,6 +811,146 @@ TEST_F(CoreMethodTestCase, ReflexFailsSafeWhenMitigateThrows)
   EXPECT_NO_THROW(result = reflex.internal_check_and_mitigate(nav_state));
 
   EXPECT_TRUE(result);
+  ASSERT_TRUE(nav_state.has("cmd_vel"));
+  const auto & applied = nav_state.get<geometry_msgs::msg::TwistStamped>("cmd_vel");
+  EXPECT_DOUBLE_EQ(applied.twist.linear.x, 0.0);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// RecoveryEvaluatorBase: internal_update and publish_diagnostic (level 1, see
+// docs/recoveries_easynav.md).
+// ─────────────────────────────────────────────────────────────────────────────
+
+TEST_F(CoreMethodTestCase, EvaluatorInternalUpdateDoesNotRunTooSoon)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_eval_node");
+  TrackingEvaluator eval;
+  eval.initialize(node, "eval_p");
+
+  easynav::NavState nav_state;
+  eval.internal_update(nav_state);
+
+  EXPECT_EQ(eval.call_count, 0);
+}
+
+TEST_F(CoreMethodTestCase, EvaluatorInternalUpdateRunsWhenTimeElapsed)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_eval2_node");
+  TrackingEvaluator eval;
+  eval.initialize(node, "eval_p2");
+
+  std::this_thread::sleep_for(std::chrono::milliseconds(120));
+  easynav::NavState nav_state;
+  eval.internal_update(nav_state);
+
+  EXPECT_EQ(eval.call_count, 1);
+}
+
+TEST_F(CoreMethodTestCase, EvaluatorUpdateExceptionDoesNotPropagate)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_eval_throw_node");
+  ThrowingEvaluator eval;
+  eval.initialize(node, "eval_throw");
+
+  easynav::NavState nav_state;
+  EXPECT_NO_THROW(eval.internal_update(nav_state));
+}
+
+TEST_F(CoreMethodTestCase, PublishDiagnosticCreatesGroupAndEntry)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_eval_pub_node");
+  PublishingEvaluator eval;
+  eval.initialize(node, "my_eval");
+  eval.level_to_publish = diagnostic_msgs::msg::DiagnosticStatus::ERROR;
+
+  std::this_thread::sleep_for(std::chrono::milliseconds(120));
+  easynav::NavState nav_state;
+  eval.internal_update(nav_state);
+
+  ASSERT_TRUE(nav_state.has("diagnostics.my_eval"));
+  EXPECT_EQ(
+    nav_state.get<diagnostic_msgs::msg::DiagnosticStatus>("diagnostics.my_eval").level,
+    diagnostic_msgs::msg::DiagnosticStatus::ERROR);
+
+  auto members = nav_state.get_group_keys("diagnostics");
+  EXPECT_NE(
+    std::find(members.begin(), members.end(), "diagnostics.my_eval"), members.end());
+}
+
+TEST_F(CoreMethodTestCase, PublishDiagnosticOverwritesInsteadOfDuplicating)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_eval_pub2_node");
+  PublishingEvaluator eval;
+  eval.initialize(node, "my_eval2");
+
+  easynav::NavState nav_state;
+  eval.level_to_publish = diagnostic_msgs::msg::DiagnosticStatus::ERROR;
+  eval.internal_update(nav_state);
+
+  std::this_thread::sleep_for(std::chrono::milliseconds(120));
+  eval.level_to_publish = diagnostic_msgs::msg::DiagnosticStatus::OK;
+  eval.internal_update(nav_state);
+
+  EXPECT_EQ(
+    nav_state.get<diagnostic_msgs::msg::DiagnosticStatus>("diagnostics.my_eval2").level,
+    diagnostic_msgs::msg::DiagnosticStatus::OK);
+
+  auto members = nav_state.get_group_keys("diagnostics");
+  EXPECT_EQ(
+    std::count(members.begin(), members.end(), "diagnostics.my_eval2"), 1);
+}
+
+TEST_F(CoreMethodTestCase, PublishDiagnosticFromTwoEvaluatorsBothAppearInGroup)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_eval_pub3_node");
+  PublishingEvaluator eval_a;
+  eval_a.initialize(node, "eval_a");
+  PublishingEvaluator eval_b;
+  eval_b.initialize(node, "eval_b");
+
+  std::this_thread::sleep_for(std::chrono::milliseconds(120));
+  easynav::NavState nav_state;
+  eval_a.internal_update(nav_state);
+  eval_b.internal_update(nav_state);
+
+  auto members = nav_state.get_group_keys("diagnostics");
+  EXPECT_NE(std::find(members.begin(), members.end(), "diagnostics.eval_a"), members.end());
+  EXPECT_NE(std::find(members.begin(), members.end(), "diagnostics.eval_b"), members.end());
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// RecoveryMitigationBase: internal_start/internal_cycle/internal_stop (level 1,
+// see docs/recoveries_easynav.md).
+// ─────────────────────────────────────────────────────────────────────────────
+
+TEST_F(CoreMethodTestCase, MitigationLifecycleCallsAreForwarded)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_mit_node");
+  TrackingMitigation mit;
+  mit.initialize(node, "mit_p");
+
+  easynav::NavState nav_state;
+  mit.internal_start(nav_state);
+  auto status = mit.internal_cycle(nav_state);
+  mit.internal_stop(nav_state);
+
+  EXPECT_EQ(mit.start_calls, 1);
+  EXPECT_EQ(mit.cycle_calls, 1);
+  EXPECT_EQ(mit.stop_calls, 1);
+  EXPECT_EQ(status, easynav::RecoveryStatus::RUNNING);
+}
+
+TEST_F(CoreMethodTestCase, MitigationCycleExceptionFailsSafe)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_mit_throw_node");
+  ThrowingCycleMitigation mit;
+  mit.initialize(node, "mit_throw");
+
+  easynav::NavState nav_state;
+  easynav::RecoveryStatus status = easynav::RecoveryStatus::RUNNING;
+  EXPECT_NO_THROW(status = mit.internal_cycle(nav_state));
+
+  EXPECT_EQ(status, easynav::RecoveryStatus::FAILED);
   ASSERT_TRUE(nav_state.has("cmd_vel"));
   const auto & applied = nav_state.get<geometry_msgs::msg::TwistStamped>("cmd_vel");
   EXPECT_DOUBLE_EQ(applied.twist.linear.x, 0.0);

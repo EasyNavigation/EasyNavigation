@@ -1,0 +1,2 @@
+ament_add_gtest(recovery_manager_node_tests recovery_manager_node_tests.cpp)
+target_link_libraries(recovery_manager_node_tests ${PROJECT_NAME})
