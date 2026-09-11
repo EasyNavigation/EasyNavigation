@@ -13,6 +13,7 @@ find_package(pluginlib REQUIRED)
 find_package(visualization_msgs REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
+find_package(diagnostic_msgs REQUIRED)
 find_package(PCL REQUIRED COMPONENTS common io)
 
 add_library(${PROJECT_NAME} SHARED
@@ -21,7 +22,10 @@ add_library(${PROJECT_NAME} SHARED
   src/easynav_core/LocalizerMethodBase.cpp
   src/easynav_core/MapsManagerBase.cpp
   src/easynav_core/MethodBase.cpp
+  src/easynav_core/ObstacleProximity.cpp
   src/easynav_core/PlannerMethodBase.cpp
+  src/easynav_core/RecoveryEvaluatorBase.cpp
+  src/easynav_core/RecoveryMitigationBase.cpp
   src/easynav_core/SafetyReflexBase.cpp
 )
 target_include_directories(${PROJECT_NAME} PUBLIC
@@ -37,6 +41,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
   tf2_ros::tf2_ros
   tf2_geometry_msgs::tf2_geometry_msgs
   ${visualization_msgs_TARGETS}
+  ${diagnostic_msgs_TARGETS}
   ${PCL_LIBRARIES}
 )
 
@@ -75,6 +80,7 @@ ament_export_dependencies(
   pluginlib
   visualization_msgs
   tf2_ros
+  diagnostic_msgs
   PCL
 )
 ament_package()

@@ -13,36 +13,28 @@
 // limitations under the License.
 
 /// \file
-/// \brief Implementation of the CollisionSafetyReflex plugin.
+/// \brief Implementation of the DummyEvaluator class.
 
-#include "easynav_controller/CollisionSafetyReflex.hpp"
+#include "easynav_recovery/DummyEvaluator.hpp"
 
 namespace easynav
 {
 
-void
-CollisionSafetyReflex::on_initialize()
+void DummyEvaluator::on_initialize()
 {
-  collision_checker_.initialize(get_node(), get_plugin_name());
 }
 
-bool
-CollisionSafetyReflex::check(NavState & nav_state)
+void DummyEvaluator::update(NavState & nav_state)
 {
-  return collision_checker_.check(nav_state);
-}
+  diagnostic_msgs::msg::DiagnosticStatus status;
+  status.level = diagnostic_msgs::msg::DiagnosticStatus::OK;
+  status.name = get_plugin_name();
+  status.message = "dummy evaluator: nothing checked";
 
-void
-CollisionSafetyReflex::mitigate(NavState & nav_state)
-{
-  RCLCPP_WARN_THROTTLE(
-    get_node()->get_logger(), *get_node()->get_clock(), 1000,
-    "CollisionSafetyReflex [%s]: imminent collision, stopping", get_plugin_name().c_str());
-
-  stop_robot(nav_state);
+  publish_diagnostic(nav_state, status);
 }
 
 }  // namespace easynav
 
 #include <pluginlib/class_list_macros.hpp>
-PLUGINLIB_EXPORT_CLASS(easynav::CollisionSafetyReflex, easynav::SafetyReflexBase)
+PLUGINLIB_EXPORT_CLASS(easynav::DummyEvaluator, easynav::RecoveryEvaluatorBase)

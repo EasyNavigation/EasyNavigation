@@ -410,6 +410,25 @@ public:
     return groups_.find(key) != groups_.end();
   }
 
+  /// \brief Retrieves the list of member keys of a group, without dereferencing them.
+  ///
+  /// Unlike \ref get_group(), which returns the stored values themselves, this returns just
+  /// the key names that \ref set_group() recorded for \p group_key. Useful for code that needs
+  /// to grow a group incrementally (read the current members, add one, call \c set_group()
+  /// again) without already knowing every member in advance.
+  ///
+  /// \param group_key Group key to query.
+  /// \return The group's member keys, or an empty vector if \p group_key does not exist.
+  std::vector<std::string> get_group_keys(const std::string & group_key) const
+  {
+    std::lock_guard<std::mutex> lock(group_mutex_);
+    auto it = groups_.find(group_key);
+    if (it == groups_.end()) {
+      return {};
+    }
+    return it->second;
+  }
+
   /// \brief Type alias for a generic printer functor used by \ref debug_string().
   ///
   /// The functor receives the stored value as a \c std::shared_ptr<void>

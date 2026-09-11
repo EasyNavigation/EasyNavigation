@@ -183,6 +183,33 @@ TEST_F(NavStateTest, SetGroupIsVisibleInDebugString)
     << "Group member must appear in debug_string\n" << s;
 }
 
+TEST_F(NavStateTest, GetGroupKeysReturnsMembers)
+{
+  easynav::NavState state;
+  state.set_group("points", {"lidar_front", "lidar_back"});
+  EXPECT_EQ(
+    state.get_group_keys("points"), std::vector<std::string>({"lidar_front", "lidar_back"}));
+}
+
+TEST_F(NavStateTest, GetGroupKeysReturnsEmptyForMissingGroup)
+{
+  easynav::NavState state;
+  EXPECT_TRUE(state.get_group_keys("missing").empty());
+}
+
+TEST_F(NavStateTest, GetGroupKeysSupportsIncrementalGrowth)
+{
+  easynav::NavState state;
+  state.set_group("diagnostics", {"planner"});
+
+  auto keys = state.get_group_keys("diagnostics");
+  keys.push_back("controller");
+  state.set_group("diagnostics", keys);
+
+  EXPECT_EQ(
+    state.get_group_keys("diagnostics"), std::vector<std::string>({"planner", "controller"}));
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // get_by_type<T>()
 // ─────────────────────────────────────────────────────────────────────────────
