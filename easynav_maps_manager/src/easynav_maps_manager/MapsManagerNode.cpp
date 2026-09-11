@@ -132,16 +132,4 @@ MapsManagerNode::cycle(std::shared_ptr<NavState> nav_state)
   }
 }
 
-bool
-MapsManagerNode::reset(std::shared_ptr<NavState> nav_state)
-{
-  bool cleared_something = false;
-  for (auto & map_manager : maps_managers_) {
-    if (map_manager->internal_reset(*nav_state)) {
-      cleared_something = true;
-    }
-  }
-  return cleared_something;
-}
-
 }  // namespace easynav

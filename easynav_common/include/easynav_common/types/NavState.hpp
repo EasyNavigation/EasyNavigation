@@ -22,6 +22,7 @@
 #ifndef EASYNAV__TYPES__NAVSTATE_HPP_
 #define EASYNAV__TYPES__NAVSTATE_HPP_
 
+#include <algorithm>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
@@ -32,6 +33,7 @@
 #include <type_traits>
 #include <iostream>
 #include <functional>
+#include <vector>
 #include <execinfo.h>
 #include <typeinfo>
 #include <cxxabi.h>
@@ -456,12 +458,19 @@ public:
   /// \return Multi-line string with one entry per key.
   std::string debug_string() const
   {
-    std::stringstream ss;
+    std::vector<std::string> keys;
+    keys.reserve(values_.size());
     for (const auto & kv : values_) {
-      ss << kv.first << " = ";
-      auto ptr = kv.second;
+      keys.push_back(kv.first);
+    }
+    std::sort(keys.begin(), keys.end());
+
+    std::stringstream ss;
+    for (const auto & key : keys) {
+      ss << key << " = ";
+      auto ptr = values_.at(key);
       if (ptr) {
-        auto type_it = types_.find(kv.first);
+        auto type_it = types_.find(key);
         if (type_it != types_.end()) {
           auto printer_it = type_printers_.find(type_it->second);
           if (printer_it != type_printers_.end()) {

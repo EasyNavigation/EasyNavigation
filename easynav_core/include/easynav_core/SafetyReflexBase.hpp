@@ -18,6 +18,10 @@
 #ifndef EASYNAV_CORE__SAFETYREFLEXBASE_HPP_
 #define EASYNAV_CORE__SAFETYREFLEXBASE_HPP_
 
+#include <cstdint>
+#include <optional>
+#include <string>
+
 #include "easynav_common/types/NavState.hpp"
 #include "easynav_core/MethodBase.hpp"
 
@@ -35,6 +39,13 @@ namespace easynav
  * is not rate-limited by MethodBase::isTime2RunRT() — SystemNode already controls the overall
  * RT rate — and its own failure is treated as unsafe: if check() or mitigate() throws, the
  * robot is stopped as a fail-safe default instead of assuming the reflex is inactive.
+ *
+ * Per §5.2 of the design, a reflex also reports its own severity level (OK/WARN/ERROR) under
+ * "diagnostics.<plugin_name>" in the shared "diagnostics" group of NavState — the same group
+ * level-1 evaluators publish to — so a future evaluator can notice a reflex triggering
+ * repeatedly and escalate to a deliberative mitigation, without the reflex's own reaction ever
+ * depending on that slower non-RT cycle. To keep this cheap on the RT path, it is only written
+ * when the severity level actually changes, not on every cycle.
  */
 class SafetyReflexBase : public MethodBase
 {
@@ -66,6 +77,23 @@ protected:
 
   /// @brief Fail-safe default: writes a zero-velocity TwistStamped to "cmd_vel".
   void stop_robot(NavState & nav_state);
+
+private:
+  /**
+   * @brief Publishes (or overwrites) this reflex's entry in the shared "diagnostics" group,
+   * but only if \p level differs from the last level reported by this reflex.
+   *
+   * Mirrors RecoveryEvaluatorBase::publish_diagnostic()'s key/group convention
+   * ("diagnostics.<plugin_name>", membership in the "diagnostics" group), edge-triggered
+   * instead of every-cycle so it stays cheap on the RT path.
+   *
+   * @param nav_state Navigation state to write to.
+   * @param level A diagnostic_msgs::msg::DiagnosticStatus level (OK/WARN/ERROR/STALE).
+   * @param message Human-readable explanation for this level.
+   */
+  void report_diagnostic(NavState & nav_state, uint8_t level, const std::string & message);
+
+  std::optional<uint8_t> last_reported_level_;
 };
 
 }  // namespace easynav

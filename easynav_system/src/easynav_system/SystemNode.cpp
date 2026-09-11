@@ -318,54 +318,16 @@ SystemNode::system_cycle()
   sensors_node_->cycle(nav_state_);
   localizer_node_->cycle(nav_state_);
   maps_manager_node_->cycle(nav_state_);
-
-  // "maps_manager_reset_requested" (ClearMapRecovery, §5.11): a one-shot request, consumed
-  // here right after the regular map update and reset to false so it does not repeat.
-  if (nav_state_->has("maps_manager_reset_requested") &&
-    nav_state_->get<bool>("maps_manager_reset_requested"))
-  {
-    maps_manager_node_->reset(nav_state_);
-    nav_state_->set("maps_manager_reset_requested", false);
-  }
-
   goal_manager_->update(*nav_state_);
 
   rclcpp::Time planner_ts = planner_node_->get_last_execution_ts();
   rclcpp::Time goals_ts(goal_manager_->get_goals().header.stamp, planner_ts.get_clock_type());
 
-  // "force_replan_requested" (ForceReplanRecovery, §5.11): same one-shot pattern, ORed into
-  // the usual "a newer goal arrived" trigger so PlannerNode::cycle() forces an update either
-  // way.
-  const bool force_replan = nav_state_->has("force_replan_requested") &&
-    nav_state_->get<bool>("force_replan_requested");
-  if (force_replan) {
-    nav_state_->set("force_replan_requested", false);
-  }
-
-  planner_node_->cycle(nav_state_, planner_ts < goals_ts || force_replan);
+  planner_node_->cycle(nav_state_, planner_ts < goals_ts);
 
   // Level-1 recovery evaluation: diagnoses using whatever the cycle above just produced.
   // See docs/recoveries_easynav.md, level 1.
   recovery_node_->cycle(nav_state_);
-
-  // "goal_manager_request" (SafeWaypointRecovery/NotifyAndHoldRecovery, §5.8/§5.11): connects
-  // a mitigation's decision to escalate at mission level to the one real GoalManager instance,
-  // which mitigations (generic pluginlib plugins, unlike SystemNode) have no direct handle to.
-  // One-shot, consumed immediately: a mitigation's on_start() can only run from within the
-  // recovery_node_->cycle() call just above, in this same non-RT thread, so there is no race.
-  if (nav_state_->has("goal_manager_request")) {
-    const auto request = nav_state_->get<std::string>("goal_manager_request");
-    if (request != "none") {
-      const std::string reason = nav_state_->has("goal_manager_reason") ?
-        nav_state_->get<std::string>("goal_manager_reason") : std::string();
-      if (request == "failed") {
-        goal_manager_->set_failed(reason);
-      } else if (request == "error") {
-        goal_manager_->set_error(reason);
-      }
-      nav_state_->set("goal_manager_request", std::string("none"));
-    }
-  }
 
   if (navstate_pub_->get_subscription_count() > 0) {
     std_msgs::msg::String msg;

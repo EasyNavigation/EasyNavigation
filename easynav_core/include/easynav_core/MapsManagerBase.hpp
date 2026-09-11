@@ -47,16 +47,6 @@ public:
    */
   void internal_update(NavState & nav_state);
 
-  /**
-   * @brief Exception-safe wrapper around reset(). See docs/recoveries_easynav.md §5.11
-   * (ClearMapRecovery). Called on demand (not rate-limited by isTime2Run()) when a recovery
-   * mitigation requests a map reset via SystemNode.
-   *
-   * @param nav_state The current state of the navigation system.
-   * @return Whatever reset() returned, or false if it threw.
-   */
-  bool internal_reset(NavState & nav_state);
-
 protected:
   /**
    * @brief Run the map update logic.
@@ -66,19 +56,6 @@ protected:
    * @param nav_state The current state of the navigation system.
    */
   virtual void update(NavState & nav_state) = 0;
-
-  /**
-   * @brief Reset/clear this map manager's data, if it maintains any that is meaningful to
-   * clear (e.g. a bounded occupancy window, as opposed to a static map loaded once).
-   *
-   * Default: no-op, reports "not supported". Override in map managers where clearing makes
-   * sense; there is no obligation to support this for every plugin.
-   *
-   * @param nav_state The current state of the navigation system.
-   * @return True if something was actually cleared; false if this map manager has nothing
-   * clearable (the default).
-   */
-  virtual bool reset([[maybe_unused]] NavState & nav_state) {return false;}
 };
 
 }  // namespace easynav

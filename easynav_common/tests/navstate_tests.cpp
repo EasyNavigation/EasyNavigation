@@ -172,6 +172,31 @@ TEST_F(NavStateTest, VectorStringPrinterMultipleElements)
     << "Multiple elements must render comma-separated\n" << s;
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// debug_string() key ordering
+// ─────────────────────────────────────────────────────────────────────────────
+
+TEST_F(NavStateTest, DebugStringListsKeysInAlphabeticalOrder)
+{
+  // values_ is an unordered_map, so insertion/hash order is not what a human reading the
+  // "easynav_navstate" topic / TUI wants — debug_string() sorts keys instead.
+  easynav::NavState state;
+  state.set("zebra", 1);
+  state.set("apple", 2);
+  state.set("mango", 3);
+
+  std::string s = state.debug_string();
+  auto apple_pos = s.find("apple");
+  auto mango_pos = s.find("mango");
+  auto zebra_pos = s.find("zebra");
+
+  ASSERT_NE(apple_pos, std::string::npos);
+  ASSERT_NE(mango_pos, std::string::npos);
+  ASSERT_NE(zebra_pos, std::string::npos);
+  EXPECT_LT(apple_pos, mango_pos) << s;
+  EXPECT_LT(mango_pos, zebra_pos) << s;
+}
+
 TEST_F(NavStateTest, SetGroupIsVisibleInDebugString)
 {
   easynav::NavState state;

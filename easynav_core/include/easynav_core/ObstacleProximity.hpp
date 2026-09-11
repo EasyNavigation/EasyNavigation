@@ -42,7 +42,7 @@ struct ObstacleProximity
 /**
  * @brief Finds the nearest point-cloud perception to the robot, regardless of "cmd_vel".
  *
- * Unlike CollisionChecker::check() (which forward-projects the commanded velocity to decide
+ * Unlike CollisionSafetyReflex::check() (which forward-projects the commanded velocity to decide
  * whether continuing would cause a collision), this is a simple static proximity query: "how
  * close is the nearest obstacle right now". Used by level-1 evaluators/mitigators that need to
  * reason about proximity independently of the current motion (e.g. deciding whether it is safe

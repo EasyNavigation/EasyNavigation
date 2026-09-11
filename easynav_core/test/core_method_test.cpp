@@ -14,6 +14,7 @@
 
 #include <algorithm>
 #include <chrono>
+#include <string>
 #include <thread>
 
 #include "gtest/gtest.h"
@@ -270,6 +271,7 @@ class TrackingReflex : public easynav::SafetyReflexBase
 {
 public:
   bool should_trigger {false};
+  bool throw_on_mitigate {false};
   int check_calls {0};
   int mitigate_calls {0};
 
@@ -284,6 +286,9 @@ public:
   void mitigate(easynav::NavState & nav_state) override
   {
     mitigate_calls++;
+    if (throw_on_mitigate) {
+      throw std::runtime_error("boom in mitigate (toggled)");
+    }
     geometry_msgs::msg::TwistStamped applied;
     applied.twist.linear.x = 42.0;  // sentinel value, distinguishable from a fail-safe stop
     nav_state.set("cmd_vel", applied);
@@ -814,6 +819,119 @@ TEST_F(CoreMethodTestCase, ReflexFailsSafeWhenMitigateThrows)
   ASSERT_TRUE(nav_state.has("cmd_vel"));
   const auto & applied = nav_state.get<geometry_msgs::msg::TwistStamped>("cmd_vel");
   EXPECT_DOUBLE_EQ(applied.twist.linear.x, 0.0);
+}
+
+// Reflexes also report into NavState's shared "diagnostics" group, per §5.2 of the design, so
+// a future level-1 evaluator could notice one triggering repeatedly without depending on the
+// non-RT cycle for its own reaction. See docs/recoveries_easynav.md.
+
+TEST_F(CoreMethodTestCase, ReflexNotTriggeredPublishesOkDiagnostic)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_reflex_diag_ok_node");
+  TrackingReflex reflex;
+  reflex.initialize(node, "reflex_diag_ok");
+  reflex.should_trigger = false;
+
+  easynav::NavState nav_state;
+  reflex.internal_check_and_mitigate(nav_state);
+
+  ASSERT_TRUE(nav_state.has("diagnostics.reflex_diag_ok"));
+  EXPECT_EQ(
+    nav_state.get<diagnostic_msgs::msg::DiagnosticStatus>("diagnostics.reflex_diag_ok").level,
+    diagnostic_msgs::msg::DiagnosticStatus::OK);
+
+  auto members = nav_state.get_group_keys("diagnostics");
+  EXPECT_NE(
+    std::find(members.begin(), members.end(), "diagnostics.reflex_diag_ok"), members.end());
+}
+
+TEST_F(CoreMethodTestCase, ReflexTriggeredPublishesWarnDiagnostic)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_reflex_diag_warn_node");
+  TrackingReflex reflex;
+  reflex.initialize(node, "reflex_diag_warn");
+  reflex.should_trigger = true;
+
+  easynav::NavState nav_state;
+  reflex.internal_check_and_mitigate(nav_state);
+
+  EXPECT_EQ(
+    nav_state.get<diagnostic_msgs::msg::DiagnosticStatus>("diagnostics.reflex_diag_warn").level,
+    diagnostic_msgs::msg::DiagnosticStatus::WARN);
+}
+
+TEST_F(CoreMethodTestCase, ReflexCheckThrowPublishesErrorDiagnostic)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>(
+    "test_reflex_diag_check_throw_node");
+  ThrowingCheckReflex reflex;
+  reflex.initialize(node, "reflex_diag_check_throw");
+
+  easynav::NavState nav_state;
+  reflex.internal_check_and_mitigate(nav_state);
+
+  EXPECT_EQ(
+    nav_state.get<diagnostic_msgs::msg::DiagnosticStatus>(
+      "diagnostics.reflex_diag_check_throw").level,
+    diagnostic_msgs::msg::DiagnosticStatus::ERROR);
+}
+
+TEST_F(CoreMethodTestCase, ReflexMitigateThrowPublishesErrorDiagnostic)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>(
+    "test_reflex_diag_mitigate_throw_node");
+  ThrowingMitigateReflex reflex;
+  reflex.initialize(node, "reflex_diag_mitigate_throw");
+
+  easynav::NavState nav_state;
+  reflex.internal_check_and_mitigate(nav_state);
+
+  EXPECT_EQ(
+    nav_state.get<diagnostic_msgs::msg::DiagnosticStatus>(
+      "diagnostics.reflex_diag_mitigate_throw").level,
+    diagnostic_msgs::msg::DiagnosticStatus::ERROR);
+}
+
+TEST_F(CoreMethodTestCase, ReflexDiagnosticTracksLevelAcrossCycles)
+{
+  // Reproduces the exact bug edge-triggering-on-a-plain-bool would have: going from
+  // "triggered, mitigate() succeeded" (WARN) to "triggered, mitigate() throws" (ERROR) must
+  // still be reported even though "triggered" itself does not change between those two calls.
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>(
+    "test_reflex_diag_transitions_node");
+  TrackingReflex reflex;
+  reflex.initialize(node, "reflex_diag_transitions");
+  easynav::NavState nav_state;
+  const std::string key = "diagnostics.reflex_diag_transitions";
+
+  reflex.should_trigger = false;
+  reflex.internal_check_and_mitigate(nav_state);
+  EXPECT_EQ(
+    nav_state.get<diagnostic_msgs::msg::DiagnosticStatus>(key).level,
+    diagnostic_msgs::msg::DiagnosticStatus::OK);
+
+  reflex.should_trigger = true;
+  reflex.internal_check_and_mitigate(nav_state);
+  EXPECT_EQ(
+    nav_state.get<diagnostic_msgs::msg::DiagnosticStatus>(key).level,
+    diagnostic_msgs::msg::DiagnosticStatus::WARN);
+
+  reflex.throw_on_mitigate = true;
+  reflex.internal_check_and_mitigate(nav_state);
+  EXPECT_EQ(
+    nav_state.get<diagnostic_msgs::msg::DiagnosticStatus>(key).level,
+    diagnostic_msgs::msg::DiagnosticStatus::ERROR);
+
+  reflex.throw_on_mitigate = false;
+  reflex.should_trigger = false;
+  reflex.internal_check_and_mitigate(nav_state);
+  EXPECT_EQ(
+    nav_state.get<diagnostic_msgs::msg::DiagnosticStatus>(key).level,
+    diagnostic_msgs::msg::DiagnosticStatus::OK);
+
+  // No duplicate membership, regardless of how many cycles were reported above.
+  auto members = nav_state.get_group_keys("diagnostics");
+  EXPECT_EQ(std::count(members.begin(), members.end(), key), 1);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

@@ -21,9 +21,7 @@
   <depend>rclcpp_lifecycle</depend>
   <depend>easynav_common</depend>
   <depend>easynav_sensors</depend>
-  <depend>visualization_msgs</depend>
   <depend>tf2_ros</depend>
-  <depend>pcl_ros</depend>
   <depend>tf2_geometry_msgs</depend>
   <depend>diagnostic_msgs</depend>
 
