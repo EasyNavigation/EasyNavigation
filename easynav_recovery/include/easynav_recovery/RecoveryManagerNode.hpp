@@ -27,6 +27,8 @@
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 #include "pluginlib/class_loader.hpp"
 
+#include "diagnostic_msgs/msg/diagnostic_array.hpp"
+
 #include "easynav_common/types/NavState.hpp"
 #include "easynav_core/RecoveryEvaluatorBase.hpp"
 #include "easynav_core/RecoveryMitigationBase.hpp"
@@ -157,6 +159,11 @@ public:
   [[nodiscard]] std::string get_active_mitigation_name() const;
 
 private:
+  /// @brief Publishes the current "diagnostics" group as a standard DiagnosticArray, so
+  /// tooling that expects the real /diagnostics topic (rqt_robot_monitor,
+  /// diagnostic_aggregator, the EasyNav TUI) can consume it directly.
+  rclcpp::Publisher<diagnostic_msgs::msg::DiagnosticArray>::SharedPtr diagnostics_pub_;
+
   /// @brief Plugin loader for recovery evaluators.
   std::unique_ptr<pluginlib::ClassLoader<RecoveryEvaluatorBase>> evaluator_loader_;
 
@@ -185,6 +192,10 @@ private:
   /// @brief Attempts to select and start a mitigation for the current diagnostics, if none is
   /// already active. Extracted from cycle() for readability/testability.
   void try_select_mitigation(NavState & nav_state);
+
+  /// @brief Publishes the current "diagnostics" group to /diagnostics as a DiagnosticArray, if
+  /// there is at least one subscriber. Called once at the end of every cycle().
+  void publish_diagnostics(NavState & nav_state);
 };
 
 }  // namespace easynav

@@ -16,6 +16,8 @@ import math
 import os
 import re
 
+from diagnostic_msgs.msg import DiagnosticArray, DiagnosticStatus
+
 from easynav_interfaces.msg import GoalManagerInfo, NavigationControl
 from geometry_msgs.msg import Twist, TwistStamped
 
@@ -231,6 +233,48 @@ class NavStateProcessor():
 
     def destroy(self):
         self.node.destroy_subscription(self.navstate_sub)
+
+
+# Mapping of DiagnosticStatus.level (uint8) to (label, color)
+DIAG_LEVEL_MAP: dict[int, tuple[str, str]] = {
+    DiagnosticStatus.OK: ('OK', 'green'),
+    DiagnosticStatus.WARN: ('WARN', 'yellow'),
+    DiagnosticStatus.ERROR: ('ERROR', 'red'),
+    DiagnosticStatus.STALE: ('STALE', 'red'),
+}
+
+
+class DiagnosticsProcessor():
+
+    def __init__(self, node, callback):
+        self.node = node
+        self.diagnostics_sub = node.create_subscription(
+            DiagnosticArray,
+            'diagnostics',
+            callback,
+            10)
+
+        self.diagnostics_sub
+
+    @staticmethod
+    def msg2text(msg: DiagnosticArray) -> str:
+        if not msg.status:
+            return 'No diagnostics yet…'
+
+        lines = []
+        for status in msg.status:
+            label, color = DIAG_LEVEL_MAP.get(status.level, (str(status.level), 'white'))
+            hw = f' ({status.hardware_id})' if status.hardware_id else ''
+            values = ''
+            if status.values:
+                values = ' {' + ', '.join(f'{v.key}={v.value}' for v in status.values) + '}'
+            lines.append(
+                f'[{color}]{label}[/{color}] [{status.name}]{hw}: {status.message}{values}'
+            )
+        return '\n'.join(lines)
+
+    def destroy(self):
+        self.node.destroy_subscription(self.diagnostics_sub)
 
 
 # ---------- Time stats config ----------

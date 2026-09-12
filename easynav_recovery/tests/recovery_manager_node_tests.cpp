@@ -19,6 +19,7 @@
 #include "gtest/gtest.h"
 
 #include "rclcpp/rclcpp.hpp"
+#include "diagnostic_msgs/msg/diagnostic_array.hpp"
 #include "diagnostic_msgs/msg/diagnostic_status.hpp"
 #include "lifecycle_msgs/msg/transition.hpp"
 #include "lifecycle_msgs/msg/state.hpp"
@@ -344,6 +345,47 @@ TEST_F(RecoveryManagerNodeTestCase, cycle_rt_is_noop_without_a_control_owning_mi
 
   auto nav_state = std::make_shared<easynav::NavState>();
   EXPECT_FALSE(node->cycle_rt(nav_state));
+}
+
+TEST_F(RecoveryManagerNodeTestCase, cycle_publishes_diagnostics_group_to_diagnostics_topic)
+{
+  auto node = std::make_shared<easynav::RecoveryManagerNode>();
+  node->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_CONFIGURE);
+
+  diagnostic_msgs::msg::DiagnosticArray received;
+  bool got_message = false;
+  auto sub_node = std::make_shared<rclcpp::Node>("test_diagnostics_sub_node");
+  auto sub = sub_node->create_subscription<diagnostic_msgs::msg::DiagnosticArray>(
+    "diagnostics", 10,
+    [&received, &got_message](diagnostic_msgs::msg::DiagnosticArray::SharedPtr msg) {
+      received = *msg;
+      got_message = true;
+    });
+
+  auto nav_state = std::make_shared<easynav::NavState>();
+  diagnostic_msgs::msg::DiagnosticStatus status;
+  status.name = "my_eval";
+  status.hardware_id = "planner";
+  status.level = diagnostic_msgs::msg::DiagnosticStatus::ERROR;
+  nav_state->set("diagnostics.my_eval", status);
+  nav_state->set_group("diagnostics", {"diagnostics.my_eval"});
+
+  rclcpp::executors::SingleThreadedExecutor executor;
+  executor.add_node(node->get_node_base_interface());
+  executor.add_node(sub_node);
+
+  auto deadline = std::chrono::steady_clock::now() + std::chrono::seconds(2);
+  while (!got_message && std::chrono::steady_clock::now() < deadline) {
+    node->cycle(nav_state);
+    executor.spin_some();
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+  }
+
+  ASSERT_TRUE(got_message);
+  ASSERT_EQ(received.status.size(), 1u);
+  EXPECT_EQ(received.status[0].name, "my_eval");
+  EXPECT_EQ(received.status[0].hardware_id, "planner");
+  EXPECT_EQ(received.status[0].level, diagnostic_msgs::msg::DiagnosticStatus::ERROR);
 }
 
 TEST_F(RecoveryManagerNodeTestCase, DiagnosticStatusIsHumanReadableInDebugString)

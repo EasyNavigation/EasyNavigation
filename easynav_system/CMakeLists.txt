@@ -20,6 +20,7 @@ find_package(geometry_msgs)
 find_package(tf2_geometry_msgs)
 find_package(tf2)
 find_package(pluginlib REQUIRED)
+find_package(diagnostic_msgs REQUIRED)
 
 set(dependencies
   rclcpp::rclcpp

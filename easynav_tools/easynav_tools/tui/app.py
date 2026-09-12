@@ -30,6 +30,7 @@ from textual.containers import Container, Horizontal, Vertical
 from textual.widgets import Footer, Label, Static, Switch, Tab, Tabs
 
 from ..controller.ros_controllers import (
+    DiagnosticsProcessor,
     EasyNavControlProcessor,
     GoalManagerInfoProcessor,
     LogReader,
@@ -115,9 +116,11 @@ class EasyNavTabbedApp(App):
     }
 
     #navstate_block { height: 1fr; }
+    #diagnostics_block { height: 1fr; margin-top: 1; }
     #timestats_block { height: 1fr; margin-top: 1; }
 
     #navstate_wrap { height: 100%; }
+    #diagnostics_wrap { height: 100%; }
     #timestats_wrap { height: 100%; }
 
     #navstatus_block { height: 100%; }
@@ -161,6 +164,7 @@ class EasyNavTabbedApp(App):
 
         # Widget refs
         self.st_navstate: Static | None = None
+        self.st_diagnostics: Static | None = None
         self.st_timestats: Static | None = None
         self.page_commanding: Static | None = None
 
@@ -171,8 +175,10 @@ class EasyNavTabbedApp(App):
 
         # Switch state and buffers
         self.navstate_enabled = True
+        self.diagnostics_enabled = True
         self.timestats_enabled = True
         self._last_navstate_text: Text | str = ''
+        self._last_diagnostics_text: Text | str = ''
         self._last_timestats_text: Text | str = ''
 
         # Cached last twist texts
@@ -234,6 +240,16 @@ class EasyNavTabbedApp(App):
                                 self.st_navstate = Static('NavState: esperando…')
                                 yield self.st_navstate
 
+                        # Diagnostics (switch inside border)
+                        with Vertical(id='diagnostics_block', classes='titled'):
+                            with Vertical(id='diagnostics_wrap', classes='box'):
+                                with Horizontal(classes='hdr'):
+                                    yield Label('Diagnostics', classes='title')
+                                    yield Static('', classes='spacer')
+                                    yield Switch(value=True, id='sw_diagnostics')
+                                self.st_diagnostics = Static('Diagnostics: esperando…')
+                                yield self.st_diagnostics
+
                         # Time stats (switch inside border)
                         with Vertical(id='timestats_block', classes='titled'):
                             with Vertical(id='timestats_wrap', classes='box'):
@@ -263,6 +279,10 @@ class EasyNavTabbedApp(App):
         # create NavState sub if switch is ON
         if self.query_one('#sw_navstate', Switch).value:
             self.subs['navstate'] = NavStateProcessor(self.node, self.navstate_callback)
+        # create Diagnostics sub if switch is ON
+        if self.query_one('#sw_diagnostics', Switch).value:
+            self.subs['diagnostics'] = DiagnosticsProcessor(
+                self.node, self.diagnostics_callback)
         # Time stats: poll the log periodically (10 Hz is overkill; use ~2 Hz)
         self.set_interval(0.5, self._poll_time_stats_log)
 
@@ -306,6 +326,25 @@ class EasyNavTabbedApp(App):
                     self.st_navstate.update('')
                 # try to destroy wrapper and remove
                 sub = self.subs.pop('navstate', None)
+                if sub is not None and hasattr(sub, 'destroy'):
+                    try:
+                        sub.destroy()
+                    except Exception:
+                        pass
+
+        elif event.switch.id == 'sw_diagnostics':
+            self.diagnostics_enabled = event.value
+            if event.value:
+                # ON: (re)create subscriber and restore last content
+                self.subs['diagnostics'] = DiagnosticsProcessor(
+                    self.node, self.diagnostics_callback)
+                if self.st_diagnostics:
+                    self.st_diagnostics.update(self._last_diagnostics_text)
+            else:
+                # OFF: clear UI and destroy subscriber to free resources
+                if self.st_diagnostics:
+                    self.st_diagnostics.update('')
+                sub = self.subs.pop('diagnostics', None)
                 if sub is not None and hasattr(sub, 'destroy'):
                     try:
                         sub.destroy()
@@ -414,6 +453,12 @@ class EasyNavTabbedApp(App):
         self._last_navstate_text = text
         if self.navstate_enabled and self.st_navstate is not None:
             self.st_navstate.update(text)
+
+    def diagnostics_callback(self, msg) -> None:
+        text = DiagnosticsProcessor.msg2text(msg)
+        self._last_diagnostics_text = text
+        if self.diagnostics_enabled and self.st_diagnostics is not None:
+            self.st_diagnostics.update(text)
 
     def _update_twist_box(self) -> None:
         if self.box_twist is None:
