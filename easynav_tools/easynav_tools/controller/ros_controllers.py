@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import glob
 import math
 import os
 import re
@@ -76,6 +77,10 @@ NC_TYPE_MAP: dict[int, tuple[str, str]] = {
     6: ('CANCEL',    'yellow'),
     7: ('CANCELLED', 'yellow'),
     8: ('ERROR',     'red'),
+    9: ('PAUSE',     'yellow'),
+    10: ('RESUME',   'green'),
+    11: ('PAUSED',   'yellow'),
+    12: ('RESUMED',  'green'),
 }
 
 
@@ -278,8 +283,44 @@ class DiagnosticsProcessor():
 
 
 # ---------- Time stats config ----------
-_LOG_PATH = '/tmp/easynav.log'
+# Each EasyNav process writes its own /tmp/easynav_<ns>.log, keyed by ROS
+# namespace rather than PID (a single shared /tmp/easynav.log broke with
+# multiple concurrent instances on the same host; a PID-keyed name made the
+# file unfindable without knowing the PID -- see easynav::YTSession).
+_LOG_GLOB = '/tmp/easynav*.log'
 _LOG_RE = re.compile(r'^(?P<name>\S+)\s+(?P<start>\d+)\s+(?P<end>\d+)\s*$')
+
+
+def _namespace_to_log_path(namespace: str) -> str:
+    """Mirror easynav::YTSession::log_path()'s namespace -> filename mapping."""
+    ns = namespace.strip('/')
+    if not ns:
+        return '/tmp/easynav.log'
+    return f'/tmp/easynav_{ns.replace("/", "_")}.log'
+
+
+def _discover_log_path(namespace: str | None = None) -> str | None:
+    """Resolve the trace-log path for a running EasyNav instance.
+
+    With an explicit namespace, targets that instance directly. Otherwise,
+    auto-discovers among currently-present /tmp/easynav*.log files, picking
+    the most recently modified one if more than one EasyNav instance is
+    running. Returns None if no namespace was given and no log file exists
+    yet (e.g. EasyNav hasn't started).
+    """
+    if namespace is not None:
+        return _namespace_to_log_path(namespace)
+
+    dated_candidates = []
+    for path in glob.glob(_LOG_GLOB):
+        try:
+            dated_candidates.append((os.path.getmtime(path), path))
+        except FileNotFoundError:
+            # Deleted/rotated between glob() and getmtime(); skip it.
+            continue
+    if not dated_candidates:
+        return None
+    return max(dated_candidates)[1]
 
 
 # -------- Running stats (Welford) --------
@@ -320,8 +361,9 @@ def _sort_key_suffix(full: str) -> tuple[str, str]:
 
 class LogReader:
 
-    def __init__(self):
+    def __init__(self, namespace: str | None = None):
         # ---- Time stats state (tailing the log) ----
+        self._log_path = _discover_log_path(namespace)
         self._log_fh = None
         self._log_inode = None
         self._log_pos = 0
@@ -329,8 +371,15 @@ class LogReader:
 
     def _open_log_if_needed(self) -> None:
         """Open the log file if available, preserving position; handle rotation/truncation."""
+        if self._log_path is None:
+            # No pid was given and no instance was running yet at construction time;
+            # keep looking in case one has started since.
+            self._log_path = _discover_log_path()
+            if self._log_path is None:
+                return
+
         try:
-            st = os.stat(_LOG_PATH)
+            st = os.stat(self._log_path)
         except FileNotFoundError:
             # file missing: close if we had it
             if self._log_fh:
@@ -345,7 +394,7 @@ class LogReader:
 
         if self._log_fh is None:
             # first open: read from start to accumulate history
-            self._log_fh = open(_LOG_PATH, 'r', encoding='utf-8', errors='ignore')
+            self._log_fh = open(self._log_path, 'r', encoding='utf-8', errors='ignore')
             self._log_inode = st.st_ino
             self._log_pos = 0
             return
@@ -359,7 +408,7 @@ class LogReader:
                     self._log_fh.close()
                 except Exception:
                     pass
-                self._log_fh = open(_LOG_PATH, 'r', encoding='utf-8', errors='ignore')
+                self._log_fh = open(self._log_path, 'r', encoding='utf-8', errors='ignore')
                 self._log_inode = st.st_ino
                 self._log_pos = 0
         except Exception:
@@ -420,7 +469,7 @@ class LogReader:
         rows = []
         for full_name, d in sorted(self._ts_stats.items(), key=lambda kv: _sort_key_suffix(kv[0])):
             short = _shorten_name(full_name)
-            exec_mean, exec_std = d['exec'].as_tuple()            # μs
+            exec_mean, exec_std = d['exec'].as_tuple()            # ms
             elap_mean, elap_std = d['elapsed'].as_tuple()         # ms
             freq_mean, freq_std = d['freq'].as_tuple()            # Hz
             rows.append((short, (exec_mean, exec_std),

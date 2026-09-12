@@ -36,6 +36,8 @@ def spin_wait(node: Node, predicate, timeout=3.0, step=0.01):
 
 class TestGoalManagerClientUnit(unittest.TestCase):
 
+    _next_id = 0
+
     @classmethod
     def setUpClass(cls):
         rclpy.init()
@@ -45,7 +47,14 @@ class TestGoalManagerClientUnit(unittest.TestCase):
         rclpy.shutdown()
 
     def setUp(self):
-        self.node = Node('gm_client_unit_tester')
+        # A unique node name per test (rather than a fixed one reused across
+        # tests) avoids a DDS-level crosstalk race: rapidly destroying and
+        # recreating a node/topic with the exact same name within a single
+        # shared rclpy context can let an in-flight message meant for the
+        # previous test's subscriber be delivered to this test's fresh one.
+        self._test_id = TestGoalManagerClientUnit._next_id
+        TestGoalManagerClientUnit._next_id += 1
+        self.node = Node(f'gm_client_unit_tester_{self._test_id}')
         self.client = GoalManagerClient(self.node)
 
         self.server_pub = self.node.create_publisher(
@@ -211,4 +220,72 @@ class TestGoalManagerClientUnit(unittest.TestCase):
         msg_other.nav_current_user_id = 'someone_else'
         self.server_pub.publish(msg_other)
         time.sleep(0.05)
+        self.assertEqual(self.client.get_state(), ClientState.IDLE)
+
+    def test_pause_resume(self):
+        self.client.send_goals(self.goals)
+        self._publish_and_wait(
+            self._srv_msg(NavigationControl.ACCEPT),
+            lambda: self.client.get_state() == ClientState.ACCEPTED_AND_NAVIGATING)
+
+        self.assertFalse(self.client.is_paused())
+
+        self.client.pause()
+        ok = self._publish_and_wait(
+            self._srv_msg(NavigationControl.PAUSED),
+            lambda: self.client.is_paused())
+        self.assertTrue(ok)
+        # Pausing must not change the navigation state itself.
+        self.assertEqual(self.client.get_state(), ClientState.ACCEPTED_AND_NAVIGATING)
+
+        self.client.resume()
+        ok = self._publish_and_wait(
+            self._srv_msg(NavigationControl.RESUMED),
+            lambda: not self.client.is_paused())
+        self.assertTrue(ok)
+        self.assertEqual(self.client.get_state(), ClientState.ACCEPTED_AND_NAVIGATING)
+
+    def test_pause_flag_resets_on_finish(self):
+        self.client.send_goals(self.goals)
+        self._publish_and_wait(
+            self._srv_msg(NavigationControl.ACCEPT),
+            lambda: self.client.get_state() == ClientState.ACCEPTED_AND_NAVIGATING)
+
+        self.client.pause()
+        ok = self._publish_and_wait(
+            self._srv_msg(NavigationControl.PAUSED),
+            lambda: self.client.is_paused())
+        self.assertTrue(ok)
+
+        ok = self._publish_and_wait(
+            self._srv_msg(NavigationControl.FINISHED, 'done'),
+            lambda: self.client.get_state() == ClientState.NAVIGATION_FINISHED)
+        self.assertTrue(ok)
+        self.assertFalse(self.client.is_paused())
+
+    def test_pause_resume_from_idle_third_party(self):
+        # Unlike cancel(), pause()/resume() are not restricted to a goal this
+        # client itself commanded: an operator tool or a fleet-level conflict
+        # monitor may call them while this client's own state is still IDLE
+        # (it never sent a goal of its own), and still observe the PAUSED
+        # confirmation for whatever navigation is active elsewhere.
+        self.assertEqual(self.client.get_state(), ClientState.IDLE)
+
+        try:
+            self.client.pause()
+        except Exception as e:
+            self.fail(f'pause() raised while IDLE: {e}')
+
+        ok = self._publish_and_wait(
+            self._srv_msg(NavigationControl.PAUSED),
+            lambda: self.client.is_paused())
+        self.assertTrue(ok)
+        # Client-side goal-ownership state must stay untouched.
+        self.assertEqual(self.client.get_state(), ClientState.IDLE)
+
+        self.client.resume()
+        ok = self._publish_and_wait(
+            self._srv_msg(NavigationControl.RESUMED),
+            lambda: not self.client.is_paused())
+        self.assertTrue(ok)
         self.assertEqual(self.client.get_state(), ClientState.IDLE)

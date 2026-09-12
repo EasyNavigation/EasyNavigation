@@ -29,10 +29,16 @@ class TimeStatsVerb(VerbExtension):
     def add_arguments(self, parser, cli_name):
         add_arguments(parser)
         parser.add_argument('--duration', type=float, default=5000.0, help='Seconds to run')
+        parser.add_argument(
+            '--namespace', type=str, default=None,
+            help='ROS namespace of the EasyNav instance to read stats from (e.g. '
+                 '"robot_1"). Defaults to auto-discovering the most recently modified '
+                 '/tmp/easynav*.log; only needed when more than one EasyNav instance '
+                 'is running on this host.')
 
     def main(self, *, args):
         try:
-            log_reader = LogReader()
+            log_reader = LogReader(namespace=args.namespace)
 
             t_end = time.time() + args.duration
             while time.time() < t_end:

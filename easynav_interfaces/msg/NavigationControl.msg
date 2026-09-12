@@ -9,6 +9,10 @@ uint8 FAILED=5
 uint8 CANCEL=6
 uint8 CANCELLED=7
 uint8 ERROR=8
+uint8 PAUSE=9
+uint8 RESUME=10
+uint8 PAUSED=11
+uint8 RESUMED=12
 
 uint8 type
 

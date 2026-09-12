@@ -52,6 +52,25 @@ GoalManagerClient::control_callback(easynav_interfaces::msg::NavigationControl::
   RCLCPP_DEBUG(node_->get_logger(), "Received a navigation %d msg with user_id %s",
     msg->type, msg->user_id.c_str());
 
+  // Unlike goal ownership (SENT_GOAL/ACCEPTED_AND_NAVIGATING/...), pause/resume
+  // confirmations can legitimately arrive while this client is IDLE: any
+  // GoalManagerClient may pause/resume whatever navigation is currently active,
+  // not just the one it commanded itself. Handled here, independent of state_.
+  switch (msg->type) {
+    case easynav_interfaces::msg::NavigationControl::PAUSED:
+      RCLCPP_DEBUG(node_->get_logger(), "Navigation paused");
+      paused_ = true;
+      last_control_ = std::move(msg);
+      return;
+    case easynav_interfaces::msg::NavigationControl::RESUMED:
+      RCLCPP_DEBUG(node_->get_logger(), "Navigation resumed");
+      paused_ = false;
+      last_control_ = std::move(msg);
+      return;
+    default:
+      break;
+  }
+
   switch (state_) {
     case State::IDLE:
     case State::NAVIGATION_FINISHED:
@@ -115,6 +134,7 @@ GoalManagerClient::control_callback(easynav_interfaces::msg::NavigationControl::
           RCLCPP_INFO(node_->get_logger(), "Navigation succesfully finished");
           last_result_ = *msg;
           state_ = State::NAVIGATION_FINISHED;
+          paused_ = false;
           break;
         case easynav_interfaces::msg::NavigationControl::FAILED:
           RCLCPP_ERROR(
@@ -122,11 +142,13 @@ GoalManagerClient::control_callback(easynav_interfaces::msg::NavigationControl::
             msg->status_message.c_str());
           last_result_ = *msg;
           state_ = State::NAVIGATION_FAILED;
+          paused_ = false;
           break;
         case easynav_interfaces::msg::NavigationControl::CANCELLED:
           RCLCPP_INFO(node_->get_logger(), "Navigation cancelled");
           last_result_ = *msg;
           state_ = State::NAVIGATION_CANCELLED;
+          paused_ = false;
           break;
         default:
           RCLCPP_ERROR(
@@ -234,6 +256,48 @@ GoalManagerClient::cancel()
 
 
   RCLCPP_DEBUG(node_->get_logger(), "Navigation cancelation sent");
+  control_pub_->publish(msg);
+}
+
+void
+GoalManagerClient::pause()
+{
+  RCLCPP_DEBUG(node_->get_logger(), "Sending navigation pause");
+
+  // Unlike cancel(), pause()/resume() are not restricted to a goal this
+  // client itself commanded: any GoalManagerClient may pause/resume whatever
+  // navigation is currently active (e.g. an operator tool or a fleet-level
+  // conflict monitor pausing a robot it doesn't own).
+  if (last_control_ == nullptr) {
+    last_control_ = std::make_unique<easynav_interfaces::msg::NavigationControl>();
+  }
+
+  easynav_interfaces::msg::NavigationControl msg;
+  msg.type = easynav_interfaces::msg::NavigationControl::PAUSE;
+  msg.header = last_control_->header;
+  msg.user_id = id_;
+  msg.seq = last_control_->seq + 1;
+
+  RCLCPP_DEBUG(node_->get_logger(), "Navigation pause sent");
+  control_pub_->publish(msg);
+}
+
+void
+GoalManagerClient::resume()
+{
+  RCLCPP_DEBUG(node_->get_logger(), "Sending navigation resume");
+
+  if (last_control_ == nullptr) {
+    last_control_ = std::make_unique<easynav_interfaces::msg::NavigationControl>();
+  }
+
+  easynav_interfaces::msg::NavigationControl msg;
+  msg.type = easynav_interfaces::msg::NavigationControl::RESUME;
+  msg.header = last_control_->header;
+  msg.user_id = id_;
+  msg.seq = last_control_->seq + 1;
+
+  RCLCPP_DEBUG(node_->get_logger(), "Navigation resume sent");
   control_pub_->publish(msg);
 }
 
