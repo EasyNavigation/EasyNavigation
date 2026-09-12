@@ -22,6 +22,8 @@ from diagnostic_msgs.msg import DiagnosticArray, DiagnosticStatus
 from easynav_interfaces.msg import GoalManagerInfo, NavigationControl
 from geometry_msgs.msg import Twist, TwistStamped
 
+from rcl_interfaces.msg import Log
+
 from std_msgs.msg import String
 
 
@@ -280,6 +282,50 @@ class DiagnosticsProcessor():
 
     def destroy(self):
         self.node.destroy_subscription(self.diagnostics_sub)
+
+
+# Mapping of rcl_interfaces/Log.level (uint8) to (label, color) -- same severity numbering
+# rosout itself uses.
+LOG_LEVEL_MAP: dict[int, tuple[str, str]] = {
+    Log.DEBUG: ('DEBUG', 'white'),
+    Log.INFO: ('INFO', 'green'),
+    Log.WARN: ('WARN', 'yellow'),
+    Log.ERROR: ('ERROR', 'red'),
+    Log.FATAL: ('FATAL', 'red'),
+}
+
+
+class MitigationProcessor():
+    """Subscribes to 'mitigation' (rcl_interfaces/msg/Log).
+
+    Carries what RecoveryMitigationBase::report() logs while a mitigation is active, plus
+    RecoveryManagerNode's own "resolved" sentinel (level DEBUG, see is_resolved_sentinel) once
+    the diagnostic that triggered it clears.
+    """
+
+    def __init__(self, node, callback):
+        self.node = node
+        self.mitigation_sub = node.create_subscription(
+            Log,
+            'mitigation',
+            callback,
+            10)
+
+        self.mitigation_sub
+
+    @staticmethod
+    def is_resolved_sentinel(msg: Log) -> bool:
+        """Check whether msg is RecoveryManagerNode's "clear your log" marker, not a report."""
+        return msg.level == Log.DEBUG
+
+    @staticmethod
+    def msg2line(msg: Log) -> str:
+        """Render one Log entry as a single colored line for the Mitigation panel."""
+        label, color = LOG_LEVEL_MAP.get(msg.level, (str(msg.level), 'white'))
+        return f'[{color}]{label}[/{color}] [{msg.name}]: {msg.msg}'
+
+    def destroy(self):
+        self.node.destroy_subscription(self.mitigation_sub)
 
 
 # ---------- Time stats config ----------

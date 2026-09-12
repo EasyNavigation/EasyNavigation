@@ -390,9 +390,7 @@ GoalManager::update(NavState & nav_state)
   // One-shot signal from CancelMissionRecovery (a RecoveryMitigationBase plugin has no
   // reference to GoalManager — only SystemNode does): a mitigator requests the mission be
   // cancelled, GoalManager reads it, reports why (from the current "diagnostics" group) and
-  // resets the flag. Same "single flag, written by a mitigator, consumed and reset by the one
-  // subsystem that can act on it" pattern already used for "control_owner". See
-  // docs/recoveries_easynav_implementation.md, Fase 5.
+  // resets the flag.
   if (nav_state.has("mission_cancel_requested") &&
     nav_state.get<bool>("mission_cancel_requested"))
   {

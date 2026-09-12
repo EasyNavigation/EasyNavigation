@@ -35,7 +35,7 @@ PlannerMethodBase::internal_update(NavState & nav_state)
     try {
       update(nav_state);
     } catch (const std::exception & e) {
-      // A misbehaving plugin must not crash the process. See docs/recoveries_easynav.md.
+      // A misbehaving plugin must not crash the process.
       RCLCPP_ERROR_THROTTLE(
         get_node()->get_logger(), *get_node()->get_clock(), 1000,
         "Exception in update() of planner [%s]: %s", get_plugin_name().c_str(), e.what());

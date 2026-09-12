@@ -201,8 +201,7 @@ public:
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Plugins that throw: internal_update*/force_update must not propagate the
-// exception (see docs/recoveries_easynav.md, "Fase 0" of the recovery roadmap).
+// Plugins that throw: internal_update*/force_update must not propagate the exception.
 // ─────────────────────────────────────────────────────────────────────────────
 
 class ThrowingLocalizer : public easynav::LocalizerMethodBase
@@ -264,7 +263,7 @@ public:
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-// SafetyReflexBase mocks (level 0, see docs/recoveries_easynav.md).
+// SafetyReflexBase mocks (level 0).
 // ─────────────────────────────────────────────────────────────────────────────
 
 class TrackingReflex : public easynav::SafetyReflexBase
@@ -312,7 +311,7 @@ public:
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-// RecoveryEvaluatorBase mocks (level 1, see docs/recoveries_easynav.md).
+// RecoveryEvaluatorBase mocks (level 1).
 // ─────────────────────────────────────────────────────────────────────────────
 
 class TrackingEvaluator : public easynav::RecoveryEvaluatorBase
@@ -348,7 +347,7 @@ public:
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-// RecoveryMitigationBase mocks (level 1, see docs/recoveries_easynav.md).
+// RecoveryMitigationBase mocks (level 1).
 // ─────────────────────────────────────────────────────────────────────────────
 
 class TrackingMitigation : public easynav::RecoveryMitigationBase
@@ -668,8 +667,7 @@ TEST_F(CoreMethodTestCase, ControllerInternalUpdateRtRunsWhenTimeElapsed)
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// A throwing plugin must not crash the RT thread / the process (Fase 0, see
-// docs/recoveries_easynav.md).
+// A throwing plugin must not crash the RT thread / the process.
 // ─────────────────────────────────────────────────────────────────────────────
 
 TEST_F(CoreMethodTestCase, LocalizerUpdateRtExceptionDoesNotPropagate)
@@ -752,8 +750,7 @@ TEST_F(CoreMethodTestCase, ControllerInternalUpdateRtExceptionDoesNotPropagate)
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// SafetyReflexBase: internal_check_and_mitigate (level 0, see
-// docs/recoveries_easynav.md).
+// SafetyReflexBase: internal_check_and_mitigate (level 0).
 // ─────────────────────────────────────────────────────────────────────────────
 
 TEST_F(CoreMethodTestCase, ReflexDoesNotMitigateWhenCheckReturnsFalse)
@@ -821,9 +818,8 @@ TEST_F(CoreMethodTestCase, ReflexFailsSafeWhenMitigateThrows)
   EXPECT_DOUBLE_EQ(applied.twist.linear.x, 0.0);
 }
 
-// Reflexes also report into NavState's shared "diagnostics" group, per §5.2 of the design, so
-// a future level-1 evaluator could notice one triggering repeatedly without depending on the
-// non-RT cycle for its own reaction. See docs/recoveries_easynav.md.
+// Reflexes also report into NavState's shared "diagnostics" group, so a future level-1
+// evaluator could notice one triggering repeatedly without depending on the non-RT cycle.
 
 TEST_F(CoreMethodTestCase, ReflexNotTriggeredPublishesOkDiagnostic)
 {
@@ -935,8 +931,7 @@ TEST_F(CoreMethodTestCase, ReflexDiagnosticTracksLevelAcrossCycles)
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// RecoveryEvaluatorBase: internal_update and publish_diagnostic (level 1, see
-// docs/recoveries_easynav.md).
+// RecoveryEvaluatorBase: internal_update and publish_diagnostic (level 1).
 // ─────────────────────────────────────────────────────────────────────────────
 
 TEST_F(CoreMethodTestCase, EvaluatorInternalUpdateDoesNotRunTooSoon)
@@ -1037,8 +1032,7 @@ TEST_F(CoreMethodTestCase, PublishDiagnosticFromTwoEvaluatorsBothAppearInGroup)
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// RecoveryMitigationBase: internal_start/internal_cycle/internal_stop (level 1,
-// see docs/recoveries_easynav.md).
+// RecoveryMitigationBase: internal_start/internal_cycle/internal_stop (level 1).
 // ─────────────────────────────────────────────────────────────────────────────
 
 TEST_F(CoreMethodTestCase, MitigationLifecycleCallsAreForwarded)

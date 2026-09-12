@@ -30,10 +30,10 @@ namespace easynav
  * @class RecoveryEvaluatorBase
  * @brief Base class for level-1 (deliberative, non-RT) diagnosis plugins.
  *
- * See docs/recoveries_easynav.md, level 1. An evaluator only reads NavState — it never writes
- * "cmd_vel" or otherwise acts on the robot; deciding and acting on a diagnosis is the
- * responsibility of RecoveryMitigationBase plugins and RecoveryManagerNode, not the evaluator
- * itself. Loaded and run by RecoveryManagerNode on its non-RT cycle.
+ * An evaluator only reads NavState — it never writes "cmd_vel" or otherwise acts on the robot;
+ * deciding and acting on a diagnosis is the responsibility of RecoveryMitigationBase plugins and
+ * RecoveryManagerNode, not the evaluator itself. Loaded and run by RecoveryManagerNode on its
+ * non-RT cycle.
  *
  * Every call to update() is expected to call publish_diagnostic() with the evaluator's
  * *current* assessment, including a benign one (e.g. diagnostic_msgs::msg::DiagnosticStatus::OK)

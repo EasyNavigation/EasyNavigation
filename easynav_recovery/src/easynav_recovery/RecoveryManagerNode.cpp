@@ -38,9 +38,12 @@ RecoveryManagerNode::RecoveryManagerNode(const rclcpp::NodeOptions & options)
 
   // Standard ROS 2 diagnostics topic, so existing tooling (rqt_robot_monitor,
   // diagnostic_aggregator, ...) can consume what used to live only inside NavState's internal
-  // "diagnostics" group. See docs/recoveries_easynav.md §5.5 and
-  // docs/recoveries_easynav_implementation.md, Fase 5.
+  // "diagnostics" group.
   diagnostics_pub_ = create_publisher<diagnostic_msgs::msg::DiagnosticArray>("diagnostics", 10);
+
+  // rcl_interfaces/msg/Log is the same message /rosout already carries — reused here so a
+  // mitigation's narrative has a dedicated, low-noise topic instead of the busier /rosout.
+  mitigation_pub_ = create_publisher<rcl_interfaces::msg::Log>("mitigation", 10);
 
   NavState::register_printer<diagnostic_msgs::msg::DiagnosticStatus>(
     [](const diagnostic_msgs::msg::DiagnosticStatus & status) {
@@ -161,6 +164,8 @@ RecoveryManagerNode::on_configure([[maybe_unused]] const rclcpp_lifecycle::State
   active_mitigation_.reset();
   mitigations_.clear();
   excluded_mitigations_.clear();
+  keys_with_mitigation_history_.clear();
+  last_published_report_seq_ = 0;
 
   // (priority, plugin) pairs, sorted below before becoming mitigations_ — see the class doc
   // comment. Declared/read here, per mitigation instance, rather than as a property of
@@ -277,6 +282,7 @@ RecoveryManagerNode::cycle(std::shared_ptr<NavState> nav_state)
   }
 
   publish_diagnostics(*nav_state);
+  publish_mitigation_log(*nav_state);
 }
 
 void
@@ -298,6 +304,44 @@ RecoveryManagerNode::publish_diagnostics(NavState & nav_state)
   }
 
   diagnostics_pub_->publish(array);
+}
+
+void
+RecoveryManagerNode::publish_mitigation_log(NavState & nav_state)
+{
+  if (!nav_state.has("mitigation.pending_report")) {
+    return;
+  }
+
+  // Single overwritten slot, not a queue: seq tells "unchanged since last cycle" apart from
+  // "a new report arrived".
+  const auto report_entry = nav_state.get_safe<MitigationReport>("mitigation.pending_report");
+  if (report_entry.seq == last_published_report_seq_) {
+    return;
+  }
+  last_published_report_seq_ = report_entry.seq;
+
+  if (mitigation_pub_->get_subscription_count() == 0) {
+    return;
+  }
+  mitigation_pub_->publish(report_entry.log);
+}
+
+void
+RecoveryManagerNode::publish_mitigation_resolved(const std::string & key)
+{
+  if (mitigation_pub_->get_subscription_count() == 0) {
+    return;
+  }
+
+  rcl_interfaces::msg::Log msg;
+  msg.stamp = now();
+  // DEBUG is never used by report() itself, so subscribers can treat it as an unambiguous
+  // "clear your log" sentinel instead of parsing message text.
+  msg.level = rcl_interfaces::msg::Log::DEBUG;
+  msg.name = get_name();
+  msg.msg = key + " resuelto — mitigación finalizada";
+  mitigation_pub_->publish(msg);
 }
 
 bool
@@ -336,6 +380,10 @@ RecoveryManagerNode::try_select_mitigation(NavState & nav_state)
       // Resolved: forget which mitigations were already excluded for it, so a future
       // recurrence of this diagnostic starts escalation from the first candidate again.
       excluded_mitigations_.erase(key);
+      // Only announce "resolved" if a mitigation actually ran for this key at some point.
+      if (keys_with_mitigation_history_.erase(key) > 0) {
+        publish_mitigation_resolved(key);
+      }
       continue;
     }
 
@@ -355,6 +403,7 @@ RecoveryManagerNode::try_select_mitigation(NavState & nav_state)
 
       active_mitigation_ = mitigation;
       active_diagnostic_key_ = key;
+      keys_with_mitigation_history_.insert(key);
       active_mitigation_->internal_start(nav_state);
       if (active_mitigation_->requires_control()) {
         nav_state.set(

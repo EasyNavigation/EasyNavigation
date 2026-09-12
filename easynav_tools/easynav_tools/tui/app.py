@@ -27,13 +27,14 @@ from rich.text import Text
 
 from textual.app import App, ComposeResult
 from textual.containers import Container, Horizontal, Vertical
-from textual.widgets import Footer, Label, Static, Switch, Tab, Tabs
+from textual.widgets import Footer, Label, RichLog, Static, Switch, Tab, Tabs
 
 from ..controller.ros_controllers import (
     DiagnosticsProcessor,
     EasyNavControlProcessor,
     GoalManagerInfoProcessor,
     LogReader,
+    MitigationProcessor,
     NavStateProcessor,
     TwistProcessor,
     TwistStampedProcessor,
@@ -115,13 +116,19 @@ class EasyNavTabbedApp(App):
         overflow: auto;
     }
 
-    #navstate_block { height: 1fr; }
+    /* Diagnostics is a per-key state snapshot (usually short); Mitigation is a scrolling
+       narrative log that benefits from more room; NavState stays the biggest single block. */
+    #navstate_block { height: 2fr; }
     #diagnostics_block { height: 1fr; margin-top: 1; }
+    #mitigation_block { height: 1fr; margin-top: 1; }
     #timestats_block { height: 1fr; margin-top: 1; }
 
     #navstate_wrap { height: 100%; }
     #diagnostics_wrap { height: 100%; }
+    #mitigation_wrap { height: 100%; }
     #timestats_wrap { height: 100%; }
+
+    #rl_mitigation { height: 1fr; width: 100%; }
 
     #navstatus_block { height: 100%; }
     #navstatus_box   { height: 100%; }
@@ -165,6 +172,7 @@ class EasyNavTabbedApp(App):
         # Widget refs
         self.st_navstate: Static | None = None
         self.st_diagnostics: Static | None = None
+        self.rl_mitigation: RichLog | None = None
         self.st_timestats: Static | None = None
         self.page_commanding: Static | None = None
 
@@ -176,6 +184,7 @@ class EasyNavTabbedApp(App):
         # Switch state and buffers
         self.navstate_enabled = True
         self.diagnostics_enabled = True
+        self.mitigation_enabled = True
         self.timestats_enabled = True
         self._last_navstate_text: Text | str = ''
         self._last_diagnostics_text: Text | str = ''
@@ -253,6 +262,19 @@ class EasyNavTabbedApp(App):
                                 self.st_diagnostics = Static('Diagnostics: esperando…')
                                 yield self.st_diagnostics
 
+                        # Mitigation (switch inside border): scrolling narrative log of what
+                        # active RecoveryMitigationBase plugins report doing, cleared once
+                        # RecoveryManagerNode's "resolved" sentinel arrives for that episode.
+                        with Vertical(id='mitigation_block', classes='titled'):
+                            with Vertical(id='mitigation_wrap', classes='box'):
+                                with Horizontal(classes='hdr'):
+                                    yield Label('Mitigation', classes='title')
+                                    yield Static('', classes='spacer')
+                                    yield Switch(value=True, id='sw_mitigation')
+                                self.rl_mitigation = RichLog(
+                                    id='rl_mitigation', markup=True, wrap=True, auto_scroll=True)
+                                yield self.rl_mitigation
+
                         # Time stats (switch inside border)
                         with Vertical(id='timestats_block', classes='titled'):
                             with Vertical(id='timestats_wrap', classes='box'):
@@ -286,6 +308,10 @@ class EasyNavTabbedApp(App):
         if self.query_one('#sw_diagnostics', Switch).value:
             self.subs['diagnostics'] = DiagnosticsProcessor(
                 self.node, self.diagnostics_callback)
+        # create Mitigation sub if switch is ON
+        if self.query_one('#sw_mitigation', Switch).value:
+            self.subs['mitigation'] = MitigationProcessor(
+                self.node, self.mitigation_callback)
         # Time stats: poll the log periodically (10 Hz is overkill; use ~2 Hz)
         self.set_interval(0.5, self._poll_time_stats_log)
 
@@ -348,6 +374,25 @@ class EasyNavTabbedApp(App):
                 if self.st_diagnostics:
                     self.st_diagnostics.update('')
                 sub = self.subs.pop('diagnostics', None)
+                if sub is not None and hasattr(sub, 'destroy'):
+                    try:
+                        sub.destroy()
+                    except Exception:
+                        pass
+
+        elif event.switch.id == 'sw_mitigation':
+            self.mitigation_enabled = event.value
+            if event.value:
+                # ON: (re)create subscriber. Unlike Diagnostics/NavState there is no single
+                # "last text" to restore -- Mitigation is a running log, not a state snapshot --
+                # so it simply starts collecting new lines again.
+                self.subs['mitigation'] = MitigationProcessor(
+                    self.node, self.mitigation_callback)
+            else:
+                # OFF: clear the log and destroy subscriber to free resources
+                if self.rl_mitigation:
+                    self.rl_mitigation.clear()
+                sub = self.subs.pop('mitigation', None)
                 if sub is not None and hasattr(sub, 'destroy'):
                     try:
                         sub.destroy()
@@ -462,6 +507,15 @@ class EasyNavTabbedApp(App):
         self._last_diagnostics_text = text
         if self.diagnostics_enabled and self.st_diagnostics is not None:
             self.st_diagnostics.update(text)
+
+    def mitigation_callback(self, msg) -> None:
+        if not self.mitigation_enabled or self.rl_mitigation is None:
+            return
+        if MitigationProcessor.is_resolved_sentinel(msg):
+            # RecoveryManagerNode's "clear your log" marker: the episode ended.
+            self.rl_mitigation.clear()
+            return
+        self.rl_mitigation.write(MitigationProcessor.msg2line(msg))
 
     def _update_twist_box(self) -> None:
         if self.box_twist is None:

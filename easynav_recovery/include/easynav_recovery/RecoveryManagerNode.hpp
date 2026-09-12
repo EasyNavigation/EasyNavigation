@@ -28,6 +28,7 @@
 #include "pluginlib/class_loader.hpp"
 
 #include "diagnostic_msgs/msg/diagnostic_array.hpp"
+#include "rcl_interfaces/msg/log.hpp"
 
 #include "easynav_common/types/NavState.hpp"
 #include "easynav_core/RecoveryEvaluatorBase.hpp"
@@ -40,15 +41,13 @@ namespace easynav
  * @class RecoveryManagerNode
  * @brief ROS 2 lifecycle node hosting level-1 (deliberative, non-RT) recovery evaluators.
  *
- * See docs/recoveries_easynav.md, level 1. Owned by SystemNode and cycled on its non-RT loop,
- * exactly like PlannerNode/MapsManagerNode — this is a deliberate placement, not an
- * afterthought: evaluators need to read NavState with minimal cost and no IPC latency, which
- * requires living in the same process as the rest of the navigation stack.
+ * Owned by SystemNode and cycled on its non-RT loop, exactly like PlannerNode/MapsManagerNode:
+ * evaluators need to read NavState with minimal cost and no IPC latency, which requires living
+ * in the same process as the rest of the navigation stack.
  *
  * Unlike ControllerNode/PlannerNode (which host exactly one active plugin instance),
  * RecoveryManagerNode loads and runs every configured RecoveryEvaluatorBase plugin — recovery
- * evaluation is meant to be composed from several independent, narrowly-scoped diagnoses
- * rather than a single monolithic one.
+ * evaluation is composed from several independent, narrowly-scoped diagnoses.
  *
  * It also loads RecoveryMitigationBase plugins ("mitigation_types") and arbitrates between
  * them: at most one is active at a time. Selection scans the first non-OK diagnostic (in
@@ -56,11 +55,13 @@ namespace easynav
  * in priority order, whose can_handle() accepts it, skipping any mitigation already excluded
  * for that specific diagnostic key (see excluded_mitigations_ below). Priority is configured
  * per mitigation instance via "<mitigation_type>.priority" (lower number tried first, default
- * 100, ties broken by "mitigation_types" list order) — an arbitration detail this manager owns,
- * not something RecoveryMitigationBase itself needs to know about; there is still no time-based
- * cooldown (see docs/recoveries_easynav_implementation.md for what that would add). A
- * mitigation that requires_control() is cycled from cycle_rt() (RT rate, drives "cmd_vel" via
- * "control_owner"); one that does not is cycled from cycle() (non-RT rate) instead.
+ * 100, ties broken by "mitigation_types" list order). A mitigation that requires_control() is
+ * cycled from cycle_rt() (RT rate, drives "cmd_vel" via "control_owner"); one that does not is
+ * cycled from cycle() (non-RT rate) instead.
+ *
+ * It also republishes what mitigations report doing (RecoveryMitigationBase::report()) on the
+ * "mitigation" topic, plus a "resolved" sentinel once a diagnostic that had an active mitigation
+ * clears — see publish_mitigation_log()/publish_mitigation_resolved().
  */
 class RecoveryManagerNode : public rclcpp_lifecycle::LifecycleNode
 {
@@ -164,6 +165,22 @@ private:
   /// diagnostic_aggregator, the EasyNav TUI) can consume it directly.
   rclcpp::Publisher<diagnostic_msgs::msg::DiagnosticArray>::SharedPtr diagnostics_pub_;
 
+  /// @brief Publishes what mitigations report doing via RecoveryMitigationBase::report(), plus
+  /// this node's own "resolved" sentinel (see keys_with_mitigation_history_ below) — an
+  /// append-only narrative feed, distinct from /diagnostics' per-key current-state snapshot.
+  rclcpp::Publisher<rcl_interfaces::msg::Log>::SharedPtr mitigation_pub_;
+
+  /// @brief Highest MitigationReport::seq already published to "mitigation", so
+  /// publish_mitigation_log() only republishes a report once, however many cycles it lingers in
+  /// NavState before the next one overwrites it.
+  uint64_t last_published_report_seq_ {0};
+
+  /// @brief Diagnostic keys for which a mitigation has actually been selected/started at least
+  /// once since that key last cleared to OK — so try_select_mitigation() only announces
+  /// "resolved" on "mitigation" for keys that were actually mitigated (excluded_mitigations_
+  /// alone is not enough: it only tracks FAILED attempts, not a first-try SUCCEEDED).
+  std::unordered_set<std::string> keys_with_mitigation_history_;
+
   /// @brief Plugin loader for recovery evaluators.
   std::unique_ptr<pluginlib::ClassLoader<RecoveryEvaluatorBase>> evaluator_loader_;
 
@@ -196,6 +213,15 @@ private:
   /// @brief Publishes the current "diagnostics" group to /diagnostics as a DiagnosticArray, if
   /// there is at least one subscriber. Called once at the end of every cycle().
   void publish_diagnostics(NavState & nav_state);
+
+  /// @brief Publishes the latest pending RecoveryMitigationBase::report() to "mitigation", if
+  /// it has not been published yet. Called only from cycle(), never cycle_rt(), so a
+  /// control-owning mitigation's report never triggers a publish from the RT thread.
+  void publish_mitigation_log(NavState & nav_state);
+
+  /// @brief Publishes a "resolved" sentinel (level DEBUG — never used by report() itself) to
+  /// "mitigation" for \p key, so subscribers know to clear their running log.
+  void publish_mitigation_resolved(const std::string & key);
 };
 
 }  // namespace easynav

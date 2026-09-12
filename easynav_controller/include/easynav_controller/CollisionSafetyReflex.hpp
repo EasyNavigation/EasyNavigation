@@ -37,7 +37,7 @@ namespace easynav
  *
  * Loaded and run directly by SystemNode on every RT cycle, right before "cmd_vel" is
  * published, regardless of whether it was produced by the active controller or by a movement
- * recovery mitigator. See docs/recoveries_easynav.md, level 0.
+ * recovery mitigator.
  *
  * Forward-projects the commanded "cmd_vel" against nearby point-cloud perceptions to decide
  * whether continuing would cause a collision within the current braking distance.

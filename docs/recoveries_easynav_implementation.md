@@ -23,9 +23,9 @@ Convenciones de este documento:
 | Fase 2 — nivel 1, evaluación | ✅ Hecho (`RecoveryEvaluatorBase`, `RecoveryManagerNode`, wiring en `SystemNode`, primer evaluador real `NoPathEvaluator`) |
 | Fase 3 — mitigación y arbitraje de control | ✅ Hecho (`RecoveryMitigationBase`, `control_owner`, único par evaluador+mitigador: `ObstacleTooCloseEvaluator`/`SafeRetreatRecovery`, con *debounce* desde la Sesión 10) |
 | Fase 4 — mitigación de mapa/planner y de misión | ⬜ Revertida (Sesión 11) — implementada y luego retirada en su mayor parte; ver esa sesión para el porqué |
-| Fase 5 — recuperación especializada y pulido | 🟨 Iniciada (`AmclConvergenceEvaluator`/`AmclRelocalizeMitigation`, ver esa sección) |
-| Fase 6 — detección de mala configuración | ⬜ No iniciada |
-| Fase 7 — asistencia humana | ⬜ No iniciada |
+| Fase 5 — recuperación especializada y pulido | ✅ Hecho, con matices (Sesión 20) frente a los 4 puntos de §5.12.6 — ver esa sesión |
+| Fase 6 — detección de mala configuración | ⬜ Descartada (Sesión 20) — fuera de alcance por ahora, ver esa sesión |
+| Fase 7 — asistencia humana | ✅ Hecho, descopeada (Sesión 20) — sin modo `teleop` ni `ack` con id de episodio, ver esa sesión |
 
 ---
 
@@ -1427,16 +1427,224 @@ agotarlo), 5 en `cancel_mission_recovery_tests.cpp`, 1 en `recovery_manager_node
 (publicación real en el topic, verificada con un suscriptor y un `SingleThreadedExecutor`). La
 TUI se verifica lanzándola (no tiene suite automatizada en este repo). Linters limpios.
 
-### Próximos pasos dentro de la Fase 5
+### Sesión 20 — un falso positivo real de `ControllerStuckEvaluator` al pausar, y cierre de fases
+
+**La pregunta que destapó el bug.** El usuario preguntó si `GoalManagerClient::pause()` podía
+hacer que `ControllerStuckEvaluator` (Sesión 18) diagnosticara "atascado" por error. La
+respuesta fue que sí, y era un fallo real, no hipotético — se confirmó rastreando el código, no
+solo por inspección superficial:
+
+1. `GoalManager::update()` refleja `paused_` en `nav_state.set("navigation_paused", ...)`
+   (`GoalManager.cpp`).
+2. Pero **el controlador no se entera de la pausa**: `RegulatedPurePursuitController::update_rt()`
+   sigue escribiendo un `"cmd_vel"` no nulo en `NavState` mientras haya un `path`/goal activo,
+   ajeno a `navigation_paused` (`RegulatedPurePursuitController.cpp:536-539`).
+3. `SystemNode::cycle_rt()` solo pone a cero la copia local que se **publica** de verdad al
+   robot (`SystemNode.cpp:296-311`) — nunca reescribe la entrada `"cmd_vel"` de `NavState`.
+4. `ControllerStuckEvaluator` lee ese `"cmd_vel"` (no el publicado), ve velocidad comandada por
+   encima del umbral, compara contra `"robot_pose"` (que no avanza, porque la actuación real fue
+   puesta a cero) → tras `stuck_time_threshold_` segundos de pausa, dispara `ERROR` y puede
+   escalar hasta `AdvanceRecovery`, pese a que la pausa fue intencionada.
+
+Se comprobó además que ningún evaluador/mitigador del árbol miraba `navigation_paused` — no era
+un descuido aislado de este plugin, pero es el único evaluador realmente afectado, al ser el
+único que compara "se manda mover" contra "se mueve de verdad".
+
+**Por qué el patrón ya usado para `control_owner` no basta para `navigation_paused`.** La
+comprobación de `control_owner` (Sesión 18) *congela* `reference_position_`/`reference_time_`
+confiando en que, si una mitigación mueve el robot de verdad, la posición habrá cambiado al
+recuperar el control y el contador se reinicia solo. Con la pausa el robot **no se mueve en
+absoluto**, así que congelar el reloj habría dejado `reference_time_` estancado desde antes de
+pausar — al reanudar, `stuck_for = now - reference_time_` ya habría incluido todo el tiempo de
+pausa, disparando `ERROR` de inmediato, peor que no tratarlo.
+
+**Corrección** (`ControllerStuckEvaluator.cpp`, nueva comprobación, la primera de todas).
+Mientras `navigation_paused` sea `true`: se informa `OK` ("navigation paused") y se **reactualiza**
+`reference_position_`/`reference_time_` a la pose y el instante actuales en cada ciclo (si
+`"robot_pose"` no está disponible, solo se resetea `reference_position_` para que el primer
+muestreo lo reinicialice cuando lo esté) — a diferencia de `control_owner`, que congela. Así, al
+reanudar, se exige una ventana completa de `stuck_time_threshold_` de no-progreso real, no
+arrastrada de antes de pausar. `navigation_paused` se lee con `get<bool>` normal, no
+`get_safe()`: lo escribe `GoalManager::update()` en el mismo ciclo no-RT y antes que
+`recovery_node_->cycle()` (`SystemNode::system_cycle()`), igual que `control_owner`.
+
+**Verificación.**
+
+```
+pixi run -e rolling build --packages-select easynav_controller_stuck_evaluator
+pixi run -e rolling colcon test --packages-select easynav_controller_stuck_evaluator
+pixi run -e rolling build --packages-above easynav_core   # 37 paquetes, todos compilan
+```
+
+2 tests nuevos en `controller_stuck_evaluator_tests.cpp`: `OkWhileNavigationPaused` (permanece
+`OK` pasado el `stuck_time_threshold_` mientras dura la pausa) y
+`OkImmediatelyAfterResumingFromPause` (no dispara `ERROR` en el primer ciclo tras reanudar,
+aunque el robot siga sin moverse). 8/8 tests del paquete en verde.
+
+**Aparte, verificación de que el merge con `rolling` (previo a esta sesión) no rompió nada.**
+`pixi run -e rolling build --packages-above easynav_core` (37 paquetes) y
+`colcon test --packages-above easynav_core --parallel-workers 1`: 1499 tests, 0 errores, 28
+fallos — los mismos 28 preexistentes de `robotnik_sensors` (flake8) de siempre, 0 nuevos.
+
+**Segundo bug real, encontrado probando el fix anterior en real.** El usuario provocó que el
+robot se perdiera, esperó la escalada completa (`amcl_relocalize` → `human_assistance` →
+`cancel_mission`), vio que la misión se cancelaba correctamente informando del error — y a partir
+de ahí la terminal se llenó, sin parar, de:
+
+```
+[recovery_node]: Selecting mitigation [cancel_mission] for diagnostic [diagnostics.amcl_convergence]
+[recovery_node]: CancelMissionRecovery [cancel_mission]: nothing else resolved this — cancelling the active mission
+```
+
+repetido en cada ciclo no-RT. Causa: `CancelMissionRecovery::on_cycle()` devolvía
+`RecoveryStatus::SUCCEEDED` en cuanto `GoalManager` consumía la señal — pero
+`RecoveryManagerNode::try_select_mitigation()` (`easynav_recovery/src/.../RecoveryManagerNode.cpp:342-350`)
+solo añade a `excluded_mitigations_` (Sesión 14) cuando el resultado es `FAILED`, nunca cuando es
+`SUCCEEDED`. Cancelar la misión no arregla el diagnóstico que la disparó (`amcl_convergence`
+sigue divergido — cancelar la misión no relocaliza al robot), así que ese diagnóstico nunca
+vuelve a `OK`, y al no estar excluido, `cancel_mission` volvía a ser el candidato elegido en el
+siguiente ciclo, indefinidamente: repetía `on_start()` (con su `RCLCPP_ERROR` incluido) y
+`on_cycle()` en cada ciclo, para siempre.
+
+**Por qué es un bug de `CancelMissionRecovery`, no de `RecoveryManagerNode`.** El propio
+comentario de `RecoveryStatus::SUCCEEDED` en `RecoveryMitigationBase.hpp` es explícito: "the
+diagnostic that triggered this mitigation is considered resolved". `CancelMissionRecovery` no
+cumple ese contrato — nunca resuelve el diagnóstico, solo contiene el daño cancelando la misión.
+El resto de mitigadores existentes sí lo cumplen (cuando `SafeRetreatRecovery`/
+`AmclRelocalizeMitigation`/`HumanAssistanceRecovery`/`AdvanceRecovery` informan `SUCCEEDED`, es
+precisamente porque el diagnóstico está a punto de leerse `OK` en el siguiente ciclo del
+evaluador), así que generalizar la exclusión de `RecoveryManagerNode` a "cualquier estado
+terminal, no solo `FAILED`" habría sido un cambio innecesariamente amplio para un fallo aislado
+de un solo mitigador.
+
+**Corrección** (`CancelMissionRecovery.cpp`, `on_cycle()`): cuando la señal ya ha sido consumida,
+devuelve `RecoveryStatus::FAILED` en vez de `SUCCEEDED` — semánticamente correcto ("gave up"),
+y con el efecto colateral exacto que se necesita: al estar configurado con el mayor número de
+prioridad de todos (Sesión 19, el último candidato), quedar excluido termina la escalada en vez
+de repetirla, hasta que el diagnóstico se resuelva de verdad (por ejemplo, un operador
+relocalizando AMCL a mano) y una futura recurrencia reinicie la escalada desde el principio.
+
+**Verificación.**
+
+```
+pixi run -e rolling build --packages-select easynav_cancel_mission_recovery
+pixi run -e rolling colcon test --packages-select easynav_cancel_mission_recovery
+pixi run -e rolling build --packages-above easynav_core   # 37 paquetes, todos compilan
+pixi run -e rolling colcon test --packages-select easynav_recovery easynav_system easynav_cancel_mission_recovery easynav_human_assistance_recovery easynav_costmap_localizer --parallel-workers 1
+```
+
+Test existente `SucceedsOnceGoalManagerResetsTheFlag` renombrado a
+`ReportsFailedOnceGoalManagerResetsTheFlag` y actualizado a la nueva expectativa. 5/5 tests del
+paquete en verde; 0 fallos nuevos en los otros cuatro paquetes tocados por el cambio de contrato.
+
+**Cierre de fases, a petición del usuario.** Revisando el roadmap (§5.12) contra lo realmente
+implementado:
+
+- **Fase 5 → ✅ Hecho, con matices.** De los 4 puntos de §5.12.6, tres tienen huecos frente a la
+  letra del diseño, aceptados aquí en vez de cerrados con más código:
+  - *"entradas en `easynav_tools plugins`"*: el verbo CLI (`easynav_tools/cli/plugins.py`) no
+    lista `RecoveryEvaluatorBase`/`RecoveryMitigationBase`/`SafetyReflexBase` — solo las
+    categorías de navegación "normal". No se ha tocado.
+  - *"observabilidad (`GoalManagerInfo` extendido)"*: el .msg no cambió, pero el objetivo
+    (observabilidad del subsistema de recuperación) sí se cumplió, por otra vía ya construida:
+    `/diagnostics` real + panel de la TUI (Sesión 19).
+  - *"documentación del punto de extensión `score()`"*: no existe tal método virtual — Sesión 17
+    ya lo descartó a propósito por un parámetro `priority` leído por `RecoveryManagerNode`, más
+    simple que una propiedad del plugin. No hay nada que documentar porque el mecanismo del
+    diseño no es el que se construyó.
+- **Fase 6 → ⬜ Descartada.** Detección de mala configuración
+  (`RecurringPatternEvaluator`/`ParameterAdjustmentMitigation`, histórico de diagnósticos,
+  mitigadores en paralelo) queda fuera de alcance: es más ambiciosa que lo que se necesita
+  funcionando ahora mismo. No se ha empezado nada de esta fase.
+- **Fase 7 → ✅ Hecho, descopeada.** El `HumanAssistanceRecovery` genérico de la Sesión 17 se da
+  por suficiente: cubre el espíritu (parar y esperar a que un humano resuelva el problema) sin
+  el modo `teleop` ni el mensaje de petición/`ack` con id de episodio que pedía §5.15 literalmente.
+  Si en el futuro hiciera falta teletransporte real del robot durante la asistencia, `teleop`
+  queda como extensión posterior, no como pendiente de esta fase.
+
+### Sesión 21 — topic `"mitigation"`, un path que se quedaba pegado en RViz, y limpieza de comentarios
+
+**Lo que pedía el usuario.** Los mitigadores ya informaban de lo que hacían por rosout, pero el
+usuario quería además un topic dedicado (`"mitigation"`) para poder verlo en la TUI sin filtrar
+el `/rosout` de todo el sistema, con un cuadro nuevo debajo de "Diagnostics" que fuera acumulando
+líneas con *scroll* hasta que la situación se mitigara, momento en el que se limpiaría.
+
+**Elección del mensaje: `rcl_interfaces/msg/Log`, no algo nuevo.** Es literalmente el mensaje que
+ya usa `/rosout` — reutilizarlo evita definir un mensaje propio. `diagnostic_msgs/DiagnosticStatus`
+no encajaba: modela un estado *actual* por clave (se sobrescribe cada ciclo), no un registro de
+eventos que se van acumulando.
+
+**`RecoveryMitigationBase::report(nav_state, level, msg)`** (nuevo, `easynav_core`). Sustituye a
+las llamadas `RCLCPP_INFO/WARN/ERROR` sueltas que ya tenían `SafeRetreatRecovery`,
+`AmclRelocalizeMitigation`, `HumanAssistanceRecovery`, `AdvanceRecovery` y `CancelMissionRecovery`:
+un único punto de llamada que loguea a rosout exactamente igual que antes y además encola la
+misma entrada (`MitigationReport`: un `seq` global + un `rcl_interfaces::msg::Log`) en NavState
+para que `RecoveryManagerNode` la publique. Solo se guarda la última entrada, no una cola — un
+`seq` monótono (compartido por todas las instancias del proceso) le basta a
+`RecoveryManagerNode` para saber si hay algo nuevo con una sola lectura atómica, sin necesitar
+una cola *thread-safe* en `NavState`. En la práctica no se pierde nada relevante: cada
+`on_start()`/transición terminal de `on_cycle()` informa como mucho una vez por episodio; el
+único caso que informaba en cada ciclo (`HumanAssistanceRecovery`, "still waiting", antes con
+`RCLCPP_ERROR_THROTTLE`) pasó a un *throttle* manual explícito para no inundar ese único hueco.
+
+**`RecoveryManagerNode` centraliza la publicación real**, igual que ya hacía con `/diagnostics`:
+`mitigation_pub_` (topic relativo `"mitigation"`) se publica al final de `cycle()` (nunca desde
+`cycle_rt()`, para no meter una llamada de publicación en el hilo RT). Además publica un
+*sentinel* de "resuelto" (nivel `DEBUG`, nunca usado por `report()` en condiciones normales, así
+que sirve de marca inequívoca) cuando un diagnóstico que sí llegó a tener una mitigación activa
+vuelve a `OK` — para eso, un `keys_with_mitigation_history_` nuevo, porque una mitigación que
+tiene éxito a la primera nunca queda registrada en `excluded_mitigations_` (que solo trackea
+`FAILED`).
+
+**TUI.** `MitigationProcessor` nuevo (mismo patrón que `DiagnosticsProcessor`), y un cuadro
+"Mitigation" nuevo bajo "Diagnostics" usando `RichLog` (soporta *append* + scroll nativo, a
+diferencia del `Static` que sobrescribe usado en el resto de cuadros), con su propio interruptor
+on/off. Al llegar el *sentinel* de "resuelto", el cuadro se limpia. Se aprovechó para repartir
+mejor la altura entre los cuadros de la columna derecha (`NavState` 2fr, el resto 1fr cada uno),
+en vez de los tres a partes iguales de antes.
+
+**El path que se quedaba pegado en RViz.** Aparte, el usuario probó el escenario completo (perder
+localización, escalar hasta cancelar la misión) y notó que, aunque el robot paraba bien, RViz
+seguía mostrando el último `path` calculado. Causa: el fix de la Sesión 19 en
+`CostmapPlanner::update()` vacía `current_path_` cuando no hay `goals` y lo escribe en
+`nav_state.set("path", ...)` (lo que lee el controlador), pero nunca llama a
+`path_pub_->publish(...)` (el topic que ve RViz) — así que el último path no vacío seguía
+"congelado" visualmente. Corrección de una línea: publicar el path ya vaciado, una vez, en esa
+misma transición.
+
+**Limpieza de comentarios, a petición del usuario.** Repaso de todo el subsistema de
+recuperación (no solo lo de hoy): se quitaron todas las referencias a
+`docs/recoveries_easynav*.md`/`§X.Y`/"Sesión N" dentro de comentarios de código (quedan, como es
+lógico, en este propio documento) y se recortó verbosidad en general, en `easynav_core`,
+`easynav_recovery`, `easynav_system`, `easynav_controller`, `easynav_tools` y los paquetes de
+`easynav_plugins` tocados por el desarrollo de recuperación. Ningún cambio de lógica — solo
+comentarios — verificado con la misma batería de tests de después.
+
+**Verificación.**
+
+```
+pixi run -e rolling build --packages-select easynav_core easynav_recovery <5 mitigadores> easynav_costmap_planner easynav_tools
+pixi run -e rolling colcon test --packages-select <los mismos>
+pixi run -e rolling build --packages-above easynav_core   # 37-38 paquetes, todos compilan
+pixi run -e rolling colcon test --packages-above easynav_core easynav_tools --parallel-workers 1
+```
+
+1501 tests, 0 fallos nuevos (mismos 28 preexistentes de `robotnik_sensors`). La TUI se verifica
+lanzándola (no tiene suite automatizada).
+
+### Pendientes generales (no bloquean el cierre de ninguna fase)
 
 - **Calibrar `covariance_threshold`/`rotation_speed`/`timeout` en el robot real** — los valores
   actuales son puntos de partida razonables, no medidos.
 - **`hardware_id`/`values` del reflejo de nivel 0** (§5.13: `"controller.safety_reflex"` con
   `distancia_obstaculo`/`activo_desde`) siguen sin ese detalle — `SafetyReflexBase` (Sesión 9)
   publica un diagnóstico genérico, no estos campos específicos.
-- **Tabla de prioridad/cooldown real (§5.6)** sigue sin existir — la exclusión de esta sesión
-  resuelve "no reintentes lo que ya falló para este mismo problema", no orden configurable ni
-  cooldown por tiempo.
+- **Tabla de prioridad/cooldown real (§5.6)** sigue sin existir como tal — el parámetro
+  `priority` (Sesión 17) resuelve el orden de arbitraje, y la exclusión (Sesión 14) resuelve "no
+  reintentes lo que ya falló para este mismo problema", pero no hay *cooldown* por tiempo.
+- **Entradas de recuperación en `easynav_tools plugins`** (ver Fase 5 más arriba) — quedaría como
+  tres categorías más en `BASE_CLASSES`/`CATEGORY_ORDER` (`plugins.py`), trabajo pequeño y
+  aislado si en algún momento hace falta.
 
 ---
 

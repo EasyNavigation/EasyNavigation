@@ -274,7 +274,7 @@ SystemNode::system_cycle_rt()
 
   // "control_owner" (absent/"controller" by default) picks who gets to produce "cmd_vel" this
   // cycle: the nominal controller, or a control-owning recovery mitigation selected by
-  // RecoveryManagerNode. See docs/recoveries_easynav.md, level 1 ("Cómo toma el control...").
+  // RecoveryManagerNode.
   const std::string control_owner = nav_state_->has("control_owner") ?
     nav_state_->get<std::string>("control_owner") : std::string("controller");
 
@@ -285,7 +285,7 @@ SystemNode::system_cycle_rt()
   }
 
   // Level-0 safety reflexes: checked every RT cycle, regardless of which controller or
-  // recovery mitigator produced "cmd_vel". See docs/recoveries_easynav.md, level 0.
+  // recovery mitigator produced "cmd_vel".
   bool reflex_intervened = false;
   for (auto & reflex : safety_reflexes_) {
     if (reflex->internal_check_and_mitigate(*nav_state_)) {
@@ -330,7 +330,6 @@ SystemNode::system_cycle()
   planner_node_->cycle(nav_state_, planner_ts < goals_ts);
 
   // Level-1 recovery evaluation: diagnoses using whatever the cycle above just produced.
-  // See docs/recoveries_easynav.md, level 1.
   recovery_node_->cycle(nav_state_);
 
   if (navstate_pub_->get_subscription_count() > 0) {
