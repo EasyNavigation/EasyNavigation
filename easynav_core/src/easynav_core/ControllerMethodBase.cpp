@@ -38,7 +38,7 @@ ControllerMethodBase::internal_update_rt(NavState & nav_state, bool trigger)
     } catch (const std::exception & e) {
       // A misbehaving plugin must not crash the RT thread. Collision safety no longer lives
       // here: it is the CollisionSafetyReflex plugin, checked by SystemNode on every producer
-      // of "cmd_vel" regardless of which controller wrote it. See docs/recoveries_easynav.md.
+      // of "cmd_vel" regardless of which controller wrote it.
       RCLCPP_ERROR_THROTTLE(
         get_node()->get_logger(), *get_node()->get_clock(), 1000,
         "Exception in update_rt() of controller [%s]: %s", get_plugin_name().c_str(), e.what());

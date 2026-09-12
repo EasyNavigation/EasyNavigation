@@ -162,7 +162,6 @@ private:
   SensorsNode::SharedPtr sensors_node_;
 
   /// @brief Recovery manager node: level-1 (deliberative, non-RT) diagnosis.
-  /// See docs/recoveries_easynav.md, level 1.
   RecoveryManagerNode::SharedPtr recovery_node_;
 
   /// @brief Shared navigation state.
@@ -172,7 +171,6 @@ private:
   GoalManager::SharedPtr goal_manager_;
 
   /// @brief Pluginlib class loader for level-0 safety reflexes.
-  /// See docs/recoveries_easynav.md, level 0.
   std::unique_ptr<pluginlib::ClassLoader<easynav::SafetyReflexBase>> safety_reflex_loader_;
 
   /// @brief Loaded safety reflexes, checked/mitigated every RT cycle before "cmd_vel" is

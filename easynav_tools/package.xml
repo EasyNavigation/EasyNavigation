@@ -19,6 +19,7 @@
   <depend>rclpy</depend>
   <depend>rosidl_runtime_py</depend>
   <depend>geometry_msgs</depend>
+  <depend>rcl_interfaces</depend>
 
   <exec_depend>easynav_interfaces</exec_depend>
   <exec_depend>easynav_support_py</exec_depend>

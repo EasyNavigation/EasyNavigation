@@ -30,7 +30,7 @@ namespace easynav
 
 /**
  * @class SafetyReflexBase
- * @brief Base class for level-0 (real-time) safety reflexes, see docs/recoveries_easynav.md.
+ * @brief Base class for level-0 (real-time) safety reflexes.
  *
  * A reflex is checked by SystemNode on every RT cycle, right before "cmd_vel" is published,
  * regardless of whether it was produced by the nominal controller or by a movement recovery
@@ -40,12 +40,10 @@ namespace easynav
  * RT rate — and its own failure is treated as unsafe: if check() or mitigate() throws, the
  * robot is stopped as a fail-safe default instead of assuming the reflex is inactive.
  *
- * Per §5.2 of the design, a reflex also reports its own severity level (OK/WARN/ERROR) under
- * "diagnostics.<plugin_name>" in the shared "diagnostics" group of NavState — the same group
- * level-1 evaluators publish to — so a future evaluator can notice a reflex triggering
- * repeatedly and escalate to a deliberative mitigation, without the reflex's own reaction ever
- * depending on that slower non-RT cycle. To keep this cheap on the RT path, it is only written
- * when the severity level actually changes, not on every cycle.
+ * A reflex also reports its own severity level (OK/WARN/ERROR) under "diagnostics.<plugin_name>"
+ * in the shared "diagnostics" group of NavState, so a future evaluator can notice a reflex
+ * triggering repeatedly and escalate to a deliberative mitigation. To keep this cheap on the RT
+ * path, it is only written when the severity level actually changes, not on every cycle.
  */
 class SafetyReflexBase : public MethodBase
 {

@@ -14,7 +14,6 @@
 
 /// \file
 /// \brief Tests for SystemNode's loading of level-0 SafetyReflexBase plugins.
-/// See docs/recoveries_easynav.md, level 0.
 
 #include <gtest/gtest.h>
 

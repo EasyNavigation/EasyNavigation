@@ -18,7 +18,11 @@
 #ifndef EASYNAV_CORE__RECOVERYMITIGATIONBASE_HPP_
 #define EASYNAV_CORE__RECOVERYMITIGATIONBASE_HPP_
 
+#include <cstdint>
+#include <string>
+
 #include "diagnostic_msgs/msg/diagnostic_status.hpp"
+#include "rcl_interfaces/msg/log.hpp"
 
 #include "easynav_common/types/NavState.hpp"
 #include "easynav_core/MethodBase.hpp"
@@ -38,14 +42,30 @@ enum class RecoveryStatus
 };
 
 /**
+ * @struct MitigationReport
+ * @brief One human-readable status line from a RecoveryMitigationBase plugin, queued via
+ * RecoveryMitigationBase::report() for RecoveryManagerNode to publish on the "mitigation" topic.
+ *
+ * NavState only ever holds the single *latest* report under one key, not a growing queue: \c seq
+ * is a global counter, shared by every mitigation instance in the process, that lets
+ * RecoveryManagerNode detect "a new report arrived" with a single atomic read/write instead of a
+ * thread-safe queue. A mitigation that would report every cycle must throttle itself well below
+ * RecoveryManagerNode's own cycle rate — see report()'s doc comment.
+ */
+struct MitigationReport
+{
+  uint64_t seq {0};
+  rcl_interfaces::msg::Log log;
+};
+
+/**
  * @class RecoveryMitigationBase
  * @brief Base class for level-1 (deliberative) mitigation plugins.
  *
- * See docs/recoveries_easynav.md, level 1. A mitigation is selected by RecoveryManagerNode when
- * one of its can_handle() returns true for the current highest-priority diagnostic. Mitigations
- * that requires_control() (move the robot) are cycled by RecoveryManagerNode::cycle_rt(), at RT
- * rate, and take over "cmd_vel" via the "control_owner" NavState key; mitigations that don't
- * (e.g. a future ClearMapRecovery/ForceReplanRecovery) are cycled from the non-RT cycle()
+ * A mitigation is selected by RecoveryManagerNode when one of its can_handle() returns true for
+ * the current highest-priority diagnostic. Mitigations that requires_control() (move the robot)
+ * are cycled by RecoveryManagerNode::cycle_rt(), at RT rate, and take over "cmd_vel" via the
+ * "control_owner" NavState key; mitigations that don't are cycled from the non-RT cycle()
  * instead and never touch "control_owner".
  */
 class RecoveryMitigationBase : public MethodBase
@@ -91,6 +111,21 @@ protected:
   /// @brief Fail-safe default: writes a zero-velocity TwistStamped to "cmd_vel". Available to
   /// movement mitigations for their SUCCEEDED/FAILED exit paths.
   void stop_robot(NavState & nav_state);
+
+  /**
+   * @brief Reports a human-readable status line about what this mitigation is doing, on both
+   * rosout (at \p level) and RecoveryManagerNode's "mitigation" topic.
+   *
+   * Call this instead of RCLCPP_* directly from on_start()/on_cycle(), so both channels always
+   * carry the same content from one call site. Only the single latest report is kept between
+   * RecoveryManagerNode cycles (see MitigationReport), so a mitigation that would otherwise
+   * report every cycle must throttle itself, as it would with RCLCPP_*_THROTTLE.
+   *
+   * @param nav_state Navigation state to queue the report into.
+   * @param level One of rcl_interfaces::msg::Log's level constants (DEBUG/INFO/WARN/ERROR/FATAL).
+   * @param msg Human-readable message, already fully formatted (no printf-style varargs).
+   */
+  void report(NavState & nav_state, uint8_t level, const std::string & msg);
 };
 
 }  // namespace easynav

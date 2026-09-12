@@ -13,6 +13,7 @@ find_package(easynav_common REQUIRED)
 find_package(pluginlib REQUIRED)
 find_package(lifecycle_msgs REQUIRED)
 find_package(diagnostic_msgs REQUIRED)
+find_package(rcl_interfaces REQUIRED)
 
 add_library(${PROJECT_NAME} SHARED
   src/easynav_recovery/RecoveryManagerNode.cpp
@@ -29,6 +30,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
   pluginlib::pluginlib
   ${lifecycle_msgs_TARGETS}
   ${diagnostic_msgs_TARGETS}
+  ${rcl_interfaces_TARGETS}
 )
 
 add_library(dummy_evaluator SHARED
@@ -99,5 +101,6 @@ ament_export_dependencies(
   pluginlib
   lifecycle_msgs
   diagnostic_msgs
+  rcl_interfaces
 )
 ament_package()

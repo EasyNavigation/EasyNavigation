@@ -14,6 +14,7 @@ find_package(visualization_msgs REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 find_package(diagnostic_msgs REQUIRED)
+find_package(rcl_interfaces REQUIRED)
 
 add_library(${PROJECT_NAME} SHARED
   src/easynav_core/ControllerMethodBase.cpp
@@ -38,6 +39,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
   tf2_ros::tf2_ros
   tf2_geometry_msgs::tf2_geometry_msgs
   ${diagnostic_msgs_TARGETS}
+  ${rcl_interfaces_TARGETS}
 )
 
 install(
@@ -76,5 +78,6 @@ ament_export_dependencies(
   visualization_msgs
   tf2_ros
   diagnostic_msgs
+  rcl_interfaces
 )
 ament_package()
