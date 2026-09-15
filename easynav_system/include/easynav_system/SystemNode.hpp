@@ -21,6 +21,7 @@
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp/macros.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
+#include "pluginlib/class_loader.hpp"
 
 #include "geometry_msgs/msg/twist.hpp"
 #include "geometry_msgs/msg/twist_stamped.hpp"
@@ -28,9 +29,11 @@
 
 #include "easynav_common/types/NavState.hpp"
 #include "easynav_controller/ControllerNode.hpp"
+#include "easynav_core/SafetyReflexBase.hpp"
 #include "easynav_localizer/LocalizerNode.hpp"
 #include "easynav_maps_manager/MapsManagerNode.hpp"
 #include "easynav_planner/PlannerNode.hpp"
+#include "easynav_recovery/RecoveryManagerNode.hpp"
 #include "easynav_sensors/SensorsNode.hpp"
 #include "easynav_system/GoalManager.hpp"
 
@@ -158,11 +161,21 @@ private:
   /// @brief Sensors node.
   SensorsNode::SharedPtr sensors_node_;
 
+  /// @brief Recovery manager node: level-1 (deliberative, non-RT) diagnosis.
+  RecoveryManagerNode::SharedPtr recovery_node_;
+
   /// @brief Shared navigation state.
   std::shared_ptr<NavState> nav_state_;
 
   /// @brief Goal manager.
   GoalManager::SharedPtr goal_manager_;
+
+  /// @brief Pluginlib class loader for level-0 safety reflexes.
+  std::unique_ptr<pluginlib::ClassLoader<easynav::SafetyReflexBase>> safety_reflex_loader_;
+
+  /// @brief Loaded safety reflexes, checked/mitigated every RT cycle before "cmd_vel" is
+  /// published, regardless of which controller or recovery mitigator produced it.
+  std::vector<std::shared_ptr<easynav::SafetyReflexBase>> safety_reflexes_;
 
   /// @brief Wheter publish stamped or unstamped speed
   bool use_cmd_vel_stamped_ {false};

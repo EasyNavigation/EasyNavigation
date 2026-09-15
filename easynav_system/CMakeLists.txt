@@ -14,10 +14,13 @@ find_package(easynav_controller)
 find_package(easynav_localizer)
 find_package(easynav_maps_manager)
 find_package(easynav_planner)
+find_package(easynav_recovery)
 find_package(easynav_sensors)
 find_package(geometry_msgs)
 find_package(tf2_geometry_msgs)
 find_package(tf2)
+find_package(pluginlib REQUIRED)
+find_package(diagnostic_msgs REQUIRED)
 
 set(dependencies
   rclcpp::rclcpp
@@ -27,6 +30,7 @@ set(dependencies
   easynav_localizer::easynav_localizer
   easynav_maps_manager::easynav_maps_manager
   easynav_planner::easynav_planner
+  easynav_recovery::easynav_recovery
   easynav_sensors::easynav_sensors
   tf2::tf2
   ${geometry_msgs_TARGETS}
@@ -43,11 +47,13 @@ set(package_dependencies
   easynav_localizer
   easynav_maps_manager
   easynav_planner
+  easynav_recovery
   easynav_sensors
   geometry_msgs
   tf2_geometry_msgs
   lifecycle_msgs
   tf2
+  pluginlib
 )
 
 include_directories(include)
@@ -70,8 +76,10 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
   easynav_localizer::easynav_localizer
   easynav_maps_manager::easynav_maps_manager
   easynav_planner::easynav_planner
+  easynav_recovery::easynav_recovery
   easynav_sensors::easynav_sensors
   tf2_geometry_msgs::tf2_geometry_msgs
+  pluginlib::pluginlib
   ${easynav_interfaces_TARGETS}
   ${geometry_msgs_TARGETS}
   ${sensor_msgs_TARGETS}
@@ -126,11 +134,13 @@ ament_export_dependencies(
   easynav_localizer
   easynav_maps_manager
   easynav_planner
+  easynav_recovery
   easynav_sensors
   geometry_msgs
   sensor_msgs
   nav_msgs
   tf2_geometry_msgs
   lifecycle_msgs
+  pluginlib
 )
 ament_package()

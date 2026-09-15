@@ -63,7 +63,7 @@ public:
     /// Positional tolerance for x/y in meters.
     double position {0.03};
     /// Positional tolerance for z axis in meters. Very big number as default.
-    double height {std::numeric_limits<double>::max()};
+    double height {10000.0};
     /// Angular tolerance in radians for the yaw angle.
     double yaw {0.01};
   };

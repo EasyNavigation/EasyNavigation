@@ -1,0 +1,18 @@
+<class_libraries>
+  <library path="dummy_evaluator">
+    <class name="easynav_recovery/DummyEvaluator" type="easynav::DummyEvaluator" base_class_type="easynav::RecoveryEvaluatorBase">
+      <description>
+      A default "dummy" implementation for RecoveryEvaluatorBase. Always reports OK.
+      This evaluator does nothing. It serves as an example and a reference plugin.
+      </description>
+    </class>
+  </library>
+  <library path="dummy_mitigation">
+    <class name="easynav_recovery/DummyMitigation" type="easynav::DummyMitigation" base_class_type="easynav::RecoveryMitigationBase">
+      <description>
+      A default "dummy" implementation for RecoveryMitigationBase. Accepts any non-OK
+      diagnostic and immediately reports SUCCEEDED. Serves as an example and a reference plugin.
+      </description>
+    </class>
+  </library>
+</class_libraries>

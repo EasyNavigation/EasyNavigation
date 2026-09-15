@@ -1,0 +1,117 @@
+// Copyright 2026 Intelligent Robotics Lab
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+/// \file
+/// \brief Implementation of the abstract base class SafetyReflexBase.
+
+#include <algorithm>
+#include <string>
+
+#include "diagnostic_msgs/msg/diagnostic_status.hpp"
+#include "geometry_msgs/msg/twist_stamped.hpp"
+
+#include "easynav_common/RTTFBuffer.hpp"
+#include "easynav_common/YTSession.hpp"
+
+#include "easynav_core/SafetyReflexBase.hpp"
+
+namespace easynav
+{
+
+bool
+SafetyReflexBase::internal_check_and_mitigate(NavState & nav_state)
+{
+  EASYNAV_TRACE_EVENT;
+
+  bool triggered = false;
+  try {
+    triggered = check(nav_state);
+  } catch (const std::exception & e) {
+    if (auto node = get_node()) {
+      RCLCPP_ERROR_THROTTLE(
+        node->get_logger(), *node->get_clock(), 1000,
+        "Exception in check() of safety reflex [%s]: %s -- failing safe (stopping)",
+        get_plugin_name().c_str(), e.what());
+    }
+    stop_robot(nav_state);
+    report_diagnostic(
+      nav_state, diagnostic_msgs::msg::DiagnosticStatus::ERROR,
+      std::string("check() failed: ") + e.what());
+    return true;
+  }
+
+  if (!triggered) {
+    report_diagnostic(
+      nav_state, diagnostic_msgs::msg::DiagnosticStatus::OK, "not triggered");
+    return false;
+  }
+
+  try {
+    mitigate(nav_state);
+  } catch (const std::exception & e) {
+    if (auto node = get_node()) {
+      RCLCPP_ERROR_THROTTLE(
+        node->get_logger(), *node->get_clock(), 1000,
+        "Exception in mitigate() of safety reflex [%s]: %s -- failing safe (stopping)",
+        get_plugin_name().c_str(), e.what());
+    }
+    stop_robot(nav_state);
+    report_diagnostic(
+      nav_state, diagnostic_msgs::msg::DiagnosticStatus::ERROR,
+      std::string("mitigate() failed: ") + e.what());
+    return true;
+  }
+
+  report_diagnostic(nav_state, diagnostic_msgs::msg::DiagnosticStatus::WARN, "triggered");
+  return true;
+}
+
+void
+SafetyReflexBase::stop_robot(NavState & nav_state)
+{
+  geometry_msgs::msg::TwistStamped zero_speed;
+  if (auto node = get_node()) {
+    zero_speed.header.stamp = node->now();
+  }
+  zero_speed.header.frame_id = RTTFBuffer::getInstance()->get_tf_info().robot_frame;
+
+  nav_state.set("cmd_vel", zero_speed);
+}
+
+void
+SafetyReflexBase::report_diagnostic(
+  NavState & nav_state, uint8_t level, const std::string & message)
+{
+  if (last_reported_level_.has_value() && *last_reported_level_ == level) {
+    return;
+  }
+  last_reported_level_ = level;
+
+  diagnostic_msgs::msg::DiagnosticStatus status;
+  status.name = get_plugin_name();
+  status.hardware_id = "safety_reflex";
+  status.level = level;
+  status.message = message;
+
+  const std::string key = "diagnostics." + get_plugin_name();
+  nav_state.set(key, status);
+
+  auto members = nav_state.get_group_keys("diagnostics");
+  if (std::find(members.begin(), members.end(), key) == members.end()) {
+    members.push_back(key);
+    nav_state.set_group("diagnostics", members);
+  }
+}
+
+}  // namespace easynav

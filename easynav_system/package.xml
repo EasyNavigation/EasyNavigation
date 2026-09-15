@@ -26,13 +26,16 @@
   <depend>easynav_localizer</depend>
   <depend>easynav_maps_manager</depend>
   <depend>easynav_planner</depend>
+  <depend>easynav_recovery</depend>
   <depend>easynav_sensors</depend>
+  <depend>pluginlib</depend>
 
   <depend>geometry_msgs</depend>
   <depend>sensor_msgs</depend>
   <depend>nav_msgs</depend>
   <depend>lifecycle_msgs</depend>
   <depend>tf2_geometry_msgs</depend>
+  <depend>diagnostic_msgs</depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(easynav_controller)
+project(easynav_recovery)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
@@ -10,16 +10,13 @@ find_package(rclcpp REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
 find_package(easynav_core REQUIRED)
 find_package(easynav_common REQUIRED)
-find_package(easynav_sensors REQUIRED)
 find_package(pluginlib REQUIRED)
-find_package(geometry_msgs REQUIRED)
 find_package(lifecycle_msgs REQUIRED)
-find_package(visualization_msgs REQUIRED)
-find_package(PCL REQUIRED COMPONENTS common io)
-
+find_package(diagnostic_msgs REQUIRED)
+find_package(rcl_interfaces REQUIRED)
 
 add_library(${PROJECT_NAME} SHARED
-  src/easynav_controller/ControllerNode.cpp
+  src/easynav_recovery/RecoveryManagerNode.cpp
 )
 target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -28,40 +25,36 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 target_link_libraries(${PROJECT_NAME} PUBLIC
   rclcpp::rclcpp
   rclcpp_lifecycle::rclcpp_lifecycle
-  pluginlib::pluginlib
   easynav_common::easynav_common
   easynav_core::easynav_core
+  pluginlib::pluginlib
   ${lifecycle_msgs_TARGETS}
-  ${geometry_msgs_TARGETS}
+  ${diagnostic_msgs_TARGETS}
+  ${rcl_interfaces_TARGETS}
 )
 
-add_library(dummy_controller SHARED
-  src/easynav_controller/DummyController.cpp
+add_library(dummy_evaluator SHARED
+  src/easynav_recovery/DummyEvaluator.cpp
 )
-target_include_directories(dummy_controller PUBLIC
+target_include_directories(dummy_evaluator PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include/${PROJECT_NAME}>
 )
-target_link_libraries(dummy_controller PUBLIC
+target_link_libraries(dummy_evaluator PUBLIC
   easynav_core::easynav_core
   pluginlib::pluginlib
-  ${geometry_msgs_TARGETS}
 )
 
-add_library(collision_safety_reflex SHARED
-  src/easynav_controller/CollisionSafetyReflex.cpp
+add_library(dummy_mitigation SHARED
+  src/easynav_recovery/DummyMitigation.cpp
 )
-target_include_directories(collision_safety_reflex PUBLIC
+target_include_directories(dummy_mitigation PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include/${PROJECT_NAME}>
-  ${PCL_INCLUDE_DIRS}
 )
-target_link_libraries(collision_safety_reflex PUBLIC
+target_link_libraries(dummy_mitigation PUBLIC
   easynav_core::easynav_core
-  easynav_sensors::easynav_sensors
   pluginlib::pluginlib
-  ${visualization_msgs_TARGETS}
-  ${PCL_LIBRARIES}
 )
 
 install(
@@ -71,8 +64,8 @@ install(
 
 install(TARGETS
   ${PROJECT_NAME}
-  dummy_controller
-  collision_safety_reflex
+  dummy_evaluator
+  dummy_mitigation
   EXPORT export_${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
@@ -92,25 +85,22 @@ endif()
 ament_export_include_directories("include/${PROJECT_NAME}")
 ament_export_libraries(
   ${PROJECT_NAME}
-  dummy_controller
-  collision_safety_reflex
+  dummy_evaluator
+  dummy_mitigation
 )
 ament_export_targets(export_${PROJECT_NAME})
 
-# Register the control plugins
-pluginlib_export_plugin_description_file(easynav_core easynav_controller_plugins.xml)
-pluginlib_export_plugin_description_file(easynav_core easynav_safety_reflexes_plugins.xml)
+# Register the recovery evaluator plugins
+pluginlib_export_plugin_description_file(easynav_core easynav_recovery_plugins.xml)
 
 ament_export_dependencies(
   rclcpp
   rclcpp_lifecycle
-  easynav_core
   easynav_common
-  easynav_sensors
+  easynav_core
   pluginlib
-  geometry_msgs
   lifecycle_msgs
-  visualization_msgs
-  PCL
+  diagnostic_msgs
+  rcl_interfaces
 )
 ament_package()

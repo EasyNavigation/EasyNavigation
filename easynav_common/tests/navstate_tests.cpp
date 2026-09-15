@@ -172,6 +172,31 @@ TEST_F(NavStateTest, VectorStringPrinterMultipleElements)
     << "Multiple elements must render comma-separated\n" << s;
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// debug_string() key ordering
+// ─────────────────────────────────────────────────────────────────────────────
+
+TEST_F(NavStateTest, DebugStringListsKeysInAlphabeticalOrder)
+{
+  // values_ is an unordered_map, so insertion/hash order is not what a human reading the
+  // "easynav_navstate" topic / TUI wants — debug_string() sorts keys instead.
+  easynav::NavState state;
+  state.set("zebra", 1);
+  state.set("apple", 2);
+  state.set("mango", 3);
+
+  std::string s = state.debug_string();
+  auto apple_pos = s.find("apple");
+  auto mango_pos = s.find("mango");
+  auto zebra_pos = s.find("zebra");
+
+  ASSERT_NE(apple_pos, std::string::npos);
+  ASSERT_NE(mango_pos, std::string::npos);
+  ASSERT_NE(zebra_pos, std::string::npos);
+  EXPECT_LT(apple_pos, mango_pos) << s;
+  EXPECT_LT(mango_pos, zebra_pos) << s;
+}
+
 TEST_F(NavStateTest, SetGroupIsVisibleInDebugString)
 {
   easynav::NavState state;
@@ -181,6 +206,33 @@ TEST_F(NavStateTest, SetGroupIsVisibleInDebugString)
     << "Group member must appear in debug_string\n" << s;
   EXPECT_NE(s.find("lidar_back"), std::string::npos)
     << "Group member must appear in debug_string\n" << s;
+}
+
+TEST_F(NavStateTest, GetGroupKeysReturnsMembers)
+{
+  easynav::NavState state;
+  state.set_group("points", {"lidar_front", "lidar_back"});
+  EXPECT_EQ(
+    state.get_group_keys("points"), std::vector<std::string>({"lidar_front", "lidar_back"}));
+}
+
+TEST_F(NavStateTest, GetGroupKeysReturnsEmptyForMissingGroup)
+{
+  easynav::NavState state;
+  EXPECT_TRUE(state.get_group_keys("missing").empty());
+}
+
+TEST_F(NavStateTest, GetGroupKeysSupportsIncrementalGrowth)
+{
+  easynav::NavState state;
+  state.set_group("diagnostics", {"planner"});
+
+  auto keys = state.get_group_keys("diagnostics");
+  keys.push_back("controller");
+  state.set_group("diagnostics", keys);
+
+  EXPECT_EQ(
+    state.get_group_keys("diagnostics"), std::vector<std::string>({"planner", "controller"}));
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
