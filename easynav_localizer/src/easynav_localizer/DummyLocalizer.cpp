@@ -27,8 +27,12 @@ void DummyLocalizer::on_initialize()
   auto node = get_node();
   const auto & plugin_name = get_plugin_name();
 
-  node->declare_parameter<double>(plugin_name + ".cycle_time_rt", 0.0);
-  node->declare_parameter<double>(plugin_name + ".cycle_time_nort", 0.0);
+  if (!node->has_parameter(plugin_name + ".cycle_time_rt")) {
+    node->declare_parameter<double>(plugin_name + ".cycle_time_rt", 0.0);
+  }
+  if (!node->has_parameter(plugin_name + ".cycle_time_nort")) {
+    node->declare_parameter<double>(plugin_name + ".cycle_time_nort", 0.0);
+  }
   node->get_parameter<double>(plugin_name + ".cycle_time_rt", cycle_time_rt_);
   node->get_parameter<double>(plugin_name + ".cycle_time_nort", cycle_time_nort_);
 

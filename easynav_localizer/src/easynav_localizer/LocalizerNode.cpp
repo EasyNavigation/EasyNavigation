@@ -96,7 +96,9 @@ CallbackReturnT
 LocalizerNode::on_configure([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
   std::vector<std::string> localizer_types;
-  declare_parameter("localizer_types", localizer_types);
+  if (!has_parameter("localizer_types")) {
+    declare_parameter("localizer_types", localizer_types);
+  }
   get_parameter("localizer_types", localizer_types);
 
   if (localizer_types.size() > 1) {
@@ -107,7 +109,9 @@ LocalizerNode::on_configure([[maybe_unused]] const rclcpp_lifecycle::State & sta
 
   for (const auto & localizer_type : localizer_types) {
     std::string plugin;
-    declare_parameter(localizer_type + std::string(".plugin"), plugin);
+    if (!has_parameter(localizer_type + ".plugin")) {
+      declare_parameter(localizer_type + std::string(".plugin"), plugin);
+    }
     get_parameter(localizer_type + std::string(".plugin"), plugin);
 
     try {
@@ -151,6 +155,21 @@ LocalizerNode::on_deactivate([[maybe_unused]] const rclcpp_lifecycle::State & st
 CallbackReturnT
 LocalizerNode::on_cleanup([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
+  localizer_method_ = nullptr;
+
+  std::vector<std::string> localizer_types;
+  get_parameter("localizer_types", localizer_types);
+  for (const auto & localizer_type : localizer_types) {
+    if (has_parameter(localizer_type + ".plugin")) {
+      std::string plugin;
+      get_parameter(localizer_type + ".plugin", plugin);
+      try {
+        localizer_loader_->unloadLibraryForClass(plugin);
+      } catch (const std::exception &) {
+      }
+    }
+  }
+
   return CallbackReturnT::SUCCESS;
 }
 

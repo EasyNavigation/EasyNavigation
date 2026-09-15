@@ -183,6 +183,11 @@ CallbackReturnT
 SensorsNode::on_cleanup(const rclcpp_lifecycle::State & state)
 {
   (void)state;
+
+  handler_list_.clear();
+  groups_.clear();
+  groups_initialized = false;
+
   return CallbackReturnT::SUCCESS;
 }
 

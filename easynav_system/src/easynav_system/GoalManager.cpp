@@ -78,11 +78,13 @@ GoalManager::GoalManager(
 
   // Use the constructor parameter directly here, not parent_node_: it's a live
   // shared_ptr for the duration of this constructor, no need to lock() it.
-  parent_node->declare_parameter("allow_preempt_goal", allow_preempt_goal_);
-  parent_node->declare_parameter("position_tolerance", goal_tolerance_.position);
-  parent_node->declare_parameter("height_tolerance", goal_tolerance_.height);
-  parent_node->declare_parameter("angle_tolerance", goal_tolerance_.yaw);
-  parent_node->declare_parameter("update_frequency", update_frequency_);
+  if (!parent_node->has_parameter("allow_preempt_goal")) {
+    parent_node->declare_parameter("allow_preempt_goal", allow_preempt_goal_);
+    parent_node->declare_parameter("position_tolerance", goal_tolerance_.position);
+    parent_node->declare_parameter("height_tolerance", goal_tolerance_.height);
+    parent_node->declare_parameter("angle_tolerance", goal_tolerance_.yaw);
+    parent_node->declare_parameter("update_frequency", update_frequency_);
+  }
   parent_node->get_parameter("allow_preempt_goal", allow_preempt_goal_);
   parent_node->get_parameter("position_tolerance", goal_tolerance_.position);
   parent_node->get_parameter("height_tolerance", goal_tolerance_.height);

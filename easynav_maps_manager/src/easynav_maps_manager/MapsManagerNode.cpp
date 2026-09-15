@@ -57,12 +57,16 @@ CallbackReturnT
 MapsManagerNode::on_configure([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
   std::vector<std::string> map_types;
-  declare_parameter("map_types", map_types);
+  if (!has_parameter("map_types")) {
+    declare_parameter("map_types", map_types);
+  }
   get_parameter("map_types", map_types);
 
   for (const auto & map_type : map_types) {
     std::string plugin;
-    declare_parameter(map_type + std::string(".plugin"), plugin);
+    if (!has_parameter(map_type + ".plugin")) {
+      declare_parameter(map_type + std::string(".plugin"), plugin);
+    }
     get_parameter(map_type + std::string(".plugin"), plugin);
 
     try {
@@ -109,6 +113,8 @@ MapsManagerNode::on_deactivate([[maybe_unused]] const rclcpp_lifecycle::State & 
 CallbackReturnT
 MapsManagerNode::on_cleanup([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
+  maps_managers_.clear();
+
   return CallbackReturnT::SUCCESS;
 }
 

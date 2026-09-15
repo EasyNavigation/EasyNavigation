@@ -86,7 +86,9 @@ CallbackReturnT
 ControllerNode::on_configure([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
   std::vector<std::string> controller_types;
-  declare_parameter("controller_types", controller_types);
+  if (!has_parameter("controller_types")) {
+    declare_parameter("controller_types", controller_types);
+  }
   get_parameter("controller_types", controller_types);
 
   if (controller_types.size() > 1) {
@@ -97,7 +99,9 @@ ControllerNode::on_configure([[maybe_unused]] const rclcpp_lifecycle::State & st
 
   for (const auto & controller_type : controller_types) {
     std::string plugin;
-    declare_parameter(controller_type + std::string(".plugin"), plugin);
+    if (!has_parameter(controller_type + ".plugin")) {
+      declare_parameter(controller_type + std::string(".plugin"), plugin);
+    }
     get_parameter(controller_type + std::string(".plugin"), plugin);
 
     try {
@@ -141,6 +145,21 @@ ControllerNode::on_deactivate([[maybe_unused]] const rclcpp_lifecycle::State & s
 CallbackReturnT
 ControllerNode::on_cleanup([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
+  controller_method_ = nullptr;
+
+  std::vector<std::string> controller_types;
+  get_parameter("controller_types", controller_types);
+  for (const auto & controller_type : controller_types) {
+    if (has_parameter(controller_type + ".plugin")) {
+      std::string plugin;
+      get_parameter(controller_type + ".plugin", plugin);
+      try {
+        controller_loader_->unloadLibraryForClass(plugin);
+      } catch (const std::exception &) {
+      }
+    }
+  }
+
   return CallbackReturnT::SUCCESS;
 }
 
