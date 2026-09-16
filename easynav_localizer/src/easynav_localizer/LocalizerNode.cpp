@@ -155,7 +155,10 @@ LocalizerNode::on_deactivate([[maybe_unused]] const rclcpp_lifecycle::State & st
 CallbackReturnT
 LocalizerNode::on_cleanup([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
-  localizer_method_ = nullptr;
+  {
+    std::lock_guard<std::mutex> lock(localizer_method_mutex_);
+    localizer_method_ = nullptr;
+  }
 
   std::vector<std::string> localizer_types;
   get_parameter("localizer_types", localizer_types);
@@ -195,17 +198,31 @@ LocalizerNode::get_real_time_cbg()
 bool
 LocalizerNode::cycle_rt(std::shared_ptr<NavState> nav_state, bool trigger)
 {
-  if (localizer_method_ == nullptr) {return false;}
+  // Take a local copy so the plugin instance stays alive for this call even
+  // if on_cleanup() resets localizer_method_ right after we release the lock.
+  std::shared_ptr<LocalizerMethodBase> localizer_method;
+  {
+    std::lock_guard<std::mutex> lock(localizer_method_mutex_);
+    localizer_method = localizer_method_;
+  }
 
-  return localizer_method_->internal_update_rt(*nav_state, trigger);
+  if (localizer_method == nullptr) {return false;}
+
+  return localizer_method->internal_update_rt(*nav_state, trigger);
 }
 
 void
 LocalizerNode::cycle(std::shared_ptr<NavState> nav_state)
 {
-  if (localizer_method_ == nullptr) {return;}
+  std::shared_ptr<LocalizerMethodBase> localizer_method;
+  {
+    std::lock_guard<std::mutex> lock(localizer_method_mutex_);
+    localizer_method = localizer_method_;
+  }
 
-  localizer_method_->internal_update(*nav_state);
+  if (localizer_method == nullptr) {return;}
+
+  localizer_method->internal_update(*nav_state);
 }
 
 }  // namespace easynav

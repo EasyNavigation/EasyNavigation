@@ -145,7 +145,10 @@ ControllerNode::on_deactivate([[maybe_unused]] const rclcpp_lifecycle::State & s
 CallbackReturnT
 ControllerNode::on_cleanup([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
-  controller_method_ = nullptr;
+  {
+    std::lock_guard<std::mutex> lock(controller_method_mutex_);
+    controller_method_ = nullptr;
+  }
 
   std::vector<std::string> controller_types;
   get_parameter("controller_types", controller_types);
@@ -184,9 +187,17 @@ ControllerNode::get_real_time_cbg()
 bool
 ControllerNode::cycle_rt(std::shared_ptr<NavState> nav_state, bool trigger)
 {
-  if (controller_method_ == nullptr) {return false;}
+  // Take a local copy so the plugin instance stays alive for this call even
+  // if on_cleanup() resets controller_method_ right after we release the lock.
+  std::shared_ptr<ControllerMethodBase> controller_method;
+  {
+    std::lock_guard<std::mutex> lock(controller_method_mutex_);
+    controller_method = controller_method_;
+  }
 
-  return controller_method_->internal_update_rt(*nav_state, trigger);
+  if (controller_method == nullptr) {return false;}
+
+  return controller_method->internal_update_rt(*nav_state, trigger);
 }
 
 }  // namespace easynav

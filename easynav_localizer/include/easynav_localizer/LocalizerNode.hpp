@@ -18,6 +18,8 @@
 #ifndef EASYNAV_LOCALIZER__LOCALIZERNODE_HPP_
 #define EASYNAV_LOCALIZER__LOCALIZERNODE_HPP_
 
+#include <mutex>
+
 #include "rclcpp/macros.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 #include "pluginlib/class_loader.hpp"
@@ -122,6 +124,12 @@ private:
 
   /// @brief Instance of the loaded localization plugin.
   std::shared_ptr<LocalizerMethodBase> localizer_method_ {nullptr};
+
+  /**
+   * @brief Guards \ref localizer_method_ between the RT thread (cycle_rt)
+   * and the non-RT thread (cycle / on_cleanup), which run concurrently.
+   */
+  std::mutex localizer_method_mutex_;
 };
 
 }  // namespace easynav

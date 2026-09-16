@@ -71,16 +71,22 @@ using lifecycle_msgs::msg::Transition;
 namespace
 {
 
-void expect_transition(
+// Returns false (instead of asserting directly) so a failed transition aborts
+// the calling TEST_F via ASSERT_TRUE at the call site, rather than letting the
+// test continue with the node left in an unexpected lifecycle state.
+[[nodiscard]] bool expect_transition(
   const easynav::SystemNode::SharedPtr & node, uint8_t transition_id, uint8_t expected_state_id)
 {
   easynav::SystemNode::CallbackReturnT cb_result;
   const auto & new_state = node->trigger_transition(transition_id, cb_result);
 
-  ASSERT_EQ(cb_result, easynav::SystemNode::CallbackReturnT::SUCCESS) <<
+  EXPECT_EQ(cb_result, easynav::SystemNode::CallbackReturnT::SUCCESS) <<
     "transition " << static_cast<int>(transition_id) << " callback failed";
-  ASSERT_EQ(new_state.id(), expected_state_id) <<
+  EXPECT_EQ(new_state.id(), expected_state_id) <<
     "transition " << static_cast<int>(transition_id) << " left node in unexpected state";
+
+  return cb_result == easynav::SystemNode::CallbackReturnT::SUCCESS &&
+         new_state.id() == expected_state_id;
 }
 
 }  // namespace
@@ -89,10 +95,10 @@ TEST_F(SystemLifecycleCycleTest, ActiveToUnconfiguredAndBackRepeatedly)
 {
   auto system_node = std::make_shared<easynav::SystemNode>();
 
-  expect_transition(
-    system_node, Transition::TRANSITION_CONFIGURE, State::PRIMARY_STATE_INACTIVE);
-  expect_transition(
-    system_node, Transition::TRANSITION_ACTIVATE, State::PRIMARY_STATE_ACTIVE);
+  ASSERT_TRUE(expect_transition(
+    system_node, Transition::TRANSITION_CONFIGURE, State::PRIMARY_STATE_INACTIVE));
+  ASSERT_TRUE(expect_transition(
+    system_node, Transition::TRANSITION_ACTIVATE, State::PRIMARY_STATE_ACTIVE));
 
   auto listener_node = rclcpp::Node::make_shared("cmd_vel_cycle_listener");
   std::vector<geometry_msgs::msg::Twist> received;
@@ -109,15 +115,15 @@ TEST_F(SystemLifecycleCycleTest, ActiveToUnconfiguredAndBackRepeatedly)
   for (int cycle = 0; cycle < kCycles; ++cycle) {
     SCOPED_TRACE(::testing::Message() << "cycle " << cycle);
 
-    expect_transition(
-      system_node, Transition::TRANSITION_DEACTIVATE, State::PRIMARY_STATE_INACTIVE);
-    expect_transition(
-      system_node, Transition::TRANSITION_CLEANUP, State::PRIMARY_STATE_UNCONFIGURED);
+    ASSERT_TRUE(expect_transition(
+      system_node, Transition::TRANSITION_DEACTIVATE, State::PRIMARY_STATE_INACTIVE));
+    ASSERT_TRUE(expect_transition(
+      system_node, Transition::TRANSITION_CLEANUP, State::PRIMARY_STATE_UNCONFIGURED));
 
-    expect_transition(
-      system_node, Transition::TRANSITION_CONFIGURE, State::PRIMARY_STATE_INACTIVE);
-    expect_transition(
-      system_node, Transition::TRANSITION_ACTIVATE, State::PRIMARY_STATE_ACTIVE);
+    ASSERT_TRUE(expect_transition(
+      system_node, Transition::TRANSITION_CONFIGURE, State::PRIMARY_STATE_INACTIVE));
+    ASSERT_TRUE(expect_transition(
+      system_node, Transition::TRANSITION_ACTIVATE, State::PRIMARY_STATE_ACTIVE));
 
     auto nav_state = system_node->get_nav_state();
     ASSERT_TRUE(nav_state->has("navigation_paused"));
@@ -151,26 +157,26 @@ TEST_F(SystemLifecycleCycleTest, AllPrimaryTransitionsRepeatedly)
   for (int cycle = 0; cycle < 3; ++cycle) {
     SCOPED_TRACE(::testing::Message() << "cycle " << cycle);
 
-    expect_transition(
-      system_node, Transition::TRANSITION_CONFIGURE, State::PRIMARY_STATE_INACTIVE);
-    expect_transition(
-      system_node, Transition::TRANSITION_ACTIVATE, State::PRIMARY_STATE_ACTIVE);
+    ASSERT_TRUE(expect_transition(
+      system_node, Transition::TRANSITION_CONFIGURE, State::PRIMARY_STATE_INACTIVE));
+    ASSERT_TRUE(expect_transition(
+      system_node, Transition::TRANSITION_ACTIVATE, State::PRIMARY_STATE_ACTIVE));
 
-    expect_transition(
-      system_node, Transition::TRANSITION_DEACTIVATE, State::PRIMARY_STATE_INACTIVE);
-    expect_transition(
-      system_node, Transition::TRANSITION_ACTIVATE, State::PRIMARY_STATE_ACTIVE);
-    expect_transition(
-      system_node, Transition::TRANSITION_DEACTIVATE, State::PRIMARY_STATE_INACTIVE);
+    ASSERT_TRUE(expect_transition(
+      system_node, Transition::TRANSITION_DEACTIVATE, State::PRIMARY_STATE_INACTIVE));
+    ASSERT_TRUE(expect_transition(
+      system_node, Transition::TRANSITION_ACTIVATE, State::PRIMARY_STATE_ACTIVE));
+    ASSERT_TRUE(expect_transition(
+      system_node, Transition::TRANSITION_DEACTIVATE, State::PRIMARY_STATE_INACTIVE));
 
-    expect_transition(
-      system_node, Transition::TRANSITION_CLEANUP, State::PRIMARY_STATE_UNCONFIGURED);
+    ASSERT_TRUE(expect_transition(
+      system_node, Transition::TRANSITION_CLEANUP, State::PRIMARY_STATE_UNCONFIGURED));
   }
 
-  expect_transition(
-    system_node, Transition::TRANSITION_CONFIGURE, State::PRIMARY_STATE_INACTIVE);
-  expect_transition(
-    system_node, Transition::TRANSITION_ACTIVATE, State::PRIMARY_STATE_ACTIVE);
+  ASSERT_TRUE(expect_transition(
+    system_node, Transition::TRANSITION_CONFIGURE, State::PRIMARY_STATE_INACTIVE));
+  ASSERT_TRUE(expect_transition(
+    system_node, Transition::TRANSITION_ACTIVATE, State::PRIMARY_STATE_ACTIVE));
 
   ASSERT_NO_THROW(system_node->system_cycle());
   ASSERT_NO_THROW(system_node->system_cycle_rt());

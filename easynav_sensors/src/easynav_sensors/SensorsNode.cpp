@@ -184,7 +184,10 @@ SensorsNode::on_cleanup(const rclcpp_lifecycle::State & state)
 {
   (void)state;
 
-  handler_list_.clear();
+  {
+    std::lock_guard<std::mutex> lock(handler_list_mutex_);
+    handler_list_.clear();
+  }
   groups_.clear();
   groups_initialized = false;
 
@@ -216,9 +219,17 @@ SensorsNode::cycle_rt(
   std::shared_ptr<NavState> nav_state,
   [[maybe_unused]] bool trigger)
 {
+  // Copy the list so handlers stay alive for this call even if on_cleanup()
+  // clears handler_list_ right after we release the lock.
+  std::vector<std::shared_ptr<PerceptionHandler>> handlers;
+  {
+    std::lock_guard<std::mutex> lock(handler_list_mutex_);
+    handlers = handler_list_;
+  }
+
   bool trigger_perceptions = false;
   // Run handlers' cycle and check if there is new sensor data o trigger perceptions
-  for (auto & handler : handler_list_) {
+  for (auto & handler : handlers) {
     const bool trigger = handler->cycle_rt(nav_state);
     trigger_perceptions = trigger_perceptions || trigger;
   }
