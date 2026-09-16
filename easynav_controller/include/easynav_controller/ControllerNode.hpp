@@ -18,6 +18,8 @@
 #ifndef EASYNAV_CONTROLLER__CONTROLLERNODE_HPP_
 #define EASYNAV_CONTROLLER__CONTROLLERNODE_HPP_
 
+#include <mutex>
+
 #include "rclcpp/macros.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 #include "easynav_core/ControllerMethodBase.hpp"
@@ -150,6 +152,12 @@ private:
    * This is the actual control algorithm that will be used.
    */
   std::shared_ptr<ControllerMethodBase> controller_method_ {nullptr};
+
+  /**
+   * @brief Guards \ref controller_method_ between the RT thread (cycle_rt)
+   * and the non-RT thread (on_cleanup), which run concurrently.
+   */
+  std::mutex controller_method_mutex_;
 
   /**
    * @brief Current navigation state.

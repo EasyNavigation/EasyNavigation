@@ -69,7 +69,9 @@ CallbackReturnT
 PlannerNode::on_configure([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
   std::vector<std::string> planner_types;
-  declare_parameter("planner_types", planner_types);
+  if (!has_parameter("planner_types")) {
+    declare_parameter("planner_types", planner_types);
+  }
   get_parameter("planner_types", planner_types);
 
   if (planner_types.size() > 1) {
@@ -80,7 +82,9 @@ PlannerNode::on_configure([[maybe_unused]] const rclcpp_lifecycle::State & state
 
   for (const auto & planner_type : planner_types) {
     std::string plugin;
-    declare_parameter(planner_type + std::string(".plugin"), plugin);
+    if (!has_parameter(planner_type + ".plugin")) {
+      declare_parameter(planner_type + std::string(".plugin"), plugin);
+    }
     get_parameter(planner_type + std::string(".plugin"), plugin);
 
     try {
@@ -124,6 +128,21 @@ PlannerNode::on_deactivate([[maybe_unused]] const rclcpp_lifecycle::State & stat
 CallbackReturnT
 PlannerNode::on_cleanup([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
+  planner_method_ = nullptr;
+
+  std::vector<std::string> planner_types;
+  get_parameter("planner_types", planner_types);
+  for (const auto & planner_type : planner_types) {
+    if (has_parameter(planner_type + ".plugin")) {
+      std::string plugin;
+      get_parameter(planner_type + ".plugin", plugin);
+      try {
+        planner_loader_->unloadLibraryForClass(plugin);
+      } catch (const std::exception &) {
+      }
+    }
+  }
+
   return CallbackReturnT::SUCCESS;
 }
 

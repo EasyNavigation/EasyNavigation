@@ -75,14 +75,29 @@ GoalManager::GoalManager(
 {
   nav_state.set("navigation_state", state_);
   nav_state.set("navigation_paused", paused_);
+  // Overwrite unconditionally: nav_state is owned by SystemNode and survives a
+  // cleanup/reconfigure cycle, so it may still hold a goal from a previous
+  // GoalManager instance. Relying on update()'s goals_synced_empty_ throttle
+  // here would skip this write, since a fresh instance defaults it to true.
+  nav_state.set("goals", goals_);
 
   // Use the constructor parameter directly here, not parent_node_: it's a live
   // shared_ptr for the duration of this constructor, no need to lock() it.
-  parent_node->declare_parameter("allow_preempt_goal", allow_preempt_goal_);
-  parent_node->declare_parameter("position_tolerance", goal_tolerance_.position);
-  parent_node->declare_parameter("height_tolerance", goal_tolerance_.height);
-  parent_node->declare_parameter("angle_tolerance", goal_tolerance_.yaw);
-  parent_node->declare_parameter("update_frequency", update_frequency_);
+  if (!parent_node->has_parameter("allow_preempt_goal")) {
+    parent_node->declare_parameter("allow_preempt_goal", allow_preempt_goal_);
+  }
+  if (!parent_node->has_parameter("position_tolerance")) {
+    parent_node->declare_parameter("position_tolerance", goal_tolerance_.position);
+  }
+  if (!parent_node->has_parameter("height_tolerance")) {
+    parent_node->declare_parameter("height_tolerance", goal_tolerance_.height);
+  }
+  if (!parent_node->has_parameter("angle_tolerance")) {
+    parent_node->declare_parameter("angle_tolerance", goal_tolerance_.yaw);
+  }
+  if (!parent_node->has_parameter("update_frequency")) {
+    parent_node->declare_parameter("update_frequency", update_frequency_);
+  }
   parent_node->get_parameter("allow_preempt_goal", allow_preempt_goal_);
   parent_node->get_parameter("position_tolerance", goal_tolerance_.position);
   parent_node->get_parameter("height_tolerance", goal_tolerance_.height);

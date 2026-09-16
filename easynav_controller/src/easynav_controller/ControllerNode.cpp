@@ -86,7 +86,9 @@ CallbackReturnT
 ControllerNode::on_configure([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
   std::vector<std::string> controller_types;
-  declare_parameter("controller_types", controller_types);
+  if (!has_parameter("controller_types")) {
+    declare_parameter("controller_types", controller_types);
+  }
   get_parameter("controller_types", controller_types);
 
   if (controller_types.size() > 1) {
@@ -97,7 +99,9 @@ ControllerNode::on_configure([[maybe_unused]] const rclcpp_lifecycle::State & st
 
   for (const auto & controller_type : controller_types) {
     std::string plugin;
-    declare_parameter(controller_type + std::string(".plugin"), plugin);
+    if (!has_parameter(controller_type + ".plugin")) {
+      declare_parameter(controller_type + std::string(".plugin"), plugin);
+    }
     get_parameter(controller_type + std::string(".plugin"), plugin);
 
     try {
@@ -141,6 +145,24 @@ ControllerNode::on_deactivate([[maybe_unused]] const rclcpp_lifecycle::State & s
 CallbackReturnT
 ControllerNode::on_cleanup([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
+  {
+    std::lock_guard<std::mutex> lock(controller_method_mutex_);
+    controller_method_ = nullptr;
+  }
+
+  std::vector<std::string> controller_types;
+  get_parameter("controller_types", controller_types);
+  for (const auto & controller_type : controller_types) {
+    if (has_parameter(controller_type + ".plugin")) {
+      std::string plugin;
+      get_parameter(controller_type + ".plugin", plugin);
+      try {
+        controller_loader_->unloadLibraryForClass(plugin);
+      } catch (const std::exception &) {
+      }
+    }
+  }
+
   return CallbackReturnT::SUCCESS;
 }
 
@@ -165,9 +187,17 @@ ControllerNode::get_real_time_cbg()
 bool
 ControllerNode::cycle_rt(std::shared_ptr<NavState> nav_state, bool trigger)
 {
-  if (controller_method_ == nullptr) {return false;}
+  // Take a local copy so the plugin instance stays alive for this call even
+  // if on_cleanup() resets controller_method_ right after we release the lock.
+  std::shared_ptr<ControllerMethodBase> controller_method;
+  {
+    std::lock_guard<std::mutex> lock(controller_method_mutex_);
+    controller_method = controller_method_;
+  }
 
-  return controller_method_->internal_update_rt(*nav_state, trigger);
+  if (controller_method == nullptr) {return false;}
+
+  return controller_method->internal_update_rt(*nav_state, trigger);
 }
 
 }  // namespace easynav

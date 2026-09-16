@@ -40,14 +40,30 @@ ControllerMethodBase::initialize(
   collision_marker_pub_ = node->create_publisher<visualization_msgs::msg::MarkerArray>(
     "collision_area", 10);
 
-  node->declare_parameter("colision_checker.active", collision_checker_active_);
-  node->declare_parameter("colision_checker.debug_markers", debug_markers_);
-  node->declare_parameter("colision_checker.robot_radius", robot_radius_);
-  node->declare_parameter("colision_checker.robot_height", robot_height_);
-  node->declare_parameter("colision_checker.brake_acc", brake_acc_);
-  node->declare_parameter("colision_checker.safety_margin", safety_margin_);
-  node->declare_parameter("colision_checker.z_min_filter", z_min_filter_);
-  node->declare_parameter("colision_checker.downsample_leaf_size", downsample_leaf_size_);
+  if (!node->has_parameter("colision_checker.active")) {
+    node->declare_parameter("colision_checker.active", collision_checker_active_);
+  }
+  if (!node->has_parameter("colision_checker.debug_markers")) {
+    node->declare_parameter("colision_checker.debug_markers", debug_markers_);
+  }
+  if (!node->has_parameter("colision_checker.robot_radius")) {
+    node->declare_parameter("colision_checker.robot_radius", robot_radius_);
+  }
+  if (!node->has_parameter("colision_checker.robot_height")) {
+    node->declare_parameter("colision_checker.robot_height", robot_height_);
+  }
+  if (!node->has_parameter("colision_checker.brake_acc")) {
+    node->declare_parameter("colision_checker.brake_acc", brake_acc_);
+  }
+  if (!node->has_parameter("colision_checker.safety_margin")) {
+    node->declare_parameter("colision_checker.safety_margin", safety_margin_);
+  }
+  if (!node->has_parameter("colision_checker.z_min_filter")) {
+    node->declare_parameter("colision_checker.z_min_filter", z_min_filter_);
+  }
+  if (!node->has_parameter("colision_checker.downsample_leaf_size")) {
+    node->declare_parameter("colision_checker.downsample_leaf_size", downsample_leaf_size_);
+  }
 
   node->get_parameter("colision_checker.active", collision_checker_active_);
   node->get_parameter("colision_checker.debug_markers", debug_markers_);

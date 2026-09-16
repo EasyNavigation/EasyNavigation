@@ -36,8 +36,12 @@ MethodBase::initialize(
   rt_frequency_ = 10.0;
   frequency_ = 10.0;
 
-  parent_node->declare_parameter(plugin_name + ".rt_freq", rt_frequency_);
-  parent_node->declare_parameter(plugin_name + ".freq", frequency_);
+  if (!parent_node->has_parameter(plugin_name + ".rt_freq")) {
+    parent_node->declare_parameter(plugin_name + ".rt_freq", rt_frequency_);
+  }
+  if (!parent_node->has_parameter(plugin_name + ".freq")) {
+    parent_node->declare_parameter(plugin_name + ".freq", frequency_);
+  }
   parent_node->get_parameter(plugin_name + ".rt_freq", rt_frequency_);
   parent_node->get_parameter(plugin_name + ".freq", frequency_);
 
