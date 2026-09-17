@@ -194,6 +194,11 @@ CallbackReturnT ControllerNode::on_configure(
   [[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
   configuring_ = true;
+  {
+    std::lock_guard<std::mutex> lock(pending_controller_mutex_);
+    pending_controller_type_.clear();
+    controller_change_pending_ = false;
+  }
 
   std::vector<std::string> controller_types;
 
@@ -336,6 +341,12 @@ ControllerNode::on_deactivate([[maybe_unused]] const rclcpp_lifecycle::State & s
 CallbackReturnT
 ControllerNode::on_cleanup([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
+  {
+    std::lock_guard<std::mutex> lock(pending_controller_mutex_);
+    pending_controller_type_.clear();
+    controller_change_pending_ = false;
+  }
+
   {
     std::lock_guard<std::mutex> lock(controller_method_mutex_);
     controller_method_ = nullptr;
