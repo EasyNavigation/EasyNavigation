@@ -18,8 +18,8 @@
 #include "geometry_msgs/msg/twist_stamped.hpp"
 #include "pluginlib/class_loader.hpp"
 
-#include "lifecycle_msgs/msg/transition.hpp"
 #include "lifecycle_msgs/msg/state.hpp"
+#include "lifecycle_msgs/msg/transition.hpp"
 
 #include "easynav_controller/ControllerNode.hpp"
 
@@ -37,6 +37,9 @@ ControllerNode::ControllerNode(
   controller_loader_ = std::make_unique<pluginlib::ClassLoader<easynav::ControllerMethodBase>>(
     "easynav_core", "easynav::ControllerMethodBase");
 
+  on_set_parameters_callback_handle_ = add_on_set_parameters_callback(std::bind(
+      &ControllerNode::on_set_parameters, this, std::placeholders::_1));
+
   NavState::register_printer<geometry_msgs::msg::TwistStamped>(
     [](const geometry_msgs::msg::TwistStamped & twist) {
       std::ostringstream ret;
@@ -50,7 +53,6 @@ ControllerNode::ControllerNode(
       return ret.str();
     });
 }
-
 
 ControllerNode::~ControllerNode()
 {
@@ -82,21 +84,146 @@ ControllerNode::~ControllerNode()
 
 using CallbackReturnT = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
 
-CallbackReturnT
-ControllerNode::on_configure([[maybe_unused]] const rclcpp_lifecycle::State & state)
+std::shared_ptr<ControllerMethodBase>
+ControllerNode::create_and_initialize_controller(
+  const std::string & controller_type, const std::string & plugin)
 {
+  try {
+    RCLCPP_INFO(get_logger(), "Loading ControllerMethodBase %s [%s]",
+                controller_type.c_str(), plugin.c_str());
+
+    auto instance = controller_loader_->createSharedInstance(plugin);
+    instance->initialize(shared_from_this(), controller_type);
+
+    RCLCPP_INFO(get_logger(), "Loaded ControllerMethodBase %s [%s]",
+                controller_type.c_str(), plugin.c_str());
+
+    return instance;
+  } catch (const std::exception & e) {
+    RCLCPP_ERROR(get_logger(),
+                 "Unable to load controller [%s] plugin [%s]. Error: %s",
+                 controller_type.c_str(), plugin.c_str(), e.what());
+    return nullptr;
+  }
+}
+
+rcl_interfaces::msg::SetParametersResult ControllerNode::on_set_parameters(
+  const std::vector<rclcpp::Parameter> & parameters)
+{
+  rcl_interfaces::msg::SetParametersResult result;
+  result.successful = true;
+
+  const rclcpp::Parameter *controller_types_parameter = nullptr;
+
+  for (const auto & parameter : parameters) {
+    if (parameter.get_name() == "controller_types") {
+      controller_types_parameter = &parameter;
+      break;
+    }
+  }
+
+  // No controller_types change.
+  if (controller_types_parameter == nullptr) {
+    return result;
+  }
+
+  // Initial declaration during on_configure(): on_configure() itself loads
+  // the controller directly, so skip the pending/inactive validation here.
+  if (configuring_) {
+    return result;
+  }
+
+  // Runtime changes are only allowed while inactive.
+  if (get_current_state().id() !=
+    lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE)
+  {
+    result.successful = false;
+    result.reason =
+      "controller_types can only be changed while the node is inactive";
+    return result;
+  }
+
+  const auto new_types = controller_types_parameter->as_string_array();
+
+  if (new_types.size() > 1) {
+    result.successful = false;
+    result.reason = "You must instance one controller. [" +
+      std::to_string(new_types.size()) + "] requested";
+    return result;
+  }
+
+  const std::string new_controller_type =
+    new_types.empty() ? "" : new_types.front();
+
+  // If a controller was requested, check that its plugin parameter exists.
+  if (!new_controller_type.empty()) {
+    const std::string plugin_parameter = new_controller_type + ".plugin";
+
+    if (!has_parameter(plugin_parameter)) {
+      result.successful = false;
+      result.reason =
+        "Parameter [" + plugin_parameter +
+        "] must be declared before switching controller_types to [" +
+        new_controller_type + "]";
+      return result;
+    }
+
+    std::string plugin;
+    get_parameter(plugin_parameter, plugin);
+
+    if (plugin.empty()) {
+      result.successful = false;
+      result.reason = "Parameter [" + plugin_parameter + "] is empty";
+      return result;
+    }
+  }
+
+  // Only store the requested controller
+  // The actual plugin creation is performed in on_activate()
+  {
+    std::lock_guard<std::mutex> lock(pending_controller_mutex_);
+
+    pending_controller_type_ = new_controller_type;
+    controller_change_pending_ = true;
+  }
+
+  return result;
+}
+
+CallbackReturnT ControllerNode::on_configure(
+  [[maybe_unused]] const rclcpp_lifecycle::State & state)
+{
+  configuring_ = true;
+
   std::vector<std::string> controller_types;
+
   if (!has_parameter("controller_types")) {
     declare_parameter("controller_types", controller_types);
   }
+
   get_parameter("controller_types", controller_types);
 
   if (controller_types.size() > 1) {
-    RCLCPP_ERROR(get_logger(),
-      "You must instance one controller.  [%lu] found", controller_types.size());
+    RCLCPP_ERROR(get_logger(), "You must instance one controller. [%lu] found",
+                 controller_types.size());
+
+    configuring_ = false;
     return CallbackReturnT::FAILURE;
   }
 
+  const auto parameter_overrides =
+    get_node_parameters_interface()->get_parameter_overrides();
+
+  for (const auto &[name, value] : parameter_overrides) {
+    static const std::string suffix = ".plugin";
+
+    if (name.size() > suffix.size() &&
+      name.compare(name.size() - suffix.size(), suffix.size(), suffix) == 0 &&
+      !has_parameter(name))
+    {
+      declare_parameter(name, value);
+    }
+  }
   for (const auto & controller_type : controller_types) {
     std::string plugin;
     if (!has_parameter(controller_type + ".plugin")) {
@@ -104,35 +231,99 @@ ControllerNode::on_configure([[maybe_unused]] const rclcpp_lifecycle::State & st
     }
     get_parameter(controller_type + std::string(".plugin"), plugin);
 
-    try {
-      RCLCPP_INFO(get_logger(),
-        "Loading ControllerMethodBase %s [%s]", controller_type.c_str(), plugin.c_str());
+    auto instance = create_and_initialize_controller(controller_type, plugin);
+    if (!instance) {
+      configuring_ = false;
+      return CallbackReturnT::FAILURE;
+    }
 
-      controller_method_ = controller_loader_->createSharedInstance(plugin);
+    {
+      std::lock_guard<std::mutex> lock(controller_method_mutex_);
+      controller_method_ = instance;
+    }
+  }
 
-      try {
-        controller_method_->initialize(shared_from_this(), controller_type);
-      } catch (const std::runtime_error & e) {
-        RCLCPP_ERROR(get_logger(),
-          "Unable to initialize [%s]. Error: %s", plugin.c_str(), e.what());
-        return CallbackReturnT::FAILURE;
-      }
+  configuring_ = false;
+  return CallbackReturnT::SUCCESS;
+}
 
-      RCLCPP_INFO(get_logger(),
-        "Loaded ControllerMethodBase %s [%s]", controller_type.c_str(), plugin.c_str());
-    } catch (pluginlib::PluginlibException & ex) {
-      RCLCPP_ERROR(get_logger(),
-        "Unable to load plugin easynav::ControllerMethodBase. Error: %s", ex.what());
+void ControllerNode::apply_pending_controller()
+{
+  std::string controller_type;
+
+  {
+    std::lock_guard<std::mutex> lock(pending_controller_mutex_);
+
+    if (!controller_change_pending_) {
+      return;
+    }
+
+    controller_type = pending_controller_type_;
+  }
+
+  // No controller selected.
+  if (controller_type.empty()) {
+    {
+      std::lock_guard<std::mutex> lock(controller_method_mutex_);
+      controller_method_ = nullptr;
+    }
+
+    std::lock_guard<std::mutex> lock(pending_controller_mutex_);
+    controller_change_pending_ = false;
+
+    RCLCPP_INFO(get_logger(), "No controller selected");
+
+    return;
+  }
+
+  const std::string plugin_parameter = controller_type + ".plugin";
+
+  std::string plugin;
+  get_parameter(plugin_parameter, plugin);
+
+  // Plugin creation and initialization happen outside the
+  // parameter callback and outside the RT cycle.
+  auto instance = create_and_initialize_controller(controller_type, plugin);
+
+  if (!instance) {
+    RCLCPP_ERROR(get_logger(), "Unable to switch to controller [%s]",
+                 controller_type.c_str());
+
+    return;
+  }
+
+  // Only the shared_ptr replacement is protected.
+  {
+    std::lock_guard<std::mutex> lock(controller_method_mutex_);
+    controller_method_ = instance;
+  }
+
+  {
+    std::lock_guard<std::mutex> lock(pending_controller_mutex_);
+    controller_change_pending_ = false;
+  }
+
+  RCLCPP_INFO(get_logger(), "Controller switched to [%s]",
+              controller_type.c_str());
+}
+
+CallbackReturnT ControllerNode::on_activate(
+  [[maybe_unused]] const rclcpp_lifecycle::State & state)
+{
+  apply_pending_controller();
+
+  {
+    std::lock_guard<std::mutex> lock(pending_controller_mutex_);
+
+    if (controller_change_pending_) {
+      RCLCPP_ERROR(
+          get_logger(),
+          "Unable to activate: controller change could not be applied");
+
       return CallbackReturnT::FAILURE;
     }
   }
 
-  return CallbackReturnT::SUCCESS;
-}
-
-CallbackReturnT
-ControllerNode::on_activate([[maybe_unused]] const rclcpp_lifecycle::State & state)
-{
   return CallbackReturnT::SUCCESS;
 }
 
