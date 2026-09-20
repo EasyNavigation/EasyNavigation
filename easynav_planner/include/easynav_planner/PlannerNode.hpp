@@ -21,7 +21,7 @@
 #include "rclcpp/macros.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 #include "easynav_core/PlannerMethodBase.hpp"
-#include "pluginlib/class_loader.hpp"
+#include "easynav_core/PluginSwitcher.hpp"
 #include "nav_msgs/msg/path.hpp"
 #include "easynav_common/types/NavState.hpp"
 
@@ -118,11 +118,9 @@ public:
   const rclcpp::Time get_last_execution_ts() const;
 
 private:
-  /// @brief Plugin loader for planner methods.
-  std::unique_ptr<pluginlib::ClassLoader<PlannerMethodBase>> planner_loader_;
-
-  /// @brief Loaded planner plugin.
-  std::shared_ptr<PlannerMethodBase> planner_method_ {nullptr};
+  /// @brief Owns the planner plugin. To change it: deactivate, cleanup, set
+  /// "planner_types" and configure again.
+  PluginSwitcher<PlannerMethodBase> planner_;
 };
 
 }  // namespace easynav

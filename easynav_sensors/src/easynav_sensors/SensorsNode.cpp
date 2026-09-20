@@ -74,6 +74,23 @@ SensorsNode::~SensorsNode()
   if (get_current_state().id() == lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE) {
     trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_ACTIVE_SHUTDOWN);
   }
+  if (get_current_state().id() == lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE) {
+    trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_INACTIVE_SHUTDOWN);
+  }
+  if (get_current_state().id() == lifecycle_msgs::msg::State::PRIMARY_STATE_UNCONFIGURED) {
+    trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_UNCONFIGURED_SHUTDOWN);
+  }
+}
+
+void
+SensorsNode::release_handlers()
+{
+  {
+    std::lock_guard<std::mutex> lock(handler_list_mutex_);
+    handler_list_.clear();
+  }
+  groups_.clear();
+  groups_initialized = false;
 }
 
 
@@ -184,12 +201,7 @@ SensorsNode::on_cleanup(const rclcpp_lifecycle::State & state)
 {
   (void)state;
 
-  {
-    std::lock_guard<std::mutex> lock(handler_list_mutex_);
-    handler_list_.clear();
-  }
-  groups_.clear();
-  groups_initialized = false;
+  release_handlers();
 
   return CallbackReturnT::SUCCESS;
 }
@@ -198,6 +210,10 @@ CallbackReturnT
 SensorsNode::on_shutdown(const rclcpp_lifecycle::State & state)
 {
   (void)state;
+
+  // A shutdown from ACTIVE skips on_deactivate.
+  percept_pub_->on_deactivate();
+  release_handlers();
   return CallbackReturnT::SUCCESS;
 }
 
@@ -205,6 +221,9 @@ CallbackReturnT
 SensorsNode::on_error(const rclcpp_lifecycle::State & state)
 {
   (void)state;
+
+  percept_pub_->on_deactivate();
+  release_handlers();
   return CallbackReturnT::SUCCESS;
 }
 

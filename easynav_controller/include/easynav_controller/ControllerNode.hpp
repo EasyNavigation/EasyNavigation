@@ -19,15 +19,11 @@
 #define EASYNAV_CONTROLLER__CONTROLLERNODE_HPP_
 
 #include <memory>
-#include <mutex>
 #include <string>
-#include <vector>
 
 #include "easynav_core/ControllerMethodBase.hpp"
-#include "pluginlib/class_loader.hpp"
-#include "rcl_interfaces/msg/set_parameters_result.hpp"
+#include "easynav_core/PluginSwitcher.hpp"
 #include "rclcpp/macros.hpp"
-#include "rclcpp/parameter.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 
 namespace easynav
@@ -136,98 +132,26 @@ public:
    */
   bool cycle_rt(std::shared_ptr<NavState> nav_state, bool trigger = false);
 
+  /**
+   * @brief Alias of the loaded controller (its "controller_types" entry).
+   * @return The alias, or an empty string if no controller is loaded.
+   */
+  std::string get_loaded_controller() const;
+
 private:
-  /**
-   * @brief Applies a pending runtime controller change.
-   *
-   * The controller plugin is created and initialized outside the parameter
-   * callback. The new controller is then swapped into controller_method_
-   * under the corresponding mutex.
-   */
-  void apply_pending_controller();
-
-  /**
-   * @brief Guards access to the pending controller change.
-   */
-  std::mutex pending_controller_mutex_;
-
-  /**
-   * @brief Controller type pending to be loaded.
-   */
-  std::string pending_controller_type_;
-
-  /**
-   * @brief Indicates whether a controller change is pending.
-   */
-  bool controller_change_pending_{false};
-
-  /**
-   * @brief Indicates that the node is currently being configured.
-   *
-   * While configuring, parameter callbacks must not apply runtime validation
-   * to the initial parameter declarations.
-   */
-  bool configuring_{false};
-
-  /**
-   * @brief Validates runtime changes of the "controller_types" parameter.
-   *
-   * Controller changes are only allowed while the node is inactive. During
-   * initial configuration, validation is skipped while configuring_ is true.
-   */
-  rcl_interfaces::msg::SetParametersResult
-  on_set_parameters(const std::vector<rclcpp::Parameter> & parameters);
-
-  /**
-   * @brief Creates and initializes a controller plugin instance.
-   *
-   * The created instance is not assigned to controller_method_ by this
-   * function.
-   *
-   * @param controller_type Alias used to configure the controller.
-   * @param plugin Pluginlib class name.
-   * @return The initialized controller instance, or nullptr on failure.
-   */
-  std::shared_ptr<ControllerMethodBase>
-  create_and_initialize_controller(
-    const std::string & controller_type,
-    const std::string & plugin);
-
   /**
    * @brief Callback group intended for real-time tasks.
    */
   rclcpp::CallbackGroup::SharedPtr realtime_cbg_;
 
   /**
-   * @brief Pluginlib loader used to dynamically load controller implementations.
+   * @brief Owns the controller plugin and reloads it on every configure.
    *
-   * This allows runtime selection and loading of different controller strategies
-   * that inherit from ControllerMethodBase, using ROS pluginlib.
-   *
+   * To change the controller: deactivate, cleanup, set "controller_types" and
+   * configure again. Declared after realtime_cbg_ so the plugin (and its
+   * library) is destroyed first.
    */
-  std::unique_ptr<pluginlib::ClassLoader<easynav::ControllerMethodBase>> controller_loader_;
-
-  /**
-   * @brief Pointer to the controller method.
-   *
-   * This is the actual control algorithm that will be used.
-   */
-  std::shared_ptr<ControllerMethodBase> controller_method_ {nullptr};
-
-  /**
-   * @brief Guards \ref controller_method_ between the RT thread (cycle_rt)
-   * and the non-RT thread (on_cleanup), which run concurrently.
-   */
-  std::mutex controller_method_mutex_;
-
-/**
- * @brief Handle for the on-set-parameters callback.
- *
- * The callback validates runtime changes to "controller_types" and stores
- * pending controller changes for later application.
- */
-  rclcpp::node_interfaces::OnSetParametersCallbackHandle::SharedPtr
-    on_set_parameters_callback_handle_;
+  PluginSwitcher<easynav::ControllerMethodBase> controller_;
 
   /**
    * @brief Current navigation state.

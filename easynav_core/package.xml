@@ -19,6 +19,7 @@
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <depend>rclcpp_lifecycle</depend>
+  <depend>pluginlib</depend>
   <depend>easynav_common</depend>
   <depend>easynav_sensors</depend>
   <depend>visualization_msgs</depend>

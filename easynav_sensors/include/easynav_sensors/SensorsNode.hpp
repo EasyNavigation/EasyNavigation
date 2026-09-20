@@ -140,6 +140,9 @@ protected:
   std::mutex handler_list_mutex_;
 
 private:
+  /// @brief Drops the handlers and the sensor groups (cleanup, shutdown and error).
+  void release_handlers();
+
   /// @brief Callback group for real-time operations.
   rclcpp::CallbackGroup::SharedPtr realtime_cbg_;
 

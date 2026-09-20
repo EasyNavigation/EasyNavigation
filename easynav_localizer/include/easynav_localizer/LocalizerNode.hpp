@@ -18,11 +18,9 @@
 #ifndef EASYNAV_LOCALIZER__LOCALIZERNODE_HPP_
 #define EASYNAV_LOCALIZER__LOCALIZERNODE_HPP_
 
-#include <mutex>
-
 #include "rclcpp/macros.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
-#include "pluginlib/class_loader.hpp"
+#include "easynav_core/PluginSwitcher.hpp"
 
 #include "easynav_core/LocalizerMethodBase.hpp"
 #include "easynav_common/types/NavState.hpp"
@@ -119,17 +117,9 @@ private:
   /// @brief Callback group reserved for real-time operations.
   rclcpp::CallbackGroup::SharedPtr realtime_cbg_;
 
-  /// @brief Plugin loader for LocalizerMethodBase implementations.
-  std::unique_ptr<pluginlib::ClassLoader<easynav::LocalizerMethodBase>> localizer_loader_;
-
-  /// @brief Instance of the loaded localization plugin.
-  std::shared_ptr<LocalizerMethodBase> localizer_method_ {nullptr};
-
-  /**
-   * @brief Guards \ref localizer_method_ between the RT thread (cycle_rt)
-   * and the non-RT thread (cycle / on_cleanup), which run concurrently.
-   */
-  std::mutex localizer_method_mutex_;
+  /// @brief Owns the localizer plugin. To change it: deactivate, cleanup, set
+  /// "localizer_types" and configure again.
+  PluginSwitcher<LocalizerMethodBase> localizer_;
 };
 
 }  // namespace easynav
