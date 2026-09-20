@@ -18,12 +18,17 @@
 #ifndef EASYNAV_CONTROLLER__CONTROLLERNODE_HPP_
 #define EASYNAV_CONTROLLER__CONTROLLERNODE_HPP_
 
+#include <memory>
 #include <mutex>
+#include <string>
+#include <vector>
 
-#include "rclcpp/macros.hpp"
-#include "rclcpp_lifecycle/lifecycle_node.hpp"
 #include "easynav_core/ControllerMethodBase.hpp"
 #include "pluginlib/class_loader.hpp"
+#include "rcl_interfaces/msg/set_parameters_result.hpp"
+#include "rclcpp/macros.hpp"
+#include "rclcpp/parameter.hpp"
+#include "rclcpp_lifecycle/lifecycle_node.hpp"
 
 namespace easynav
 {
@@ -133,6 +138,62 @@ public:
 
 private:
   /**
+   * @brief Applies a pending runtime controller change.
+   *
+   * The controller plugin is created and initialized outside the parameter
+   * callback. The new controller is then swapped into controller_method_
+   * under the corresponding mutex.
+   */
+  void apply_pending_controller();
+
+  /**
+   * @brief Guards access to the pending controller change.
+   */
+  std::mutex pending_controller_mutex_;
+
+  /**
+   * @brief Controller type pending to be loaded.
+   */
+  std::string pending_controller_type_;
+
+  /**
+   * @brief Indicates whether a controller change is pending.
+   */
+  bool controller_change_pending_{false};
+
+  /**
+   * @brief Indicates that the node is currently being configured.
+   *
+   * While configuring, parameter callbacks must not apply runtime validation
+   * to the initial parameter declarations.
+   */
+  bool configuring_{false};
+
+  /**
+   * @brief Validates runtime changes of the "controller_types" parameter.
+   *
+   * Controller changes are only allowed while the node is inactive. During
+   * initial configuration, validation is skipped while configuring_ is true.
+   */
+  rcl_interfaces::msg::SetParametersResult
+  on_set_parameters(const std::vector<rclcpp::Parameter> & parameters);
+
+  /**
+   * @brief Creates and initializes a controller plugin instance.
+   *
+   * The created instance is not assigned to controller_method_ by this
+   * function.
+   *
+   * @param controller_type Alias used to configure the controller.
+   * @param plugin Pluginlib class name.
+   * @return The initialized controller instance, or nullptr on failure.
+   */
+  std::shared_ptr<ControllerMethodBase>
+  create_and_initialize_controller(
+    const std::string & controller_type,
+    const std::string & plugin);
+
+  /**
    * @brief Callback group intended for real-time tasks.
    */
   rclcpp::CallbackGroup::SharedPtr realtime_cbg_;
@@ -158,6 +219,15 @@ private:
    * and the non-RT thread (on_cleanup), which run concurrently.
    */
   std::mutex controller_method_mutex_;
+
+/**
+ * @brief Handle for the on-set-parameters callback.
+ *
+ * The callback validates runtime changes to "controller_types" and stores
+ * pending controller changes for later application.
+ */
+  rclcpp::node_interfaces::OnSetParametersCallbackHandle::SharedPtr
+    on_set_parameters_callback_handle_;
 
   /**
    * @brief Current navigation state.
