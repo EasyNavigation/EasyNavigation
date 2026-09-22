@@ -31,12 +31,10 @@ using namespace std::chrono_literals;
 
 LocalizerNode::LocalizerNode(
   const rclcpp::NodeOptions & options)
-: LifecycleNode("localizer_node", options)
+: LifecycleNode("localizer_node", options),
+  localizer_(*this, "easynav_core", "easynav::LocalizerMethodBase", "localizer_types")
 {
   realtime_cbg_ = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive, false);
-
-  localizer_loader_ = std::make_unique<pluginlib::ClassLoader<easynav::LocalizerMethodBase>>(
-    "easynav_core", "easynav::LocalizerMethodBase");
 
   NavState::register_printer<nav_msgs::msg::Odometry>(
     [](const nav_msgs::msg::Odometry & odom) {
@@ -75,19 +73,7 @@ LocalizerNode::~LocalizerNode()
     trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_UNCONFIGURED_SHUTDOWN);
   }
 
-  localizer_method_ = nullptr;
-  std::vector<std::string> localizer_types;
-  get_parameter("localizer_types", localizer_types);
-  for (const auto & localizer_type : localizer_types) {
-    std::string plugin;
-    if (has_parameter(localizer_type + ".plugin")) {
-      get_parameter(localizer_type + ".plugin", plugin);
-      try {
-        localizer_loader_->unloadLibraryForClass(plugin);
-      } catch (const std::exception &) {
-      }
-    }
-  }
+  localizer_.release();
 }
 
 using CallbackReturnT = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
@@ -95,45 +81,7 @@ using CallbackReturnT = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterfac
 CallbackReturnT
 LocalizerNode::on_configure([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
-  std::vector<std::string> localizer_types;
-  declare_parameter("localizer_types", localizer_types);
-  get_parameter("localizer_types", localizer_types);
-
-  if (localizer_types.size() > 1) {
-    RCLCPP_ERROR(get_logger(),
-      "You must instance one localizer.  [%lu] found", localizer_types.size());
-    return CallbackReturnT::FAILURE;
-  }
-
-  for (const auto & localizer_type : localizer_types) {
-    std::string plugin;
-    declare_parameter(localizer_type + std::string(".plugin"), plugin);
-    get_parameter(localizer_type + std::string(".plugin"), plugin);
-
-    try {
-      RCLCPP_INFO(get_logger(),
-        "Loading LocalizerMethodBase %s [%s]", localizer_type.c_str(), plugin.c_str());
-
-      localizer_method_ = localizer_loader_->createSharedInstance(plugin);
-
-      try {
-        localizer_method_->initialize(shared_from_this(), localizer_type);
-      } catch (const std::runtime_error & e) {
-        RCLCPP_ERROR(get_logger(),
-          "Unable to initialize [%s]. Error: %s", plugin.c_str(), e.what());
-        return CallbackReturnT::FAILURE;
-      }
-
-      RCLCPP_INFO(get_logger(),
-        "Loaded LocalizerMethodBase %s [%s]", localizer_type.c_str(), plugin.c_str());
-    } catch (pluginlib::PluginlibException & ex) {
-      RCLCPP_ERROR(get_logger(),
-        "Unable to load plugin easynav::LocalizerMethodBase. Error: %s", ex.what());
-      return CallbackReturnT::FAILURE;
-    }
-  }
-
-  return CallbackReturnT::SUCCESS;
+  return localizer_.configure() ? CallbackReturnT::SUCCESS : CallbackReturnT::FAILURE;
 }
 
 CallbackReturnT
@@ -151,18 +99,21 @@ LocalizerNode::on_deactivate([[maybe_unused]] const rclcpp_lifecycle::State & st
 CallbackReturnT
 LocalizerNode::on_cleanup([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
+  localizer_.release();
   return CallbackReturnT::SUCCESS;
 }
 
 CallbackReturnT
 LocalizerNode::on_shutdown([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
+  localizer_.release();
   return CallbackReturnT::SUCCESS;
 }
 
 CallbackReturnT
 LocalizerNode::on_error([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
+  localizer_.release();
   return CallbackReturnT::SUCCESS;
 }
 
@@ -176,17 +127,21 @@ LocalizerNode::get_real_time_cbg()
 bool
 LocalizerNode::cycle_rt(std::shared_ptr<NavState> nav_state, bool trigger)
 {
-  if (localizer_method_ == nullptr) {return false;}
+  // get() returns a copy, so the plugin stays alive for this call even if
+  // on_cleanup() releases it concurrently.
+  auto localizer_method = localizer_.get();
+  if (localizer_method == nullptr) {return false;}
 
-  return localizer_method_->internal_update_rt(*nav_state, trigger);
+  return localizer_method->internal_update_rt(*nav_state, trigger);
 }
 
 void
 LocalizerNode::cycle(std::shared_ptr<NavState> nav_state)
 {
-  if (localizer_method_ == nullptr) {return;}
+  auto localizer_method = localizer_.get();
+  if (localizer_method == nullptr) {return;}
 
-  localizer_method_->internal_update(*nav_state);
+  localizer_method->internal_update(*nav_state);
 }
 
 }  // namespace easynav

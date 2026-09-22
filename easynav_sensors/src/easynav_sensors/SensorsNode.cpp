@@ -74,6 +74,23 @@ SensorsNode::~SensorsNode()
   if (get_current_state().id() == lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE) {
     trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_ACTIVE_SHUTDOWN);
   }
+  if (get_current_state().id() == lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE) {
+    trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_INACTIVE_SHUTDOWN);
+  }
+  if (get_current_state().id() == lifecycle_msgs::msg::State::PRIMARY_STATE_UNCONFIGURED) {
+    trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_UNCONFIGURED_SHUTDOWN);
+  }
+}
+
+void
+SensorsNode::release_handlers()
+{
+  {
+    std::lock_guard<std::mutex> lock(handler_list_mutex_);
+    handler_list_.clear();
+  }
+  groups_.clear();
+  groups_initialized = false;
 }
 
 
@@ -183,6 +200,9 @@ CallbackReturnT
 SensorsNode::on_cleanup(const rclcpp_lifecycle::State & state)
 {
   (void)state;
+
+  release_handlers();
+
   return CallbackReturnT::SUCCESS;
 }
 
@@ -190,6 +210,10 @@ CallbackReturnT
 SensorsNode::on_shutdown(const rclcpp_lifecycle::State & state)
 {
   (void)state;
+
+  // A shutdown from ACTIVE skips on_deactivate.
+  percept_pub_->on_deactivate();
+  release_handlers();
   return CallbackReturnT::SUCCESS;
 }
 
@@ -197,6 +221,9 @@ CallbackReturnT
 SensorsNode::on_error(const rclcpp_lifecycle::State & state)
 {
   (void)state;
+
+  percept_pub_->on_deactivate();
+  release_handlers();
   return CallbackReturnT::SUCCESS;
 }
 
@@ -211,9 +238,17 @@ SensorsNode::cycle_rt(
   std::shared_ptr<NavState> nav_state,
   [[maybe_unused]] bool trigger)
 {
+  // Copy the list so handlers stay alive for this call even if on_cleanup()
+  // clears handler_list_ right after we release the lock.
+  std::vector<std::shared_ptr<PerceptionHandler>> handlers;
+  {
+    std::lock_guard<std::mutex> lock(handler_list_mutex_);
+    handlers = handler_list_;
+  }
+
   bool trigger_perceptions = false;
   // Run handlers' cycle and check if there is new sensor data o trigger perceptions
-  for (auto & handler : handler_list_) {
+  for (auto & handler : handlers) {
     const bool trigger = handler->cycle_rt(nav_state);
     trigger_perceptions = trigger_perceptions || trigger;
   }

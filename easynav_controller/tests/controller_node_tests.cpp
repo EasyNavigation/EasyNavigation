@@ -155,8 +155,221 @@ TEST_F(ControllerNodeTestCase, complete_lifecycle_configure_activate_deactivate_
     lifecycle_msgs::msg::State::PRIMARY_STATE_UNCONFIGURED);
 }
 
+
+namespace
+{
+
+using lifecycle_msgs::msg::State;
+using lifecycle_msgs::msg::Transition;
+
+// Two aliases of the same plugin class: distinguishable through get_loaded_controller().
+rclcpp::NodeOptions two_controllers_options()
+{
+  return rclcpp::NodeOptions()
+         .append_parameter_override(
+    "controller_types", std::vector<std::string>{"first_ctrl"})
+         .append_parameter_override(
+    "first_ctrl.plugin", std::string("easynav_controller/DummyController"))
+         .append_parameter_override(
+    "second_ctrl.plugin", std::string("easynav_controller/DummyController"));
+}
+
+}  // namespace
+
 // ---------------------------------------------------------------------------
-// 7. Shutdown transition from inactive state.
+// 7. Changing controller_types has no effect until the node is configured again.
+// ---------------------------------------------------------------------------
+
+TEST_F(ControllerNodeTestCase, controller_change_takes_effect_after_cleanup_and_configure)
+{
+  auto node = std::make_shared<easynav::ControllerNode>(two_controllers_options());
+
+  node->trigger_transition(Transition::TRANSITION_CONFIGURE);
+  ASSERT_EQ(node->get_current_state().id(), State::PRIMARY_STATE_INACTIVE);
+  EXPECT_EQ(node->get_loaded_controller(), "first_ctrl");
+
+  ASSERT_TRUE(
+    node->set_parameter(
+      rclcpp::Parameter("controller_types", std::vector<std::string>{"second_ctrl"})).successful);
+  EXPECT_EQ(node->get_loaded_controller(), "first_ctrl");
+
+  node->trigger_transition(Transition::TRANSITION_CLEANUP);
+  ASSERT_EQ(node->get_current_state().id(), State::PRIMARY_STATE_UNCONFIGURED);
+  EXPECT_EQ(node->get_loaded_controller(), "");
+
+  node->trigger_transition(Transition::TRANSITION_CONFIGURE);
+  ASSERT_EQ(node->get_current_state().id(), State::PRIMARY_STATE_INACTIVE);
+  EXPECT_EQ(node->get_loaded_controller(), "second_ctrl");
+
+  node->trigger_transition(Transition::TRANSITION_ACTIVATE);
+  ASSERT_EQ(node->get_current_state().id(), State::PRIMARY_STATE_ACTIVE);
+
+  auto nav_state = std::make_shared<easynav::NavState>();
+  EXPECT_TRUE(node->cycle_rt(nav_state, true));
+}
+
+// ---------------------------------------------------------------------------
+// 8. The controller can also be changed while unconfigured, and switched back later.
+// ---------------------------------------------------------------------------
+
+TEST_F(ControllerNodeTestCase, controller_change_while_unconfigured_and_switch_back)
+{
+  auto node = std::make_shared<easynav::ControllerNode>(two_controllers_options());
+
+  node->trigger_transition(Transition::TRANSITION_CONFIGURE);
+  node->trigger_transition(Transition::TRANSITION_CLEANUP);
+  ASSERT_EQ(node->get_current_state().id(), State::PRIMARY_STATE_UNCONFIGURED);
+
+  ASSERT_TRUE(
+    node->set_parameter(
+      rclcpp::Parameter("controller_types", std::vector<std::string>{"second_ctrl"})).successful);
+  node->trigger_transition(Transition::TRANSITION_CONFIGURE);
+  ASSERT_EQ(node->get_current_state().id(), State::PRIMARY_STATE_INACTIVE);
+  EXPECT_EQ(node->get_loaded_controller(), "second_ctrl");
+
+  // Back to the first one: its parameters were declared before and must not clash.
+  node->trigger_transition(Transition::TRANSITION_CLEANUP);
+  ASSERT_TRUE(
+    node->set_parameter(
+      rclcpp::Parameter("controller_types", std::vector<std::string>{"first_ctrl"})).successful);
+  node->trigger_transition(Transition::TRANSITION_CONFIGURE);
+  ASSERT_EQ(node->get_current_state().id(), State::PRIMARY_STATE_INACTIVE);
+  EXPECT_EQ(node->get_loaded_controller(), "first_ctrl");
+}
+
+// ---------------------------------------------------------------------------
+// 9. Every valid cycle of transitions can be repeated (parameters are declared again).
+// ---------------------------------------------------------------------------
+
+TEST_F(ControllerNodeTestCase, lifecycle_can_be_repeated)
+{
+  auto node = std::make_shared<easynav::ControllerNode>(two_controllers_options());
+  auto nav_state = std::make_shared<easynav::NavState>();
+
+  for (int i = 0; i < 3; ++i) {
+    node->trigger_transition(Transition::TRANSITION_CONFIGURE);
+    ASSERT_EQ(node->get_current_state().id(), State::PRIMARY_STATE_INACTIVE) << "round " << i;
+    node->trigger_transition(Transition::TRANSITION_ACTIVATE);
+    ASSERT_EQ(node->get_current_state().id(), State::PRIMARY_STATE_ACTIVE) << "round " << i;
+    EXPECT_TRUE(node->cycle_rt(nav_state, true));
+    node->trigger_transition(Transition::TRANSITION_DEACTIVATE);
+    ASSERT_EQ(node->get_current_state().id(), State::PRIMARY_STATE_INACTIVE) << "round " << i;
+    node->trigger_transition(Transition::TRANSITION_CLEANUP);
+    ASSERT_EQ(node->get_current_state().id(), State::PRIMARY_STATE_UNCONFIGURED) << "round " << i;
+    EXPECT_FALSE(node->cycle_rt(nav_state, true));
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 10. Parameters of a controller that has not been loaded yet.
+//
+// The parameters of a controller are declared by the plugin itself when it is
+// initialized (on configure), so they do not exist while another controller is
+// loaded. They can be provided in advance as parameter overrides, and they are
+// applied when the plugin declares them after the switch.
+// ---------------------------------------------------------------------------
+
+TEST_F(ControllerNodeTestCase, parameters_of_not_yet_loaded_controller_come_from_overrides)
+{
+  auto node = std::make_shared<easynav::ControllerNode>(
+    two_controllers_options().append_parameter_override("second_ctrl.cycle_time_rt", 0.5));
+
+  node->trigger_transition(Transition::TRANSITION_CONFIGURE);
+  ASSERT_EQ(node->get_current_state().id(), State::PRIMARY_STATE_INACTIVE);
+
+  // Not declared yet: it cannot be set at runtime, but nothing else is affected.
+  EXPECT_FALSE(node->has_parameter("second_ctrl.cycle_time_rt"));
+  EXPECT_THROW(
+    node->set_parameter(rclcpp::Parameter("second_ctrl.cycle_time_rt", 0.9)),
+    rclcpp::exceptions::ParameterNotDeclaredException);
+  EXPECT_DOUBLE_EQ(node->get_parameter("first_ctrl.cycle_time_rt").as_double(), 0.0);
+
+  ASSERT_TRUE(
+    node->set_parameter(
+      rclcpp::Parameter("controller_types", std::vector<std::string>{"second_ctrl"})).successful);
+  node->trigger_transition(Transition::TRANSITION_CLEANUP);
+  node->trigger_transition(Transition::TRANSITION_CONFIGURE);
+  ASSERT_EQ(node->get_current_state().id(), State::PRIMARY_STATE_INACTIVE);
+  EXPECT_EQ(node->get_loaded_controller(), "second_ctrl");
+
+  // The plugin declared its parameters now, taking the override as initial value.
+  ASSERT_TRUE(node->has_parameter("second_ctrl.cycle_time_rt"));
+  EXPECT_DOUBLE_EQ(node->get_parameter("second_ctrl.cycle_time_rt").as_double(), 0.5);
+}
+
+// ---------------------------------------------------------------------------
+// 11. Runtime values of a controller survive a cleanup: its parameters stay declared
+//     and the next load of the same controller uses them.
+// ---------------------------------------------------------------------------
+
+TEST_F(ControllerNodeTestCase, controller_parameters_keep_runtime_value_after_cleanup)
+{
+  auto node = std::make_shared<easynav::ControllerNode>(
+    two_controllers_options().append_parameter_override("first_ctrl.cycle_time_rt", 0.5));
+
+  node->trigger_transition(Transition::TRANSITION_CONFIGURE);
+  ASSERT_EQ(node->get_current_state().id(), State::PRIMARY_STATE_INACTIVE);
+  ASSERT_TRUE(node->has_parameter("first_ctrl.cycle_time_rt"));
+  ASSERT_TRUE(node->set_parameter(rclcpp::Parameter("first_ctrl.cycle_time_rt", 0.9)).successful);
+
+  node->trigger_transition(Transition::TRANSITION_CLEANUP);
+  ASSERT_EQ(node->get_current_state().id(), State::PRIMARY_STATE_UNCONFIGURED);
+  EXPECT_TRUE(node->has_parameter("first_ctrl.plugin"));
+
+  node->trigger_transition(Transition::TRANSITION_CONFIGURE);
+  ASSERT_EQ(node->get_current_state().id(), State::PRIMARY_STATE_INACTIVE);
+  EXPECT_DOUBLE_EQ(node->get_parameter("first_ctrl.cycle_time_rt").as_double(), 0.9);
+}
+
+// ---------------------------------------------------------------------------
+// 12. A failed configure leaves the node unconfigured and it recovers with a valid controller.
+// ---------------------------------------------------------------------------
+
+TEST_F(ControllerNodeTestCase, failed_configure_can_be_retried_with_another_controller)
+{
+  auto node = std::make_shared<easynav::ControllerNode>(
+    rclcpp::NodeOptions()
+    .append_parameter_override(
+      "controller_types", std::vector<std::string>{"broken_ctrl"})
+    .append_parameter_override(
+      "broken_ctrl.plugin", std::string("easynav_controller/NoSuchController"))
+    .append_parameter_override(
+      "first_ctrl.plugin", std::string("easynav_controller/DummyController")));
+
+  node->trigger_transition(Transition::TRANSITION_CONFIGURE);
+  ASSERT_EQ(node->get_current_state().id(), State::PRIMARY_STATE_UNCONFIGURED);
+  EXPECT_EQ(node->get_loaded_controller(), "");
+
+  ASSERT_TRUE(
+    node->set_parameter(
+      rclcpp::Parameter("controller_types", std::vector<std::string>{"first_ctrl"})).successful);
+  node->trigger_transition(Transition::TRANSITION_CONFIGURE);
+  ASSERT_EQ(node->get_current_state().id(), State::PRIMARY_STATE_INACTIVE);
+  EXPECT_EQ(node->get_loaded_controller(), "first_ctrl");
+}
+
+// ---------------------------------------------------------------------------
+// 13. Shutdown from active releases the controller.
+// ---------------------------------------------------------------------------
+
+TEST_F(ControllerNodeTestCase, shutdown_from_active_releases_controller)
+{
+  auto node = std::make_shared<easynav::ControllerNode>(two_controllers_options());
+
+  node->trigger_transition(Transition::TRANSITION_CONFIGURE);
+  node->trigger_transition(Transition::TRANSITION_ACTIVATE);
+  ASSERT_EQ(node->get_current_state().id(), State::PRIMARY_STATE_ACTIVE);
+
+  node->trigger_transition(Transition::TRANSITION_ACTIVE_SHUTDOWN);
+  EXPECT_EQ(node->get_current_state().id(), State::PRIMARY_STATE_FINALIZED);
+  EXPECT_EQ(node->get_loaded_controller(), "");
+
+  auto nav_state = std::make_shared<easynav::NavState>();
+  EXPECT_FALSE(node->cycle_rt(nav_state, true));
+}
+
+// ---------------------------------------------------------------------------
+// 14. Shutdown transition from inactive state.
 // ---------------------------------------------------------------------------
 
 TEST_F(ControllerNodeTestCase, lifecycle_shutdown_from_inactive)
@@ -175,7 +388,7 @@ TEST_F(ControllerNodeTestCase, lifecycle_shutdown_from_inactive)
 }
 
 // ---------------------------------------------------------------------------
-// 8. cycle_rt returns false when no plugin is loaded.
+// 15. cycle_rt returns false when no plugin is loaded.
 // ---------------------------------------------------------------------------
 
 TEST_F(ControllerNodeTestCase, cycle_rt_returns_false_without_plugin)
@@ -188,7 +401,7 @@ TEST_F(ControllerNodeTestCase, cycle_rt_returns_false_without_plugin)
 }
 
 // ---------------------------------------------------------------------------
-// 9. cycle_rt with trigger=true executes the plugin without crashing.
+// 16. cycle_rt with trigger=true executes the plugin without crashing.
 // ---------------------------------------------------------------------------
 
 TEST_F(ControllerNodeTestCase, cycle_rt_with_trigger_executes)
@@ -210,7 +423,7 @@ TEST_F(ControllerNodeTestCase, cycle_rt_with_trigger_executes)
 }
 
 // ---------------------------------------------------------------------------
-// 10. cycle_rt without trigger respects timing (returns false immediately).
+// 17. cycle_rt without trigger respects timing (returns false immediately).
 // ---------------------------------------------------------------------------
 
 TEST_F(ControllerNodeTestCase, cycle_rt_without_trigger_respects_rate)
@@ -233,7 +446,7 @@ TEST_F(ControllerNodeTestCase, cycle_rt_without_trigger_respects_rate)
 }
 
 // ---------------------------------------------------------------------------
-// 11. get_real_time_cbg returns a non-null callback group.
+// 18. get_real_time_cbg returns a non-null callback group.
 // ---------------------------------------------------------------------------
 
 TEST_F(ControllerNodeTestCase, get_real_time_cbg_returns_valid)

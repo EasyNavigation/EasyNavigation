@@ -18,6 +18,7 @@
 #ifndef EASYNAV_SENSORS__SENSORNODE_HPP_
 #define EASYNAV_SENSORS__SENSORNODE_HPP_
 
+#include <mutex>
 #include <unordered_map>
 
 #include "rclcpp/rclcpp.hpp"
@@ -132,7 +133,16 @@ protected:
   /// @brief vector of PerceptionHandler instances
   std::vector<std::shared_ptr<PerceptionHandler>> handler_list_;
 
+  /**
+   * @brief Guards \ref handler_list_ between the RT thread (cycle_rt) and
+   * the non-RT thread (on_cleanup), which run concurrently.
+   */
+  std::mutex handler_list_mutex_;
+
 private:
+  /// @brief Drops the handlers and the sensor groups (cleanup, shutdown and error).
+  void release_handlers();
+
   /// @brief Callback group for real-time operations.
   rclcpp::CallbackGroup::SharedPtr realtime_cbg_;
 

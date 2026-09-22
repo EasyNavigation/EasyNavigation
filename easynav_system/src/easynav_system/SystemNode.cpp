@@ -181,6 +181,25 @@ CallbackReturnT
 SystemNode::on_cleanup(const rclcpp_lifecycle::State & state)
 {
   (void)state;
+
+  for (auto & system_node : get_system_nodes()) {
+    RCLCPP_INFO(get_logger(), "Cleaning up [%s]", system_node.first.c_str());
+    system_node.second.node_ptr->trigger_transition(
+      lifecycle_msgs::msg::Transition::TRANSITION_CLEANUP);
+
+    if (system_node.second.node_ptr->get_current_state().id() !=
+      lifecycle_msgs::msg::State::PRIMARY_STATE_UNCONFIGURED)
+    {
+      RCLCPP_ERROR(get_logger(), "Unable to clean up [%s]", system_node.first.c_str());
+      return CallbackReturnT::FAILURE;
+    }
+  }
+
+  goal_manager_ = nullptr;
+  navstate_pub_ = nullptr;
+  vel_pub_ = nullptr;
+  vel_pub_stamped_ = nullptr;
+
   return CallbackReturnT::SUCCESS;
 }
 

@@ -18,10 +18,13 @@
 #ifndef EASYNAV_CONTROLLER__CONTROLLERNODE_HPP_
 #define EASYNAV_CONTROLLER__CONTROLLERNODE_HPP_
 
+#include <memory>
+#include <string>
+
+#include "easynav_core/ControllerMethodBase.hpp"
+#include "easynav_core/PluginSwitcher.hpp"
 #include "rclcpp/macros.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
-#include "easynav_core/ControllerMethodBase.hpp"
-#include "pluginlib/class_loader.hpp"
 
 namespace easynav
 {
@@ -129,6 +132,12 @@ public:
    */
   bool cycle_rt(std::shared_ptr<NavState> nav_state, bool trigger = false);
 
+  /**
+   * @brief Alias of the loaded controller (its "controller_types" entry).
+   * @return The alias, or an empty string if no controller is loaded.
+   */
+  std::string get_loaded_controller() const;
+
 private:
   /**
    * @brief Callback group intended for real-time tasks.
@@ -136,20 +145,13 @@ private:
   rclcpp::CallbackGroup::SharedPtr realtime_cbg_;
 
   /**
-   * @brief Pluginlib loader used to dynamically load controller implementations.
+   * @brief Owns the controller plugin and reloads it on every configure.
    *
-   * This allows runtime selection and loading of different controller strategies
-   * that inherit from ControllerMethodBase, using ROS pluginlib.
-   *
+   * To change the controller: deactivate, cleanup, set "controller_types" and
+   * configure again. Declared after realtime_cbg_ so the plugin (and its
+   * library) is destroyed first.
    */
-  std::unique_ptr<pluginlib::ClassLoader<easynav::ControllerMethodBase>> controller_loader_;
-
-  /**
-   * @brief Pointer to the controller method.
-   *
-   * This is the actual control algorithm that will be used.
-   */
-  std::shared_ptr<ControllerMethodBase> controller_method_ {nullptr};
+  PluginSwitcher<easynav::ControllerMethodBase> controller_;
 
   /**
    * @brief Current navigation state.

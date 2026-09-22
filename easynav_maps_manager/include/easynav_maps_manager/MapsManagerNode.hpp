@@ -22,7 +22,7 @@
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 
 #include "easynav_core/MapsManagerBase.hpp"
-#include "pluginlib/class_loader.hpp"
+#include "easynav_core/PluginSwitcher.hpp"
 
 namespace easynav
 {
@@ -99,11 +99,9 @@ public:
   void cycle(std::shared_ptr<NavState> nav_state);
 
 private:
-  /// @brief Plugin loader for map manager implementations.
-  std::unique_ptr<pluginlib::ClassLoader<MapsManagerBase>> maps_manager_loader_;
-
-  /// @brief Active map manager plugins.
-  std::vector<std::shared_ptr<MapsManagerBase>> maps_managers_;
+  /// @brief Owns the map manager plugins. To change them: deactivate, cleanup, set
+  /// "map_types" and configure again.
+  PluginSwitcher<MapsManagerBase> maps_managers_;
 };
 
 }  // namespace easynav

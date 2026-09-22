@@ -18,8 +18,8 @@
 #include "geometry_msgs/msg/twist_stamped.hpp"
 #include "pluginlib/class_loader.hpp"
 
-#include "lifecycle_msgs/msg/transition.hpp"
 #include "lifecycle_msgs/msg/state.hpp"
+#include "lifecycle_msgs/msg/transition.hpp"
 
 #include "easynav_controller/ControllerNode.hpp"
 
@@ -30,12 +30,10 @@ using namespace std::chrono_literals;
 
 ControllerNode::ControllerNode(
   const rclcpp::NodeOptions & options)
-: LifecycleNode("controller_node", options)
+: LifecycleNode("controller_node", options),
+  controller_(*this, "easynav_core", "easynav::ControllerMethodBase", "controller_types")
 {
   realtime_cbg_ = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive, false);
-
-  controller_loader_ = std::make_unique<pluginlib::ClassLoader<easynav::ControllerMethodBase>>(
-    "easynav_core", "easynav::ControllerMethodBase");
 
   NavState::register_printer<geometry_msgs::msg::TwistStamped>(
     [](const geometry_msgs::msg::TwistStamped & twist) {
@@ -51,7 +49,6 @@ ControllerNode::ControllerNode(
     });
 }
 
-
 ControllerNode::~ControllerNode()
 {
   if (get_current_state().id() == lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE) {
@@ -64,66 +61,15 @@ ControllerNode::~ControllerNode()
     trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_UNCONFIGURED_SHUTDOWN);
   }
 
-  controller_method_ = nullptr;
-  std::vector<std::string> controller_types;
-  get_parameter("controller_types", controller_types);
-  for (const auto & controller_type : controller_types) {
-    std::string plugin;
-    if (has_parameter(controller_type + ".plugin")) {
-      get_parameter(controller_type + ".plugin", plugin);
-      try {
-        controller_loader_->unloadLibraryForClass(plugin);
-      } catch (const std::exception &) {
-      }
-    }
-  }
+  controller_.release();
 }
-
 
 using CallbackReturnT = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
 
 CallbackReturnT
 ControllerNode::on_configure([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
-  std::vector<std::string> controller_types;
-  declare_parameter("controller_types", controller_types);
-  get_parameter("controller_types", controller_types);
-
-  if (controller_types.size() > 1) {
-    RCLCPP_ERROR(get_logger(),
-      "You must instance one controller.  [%lu] found", controller_types.size());
-    return CallbackReturnT::FAILURE;
-  }
-
-  for (const auto & controller_type : controller_types) {
-    std::string plugin;
-    declare_parameter(controller_type + std::string(".plugin"), plugin);
-    get_parameter(controller_type + std::string(".plugin"), plugin);
-
-    try {
-      RCLCPP_INFO(get_logger(),
-        "Loading ControllerMethodBase %s [%s]", controller_type.c_str(), plugin.c_str());
-
-      controller_method_ = controller_loader_->createSharedInstance(plugin);
-
-      try {
-        controller_method_->initialize(shared_from_this(), controller_type);
-      } catch (const std::runtime_error & e) {
-        RCLCPP_ERROR(get_logger(),
-          "Unable to initialize [%s]. Error: %s", plugin.c_str(), e.what());
-        return CallbackReturnT::FAILURE;
-      }
-
-      RCLCPP_INFO(get_logger(),
-        "Loaded ControllerMethodBase %s [%s]", controller_type.c_str(), plugin.c_str());
-    } catch (pluginlib::PluginlibException & ex) {
-      RCLCPP_ERROR(get_logger(),
-        "Unable to load plugin easynav::ControllerMethodBase. Error: %s", ex.what());
-      return CallbackReturnT::FAILURE;
-    }
-  }
-
-  return CallbackReturnT::SUCCESS;
+  return controller_.configure() ? CallbackReturnT::SUCCESS : CallbackReturnT::FAILURE;
 }
 
 CallbackReturnT
@@ -141,18 +87,21 @@ ControllerNode::on_deactivate([[maybe_unused]] const rclcpp_lifecycle::State & s
 CallbackReturnT
 ControllerNode::on_cleanup([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
+  controller_.release();
   return CallbackReturnT::SUCCESS;
 }
 
 CallbackReturnT
 ControllerNode::on_shutdown([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
+  controller_.release();
   return CallbackReturnT::SUCCESS;
 }
 
 CallbackReturnT
 ControllerNode::on_error([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
+  controller_.release();
   return CallbackReturnT::SUCCESS;
 }
 
@@ -165,9 +114,19 @@ ControllerNode::get_real_time_cbg()
 bool
 ControllerNode::cycle_rt(std::shared_ptr<NavState> nav_state, bool trigger)
 {
-  if (controller_method_ == nullptr) {return false;}
+  // get() returns a copy, so the plugin stays alive for this call even if
+  // on_cleanup() releases it concurrently.
+  auto controller_method = controller_.get();
+  if (controller_method == nullptr) {return false;}
 
-  return controller_method_->internal_update_rt(*nav_state, trigger);
+  return controller_method->internal_update_rt(*nav_state, trigger);
+}
+
+std::string
+ControllerNode::get_loaded_controller() const
+{
+  const auto types = controller_.loaded_types();
+  return types.empty() ? "" : types.front();
 }
 
 }  // namespace easynav

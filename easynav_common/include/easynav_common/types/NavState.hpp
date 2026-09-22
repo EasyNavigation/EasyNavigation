@@ -427,7 +427,9 @@ public:
         auto typed_ptr = std::static_pointer_cast<T>(base_ptr);
         return printer(*typed_ptr);
       };
-    type_printers_[typeid(T).hash_code()] = wrapper;
+    auto & registry = printer_registry();
+    std::lock_guard<std::mutex> lock(registry.mutex);
+    registry.printers[typeid(T).hash_code()] = wrapper;
   }
 
   /// \brief Generates a human-readable dump of all stored keys and values.
@@ -444,9 +446,17 @@ public:
       if (ptr) {
         auto type_it = types_.find(kv.first);
         if (type_it != types_.end()) {
-          auto printer_it = type_printers_.find(type_it->second);
-          if (printer_it != type_printers_.end()) {
-            ss << "[" << ptr.get() << "] : " << printer_it->second(ptr);
+          AnyPrinter printer;
+          {
+            auto & registry = printer_registry();
+            std::lock_guard<std::mutex> lock(registry.mutex);
+            const auto printer_it = registry.printers.find(type_it->second);
+            if (printer_it != registry.printers.end()) {
+              printer = printer_it->second;
+            }
+          }
+          if (printer) {
+            ss << "[" << ptr.get() << "] : " << printer(ptr);
           } else {
             ss << "[" << ptr.get() << "] : " << type_it->second << "]";
           }
@@ -517,7 +527,23 @@ private:
   mutable std::unordered_map<std::string, std::string> type_names_;
 
   /// \brief Registry of type-hash -> printer functors used by \ref debug_string().
-  static inline std::unordered_map<size_t, AnyPrinter> type_printers_;
+  struct PrinterRegistry
+  {
+    std::mutex mutex;
+    std::unordered_map<size_t, AnyPrinter> printers;
+  };
+
+  /// \brief Process-wide printer registry.
+  ///
+  /// It is deliberately never destroyed. Plugins register printers whose code lives in their
+  /// own shared library, and those libraries are unloaded (class_loader does it from its own
+  /// static destructors) before the static destructors of this library run at exit. Destroying
+  /// the std::function objects then would call code that is no longer mapped.
+  static PrinterRegistry & printer_registry()
+  {
+    static PrinterRegistry * const registry = new PrinterRegistry();
+    return *registry;
+  }
 };
 
 }  // namespace easynav

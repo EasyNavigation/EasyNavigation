@@ -29,10 +29,9 @@ using namespace std::chrono_literals;
 
 MapsManagerNode::MapsManagerNode(
   const rclcpp::NodeOptions & options)
-: LifecycleNode("maps_manager_node", options)
+: LifecycleNode("maps_manager_node", options),
+  maps_managers_(*this, "easynav_core", "easynav::MapsManagerBase", "map_types", 0)
 {
-  maps_manager_loader_ = std::make_unique<pluginlib::ClassLoader<MapsManagerBase>>(
-    "easynav_core", "easynav::MapsManagerBase");
 }
 
 MapsManagerNode::~MapsManagerNode()
@@ -47,8 +46,7 @@ MapsManagerNode::~MapsManagerNode()
     trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_UNCONFIGURED_SHUTDOWN);
   }
 
-  maps_managers_.clear();
-  maps_manager_loader_.reset();
+  maps_managers_.release();
 }
 
 using CallbackReturnT = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
@@ -56,42 +54,7 @@ using CallbackReturnT = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterfac
 CallbackReturnT
 MapsManagerNode::on_configure([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
-  std::vector<std::string> map_types;
-  declare_parameter("map_types", map_types);
-  get_parameter("map_types", map_types);
-
-  for (const auto & map_type : map_types) {
-    std::string plugin;
-    declare_parameter(map_type + std::string(".plugin"), plugin);
-    get_parameter(map_type + std::string(".plugin"), plugin);
-
-    try {
-      RCLCPP_INFO(get_logger(),
-        "Loading MapsManagerBase %s [%s]", map_type.c_str(), plugin.c_str());
-
-      std::shared_ptr<MapsManagerBase> instance;
-      instance = maps_manager_loader_->createSharedInstance(plugin);
-
-      try {
-        instance->initialize(shared_from_this(), map_type);
-      } catch (const std::runtime_error & e) {
-        RCLCPP_ERROR(get_logger(),
-          "Unable to initialize [%s]. Error: %s", plugin.c_str(), e.what());
-        return CallbackReturnT::FAILURE;
-      }
-
-      maps_managers_.push_back(instance);
-
-      RCLCPP_INFO(get_logger(),
-        "Loaded MapsManagerBase %s [%s]", map_type.c_str(), plugin.c_str());
-    } catch (pluginlib::PluginlibException & ex) {
-      RCLCPP_ERROR(get_logger(),
-        "Unable to load plugin easynav::MapsManagerBase. Error: %s", ex.what());
-      return CallbackReturnT::FAILURE;
-    }
-  }
-
-  return CallbackReturnT::SUCCESS;
+  return maps_managers_.configure() ? CallbackReturnT::SUCCESS : CallbackReturnT::FAILURE;
 }
 
 CallbackReturnT
@@ -109,25 +72,29 @@ MapsManagerNode::on_deactivate([[maybe_unused]] const rclcpp_lifecycle::State & 
 CallbackReturnT
 MapsManagerNode::on_cleanup([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
+  maps_managers_.release();
   return CallbackReturnT::SUCCESS;
 }
 
 CallbackReturnT
 MapsManagerNode::on_shutdown([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
+  maps_managers_.release();
   return CallbackReturnT::SUCCESS;
 }
 
 CallbackReturnT
 MapsManagerNode::on_error([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
+  maps_managers_.release();
   return CallbackReturnT::SUCCESS;
 }
 
 void
 MapsManagerNode::cycle(std::shared_ptr<NavState> nav_state)
 {
-  for (auto & map_manager : maps_managers_) {
+  // get_all() returns a copy, so the plugins stay alive for the whole cycle.
+  for (auto & map_manager : maps_managers_.get_all()) {
     map_manager->internal_update(*nav_state);
   }
 }
