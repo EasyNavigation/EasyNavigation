@@ -111,24 +111,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
 <p>Declaration of the ControllerNode class, a ROS 2 lifecycle node for speed computation in Easy Navigation.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;rclcpp/macros.hpp&quot;</code><br />
-<code>#include &quot;rclcpp_lifecycle/lifecycle_node.hpp&quot;</code><br />
+<div class="textblock"><code>#include &lt;memory&gt;</code><br />
+<code>#include &lt;string&gt;</code><br />
 <code>#include &quot;easynav_core/ControllerMethodBase.hpp&quot;</code><br />
-<code>#include &quot;pluginlib/class_loader.hpp&quot;</code><br />
+<code>#include &quot;easynav_core/PluginSwitcher.hpp&quot;</code><br />
+<code>#include &quot;rclcpp/macros.hpp&quot;</code><br />
+<code>#include &quot;rclcpp_lifecycle/lifecycle_node.hpp&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for ControllerNode.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="ControllerNode_8hpp__incl.png" border="0" usemap="#aeasynav__controller_2include_2easynav__controller_2ControllerNode_8hpp" loading="lazy" alt=""/></div>
 <map name="aeasynav__controller_2include_2easynav__controller_2ControllerNode_8hpp" id="aeasynav__controller_2include_2easynav__controller_2ControllerNode_8hpp">
-<area shape="rect" title="Declaration of the ControllerNode class, a ROS 2 lifecycle node for speed computation in Easy Navigat..." alt="" coords="250,5,429,61"/>
-<area shape="rect" title=" " alt="" coords="5,116,133,142"/>
-<area shape="poly" title=" " alt="" coords="262,64,119,113,118,108,261,59"/>
-<area shape="rect" title=" " alt="" coords="156,109,318,150"/>
-<area shape="poly" title=" " alt="" coords="312,64,271,100,268,96,308,60"/>
-<area shape="rect" title=" " alt="" coords="342,109,545,150"/>
-<area shape="poly" title=" " alt="" coords="372,60,413,97,409,101,368,64"/>
-<area shape="rect" title=" " alt="" coords="570,116,739,142"/>
-<area shape="poly" title=" " alt="" coords="430,59,600,109,598,114,429,64"/>
+<area shape="rect" title="Declaration of the ControllerNode class, a ROS 2 lifecycle node for speed computation in Easy Navigat..." alt="" coords="302,5,480,61"/>
+<area shape="rect" title=" " alt="" coords="5,116,73,142"/>
+<area shape="poly" title=" " alt="" coords="302,55,197,79,85,112,81,113,79,108,84,106,196,74,301,50"/>
+<area shape="rect" title=" " alt="" coords="96,116,150,142"/>
+<area shape="poly" title=" " alt="" coords="302,63,163,111,161,112,159,107,161,107,300,58"/>
+<area shape="rect" title=" " alt="" coords="173,109,377,150"/>
+<area shape="poly" title=" " alt="" coords="359,64,313,101,309,97,356,59"/>
+<area shape="rect" title=" " alt="" coords="400,116,616,142"/>
+<area shape="poly" title=" " alt="" coords="427,59,484,105,480,109,423,64"/>
+<area shape="rect" title=" " alt="" coords="641,116,768,142"/>
+<area shape="poly" title=" " alt="" coords="482,59,650,109,649,114,480,64"/>
+<area shape="rect" title=" " alt="" coords="792,109,953,150"/>
+<area shape="poly" title=" " alt="" coords="481,49,777,106,776,111,480,54"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -141,17 +147,19 @@ This graph shows which files directly or indirectly include this file:</div>
 <area shape="poly" title=" " alt="" coords="238,70,146,111,144,106,236,65"/>
 <area shape="rect" href="controller__node__tests_8cpp.html" title=" " alt="" coords="184,109,331,165"/>
 <area shape="poly" title=" " alt="" coords="293,76,275,110,270,107,288,74"/>
-<area shape="rect" href="SystemNode_8hpp.html" title="Declaration of the SystemNode class, the central coordinator node for Easy Navigation components." alt="" coords="434,116,660,157"/>
-<area shape="poly" title=" " alt="" coords="390,65,502,113,500,118,388,70"/>
-<area shape="rect" href="SystemNode_8cpp.html" title="Implementation of the SystemNode class." alt="" coords="228,213,453,253"/>
-<area shape="poly" title=" " alt="" coords="335,75,346,109,350,165,346,213,341,212,344,165,340,109,330,76"/>
-<area shape="poly" title=" " alt="" coords="491,166,385,215,383,210,489,162"/>
-<area shape="rect" href="system__main_8cpp.html" title=" " alt="" coords="477,213,617,253"/>
-<area shape="poly" title=" " alt="" coords="550,173,550,212,544,212,544,173"/>
-<area shape="rect" href="system__pause__tests_8cpp.html" title=" " alt="" coords="641,213,810,253"/>
-<area shape="poly" title=" " alt="" coords="599,162,689,210,687,214,597,167"/>
-<area shape="rect" href="system__tfinfo__tests_8cpp.html" title=" " alt="" coords="834,213,996,253"/>
-<area shape="poly" title=" " alt="" coords="640,159,839,210,837,215,638,164"/>
+<area shape="rect" href="SystemNode_8hpp.html" title="Declaration of the SystemNode class, the central coordinator node for Easy Navigation components." alt="" coords="521,116,746,157"/>
+<area shape="poly" title=" " alt="" coords="414,64,572,113,570,118,412,69"/>
+<area shape="rect" href="SystemNode_8cpp.html" title="Implementation of the SystemNode class." alt="" coords="198,220,424,261"/>
+<area shape="poly" title=" " alt="" coords="335,75,346,108,349,137,346,165,336,195,324,221,320,219,331,193,340,164,344,137,340,110,330,76"/>
+<area shape="poly" title=" " alt="" coords="557,165,374,222,373,217,556,160"/>
+<area shape="rect" href="system__main_8cpp.html" title=" " alt="" coords="448,220,588,261"/>
+<area shape="poly" title=" " alt="" coords="602,170,542,222,538,218,598,166"/>
+<area shape="rect" href="system__lifecycle__cycle__tests_8cpp.html" title="Exercises SystemNode&#39;s own lifecycle state machine through repeated full cycles, including active &#45;&gt; ..." alt="" coords="612,213,770,268"/>
+<area shape="poly" title=" " alt="" coords="654,169,678,211,673,213,650,172"/>
+<area shape="rect" href="system__pause__tests_8cpp.html" title=" " alt="" coords="794,220,964,261"/>
+<area shape="poly" title=" " alt="" coords="696,161,832,217,830,222,694,166"/>
+<area shape="rect" href="system__tfinfo__tests_8cpp.html" title=" " alt="" coords="987,220,1150,261"/>
+<area shape="poly" title=" " alt="" coords="748,158,977,210,1003,217,1001,222,976,215,747,163"/>
 </map>
 </div>
 </div>

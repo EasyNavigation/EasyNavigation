@@ -145,6 +145,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a6eabdf043c65e5df971001021c63a06f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="classeasynav_1_1ControllerNode.html" title="ROS 2 lifecycle node that manages calculating speeds for the Easy Navigation system.">ControllerNode</a> lifecycle node with the specified options.  <br /></td></tr>
 <tr class="memitem:a797c6abce8a6f9cef19ffade9f2b6137" id="r_a797c6abce8a6f9cef19ffade9f2b6137"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a797c6abce8a6f9cef19ffade9f2b6137">cycle_rt</a> (std::shared_ptr&lt; <a class="el" href="classeasynav_1_1NavState.html">NavState</a> &gt; nav_state, bool trigger=false)</td></tr>
 <tr class="memdesc:a797c6abce8a6f9cef19ffade9f2b6137"><td class="mdescLeft">&#160;</td><td class="mdescRight">Executes one cycle of real-time controller logic.  <br /></td></tr>
+<tr class="memitem:a3f369f4ff834a49eb5d098f75b42686c" id="r_a3f369f4ff834a49eb5d098f75b42686c"><td class="memItemLeft">std::string&#160;</td><td class="memItemRight"><a class="el" href="#a3f369f4ff834a49eb5d098f75b42686c">get_loaded_controller</a> () const</td></tr>
+<tr class="memdesc:a3f369f4ff834a49eb5d098f75b42686c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alias of the loaded controller (its "controller_types" entry).  <br /></td></tr>
 <tr class="memitem:a8366fef9515c0b0cd47949fbfc018641" id="r_a8366fef9515c0b0cd47949fbfc018641"><td class="memItemLeft">rclcpp::CallbackGroup::SharedPtr&#160;</td><td class="memItemRight"><a class="el" href="#a8366fef9515c0b0cd47949fbfc018641">get_real_time_cbg</a> ()</td></tr>
 <tr class="memdesc:a8366fef9515c0b0cd47949fbfc018641"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the real-time callback group.  <br /></td></tr>
 <tr class="memitem:a26f6915d7f6c74f8cf2e766e352ef4a1" id="r_a26f6915d7f6c74f8cf2e766e352ef4a1"><td class="memItemLeft"><a class="el" href="#ad09d90f1fe35c9e2f2fd7fc1902312f4">CallbackReturnT</a>&#160;</td><td class="memItemRight"><a class="el" href="#a26f6915d7f6c74f8cf2e766e352ef4a1">on_activate</a> (const rclcpp_lifecycle::State &amp;state)</td></tr>
@@ -261,6 +263,26 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Bool value to indicate if trigger subsequent processes </dd></dl>
+
+</div>
+</div>
+<a id="a3f369f4ff834a49eb5d098f75b42686c" name="a3f369f4ff834a49eb5d098f75b42686c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3f369f4ff834a49eb5d098f75b42686c">&#9670;&#160;</a></span>get_loaded_controller()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string get_loaded_controller </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Alias of the loaded controller (its "controller_types" entry). </p>
+<dl class="section return"><dt>Returns</dt><dd>The alias, or an empty string if no controller is loaded. </dd></dl>
 
 </div>
 </div>

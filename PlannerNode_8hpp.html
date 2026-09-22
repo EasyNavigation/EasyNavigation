@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <div class="textblock"><code>#include &quot;rclcpp/macros.hpp&quot;</code><br />
 <code>#include &quot;rclcpp_lifecycle/lifecycle_node.hpp&quot;</code><br />
 <code>#include &quot;easynav_core/PlannerMethodBase.hpp&quot;</code><br />
-<code>#include &quot;pluginlib/class_loader.hpp&quot;</code><br />
+<code>#include &quot;easynav_core/PluginSwitcher.hpp&quot;</code><br />
 <code>#include &quot;nav_msgs/msg/path.hpp&quot;</code><br />
 <code>#include &quot;<a class="el" href="NavState_8hpp_source.html">easynav_common/types/NavState.hpp</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
@@ -122,45 +122,45 @@ Include dependency graph for PlannerNode.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="PlannerNode_8hpp__incl.png" border="0" usemap="#aeasynav__planner_2include_2easynav__planner_2PlannerNode_8hpp" loading="lazy" alt=""/></div>
 <map name="aeasynav__planner_2include_2easynav__planner_2PlannerNode_8hpp" id="aeasynav__planner_2include_2easynav__planner_2PlannerNode_8hpp">
-<area shape="rect" title="Declaration of the PlannerNode class, a ROS 2 lifecycle node for computing navigation paths in Easy N..." alt="" coords="428,5,654,46"/>
+<area shape="rect" title="Declaration of the PlannerNode class, a ROS 2 lifecycle node for computing navigation paths in Easy N..." alt="" coords="439,5,664,46"/>
 <area shape="rect" title=" " alt="" coords="5,102,133,127"/>
-<area shape="poly" title=" " alt="" coords="428,46,293,69,146,97,130,100,129,95,144,91,292,63,427,41"/>
+<area shape="poly" title=" " alt="" coords="439,46,299,68,146,97,130,100,129,95,144,91,298,63,438,40"/>
 <area shape="rect" title=" " alt="" coords="156,94,318,135"/>
-<area shape="poly" title=" " alt="" coords="472,49,321,92,320,87,471,44"/>
+<area shape="poly" title=" " alt="" coords="481,49,323,92,322,87,479,44"/>
 <area shape="rect" title=" " alt="" coords="342,94,534,135"/>
-<area shape="poly" title=" " alt="" coords="519,49,475,86,472,82,516,44"/>
-<area shape="rect" title=" " alt="" coords="559,102,728,127"/>
-<area shape="poly" title=" " alt="" coords="566,44,620,90,616,94,563,49"/>
-<area shape="rect" title=" " alt="" coords="753,102,916,127"/>
-<area shape="poly" title=" " alt="" coords="609,44,779,94,778,99,607,49"/>
-<area shape="rect" href="NavState_8hpp.html" title="A blackboard&#45;like structure to hold the current state of the navigation system." alt="" coords="940,94,1102,135"/>
-<area shape="poly" title=" " alt="" coords="655,43,926,91,925,96,654,48"/>
-<area shape="rect" title=" " alt="" coords="376,183,429,208"/>
-<area shape="poly" title=" " alt="" coords="941,135,928,137,794,152,687,158,580,165,445,185,444,180,580,160,687,153,793,147,927,132,940,130"/>
-<area shape="rect" title=" " alt="" coords="452,183,563,208"/>
-<area shape="poly" title=" " alt="" coords="941,135,928,137,755,162,579,185,578,179,754,157,927,132,940,130"/>
-<area shape="rect" title=" " alt="" coords="587,183,690,208"/>
-<area shape="poly" title=" " alt="" coords="940,135,706,183,705,178,939,130"/>
-<area shape="rect" title=" " alt="" coords="714,183,781,208"/>
-<area shape="poly" title=" " alt="" coords="953,138,797,183,796,178,952,133"/>
-<area shape="rect" title=" " alt="" coords="805,183,861,208"/>
-<area shape="poly" title=" " alt="" coords="975,138,877,179,875,174,973,133"/>
-<area shape="rect" title=" " alt="" coords="885,183,962,208"/>
-<area shape="poly" title=" " alt="" coords="999,137,952,175,949,171,995,133"/>
-<area shape="rect" title=" " alt="" coords="987,183,1055,208"/>
-<area shape="poly" title=" " alt="" coords="1024,135,1024,167,1018,167,1018,135"/>
-<area shape="rect" title=" " alt="" coords="1079,183,1160,208"/>
-<area shape="poly" title=" " alt="" coords="1047,133,1094,170,1091,175,1044,137"/>
-<area shape="rect" title=" " alt="" coords="1184,183,1255,208"/>
-<area shape="poly" title=" " alt="" coords="1072,133,1176,174,1174,179,1070,138"/>
-<area shape="rect" title=" " alt="" coords="1280,183,1357,208"/>
-<area shape="poly" title=" " alt="" coords="1096,133,1265,177,1264,183,1095,138"/>
-<area shape="rect" title=" " alt="" coords="1381,183,1461,208"/>
-<area shape="poly" title=" " alt="" coords="1103,128,1367,180,1366,185,1101,133"/>
-<area shape="rect" title=" " alt="" coords="1485,183,1552,208"/>
-<area shape="poly" title=" " alt="" coords="1103,123,1268,145,1470,180,1469,185,1267,150,1102,128"/>
-<area shape="rect" title=" " alt="" coords="1575,183,1643,208"/>
-<area shape="poly" title=" " alt="" coords="1102,120,1306,142,1432,158,1561,180,1560,185,1431,164,1306,147,1102,125"/>
+<area shape="poly" title=" " alt="" coords="528,49,478,87,474,82,524,44"/>
+<area shape="rect" title=" " alt="" coords="558,102,774,127"/>
+<area shape="poly" title=" " alt="" coords="579,44,640,90,637,95,576,49"/>
+<area shape="rect" title=" " alt="" coords="798,102,961,127"/>
+<area shape="poly" title=" " alt="" coords="627,44,820,94,818,100,626,49"/>
+<area shape="rect" href="NavState_8hpp.html" title="A blackboard&#45;like structure to hold the current state of the navigation system." alt="" coords="986,94,1147,135"/>
+<area shape="poly" title=" " alt="" coords="665,41,971,91,970,96,665,46"/>
+<area shape="rect" title=" " alt="" coords="421,183,474,208"/>
+<area shape="poly" title=" " alt="" coords="986,135,973,137,839,152,732,158,626,165,490,185,489,180,625,160,732,153,839,147,973,132,985,130"/>
+<area shape="rect" title=" " alt="" coords="498,183,608,208"/>
+<area shape="poly" title=" " alt="" coords="986,135,973,137,800,162,624,185,623,179,799,157,973,132,985,130"/>
+<area shape="rect" title=" " alt="" coords="632,183,735,208"/>
+<area shape="poly" title=" " alt="" coords="986,135,751,183,750,178,985,130"/>
+<area shape="rect" title=" " alt="" coords="759,183,827,208"/>
+<area shape="poly" title=" " alt="" coords="999,138,842,183,841,178,997,133"/>
+<area shape="rect" title=" " alt="" coords="850,183,906,208"/>
+<area shape="poly" title=" " alt="" coords="1020,138,922,179,920,174,1018,133"/>
+<area shape="rect" title=" " alt="" coords="930,183,1008,208"/>
+<area shape="poly" title=" " alt="" coords="1044,137,997,175,994,171,1041,133"/>
+<area shape="rect" title=" " alt="" coords="1032,183,1100,208"/>
+<area shape="poly" title=" " alt="" coords="1069,135,1069,167,1064,167,1064,135"/>
+<area shape="rect" title=" " alt="" coords="1124,183,1206,208"/>
+<area shape="poly" title=" " alt="" coords="1092,133,1140,170,1136,175,1089,137"/>
+<area shape="rect" title=" " alt="" coords="1229,183,1301,208"/>
+<area shape="poly" title=" " alt="" coords="1117,133,1222,174,1220,179,1115,138"/>
+<area shape="rect" title=" " alt="" coords="1325,183,1402,208"/>
+<area shape="poly" title=" " alt="" coords="1141,133,1311,177,1309,183,1140,138"/>
+<area shape="rect" title=" " alt="" coords="1427,183,1506,208"/>
+<area shape="poly" title=" " alt="" coords="1148,128,1412,180,1411,185,1147,133"/>
+<area shape="rect" title=" " alt="" coords="1530,183,1597,208"/>
+<area shape="poly" title=" " alt="" coords="1148,123,1314,145,1516,180,1515,185,1313,150,1147,128"/>
+<area shape="rect" title=" " alt="" coords="1621,183,1688,208"/>
+<area shape="poly" title=" " alt="" coords="1148,120,1352,142,1477,158,1606,180,1605,185,1476,164,1351,147,1147,125"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -173,17 +173,19 @@ This graph shows which files directly or indirectly include this file:</div>
 <area shape="poly" title=" " alt="" coords="318,54,181,96,180,91,316,48"/>
 <area shape="rect" href="planner__node__tests_8cpp.html" title=" " alt="" coords="254,94,416,135"/>
 <area shape="poly" title=" " alt="" coords="374,60,351,95,346,92,370,57"/>
-<area shape="rect" href="SystemNode_8hpp.html" title="Declaration of the SystemNode class, the central coordinator node for Easy Navigation components." alt="" coords="520,94,745,135"/>
-<area shape="poly" title=" " alt="" coords="463,49,579,91,577,96,461,54"/>
-<area shape="rect" href="SystemNode_8cpp.html" title="Implementation of the SystemNode class." alt="" coords="313,183,539,223"/>
-<area shape="poly" title=" " alt="" coords="417,59,431,93,436,141,432,183,427,182,430,141,426,95,412,61"/>
-<area shape="poly" title=" " alt="" coords="573,143,474,185,472,180,571,139"/>
-<area shape="rect" href="system__main_8cpp.html" title=" " alt="" coords="562,183,703,223"/>
-<area shape="poly" title=" " alt="" coords="635,150,635,182,630,182,630,150"/>
-<area shape="rect" href="system__pause__tests_8cpp.html" title=" " alt="" coords="727,183,896,223"/>
-<area shape="poly" title=" " alt="" coords="688,139,772,180,770,185,686,144"/>
-<area shape="rect" href="system__tfinfo__tests_8cpp.html" title=" " alt="" coords="920,183,1082,223"/>
-<area shape="poly" title=" " alt="" coords="732,136,920,180,918,185,731,141"/>
+<area shape="rect" href="SystemNode_8hpp.html" title="Declaration of the SystemNode class, the central coordinator node for Easy Navigation components." alt="" coords="607,94,832,135"/>
+<area shape="poly" title=" " alt="" coords="484,48,646,91,645,96,482,53"/>
+<area shape="rect" href="SystemNode_8cpp.html" title="Implementation of the SystemNode class." alt="" coords="284,190,509,231"/>
+<area shape="poly" title=" " alt="" coords="417,59,431,93,433,120,429,147,411,191,406,189,424,145,428,120,426,95,412,61"/>
+<area shape="poly" title=" " alt="" coords="638,142,465,192,463,187,636,137"/>
+<area shape="rect" href="system__main_8cpp.html" title=" " alt="" coords="533,190,674,231"/>
+<area shape="poly" title=" " alt="" coords="686,146,629,192,626,188,682,142"/>
+<area shape="rect" href="system__lifecycle__cycle__tests_8cpp.html" title="Exercises SystemNode&#39;s own lifecycle state machine through repeated full cycles, including active &#45;&gt; ..." alt="" coords="698,183,856,238"/>
+<area shape="poly" title=" " alt="" coords="741,146,762,181,758,183,737,149"/>
+<area shape="rect" href="system__pause__tests_8cpp.html" title=" " alt="" coords="880,190,1049,231"/>
+<area shape="poly" title=" " alt="" coords="786,138,914,187,912,192,784,143"/>
+<area shape="rect" href="system__tfinfo__tests_8cpp.html" title=" " alt="" coords="1073,190,1235,231"/>
+<area shape="poly" title=" " alt="" coords="848,135,1063,180,1089,187,1088,192,1061,185,847,141"/>
 </map>
 </div>
 </div>

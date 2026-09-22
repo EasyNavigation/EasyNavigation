@@ -1,11 +1,15 @@
 <map id="easynav_controller/include/easynav_controller/ControllerNode.hpp" name="easynav_controller/include/easynav_controller/ControllerNode.hpp">
-<area shape="rect" id="Node000001" title="Declaration of the ControllerNode class, a ROS 2 lifecycle node for speed computation in Easy Navigat..." alt="" coords="250,5,429,61"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,116,133,142"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="262,64,119,113,118,108,261,59"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="156,109,318,150"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="312,64,271,100,268,96,308,60"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="342,109,545,150"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="372,60,413,97,409,101,368,64"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="570,116,739,142"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="430,59,600,109,598,114,429,64"/>
+<area shape="rect" id="Node000001" title="Declaration of the ControllerNode class, a ROS 2 lifecycle node for speed computation in Easy Navigat..." alt="" coords="302,5,480,61"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,116,73,142"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="302,55,197,79,85,112,81,113,79,108,84,106,196,74,301,50"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="96,116,150,142"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="302,63,163,111,161,112,159,107,161,107,300,58"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="173,109,377,150"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="359,64,313,101,309,97,356,59"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="400,116,616,142"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="427,59,484,105,480,109,423,64"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="641,116,768,142"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="482,59,650,109,649,114,480,64"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="792,109,953,150"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="481,49,777,106,776,111,480,54"/>
 </map>

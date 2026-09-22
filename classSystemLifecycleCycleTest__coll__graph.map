@@ -1,0 +1,7 @@
+<map id="SystemLifecycleCycleTest" name="SystemLifecycleCycleTest">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,102,181,128"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="35,5,82,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="71,45,91,100,86,102,65,47"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="106,5,152,31"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="121,47,100,102,95,100,116,45"/>
+</map>
