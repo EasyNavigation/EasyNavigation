@@ -28,7 +28,7 @@ namespace easynav
 void
 RecoveryEvaluatorBase::internal_update(NavState & nav_state)
 {
-  if (isTime2Run()) {
+  if (is_time_to_update()) {
     EASYNAV_TRACE_EVENT;
 
     // Save last execution time, even if triggered

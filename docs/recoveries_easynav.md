@@ -470,6 +470,7 @@ The three generic evaluators shipped today:
 | `NoPathEvaluator` | `WARN` if the planner has not produced a `"path"` yet; `ERROR` if it produced an empty one; `OK` (silently) when there is no active goal | `"planner"` |
 | `ObstacleTooCloseEvaluator` | `ERROR` once the robot has been measurably stopped for a debounce window **and** the nearest obstacle is still closer than `safe_distance` (see §5.2) | `"obstacle_proximity"` |
 | `ControllerStuckEvaluator` | `ERROR` when `cmd_vel` commands motion above `linear_velocity_threshold` but the robot's position has not moved by `progress_distance_threshold` for `stuck_time_threshold` seconds | `"controller_stuck"` |
+| `RosGraphEvaluator` | Discovers, every time the recovery node is activated, the subscriptions and velocity outputs (`Twist`/`TwistStamped`) of the EasyNav nodes (plugins included); each cycle, `ERROR` if a discovered subscription has no publisher of its type (except optional inputs in `ignored_topics`: `goal_pose`, `initialpose`, `*/incoming_*map`) or if no velocity output has a subscriber outside EasyNav (monitoring tools in `ignored_consumers`, by default the EasyNav TUI and `ros2 topic echo`, do not count). `OK` only reports the velocity topic and whether it is stamped or unstamped. Independent of the active goal; `WARN` during `startup_grace` s after activation and until a problem has lasted `error_debounce` s | `"ros_graph"` |
 
 `ControllerStuckEvaluator` explicitly silences itself to `OK` (without diagnosing anything) in
 four situations, to avoid diagnosing its own system's normal behavior as a new failure:
@@ -561,6 +562,31 @@ consumed: cancelling the mission does not resolve the diagnostic that triggered 
 divergence stays a divergence), and reporting success would make it immediately eligible for
 reselection.
 
+### 5.8.1 System-level termination
+
+Some diagnostics cannot be fixed by an automatic mitigation, by a human clearing the robot's
+surroundings, or by cancelling the mission — e.g. a miswired ROS graph (`RosGraphEvaluator`):
+EasyNav cannot navigate correctly as configured. **`ShutdownRecovery`**
+(`easynav_plugins/recovery_mitigations/easynav_shutdown_recovery`) handles them by terminating
+EasyNav in an orderly way, following the ROS 2 managed-node design, where an error in `Active` is
+the one case in which a node leaves a primary state without an external request, and
+`ErrorProcessing` failing leads to `Finalized`:
+
+1. `on_start()` writes `"system_shutdown_reason"` (the offending diagnostics) and
+   `"system_shutdown_requested"` in `NavState`, plus `"mission_cancel_requested"` if there is an
+   active goal, and reports at `FATAL`. While selected, it holds the robot with zero `cmd_vel`.
+2. On the next non-RT cycle, `GoalManager::update()` cancels the mission (its client receives the
+   reason), and then `SystemNode::system_cycle()` records the request
+   (`SystemNode::is_shutdown_requested()`).
+3. `system_main`, as the lifecycle supervisor, stops both loops and deactivates `SystemNode`.
+   `on_deactivate()` deactivates every EasyNav node, publishes a zero velocity and returns
+   `ERROR`; `on_error()` logs the reason, shuts every EasyNav node down and returns `FAILURE`, so
+   `SystemNode` ends in `Finalized` (visible to any supervisor on `~/transition_event`).
+4. The process prints the reason as its last output and exits with code 1.
+
+`rcl`/`rclcpp` offer no "error" transition from `Active`, so the error path is entered by failing
+the deactivation, the usual way to materialize an error in `Active` with `rclcpp_lifecycle`.
+
 ### 5.9 Component-specialized recovery, co-located with its component
 
 Beyond the generic catalog, an evaluator or mitigator that depends on knowledge internal to one
@@ -611,8 +637,9 @@ domain-agnostic while allowing arbitrarily deep, component-specific knowledge at
 | `CollisionSafetyReflex` | 0 — RT reflex | Overrides `cmd_vel` on imminent collision, regardless of who produced it | Forward projection of `cmd_vel` against nearby point-cloud perceptions |
 | `SafeRetreatRecovery` | 1 — Movement (`requires_control`) | Reverses in a straight line, at `retreat_speed`, until the nearest obstacle is farther than `safe_distance` | `hardware_id == "obstacle_proximity"` |
 | `AdvanceRecovery` | 1 — Movement (`requires_control`) | Advances `advance_distance` at `advance_speed`; never reports the underlying problem solved, only that one activation is done; gives up (`FAILED`) once the *total* time spent across a recurring episode exceeds `escalate_after` | `hardware_id == "controller_stuck"` |
-| `HumanAssistanceRecovery` | 1 — Movement (`requires_control`) | Generic catch-all: stops and waits for a human to resolve the underlying condition (the "ack" is physical — the diagnostic returning to `OK`); optional `timeout` before giving up | Any `ERROR` diagnostic — meant to be configured with low priority so more specific mitigations are tried first |
+| `HumanAssistanceRecovery` | 1 — Movement (`requires_control`) | Generic catch-all: stops and waits for a human to resolve the underlying condition (the "ack" is physical — the diagnostic returning to `OK`); optional `timeout` before giving up | Any `ERROR` diagnostic except the `hardware_id`s in `ignored_hardware_ids` (default `["ros_graph"]`: a miswired graph goes straight to `CancelMissionRecovery`) — meant to be configured with low priority so more specific mitigations are tried first |
 | `CancelMissionRecovery` | 1 — Mission (does not take control) | Cancels the active mission via `GoalManager::set_error()`; always returns `FAILED`, never `SUCCEEDED` | Any `ERROR` diagnostic — the last rung of the ladder |
+| `ShutdownRecovery` | 1 — System (`requires_control`) | Holds the robot with zero `cmd_vel`, cancels the active mission (if any) and requests EasyNav to terminate: `SystemNode` leaves `Active` through the lifecycle error path (`Deactivating` → `ErrorProcessing` → `Finalized`) and the process exits with code 1, printing the offending diagnostics | `ERROR` diagnostics whose `hardware_id` is in `handled_hardware_ids` (default `["ros_graph"]`) |
 | `AmclRelocalizeMitigation` | 1 — Movement, component-specialized (`requires_control`) | Rotates in place at `rotation_speed` until the AMCL covariance trace drops back under threshold, or `timeout` | `hardware_id == "localizer.amcl"` |
 
 ### 5.12 Worked example: a person crosses at speed
@@ -718,16 +745,19 @@ system_node:
 
 recovery_node:
   ros__parameters:
-    evaluator_types: [no_path, obstacle_close, amcl_convergence, controller_stuck]
-    mitigation_types: [retreat, amcl_relocalize, advance, human_assistance, cancel_mission]
-    # priorities: retreat / advance / amcl_relocalize = 10; human_assistance = 1000; cancel_mission = 2000
+    evaluator_types: [no_path, obstacle_close, amcl_convergence, controller_stuck, ros_graph]
+    mitigation_types: [retreat, amcl_relocalize, advance, shutdown, human_assistance, cancel_mission]
+    # priorities: retreat / advance / amcl_relocalize = 10; shutdown = 100;
+    #             human_assistance = 1000; cancel_mission = 2000
 ```
 
 With this configuration, a lost localization escalates as: `amcl_relocalize` (rotates for up to
 5 s) → excluded on failure → `human_assistance` (stops and waits up to 10 s) → excluded on
 timeout → `cancel_mission` (cancels the mission, reporting which diagnostics were still in
 `ERROR`). In parallel, `retreat` and `advance` independently handle their own diagnostics
-(proximity and stuck-controller) without interfering with that escalation.
+(proximity and stuck-controller) without interfering with that escalation. A miswired ROS graph
+(`ros_graph`) goes straight to `shutdown`, which terminates EasyNav (§5.8.1): `human_assistance`
+ignores it by default, and `shutdown` is tried before `cancel_mission`.
 
 ---
 

@@ -226,12 +226,18 @@ RecoveryManagerNode::on_configure([[maybe_unused]] const rclcpp_lifecycle::State
 CallbackReturnT
 RecoveryManagerNode::on_activate([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
+  for (auto & evaluator : evaluators_) {
+    evaluator->on_activate();
+  }
   return CallbackReturnT::SUCCESS;
 }
 
 CallbackReturnT
 RecoveryManagerNode::on_deactivate([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
+  for (auto & evaluator : evaluators_) {
+    evaluator->on_deactivate();
+  }
   return CallbackReturnT::SUCCESS;
 }
 

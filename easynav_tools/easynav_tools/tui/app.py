@@ -70,7 +70,7 @@ class EasyNavTabbedApp(App):
         height: 100%;
     }
 
-    /* Left 35%: Navigation Status (sub-boxes) */
+    /* Left 35%: Navigation Status (sub-boxes) on top, Diagnostics + Mitigation stacked below */
     #left_col {
         width: 35%;
         height: 100%;
@@ -116,11 +116,12 @@ class EasyNavTabbedApp(App):
         overflow: auto;
     }
 
-    /* Diagnostics is a per-key state snapshot (usually short); Mitigation is a scrolling
-       narrative log that benefits from more room; NavState stays the biggest single block. */
+    /* Left column: Navigation Status takes what its sub-boxes need; Diagnostics (a per-key
+       state snapshot) and Mitigation (a scrolling narrative log) share the rest below it.
+       Right column: NavState stays the biggest single block, Time stats below it. */
+    #diagnostics_block { height: 1fr; }
+    #mitigation_block { height: 1fr; }
     #navstate_block { height: 2fr; }
-    #diagnostics_block { height: 1fr; margin-top: 1; }
-    #mitigation_block { height: 1fr; margin-top: 1; }
     #timestats_block { height: 1fr; margin-top: 1; }
 
     #navstate_wrap { height: 100%; }
@@ -130,8 +131,8 @@ class EasyNavTabbedApp(App):
 
     #rl_mitigation { height: 1fr; width: 100%; }
 
-    #navstatus_block { height: 100%; }
-    #navstatus_box   { height: 100%; }
+    #navstatus_block { height: auto; }
+    #navstatus_box   { height: auto; }
 
     .navstatus_item {}
 
@@ -210,7 +211,7 @@ class EasyNavTabbedApp(App):
             # Status page
             with Container(id='page_status'):
                 with Horizontal(id='status_root'):
-                    # LEFT column: Navigation Status
+                    # LEFT column: Navigation Status, then Diagnostics + Mitigation below
                     with Vertical(id='left_col'):
                         with Vertical(id='navstatus_block', classes='titled'):
                             yield Label('Navigation Status', classes='title')
@@ -240,18 +241,6 @@ class EasyNavTabbedApp(App):
                                     )
                                     yield self.box_twist
 
-                    # RIGHT column: NavState + Time stats
-                    with Vertical(id='right_col'):
-                        # NavState (switch inside border)
-                        with Vertical(id='navstate_block', classes='titled'):
-                            with Vertical(id='navstate_wrap', classes='box'):
-                                with Horizontal(classes='hdr'):
-                                    yield Label('NavState', classes='title')
-                                    yield Static('', classes='spacer')
-                                    yield Switch(value=True, id='sw_navstate')
-                                self.st_navstate = Static('NavState: esperando…')
-                                yield self.st_navstate
-
                         # Diagnostics (switch inside border)
                         with Vertical(id='diagnostics_block', classes='titled'):
                             with Vertical(id='diagnostics_wrap', classes='box'):
@@ -274,6 +263,18 @@ class EasyNavTabbedApp(App):
                                 self.rl_mitigation = RichLog(
                                     id='rl_mitigation', markup=True, wrap=True, auto_scroll=True)
                                 yield self.rl_mitigation
+
+                    # RIGHT column: NavState + Time stats
+                    with Vertical(id='right_col'):
+                        # NavState (switch inside border)
+                        with Vertical(id='navstate_block', classes='titled'):
+                            with Vertical(id='navstate_wrap', classes='box'):
+                                with Horizontal(classes='hdr'):
+                                    yield Label('NavState', classes='title')
+                                    yield Static('', classes='spacer')
+                                    yield Switch(value=True, id='sw_navstate')
+                                self.st_navstate = Static('NavState: esperando…')
+                                yield self.st_navstate
 
                         # Time stats (switch inside border)
                         with Vertical(id='timestats_block', classes='titled'):

@@ -18,6 +18,10 @@
 #ifndef EASYNAV_SYSTEM__SYSTEMNODE_HPP_
 #define EASYNAV_SYSTEM__SYSTEMNODE_HPP_
 
+#include <atomic>
+#include <mutex>
+#include <string>
+
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp/macros.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
@@ -88,6 +92,11 @@ public:
 
   /**
    * @brief Deactivate the node.
+   *
+   * Returns ERROR, once every EasyNav node is deactivated, if a recovery mitigation requested
+   * the shutdown: an unrecoverable error in Active leaves it through the lifecycle's error path
+   * (ErrorProcessing, see on_error()), not as a normal deactivation.
+   *
    * @param state Lifecycle state.
    * @return SUCCESS if deactivation succeeded.
    */
@@ -109,8 +118,13 @@ public:
 
   /**
    * @brief Handle lifecycle transition error.
+   *
+   * After a shutdown requested by a recovery mitigation (see is_shutdown_requested()), reports
+   * the reason, shuts every EasyNav node down and returns FAILURE, so this node ends Finalized.
+   * Any other error is handled as before: SUCCESS, back to Unconfigured.
+   *
    * @param state Lifecycle state.
-   * @return SUCCESS if error handled.
+   * @return SUCCESS if error handled, FAILURE if EasyNav must terminate.
    */
   CallbackReturnT on_error(const rclcpp_lifecycle::State & state);
 
@@ -141,6 +155,16 @@ public:
    * @return Shared pointer to the NavState.
    */
   [[nodiscard]] std::shared_ptr<NavState> get_nav_state() const {return nav_state_;}
+
+  /**
+   * @brief Whether a recovery mitigation requested EasyNav to terminate
+   * ("system_shutdown_requested" in NavState). Whoever drives this node's lifecycle should then
+   * deactivate it, which ends in Finalized (see on_deactivate()/on_error()).
+   */
+  [[nodiscard]] bool is_shutdown_requested() const {return shutdown_requested_;}
+
+  /// @brief The diagnostics that caused the requested shutdown ("system_shutdown_reason").
+  [[nodiscard]] std::string get_shutdown_reason() const;
 
 private:
   /// @brief Real-time callback group.
@@ -188,6 +212,13 @@ private:
 
   /// @brief Publisher for velocity command (legacy Twist).
   rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr vel_pub_;
+
+  /// @brief Set from system_cycle() once a mitigation requests EasyNav to terminate.
+  std::atomic<bool> shutdown_requested_ {false};
+
+  /// @brief Why EasyNav is terminating (see get_shutdown_reason()).
+  std::string shutdown_reason_;
+  mutable std::mutex shutdown_reason_mutex_;
 };
 
 }  // namespace easynav

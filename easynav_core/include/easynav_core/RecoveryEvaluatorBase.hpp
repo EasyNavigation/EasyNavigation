@@ -55,7 +55,25 @@ public:
    */
   void internal_update(NavState & nav_state);
 
+  /**
+   * @brief Called by RecoveryManagerNode every time it becomes active, once every EasyNav node
+   * has been configured. Default: nothing.
+   */
+  virtual void on_activate() {}
+
+  /// @brief Called by RecoveryManagerNode every time it is deactivated. Default: nothing.
+  virtual void on_deactivate() {}
+
 protected:
+  /**
+   * @brief Whether update() is due in this cycle.
+   *
+   * Default: at "<plugin_name>.freq" on the node's clock (simulated time with use_sim_time, so
+   * the evaluator pauses with the simulation). Override it for an evaluator whose subject runs
+   * in wall time regardless of the simulation (e.g. the ROS graph itself).
+   */
+  virtual bool is_time_to_update() {return isTime2Run();}
+
   /**
    * @brief Reads nav_state and, if appropriate, calls publish_diagnostic() with the current
    * assessment. Must not write "cmd_vel" or any other actuation-related key.

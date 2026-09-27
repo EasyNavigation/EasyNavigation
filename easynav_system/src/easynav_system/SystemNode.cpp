@@ -228,6 +228,22 @@ SystemNode::on_deactivate(const rclcpp_lifecycle::State & state)
     }
   }
 
+  if (shutdown_requested_) {
+    // Leave the robot stopped: nothing will publish a velocity after this.
+    if (use_cmd_vel_stamped_ && vel_pub_stamped_) {
+      geometry_msgs::msg::TwistStamped stop;
+      stop.header.stamp = now();
+      stop.header.frame_id = RTTFBuffer::getInstance()->get_tf_info().robot_frame;
+      vel_pub_stamped_->publish(stop);
+    }
+    if (!use_cmd_vel_stamped_ && vel_pub_) {
+      vel_pub_->publish(geometry_msgs::msg::Twist());
+    }
+    // An unrecoverable error in Active: go through ErrorProcessing (on_error()), not back to
+    // Inactive as a normal deactivation would.
+    return CallbackReturnT::ERROR;
+  }
+
   return CallbackReturnT::SUCCESS;
 }
 
@@ -268,7 +284,42 @@ CallbackReturnT
 SystemNode::on_error(const rclcpp_lifecycle::State & state)
 {
   (void)state;
-  return CallbackReturnT::SUCCESS;
+
+  if (!shutdown_requested_) {
+    return CallbackReturnT::SUCCESS;
+  }
+
+  // The reason itself is in /diagnostics, the blackboard and system_main's final report.
+  RCLCPP_FATAL(get_logger(), "Unrecoverable error: finalizing EasyNav");
+
+  // No full cleanup is possible: shut every EasyNav node down and fail, so this node ends in
+  // Finalized, ready to be destroyed.
+  for (auto & system_node : get_system_nodes()) {
+    auto & node = system_node.second.node_ptr;
+    switch (node->get_current_state().id()) {
+      case lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE:
+        node->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_ACTIVE_SHUTDOWN);
+        break;
+      case lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE:
+        node->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_INACTIVE_SHUTDOWN);
+        break;
+      case lifecycle_msgs::msg::State::PRIMARY_STATE_UNCONFIGURED:
+        node->trigger_transition(
+          lifecycle_msgs::msg::Transition::TRANSITION_UNCONFIGURED_SHUTDOWN);
+        break;
+      default:
+        break;
+    }
+  }
+
+  return CallbackReturnT::FAILURE;
+}
+
+std::string
+SystemNode::get_shutdown_reason() const
+{
+  std::lock_guard<std::mutex> lock(shutdown_reason_mutex_);
+  return shutdown_reason_;
 }
 
 rclcpp::CallbackGroup::SharedPtr
@@ -342,6 +393,20 @@ SystemNode::system_cycle()
   localizer_node_->cycle(nav_state_);
   maps_manager_node_->cycle(nav_state_);
   goal_manager_->update(*nav_state_);
+
+  // Checked right after GoalManager so that, when the mitigation also asked to cancel the active
+  // mission (in the previous cycle), its client has already been told why.
+  if (!shutdown_requested_ && nav_state_->has("system_shutdown_requested") &&
+    nav_state_->get<bool>("system_shutdown_requested"))
+  {
+    {
+      std::lock_guard<std::mutex> lock(shutdown_reason_mutex_);
+      shutdown_reason_ = nav_state_->has("system_shutdown_reason") ?
+        nav_state_->get<std::string>("system_shutdown_reason") :
+        std::string("unrecoverable diagnostic");
+    }
+    shutdown_requested_ = true;
+  }
 
   rclcpp::Time planner_ts = planner_node_->get_last_execution_ts();
   rclcpp::Time goals_ts(goal_manager_->get_goals().header.stamp, planner_ts.get_clock_type());

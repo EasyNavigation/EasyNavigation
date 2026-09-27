@@ -14,7 +14,9 @@
 
 #include <csignal>
 #include <cstdint>
+#include <cstdio>
 #include <cstdlib>
+#include <optional>
 #include <string>
 #include <atomic>
 #include <thread>
@@ -62,6 +64,7 @@ int main(int argc, char ** argv)
   std::signal(SIGTERM, handle_shutdown_signal);
 
   std::thread rt_thread;
+  std::optional<std::string> shutdown_reason;
   {
     // Executors live in this scope and will be destroyed after join().
     rclcpp::executors::SingleThreadedExecutor exe_nort;
@@ -177,7 +180,7 @@ int main(int argc, char ** argv)
 
     // Non-RT loop
     rclcpp::WallRate rate(freq);
-    while (!g_stop.load(std::memory_order_relaxed)) {
+    while (!g_stop.load(std::memory_order_relaxed) && !system_node->is_shutdown_requested()) {
 
       if (system_node->get_current_state().id() ==
         lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE)
@@ -200,8 +203,35 @@ int main(int argc, char ** argv)
     if (rt_thread.joinable()) {
       rt_thread.join();
     }
+
+    // A recovery mitigation found an unrecoverable error while Active. As its supervisor,
+    // deactivate EasyNav: SystemNode turns that into the lifecycle's error path
+    // (Deactivating -> ErrorProcessing -> Finalized). Both loops are stopped, so no cycle runs
+    // concurrently with the transition.
+    if (system_node->is_shutdown_requested()) {
+      shutdown_reason = system_node->get_shutdown_reason();
+      system_node->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_DEACTIVATE);
+      if (system_node->get_current_state().id() !=
+        lifecycle_msgs::msg::State::PRIMARY_STATE_FINALIZED)
+      {
+        RCLCPP_ERROR(
+          system_node->get_logger(), "EasyNav did not reach Finalized (state: %s)",
+          system_node->get_current_state().label().c_str());
+      }
+    }
   }
 
   rclcpp::shutdown();
+
+  if (shutdown_reason.has_value()) {
+    // Last thing on the terminal, after every other node's shutdown logs.
+    std::fprintf(
+      stderr,
+      "\n==================== EasyNav terminated by recovery ====================\n"
+      "%s\n"
+      "=========================================================================\n",
+      shutdown_reason->c_str());
+    return 1;
+  }
   return 0;
 }
