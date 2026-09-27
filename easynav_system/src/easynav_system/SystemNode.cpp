@@ -224,6 +224,11 @@ SystemNode::on_deactivate(const rclcpp_lifecycle::State & state)
 {
   (void)state;
 
+  // No cycle runs outside Active, so nothing will command the robot until it is activated
+  // again: stop it now. Many drivers (and simulators) keep executing the last velocity they
+  // received, so without this the robot would keep moving, e.g. while plugins are switched.
+  stop_robot();
+
   for (auto & system_node : get_system_nodes()) {
     RCLCPP_INFO(get_logger(), "Deactivating [%s]", system_node.first.c_str());
     system_node.second.node_ptr->trigger_transition(
@@ -238,16 +243,6 @@ SystemNode::on_deactivate(const rclcpp_lifecycle::State & state)
   }
 
   if (shutdown_requested_) {
-    // Leave the robot stopped: nothing will publish a velocity after this.
-    if (use_cmd_vel_stamped_ && vel_pub_stamped_) {
-      geometry_msgs::msg::TwistStamped stop;
-      stop.header.stamp = now();
-      stop.header.frame_id = RTTFBuffer::getInstance()->get_tf_info().robot_frame;
-      vel_pub_stamped_->publish(stop);
-    }
-    if (!use_cmd_vel_stamped_ && vel_pub_) {
-      vel_pub_->publish(geometry_msgs::msg::Twist());
-    }
     // An unrecoverable error in Active: go through ErrorProcessing (on_error()), not back to
     // Inactive as a normal deactivation would.
     return CallbackReturnT::ERROR;
@@ -328,6 +323,25 @@ SystemNode::on_error(const rclcpp_lifecycle::State & state)
   }
 
   return CallbackReturnT::FAILURE;
+}
+
+void
+SystemNode::stop_robot()
+{
+  geometry_msgs::msg::TwistStamped stop;
+  stop.header.stamp = now();
+  stop.header.frame_id = RTTFBuffer::getInstance()->get_tf_info().robot_frame;
+
+  // Also in NavState, so the last command is not published again on reactivation before the
+  // controller computes a new one.
+  nav_state_->set("cmd_vel", stop);
+
+  if (use_cmd_vel_stamped_ && vel_pub_stamped_) {
+    vel_pub_stamped_->publish(stop);
+  }
+  if (!use_cmd_vel_stamped_ && vel_pub_) {
+    vel_pub_->publish(stop.twist);
+  }
 }
 
 std::string

@@ -93,6 +93,8 @@ public:
   /**
    * @brief Deactivate the node.
    *
+   * Stops the robot first (zero velocity): nothing commands it again until reactivation.
+   *
    * Returns ERROR, once every EasyNav node is deactivated, if a recovery mitigation requested
    * the shutdown: an unrecoverable error in Active leaves it through the lifecycle's error path
    * (ErrorProcessing, see on_error()), not as a normal deactivation.
@@ -212,6 +214,9 @@ private:
 
   /// @brief Publisher for velocity command (legacy Twist).
   rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr vel_pub_;
+
+  /// @brief Publishes (and stores in NavState) a zero velocity command.
+  void stop_robot();
 
   /// @brief Set from system_cycle() once a mitigation requests EasyNav to terminate.
   std::atomic<bool> shutdown_requested_ {false};

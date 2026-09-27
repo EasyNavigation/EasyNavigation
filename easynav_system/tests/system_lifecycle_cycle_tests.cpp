@@ -134,9 +134,12 @@ TEST_F(SystemLifecycleCycleTest, ActiveToUnconfiguredAndBackRepeatedly)
     nonzero_cmd.twist.angular.z = 0.5;
     nav_state->set("cmd_vel", nonzero_cmd);
 
+    // The stop command published on deactivation may still be in flight: wait for the new one.
     received.clear();
     auto start = listener_node->now();
-    while (listener_node->now() - start < 2s && received.empty()) {
+    while (listener_node->now() - start < 2s &&
+      (received.empty() || received.back().linear.x == 0.0))
+    {
       system_node->system_cycle();
       system_node->system_cycle_rt();
       exe.spin_some();
@@ -180,4 +183,56 @@ TEST_F(SystemLifecycleCycleTest, AllPrimaryTransitionsRepeatedly)
 
   ASSERT_NO_THROW(system_node->system_cycle());
   ASSERT_NO_THROW(system_node->system_cycle_rt());
+}
+
+TEST_F(SystemLifecycleCycleTest, DeactivationStopsTheRobot)
+{
+  // Drivers usually keep executing the last velocity received: deactivating EasyNav (e.g. to
+  // switch plugins mid-mission) must leave the robot commanded to stop.
+  auto system_node = std::make_shared<easynav::SystemNode>();
+  ASSERT_TRUE(expect_transition(
+    system_node, Transition::TRANSITION_CONFIGURE, State::PRIMARY_STATE_INACTIVE));
+  ASSERT_TRUE(expect_transition(
+    system_node, Transition::TRANSITION_ACTIVATE, State::PRIMARY_STATE_ACTIVE));
+
+  auto listener_node = rclcpp::Node::make_shared("cmd_vel_stop_listener");
+  std::vector<geometry_msgs::msg::Twist> received;
+  auto sub = listener_node->create_subscription<geometry_msgs::msg::Twist>(
+    "cmd_vel", 10,
+    [&received](geometry_msgs::msg::Twist::UniquePtr msg) {received.push_back(*msg);});
+  rclcpp::executors::SingleThreadedExecutor exe;
+  exe.add_node(listener_node);
+  auto start = listener_node->now();
+  while (listener_node->now() - start < 2s && sub->get_publisher_count() == 0) {
+    exe.spin_some();
+    rclcpp::sleep_for(10ms);
+  }
+  ASSERT_GT(sub->get_publisher_count(), 0u);
+
+  // Moving.
+  geometry_msgs::msg::TwistStamped moving;
+  moving.twist.linear.x = 0.5;
+  auto nav_state = system_node->get_nav_state();
+  nav_state->set("cmd_vel", moving);
+  start = listener_node->now();
+  while (listener_node->now() - start < 2s && received.empty()) {
+    system_node->system_cycle_rt();
+    exe.spin_some();
+    rclcpp::sleep_for(10ms);
+  }
+  ASSERT_FALSE(received.empty());
+  ASSERT_DOUBLE_EQ(received.back().linear.x, 0.5);
+
+  received.clear();
+  ASSERT_TRUE(expect_transition(
+    system_node, Transition::TRANSITION_DEACTIVATE, State::PRIMARY_STATE_INACTIVE));
+  start = listener_node->now();
+  while (listener_node->now() - start < 2s && received.empty()) {
+    exe.spin_some();
+    rclcpp::sleep_for(10ms);
+  }
+  ASSERT_FALSE(received.empty()) << "no stop command on deactivation";
+  EXPECT_DOUBLE_EQ(received.back().linear.x, 0.0);
+  EXPECT_DOUBLE_EQ(received.back().angular.z, 0.0);
+  EXPECT_DOUBLE_EQ(nav_state->get<geometry_msgs::msg::TwistStamped>("cmd_vel").twist.linear.x, 0.0);
 }
