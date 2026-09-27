@@ -18,6 +18,7 @@
 #include <algorithm>
 #include <utility>
 
+#include "diagnostic_msgs/msg/diagnostic_array.hpp"
 #include "diagnostic_msgs/msg/diagnostic_status.hpp"
 #include "lifecycle_msgs/msg/transition.hpp"
 #include "lifecycle_msgs/msg/state.hpp"
@@ -34,6 +35,12 @@ RecoveryManagerNode::RecoveryManagerNode(const rclcpp::NodeOptions & options)
     "easynav_core", "easynav::RecoveryEvaluatorBase");
   mitigation_loader_ = std::make_unique<pluginlib::ClassLoader<easynav::RecoveryMitigationBase>>(
     "easynav_core", "easynav::RecoveryMitigationBase");
+
+  // Standard ROS 2 diagnostics topic, so existing tooling (rqt_robot_monitor,
+  // diagnostic_aggregator, ...) can consume what used to live only inside NavState's internal
+  // "diagnostics" group. See docs/recoveries_easynav.md §5.5 and
+  // docs/recoveries_easynav_implementation.md, Fase 5.
+  diagnostics_pub_ = create_publisher<diagnostic_msgs::msg::DiagnosticArray>("diagnostics", 10);
 
   NavState::register_printer<diagnostic_msgs::msg::DiagnosticStatus>(
     [](const diagnostic_msgs::msg::DiagnosticStatus & status) {
@@ -265,10 +272,32 @@ RecoveryManagerNode::cycle(std::shared_ptr<NavState> nav_state)
         active_mitigation_.reset();
       }
     }
+  } else {
+    try_select_mitigation(*nav_state);
+  }
+
+  publish_diagnostics(*nav_state);
+}
+
+void
+RecoveryManagerNode::publish_diagnostics(NavState & nav_state)
+{
+  if (diagnostics_pub_->get_subscription_count() == 0) {
     return;
   }
 
-  try_select_mitigation(*nav_state);
+  diagnostic_msgs::msg::DiagnosticArray array;
+  array.header.stamp = now();
+
+  for (const auto & key : nav_state.get_group_keys("diagnostics")) {
+    if (!nav_state.has(key)) {continue;}
+    // Some entries (e.g. a SafetyReflexBase's) are written from the RT cycle; this runs on
+    // the non-RT cycle, so get_safe() (a snapshot copy) is required here, not get(). See
+    // NavState's own get()/get_safe() guidance.
+    array.status.push_back(nav_state.get_safe<diagnostic_msgs::msg::DiagnosticStatus>(key));
+  }
+
+  diagnostics_pub_->publish(array);
 }
 
 bool
