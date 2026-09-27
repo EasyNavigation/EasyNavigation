@@ -18,7 +18,14 @@
 #ifndef EASYNAV_CONTROLLER__COLLISIONSAFETYREFLEX_HPP_
 #define EASYNAV_CONTROLLER__COLLISIONSAFETYREFLEX_HPP_
 
-#include "easynav_core/CollisionChecker.hpp"
+#include <string>
+#include <vector>
+
+#include "visualization_msgs/msg/marker_array.hpp"
+
+#include "pcl/point_cloud.h"
+#include "pcl/point_types.h"
+
 #include "easynav_core/SafetyReflexBase.hpp"
 
 namespace easynav
@@ -32,9 +39,8 @@ namespace easynav
  * published, regardless of whether it was produced by the active controller or by a movement
  * recovery mitigator. See docs/recoveries_easynav.md, level 0.
  *
- * This is the same forward-projection check historically built into ControllerMethodBase
- * (still available there, opt-in, for backward compatibility); both share the
- * CollisionChecker implementation so the safety-critical geometry exists only once.
+ * Forward-projects the commanded "cmd_vel" against nearby point-cloud perceptions to decide
+ * whether continuing would cause a collision within the current braking distance.
  */
 class CollisionSafetyReflex : public SafetyReflexBase
 {
@@ -49,7 +55,23 @@ protected:
   void mitigate(NavState & nav_state) override;
 
 private:
-  CollisionChecker collision_checker_;
+  void publish_collision_zone_marker(
+    const std::vector<double> & min,
+    const std::vector<double> & max,
+    const pcl::PointCloud<pcl::PointXYZ> & cloud,
+    bool imminent_collision,
+    const rclcpp::Time & stamp);
+
+  bool debug_markers_{false};
+  double robot_radius_{0.35};
+  double robot_height_{0.5};
+  double z_min_filter_{0.0};
+  double brake_acc_{0.5};
+  double safety_margin_{0.1};
+  double downsample_leaf_size_{0.1};
+
+  rclcpp::Time collision_stamp_;
+  rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr collision_marker_pub_;
 };
 
 }  // namespace easynav

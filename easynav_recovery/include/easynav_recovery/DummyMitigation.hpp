@@ -27,10 +27,10 @@ namespace easynav
  * @class DummyMitigation
  * @brief A default "dummy" implementation for RecoveryMitigationBase.
  *
- * Accepts any non-OK diagnostic and immediately reports SUCCEEDED, without touching the robot
- * unless configured to require control. It serves as an example, a reference no-op plugin, and
- * a real, always-loadable mitigation for tests that need one without pulling in a specific
- * mitigation's dependencies.
+ * Accepts any non-OK diagnostic and immediately reports SUCCEEDED (or FAILED, if configured
+ * to), without touching the robot unless configured to require control. It serves as an
+ * example, a reference no-op plugin, and a real, always-loadable mitigation for tests that need
+ * one without pulling in a specific mitigation's dependencies.
  */
 class DummyMitigation : public easynav::RecoveryMitigationBase
 {
@@ -48,6 +48,10 @@ protected:
 
 private:
   bool requires_control_ {false};
+
+  /// @brief If true, on_cycle() reports FAILED instead of SUCCEEDED. For tests exercising
+  /// RecoveryManagerNode's exclusion-on-FAILED behavior.
+  bool should_fail_ {false};
 };
 
 }  // namespace easynav

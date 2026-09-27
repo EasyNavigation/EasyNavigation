@@ -15,6 +15,9 @@
 /// \file
 /// \brief Implementation of the RecoveryManagerNode class.
 
+#include <algorithm>
+#include <utility>
+
 #include "diagnostic_msgs/msg/diagnostic_status.hpp"
 #include "lifecycle_msgs/msg/transition.hpp"
 #include "lifecycle_msgs/msg/state.hpp"
@@ -87,7 +90,7 @@ RecoveryManagerNode::~RecoveryManagerNode()
 
   active_mitigation_.reset();
   mitigations_.clear();
-  attempt_counts_.clear();
+  excluded_mitigations_.clear();
   std::vector<std::string> mitigation_types;
   get_parameter("mitigation_types", mitigation_types);
   for (const auto & mitigation_type : mitigation_types) {
@@ -144,20 +147,28 @@ RecoveryManagerNode::on_configure([[maybe_unused]] const rclcpp_lifecycle::State
     }
   }
 
-  declare_parameter("max_attempts_per_mitigation", max_attempts_per_mitigation_);
-  get_parameter("max_attempts_per_mitigation", max_attempts_per_mitigation_);
-
   std::vector<std::string> mitigation_types;
   declare_parameter("mitigation_types", mitigation_types);
   get_parameter("mitigation_types", mitigation_types);
 
   active_mitigation_.reset();
   mitigations_.clear();
-  attempt_counts_.clear();
+  excluded_mitigations_.clear();
+
+  // (priority, plugin) pairs, sorted below before becoming mitigations_ — see the class doc
+  // comment. Declared/read here, per mitigation instance, rather than as a property of
+  // RecoveryMitigationBase itself: priority is an arbitration detail this manager owns, not
+  // something a mitigation plugin needs to know about itself.
+  std::vector<std::pair<int, std::shared_ptr<RecoveryMitigationBase>>> loaded_mitigations;
+
   for (const auto & mitigation_type : mitigation_types) {
     std::string plugin;
     declare_parameter(mitigation_type + std::string(".plugin"), plugin);
     get_parameter(mitigation_type + std::string(".plugin"), plugin);
+
+    int priority = 100;
+    declare_parameter(mitigation_type + std::string(".priority"), priority);
+    get_parameter(mitigation_type + std::string(".priority"), priority);
 
     try {
       RCLCPP_INFO(
@@ -174,16 +185,27 @@ RecoveryManagerNode::on_configure([[maybe_unused]] const rclcpp_lifecycle::State
         return CallbackReturnT::FAILURE;
       }
 
-      mitigations_.push_back(mitigation);
+      loaded_mitigations.emplace_back(priority, mitigation);
       RCLCPP_INFO(
-        get_logger(), "Loaded RecoveryMitigationBase %s [%s]", mitigation_type.c_str(),
-        plugin.c_str());
+        get_logger(), "Loaded RecoveryMitigationBase %s [%s] (priority %d)",
+        mitigation_type.c_str(), plugin.c_str(), priority);
     } catch (pluginlib::PluginlibException & ex) {
       RCLCPP_ERROR(
         get_logger(), "Unable to load plugin easynav::RecoveryMitigationBase. Error: %s",
         ex.what());
       return CallbackReturnT::FAILURE;
     }
+  }
+
+  // Lower priority number = tried first. stable_sort keeps mitigation_types order as the
+  // tie-break, so leaving "priority" unset everywhere reproduces today's list-order behavior
+  // exactly. try_select_mitigation() itself does not need to change: it already picks the
+  // first non-excluded candidate in mitigations_ order.
+  std::stable_sort(
+    loaded_mitigations.begin(), loaded_mitigations.end(),
+    [](const auto & a, const auto & b) {return a.first < b.first;});
+  for (auto & [priority, mitigation] : loaded_mitigations) {
+    mitigations_.push_back(mitigation);
   }
 
   return CallbackReturnT::SUCCESS;
@@ -235,6 +257,10 @@ RecoveryManagerNode::cycle(std::shared_ptr<NavState> nav_state)
     if (!active_mitigation_->requires_control()) {
       RecoveryStatus status = active_mitigation_->internal_cycle(*nav_state);
       if (status != RecoveryStatus::RUNNING) {
+        if (status == RecoveryStatus::FAILED) {
+          excluded_mitigations_[active_diagnostic_key_].insert(
+            active_mitigation_->get_plugin_name());
+        }
         active_mitigation_->internal_stop(*nav_state);
         active_mitigation_.reset();
       }
@@ -254,6 +280,9 @@ RecoveryManagerNode::cycle_rt(std::shared_ptr<NavState> nav_state)
 
   RecoveryStatus status = active_mitigation_->internal_cycle(*nav_state);
   if (status != RecoveryStatus::RUNNING) {
+    if (status == RecoveryStatus::FAILED) {
+      excluded_mitigations_[active_diagnostic_key_].insert(active_mitigation_->get_plugin_name());
+    }
     active_mitigation_->internal_stop(*nav_state);
     active_mitigation_.reset();
     nav_state->set("control_owner", std::string("controller"));
@@ -275,32 +304,28 @@ RecoveryManagerNode::try_select_mitigation(NavState & nav_state)
     }
     const auto & status = nav_state.get<diagnostic_msgs::msg::DiagnosticStatus>(key);
     if (status.level == diagnostic_msgs::msg::DiagnosticStatus::OK) {
-      // Resolved: forget how many mitigations have already had a turn for it, so the next
-      // time this diagnostic reappears, escalation starts from the first candidate again.
-      attempt_counts_.erase(key);
+      // Resolved: forget which mitigations were already excluded for it, so a future
+      // recurrence of this diagnostic starts escalation from the first candidate again.
+      excluded_mitigations_.erase(key);
       continue;
     }
 
-    auto & counts_for_key = attempt_counts_[key];
+    const auto & excluded_for_key = excluded_mitigations_[key];
     for (auto & mitigation : mitigations_) {
       if (!mitigation->can_handle(status)) {
         continue;
       }
-
-      const auto & name = mitigation->get_plugin_name();
-      if (counts_for_key[name] >= max_attempts_per_mitigation_) {
-        // Already had its turn(s) for this occurrence of this diagnostic: let the next
-        // applicable candidate in mitigation_types order try instead. See the class doc
-        // comment and docs/recoveries_easynav_implementation.md, Fase 4.
+      if (excluded_for_key.count(mitigation->get_plugin_name()) > 0) {
+        // Already gave up on this diagnostic: let the next applicable candidate try instead.
         continue;
       }
-      ++counts_for_key[name];
 
       RCLCPP_INFO(
-        get_logger(), "Selecting mitigation [%s] for diagnostic [%s] (attempt %d/%d)",
-        name.c_str(), key.c_str(), counts_for_key[name], max_attempts_per_mitigation_);
+        get_logger(), "Selecting mitigation [%s] for diagnostic [%s]",
+        mitigation->get_plugin_name().c_str(), key.c_str());
 
       active_mitigation_ = mitigation;
+      active_diagnostic_key_ = key;
       active_mitigation_->internal_start(nav_state);
       if (active_mitigation_->requires_control()) {
         nav_state.set(

@@ -27,6 +27,9 @@ void DummyMitigation::on_initialize()
 
   node->declare_parameter<bool>(plugin_name + ".requires_control", requires_control_);
   node->get_parameter<bool>(plugin_name + ".requires_control", requires_control_);
+
+  node->declare_parameter<bool>(plugin_name + ".should_fail", should_fail_);
+  node->get_parameter<bool>(plugin_name + ".should_fail", should_fail_);
 }
 
 bool DummyMitigation::can_handle(const diagnostic_msgs::msg::DiagnosticStatus & status) const
@@ -36,7 +39,7 @@ bool DummyMitigation::can_handle(const diagnostic_msgs::msg::DiagnosticStatus & 
 
 RecoveryStatus DummyMitigation::on_cycle(NavState &)
 {
-  return RecoveryStatus::SUCCEEDED;
+  return should_fail_ ? RecoveryStatus::FAILED : RecoveryStatus::SUCCEEDED;
 }
 
 }  // namespace easynav

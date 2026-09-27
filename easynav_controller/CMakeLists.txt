@@ -10,9 +10,12 @@ find_package(rclcpp REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
 find_package(easynav_core REQUIRED)
 find_package(easynav_common REQUIRED)
+find_package(easynav_sensors REQUIRED)
 find_package(pluginlib REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(lifecycle_msgs REQUIRED)
+find_package(visualization_msgs REQUIRED)
+find_package(PCL REQUIRED COMPONENTS common io)
 
 
 add_library(${PROJECT_NAME} SHARED
@@ -51,10 +54,14 @@ add_library(collision_safety_reflex SHARED
 target_include_directories(collision_safety_reflex PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include/${PROJECT_NAME}>
+  ${PCL_INCLUDE_DIRS}
 )
 target_link_libraries(collision_safety_reflex PUBLIC
   easynav_core::easynav_core
+  easynav_sensors::easynav_sensors
   pluginlib::pluginlib
+  ${visualization_msgs_TARGETS}
+  ${PCL_LIBRARIES}
 )
 
 install(
@@ -99,8 +106,11 @@ ament_export_dependencies(
   rclcpp_lifecycle
   easynav_core
   easynav_common
+  easynav_sensors
   pluginlib
   geometry_msgs
   lifecycle_msgs
+  visualization_msgs
+  PCL
 )
 ament_package()
