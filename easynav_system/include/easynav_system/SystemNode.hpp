@@ -24,8 +24,6 @@
 #include "rclcpp/macros.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 
-#include "geometry_msgs/msg/twist.hpp"
-#include "geometry_msgs/msg/twist_stamped.hpp"
 #include "std_msgs/msg/string.hpp"
 
 #include "easynav_common/types/NavState.hpp"
@@ -88,8 +86,6 @@ public:
 
   /**
    * @brief Deactivate the node.
-   *
-   * Stops the robot first (zero velocity): nothing commands it again until reactivation.
    *
    * Returns ERROR, once every EasyNav node is deactivated, if a recovery mitigation requested
    * the shutdown: an unrecoverable error in Active leaves it through the lifecycle's error path
@@ -196,20 +192,8 @@ private:
   GoalManager::SharedPtr goal_manager_;
 
 
-  /// @brief Wheter publish stamped or unstamped speed
-  bool use_cmd_vel_stamped_ {false};
-
   /// @brief Publisher for nav_state as string.
   rclcpp::Publisher<std_msgs::msg::String>::SharedPtr navstate_pub_;
-
-  /// @brief Publisher for velocity command (stamped).
-  rclcpp::Publisher<geometry_msgs::msg::TwistStamped>::SharedPtr vel_pub_stamped_;
-
-  /// @brief Publisher for velocity command (legacy Twist).
-  rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr vel_pub_;
-
-  /// @brief Publishes (and stores in NavState) a zero velocity command.
-  void stop_robot();
 
 };
 

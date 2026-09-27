@@ -19,10 +19,18 @@
 #define EASYNAV_CONTROLLER__CONTROLLERNODE_HPP_
 
 #include <memory>
+#include <mutex>
+#include <optional>
 #include <string>
 
+#include "geometry_msgs/msg/twist.hpp"
+#include "geometry_msgs/msg/twist_stamped.hpp"
+
+#include "easynav_controller/VelocityMux.hpp"
+#include "easynav_controller/VelocitySmoother.hpp"
 #include "easynav_core/ControllerMethodBase.hpp"
 #include "easynav_core/PluginSwitcher.hpp"
+#include "easynav_core/RobotLimits.hpp"
 #include "rclcpp/macros.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 
@@ -38,9 +46,18 @@ namespace easynav
  *
  * This node provides the interface between the controller module in EasyNav and the ROS 2 ecosystem.
  * It handles lifecycle transitions, real-time scheduling of periodic tasks, and parameter setup.
+ *
+ * It is also the single point where the velocity command leaves EasyNav:
+ * - it owns the robot limits ("robot_limits.*"), which the controller plugins query through
+ *   ControllerMethodBase::get_robot_limits() (this node is their RobotLimitsProvider);
+ * - every RT cycle, publish_cmd_vel_rt() selects the command (VelocityMux: reflex > recovery >
+ *   pause > controller), smooths it within the robot limits (VelocitySmoother, except a reflex
+ *   override) and publishes it on "cmd_vel" (or "cmd_vel_stamped", see "use_cmd_vel_stamped");
+ * - on deactivation or shutdown, it brakes within the deceleration limits and always ends by
+ *   publishing an exact zero.
  */
 
-class ControllerNode : public rclcpp_lifecycle::LifecycleNode
+class ControllerNode : public rclcpp_lifecycle::LifecycleNode, public RobotLimitsProvider
 {
 public:
   RCLCPP_SMART_PTR_DEFINITIONS(ControllerNode)
@@ -133,6 +150,20 @@ public:
   bool cycle_rt(std::shared_ptr<NavState> nav_state, bool trigger = false);
 
   /**
+   * @brief Selects, smooths and publishes this RT cycle's velocity command.
+   *
+   * Runs after every source proposed its command (controller in cycle_rt(), recovery and
+   * reflexes in RecoveryManagerNode::cycle_rt()). Publishes when a new command was proposed, or
+   * while the smoother is still ramping towards the last one.
+   *
+   * @param nav_state Shared pointer to the navigation state structure.
+   */
+  void publish_cmd_vel_rt(std::shared_ptr<NavState> nav_state);
+
+  /// @brief Robot limits, as configured ("robot_limits.*", read on every configure).
+  RobotLimits get_robot_limits() const override;
+
+  /**
    * @brief Alias of the loaded controller (its "controller_types" entry).
    * @return The alias, or an empty string if no controller is loaded.
    */
@@ -159,6 +190,28 @@ private:
    * This is the current state of the navigation system.
    */
   const std::shared_ptr<const NavState> nav_state_;
+
+  /// @brief Reads "robot_limits.*" and "use_cmd_vel_stamped".
+  void read_parameters();
+
+  /// @brief Publishes \p cmd on the configured velocity topic.
+  void publish(const geometry_msgs::msg::TwistStamped & cmd);
+
+  /// @brief Brakes within the deceleration limits and ends by publishing an exact zero.
+  void stop_robot();
+
+  RobotLimits robot_limits_;
+  mutable std::mutex robot_limits_mutex_;
+
+  bool use_cmd_vel_stamped_ {false};
+  rclcpp::Publisher<geometry_msgs::msg::TwistStamped>::SharedPtr vel_pub_stamped_;
+  rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr vel_pub_;
+
+  VelocityMux mux_;
+  VelocitySmoother smoother_;
+
+  /// @brief When the smoother last stepped (node clock), to know how much time it covers.
+  std::optional<rclcpp::Time> last_smoother_step_;
 };
 
 }  // namespace easynav

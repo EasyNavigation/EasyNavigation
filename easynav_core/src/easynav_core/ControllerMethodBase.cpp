@@ -24,6 +24,13 @@
 namespace easynav
 {
 
+RobotLimits
+ControllerMethodBase::get_robot_limits() const
+{
+  auto provider = std::dynamic_pointer_cast<RobotLimitsProvider>(get_node());
+  return provider ? provider->get_robot_limits() : RobotLimits{};
+}
+
 bool
 ControllerMethodBase::internal_update_rt(NavState & nav_state, bool trigger)
 {

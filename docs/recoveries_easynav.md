@@ -270,7 +270,8 @@ pieces EasyNav already had.
   that owns `SensorsNode`, `LocalizerNode`, `MapsManagerNode`, `PlannerNode`, `ControllerNode` and
   now `RecoveryManagerNode`, all also `LifecycleNode`s, orchestrated in two manual loops
   (`SystemNode::system_cycle_rt()` and `SystemNode::system_cycle()`): an RT loop at `rt_freq`
-  (`sensors→localizer→controller/recovery→safety reflexes→publish cmd_vel`) and a non-RT loop at
+  (`sensors→localizer→controller→recovery (mitigation, safety reflexes)→ControllerNode's velocity
+  output: mux→smoother→publish cmd_vel`) and a non-RT loop at
   `freq` (`sensors→localizer→maps_manager→goal_manager→planner→recovery evaluation`). This matches
   the project's own long-standing requirement that the system be *"well synchronized, with
   real-time and non-real-time parts, all in one process"* — recovery evaluation lives in this same
@@ -401,9 +402,9 @@ from `"system_node"`) owned and lifecycle-managed by `SystemNode` exactly like t
 subsystems. It centralizes all the recovery logic, so `SystemNode` only calls into it:
 - non-RT, `cycle()` from `SystemNode::system_cycle()`: evaluation, mitigation selection and
   arbitration, and latching a shutdown request (`is_shutdown_requested()`, §5.8.1);
-- RT, from `SystemNode::system_cycle_rt()`: `has_control()` tells whether the nominal controller
-  may run this cycle, and `cycle_rt()` then runs the active control-owning mitigation (if any)
-  and every level-0 safety reflex;
+- RT, `cycle_rt()` from `SystemNode::system_cycle_rt()`: runs the active control-owning
+  mitigation (if any), which proposes its velocity command, and every level-0 safety reflex,
+  which may override the command about to be sent (§5.7);
 - across a `cleanup`, it gives control back to the controller and drops stale diagnostics itself.
 
 The name deliberately avoids `RecoveryNode`, to not collide
@@ -537,13 +538,17 @@ protected:
    Default/absent value: `"controller"`.
 2. When `RecoveryManagerNode` selects a mitigation with `requires_control() == true`, it calls
    `on_start()` and sets `nav_state.set("control_owner", "recovery:<name>")`.
-3. In `SystemNode::system_cycle_rt()`, `recovery_node_->has_control()` decides: if recovery does
-   not hold control, the RT cycle calls `controller_node_->cycle_rt(...)` as usual. Then it always
-   calls `recovery_node_->cycle_rt(...)`, which runs the active control-owning mitigation's
-   `internal_cycle()` (if any), writing its result to the same `"cmd_vel"` key `SystemNode`
-   publishes at the end of the cycle — the publication point is not duplicated, only who writes
-   that key changes — and then every loaded `SafetyReflexBase` (§5.2), whoever wrote it.
-   `SystemNode` never reads `control_owner` itself.
+3. Every source proposes its velocity command in its own `NavState` slot
+   (`easynav_core/VelocityCommand.hpp`), nobody overwrites anybody else's: the controller
+   (`ControllerNode::cycle_rt()` proposes what the plugin wrote to `"cmd_vel"`), the active
+   control-owning mitigation (`RecoveryMitigationBase::command_velocity()`), and the safety
+   reflexes (`SafetyReflexBase::override_velocity()`/`stop_robot()`, which check the command
+   about to be sent, `commanded_velocity()`). Then `ControllerNode::publish_cmd_vel_rt()`, the
+   single point where velocity leaves EasyNav, arbitrates with `VelocityMux` — reflex > recovery
+   > pause (zero) > controller —, smooths the result within the robot limits with
+   `VelocitySmoother` (a reflex override is published as is: an emergency may need more
+   deceleration than the nominal limits) and publishes it. `SystemNode` only chains the calls; it
+   never reads `control_owner` or any command itself.
 4. When `on_cycle()` returns `SUCCEEDED` or `FAILED`, `RecoveryManagerNode` calls `on_stop()` and
    restores `control_owner = "controller"`; the nominal controller regains control the next RT
    cycle.
@@ -674,9 +679,9 @@ person suddenly steps into the robot's way, close by.
    and `SafeRetreatRecovery` is the highest-priority mitigation whose `can_handle()` accepts
    `hardware_id == "obstacle_proximity"`. It calls `on_start()`, which sets `control_owner =
    "recovery:retreat"`.
-4. **[Level 0, RT, every cycle while recovery holds control]** `recovery_node_->has_control()`
-   keeps the nominal controller from running, and `recovery_node_->cycle_rt()` calls
-   `SafeRetreatRecovery::on_cycle()`; it commands a slow backward `cmd_vel`. That candidate passes through the same
+4. **[Level 0, RT, every cycle while recovery holds control]** `recovery_node_->cycle_rt()` calls
+   `SafeRetreatRecovery::on_cycle()`, which proposes a slow backward command; `VelocityMux`
+   prefers it over the nominal controller's. That candidate passes through the same
    `CollisionSafetyReflex` gate as the nominal controller's output — if another obstacle appeared
    behind the robot while retreating, the reflex would intervene again. Meanwhile,
    `ControllerStuckEvaluator` checks `control_owner` before evaluating (§5.6), so the lack of

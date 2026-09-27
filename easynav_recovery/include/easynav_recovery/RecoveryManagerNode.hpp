@@ -140,23 +140,17 @@ public:
   void cycle(std::shared_ptr<NavState> nav_state);
 
   /**
-   * @brief Whether recovery holds control of the robot this RT cycle, i.e. a control-owning
-   * mitigation is active and the nominal controller must not run.
+   * @brief Runs one RT cycle, after the nominal controller proposed its command:
+   *
+   * 1. If a control-owning mitigation is active, its internal_cycle(): it proposes its own
+   *    command, which ControllerNode's VelocityMux prefers over the controller's. On
+   *    SUCCEEDED/FAILED, stops it and gives control back to the controller.
+   * 2. Every level-0 safety reflex, against the command about to be sent; an intervention
+   *    overrides it.
    *
    * @param nav_state Shared navigation state.
-   */
-  [[nodiscard]] bool has_control(NavState & nav_state);
-
-  /**
-   * @brief Runs one RT cycle, after the nominal controller (if it ran):
-   *
-   * 1. If a control-owning mitigation is active, its internal_cycle() (it produces "cmd_vel").
-   *    On SUCCEEDED/FAILED, stops it and gives control back to the controller.
-   * 2. Every level-0 safety reflex, whoever produced "cmd_vel" this cycle.
-   *
-   * @param nav_state Shared navigation state.
-   * @return True if recovery produced or overrode "cmd_vel" this cycle (a control-owning
-   * mitigation ran, or a reflex intervened), so it must be published.
+   * @return True if recovery commanded the robot this cycle (a control-owning mitigation ran, or
+   * a reflex intervened).
    */
   bool cycle_rt(std::shared_ptr<NavState> nav_state);
 

@@ -26,6 +26,7 @@
 
 #include "easynav_common/types/NavState.hpp"
 #include "easynav_core/MethodBase.hpp"
+#include "easynav_core/VelocityCommand.hpp"
 
 namespace easynav
 {
@@ -108,7 +109,16 @@ protected:
   /// @brief Hook for cleanup when this mitigation stops.
   virtual void on_stop([[maybe_unused]] NavState & nav_state) {}
 
-  /// @brief Fail-safe default: writes a zero-velocity TwistStamped to "cmd_vel". Available to
+  /**
+   * @brief Proposes \p cmd as this cycle's velocity command of a control-owning mitigation.
+   *
+   * Movement mitigations must command the robot through this, not by writing "cmd_vel": the
+   * proposal takes priority over the nominal controller's, and is smoothed and published by
+   * ControllerNode (see VelocityMux).
+   */
+  void command_velocity(NavState & nav_state, const geometry_msgs::msg::TwistStamped & cmd);
+
+  /// @brief Fail-safe default: proposes a zero velocity (see command_velocity()). Available to
   /// movement mitigations for their SUCCEEDED/FAILED exit paths.
   void stop_robot(NavState & nav_state);
 

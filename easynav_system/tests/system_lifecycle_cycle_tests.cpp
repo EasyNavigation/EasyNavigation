@@ -49,6 +49,14 @@ protected:
         "-p", "dummy_planner.plugin:=easynav_planner/DummyPlanner",
         "-p", "map_types:=['dummy_map']",
         "-p", "dummy_map.plugin:=easynav_maps_manager/DummyMapsManager",
+        // Limits high enough that the velocity smoother does not get in the way.
+        "-p", "robot_limits.max_linear_vel:=10.0",
+        "-p", "robot_limits.min_linear_vel:=-10.0",
+        "-p", "robot_limits.max_angular_vel:=10.0",
+        "-p", "robot_limits.max_linear_acc:=1000.0",
+        "-p", "robot_limits.max_linear_decel:=1000.0",
+        "-p", "robot_limits.max_angular_acc:=1000.0",
+        "-p", "robot_limits.max_angular_decel:=1000.0",
       };
       rclcpp::init(static_cast<int>(argv.size()), argv.data());
       initialized_ = true;
@@ -138,7 +146,7 @@ TEST_F(SystemLifecycleCycleTest, ActiveToUnconfiguredAndBackRepeatedly)
     received.clear();
     auto start = listener_node->now();
     while (listener_node->now() - start < 2s &&
-      (received.empty() || received.back().linear.x == 0.0))
+      (received.empty() || received.back().linear.x != 1.5 + cycle))
     {
       system_node->system_cycle();
       system_node->system_cycle_rt();
@@ -215,7 +223,9 @@ TEST_F(SystemLifecycleCycleTest, DeactivationStopsTheRobot)
   auto nav_state = system_node->get_nav_state();
   nav_state->set("cmd_vel", moving);
   start = listener_node->now();
-  while (listener_node->now() - start < 2s && received.empty()) {
+  while (listener_node->now() - start < 2s &&
+    (received.empty() || received.back().linear.x != 0.5))
+  {
     system_node->system_cycle_rt();
     exe.spin_some();
     rclcpp::sleep_for(10ms);
@@ -226,13 +236,13 @@ TEST_F(SystemLifecycleCycleTest, DeactivationStopsTheRobot)
   received.clear();
   ASSERT_TRUE(expect_transition(
     system_node, Transition::TRANSITION_DEACTIVATE, State::PRIMARY_STATE_INACTIVE));
+  // Deactivation brakes in a ramp and ends with an exact zero: collect it all.
   start = listener_node->now();
-  while (listener_node->now() - start < 2s && received.empty()) {
+  while (listener_node->now() - start < 500ms) {
     exe.spin_some();
     rclcpp::sleep_for(10ms);
   }
   ASSERT_FALSE(received.empty()) << "no stop command on deactivation";
   EXPECT_DOUBLE_EQ(received.back().linear.x, 0.0);
   EXPECT_DOUBLE_EQ(received.back().angular.z, 0.0);
-  EXPECT_DOUBLE_EQ(nav_state->get<geometry_msgs::msg::TwistStamped>("cmd_vel").twist.linear.x, 0.0);
 }

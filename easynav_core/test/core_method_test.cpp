@@ -32,6 +32,7 @@
 #include "easynav_core/SafetyReflexBase.hpp"
 #include "easynav_core/RecoveryEvaluatorBase.hpp"
 #include "easynav_core/RecoveryMitigationBase.hpp"
+#include "easynav_core/VelocityCommand.hpp"
 
 class CoreMethodTestCase : public ::testing::Test
 {
@@ -795,8 +796,11 @@ TEST_F(CoreMethodTestCase, ReflexFailsSafeWhenCheckThrows)
   EXPECT_NO_THROW(result = reflex.internal_check_and_mitigate(nav_state));
 
   EXPECT_TRUE(result);
-  ASSERT_TRUE(nav_state.has("cmd_vel"));
-  const auto & applied = nav_state.get<geometry_msgs::msg::TwistStamped>("cmd_vel");
+  // Fail-safe: the reflex overrides the command with a zero velocity.
+  const auto override_cmd =
+    easynav::velocity_command::peek(nav_state, easynav::VelocitySource::REFLEX);
+  ASSERT_TRUE(override_cmd.has_value());
+  const auto & applied = *override_cmd;
   EXPECT_DOUBLE_EQ(applied.twist.linear.x, 0.0);
   EXPECT_DOUBLE_EQ(applied.twist.angular.z, 0.0);
 }
@@ -813,8 +817,11 @@ TEST_F(CoreMethodTestCase, ReflexFailsSafeWhenMitigateThrows)
   EXPECT_NO_THROW(result = reflex.internal_check_and_mitigate(nav_state));
 
   EXPECT_TRUE(result);
-  ASSERT_TRUE(nav_state.has("cmd_vel"));
-  const auto & applied = nav_state.get<geometry_msgs::msg::TwistStamped>("cmd_vel");
+  // Fail-safe: the reflex overrides the command with a zero velocity.
+  const auto override_cmd =
+    easynav::velocity_command::peek(nav_state, easynav::VelocitySource::REFLEX);
+  ASSERT_TRUE(override_cmd.has_value());
+  const auto & applied = *override_cmd;
   EXPECT_DOUBLE_EQ(applied.twist.linear.x, 0.0);
 }
 
@@ -1063,8 +1070,11 @@ TEST_F(CoreMethodTestCase, MitigationCycleExceptionFailsSafe)
   EXPECT_NO_THROW(status = mit.internal_cycle(nav_state));
 
   EXPECT_EQ(status, easynav::RecoveryStatus::FAILED);
-  ASSERT_TRUE(nav_state.has("cmd_vel"));
-  const auto & applied = nav_state.get<geometry_msgs::msg::TwistStamped>("cmd_vel");
+  // Fail-safe: the mitigation proposes a zero velocity.
+  const auto proposed =
+    easynav::velocity_command::peek(nav_state, easynav::VelocitySource::RECOVERY);
+  ASSERT_TRUE(proposed.has_value());
+  const auto & applied = *proposed;
   EXPECT_DOUBLE_EQ(applied.twist.linear.x, 0.0);
 }
 

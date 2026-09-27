@@ -27,6 +27,7 @@
 #include "geometry_msgs/msg/twist_stamped.hpp"
 #include "rclcpp/rclcpp.hpp"
 
+#include "easynav_core/VelocityCommand.hpp"
 #include "easynav_recovery/RecoveryManagerNode.hpp"
 
 using lifecycle_msgs::msg::State;
@@ -98,19 +99,6 @@ TEST_F(RecoveryManagerReflexTest, ReflexesSurviveReconfiguration)
   EXPECT_EQ(node->get_num_safety_reflexes(), 1u);
 }
 
-TEST_F(RecoveryManagerReflexTest, ControllerHasControlByDefault)
-{
-  auto node = std::make_shared<easynav::RecoveryManagerNode>();
-  node->trigger_transition(Transition::TRANSITION_CONFIGURE);
-
-  easynav::NavState nav_state;
-  EXPECT_FALSE(node->has_control(nav_state));
-  nav_state.set("control_owner", std::string("controller"));
-  EXPECT_FALSE(node->has_control(nav_state));
-  nav_state.set("control_owner", std::string("recovery:retreat"));
-  EXPECT_TRUE(node->has_control(nav_state));
-}
-
 TEST_F(RecoveryManagerReflexTest, CleanupGivesControlBackAndDropsDiagnostics)
 {
   // A cleanup drops the mitigation that held control and the evaluators that wrote the
@@ -125,7 +113,7 @@ TEST_F(RecoveryManagerReflexTest, CleanupGivesControlBackAndDropsDiagnostics)
   node->trigger_transition(Transition::TRANSITION_CLEANUP);
   node->trigger_transition(Transition::TRANSITION_CONFIGURE);
 
-  EXPECT_FALSE(node->has_control(nav_state));
+  node->cycle(std::shared_ptr<easynav::NavState>(&nav_state, [](easynav::NavState *) {}));
   EXPECT_EQ(nav_state.get<std::string>("control_owner"), "controller");
   EXPECT_TRUE(nav_state.get_group_keys("diagnostics").empty());
 }
@@ -158,13 +146,15 @@ TEST_F(RecoveryManagerReflexTest, ReflexesRunEveryRtCycleWhoeverHasControl)
   node->trigger_transition(Transition::TRANSITION_CONFIGURE);
   ASSERT_EQ(node->get_num_safety_reflexes(), 1u);
 
-  // The controller has control and commanded motion: the reflex still overrides it.
+  // The controller commands motion: the reflex overrides it.
   auto nav_state = std::make_shared<easynav::NavState>();
   geometry_msgs::msg::TwistStamped moving;
   moving.twist.linear.x = 0.5;
-  nav_state->set("cmd_vel", moving);
 
-  EXPECT_FALSE(node->has_control(*nav_state));
+  easynav::velocity_command::propose(*nav_state, easynav::VelocitySource::CONTROLLER, moving);
+
   EXPECT_TRUE(node->cycle_rt(nav_state));
-  EXPECT_DOUBLE_EQ(nav_state->get<geometry_msgs::msg::TwistStamped>("cmd_vel").twist.linear.x, 0.0);
+  const auto reflex = easynav::velocity_command::peek(*nav_state, easynav::VelocitySource::REFLEX);
+  ASSERT_TRUE(reflex.has_value()) << "the reflex did not override the command";
+  EXPECT_DOUBLE_EQ(reflex->twist.linear.x, 0.0);
 }

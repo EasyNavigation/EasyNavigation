@@ -26,6 +26,7 @@ add_library(${PROJECT_NAME} SHARED
   src/easynav_core/RecoveryEvaluatorBase.cpp
   src/easynav_core/RecoveryMitigationBase.cpp
   src/easynav_core/SafetyReflexBase.cpp
+  src/easynav_core/VelocityCommand.cpp
 )
 target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>

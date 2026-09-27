@@ -24,6 +24,7 @@
 
 #include "easynav_common/types/NavState.hpp"
 #include "easynav_core/MethodBase.hpp"
+#include "easynav_core/VelocityCommand.hpp"
 
 namespace easynav
 {
@@ -32,12 +33,14 @@ namespace easynav
  * @class SafetyReflexBase
  * @brief Base class for level-0 (real-time) safety reflexes.
  *
- * A reflex is checked by SystemNode on every RT cycle, right before "cmd_vel" is published,
- * regardless of whether it was produced by the nominal controller or by a movement recovery
- * mitigator: this is what lets a single, small, independently verifiable component gate every
- * current and future producer of "cmd_vel". Unlike other MethodBase-derived plugins, a reflex
- * is not rate-limited by MethodBase::isTime2RunRT() — SystemNode already controls the overall
- * RT rate — and its own failure is treated as unsafe: if check() or mitigate() throws, the
+ * A reflex is checked by RecoveryManagerNode on every RT cycle, right before the velocity
+ * command is published, against the command about to be sent (commanded_velocity()), whether it
+ * comes from the nominal controller or from a movement recovery mitigation: this is what lets a
+ * single, small, independently verifiable component gate every current and future source of
+ * velocity. Its intervention (override_velocity()/stop_robot()) has the highest priority and is
+ * published as is, without smoothing. Unlike other MethodBase-derived plugins, a reflex is not
+ * rate-limited by MethodBase::isTime2RunRT() — the RT loop already controls the overall rate —
+ * and its own failure is treated as unsafe: if check() or mitigate() throws, the
  * robot is stopped as a fail-safe default instead of assuming the reflex is inactive.
  *
  * A reflex also reports its own severity level (OK/WARN/ERROR) under "diagnostics.<plugin_name>"
@@ -54,8 +57,8 @@ public:
   /**
    * @brief Runs one RT cycle of this reflex without letting check()/mitigate() escape.
    *
-   * @param nav_state Current navigation state; "cmd_vel" is read and possibly overwritten.
-   * @return True if the reflex modified "cmd_vel" this cycle (a mitigation was applied).
+   * @param nav_state Current navigation state.
+   * @return True if the reflex overrode the velocity command this cycle.
    */
   bool internal_check_and_mitigate(NavState & nav_state);
 
@@ -63,17 +66,30 @@ protected:
   /**
    * @brief Decides whether mitigate() must run this cycle.
    * @param nav_state Current navigation state.
-   * @return True if the situation requires intervening on "cmd_vel".
+   * @return True if the situation requires overriding the velocity command.
    */
   virtual bool check(NavState & nav_state) = 0;
 
   /**
-   * @brief Applies the safety intervention, typically overwriting "cmd_vel".
+   * @brief Applies the safety intervention, typically overriding the command with
+   * override_velocity() or stop_robot().
    * @param nav_state Navigation state to modify.
    */
   virtual void mitigate(NavState & nav_state) = 0;
 
-  /// @brief Fail-safe default: writes a zero-velocity TwistStamped to "cmd_vel".
+  /**
+   * @brief The velocity about to be commanded this cycle, before any reflex: the control-owning
+   * mitigation's proposal if there is one, otherwise the controller's. What check() should
+   * evaluate.
+   */
+  std::optional<geometry_msgs::msg::TwistStamped> commanded_velocity(
+    const NavState & nav_state) const;
+
+  /// @brief Overrides this cycle's command with \p cmd: highest priority, published as is
+  /// (not smoothed: an emergency may need more deceleration than the nominal limits).
+  void override_velocity(NavState & nav_state, const geometry_msgs::msg::TwistStamped & cmd);
+
+  /// @brief Fail-safe default: overrides the command with a zero velocity.
   void stop_robot(NavState & nav_state);
 
 private:

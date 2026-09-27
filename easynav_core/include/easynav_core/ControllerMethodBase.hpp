@@ -20,6 +20,7 @@
 
 #include "easynav_common/types/NavState.hpp"
 #include "easynav_core/MethodBase.hpp"
+#include "easynav_core/RobotLimits.hpp"
 
 namespace easynav
 {
@@ -50,6 +51,16 @@ public:
    * @return True if update_rt() was called, false otherwise.
    */
   bool internal_update_rt(NavState & nav_state, bool trigger = false);
+
+  /**
+   * @brief The robot's velocity and acceleration limits, as configured in the node that loaded
+   * this plugin (ControllerNode, "robot_limits.*").
+   *
+   * Controllers must use these instead of declaring their own: the same limits are enforced on
+   * every published command by ControllerNode's velocity smoother. If the parent node does not
+   * provide them (e.g. a plain node in a test), the RobotLimits defaults.
+   */
+  [[nodiscard]] RobotLimits get_robot_limits() const;
 
 protected:
   /**

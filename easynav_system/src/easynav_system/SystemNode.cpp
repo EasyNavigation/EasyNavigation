@@ -60,7 +60,6 @@ SystemNode::SystemNode(const rclcpp::NodeOptions & options)
   sensors_node_ = SensorsNode::make_shared();
   recovery_node_ = RecoveryManagerNode::make_shared();
 
-  declare_parameter<bool>("use_cmd_vel_stamped", use_cmd_vel_stamped_);
 
   TFInfo tf_info;
   declare_parameter<std::string>("tf_prefix", tf_info.tf_prefix);
@@ -94,7 +93,6 @@ SystemNode::on_configure(const rclcpp_lifecycle::State & state)
   (void)state;
 
   TFInfo tf_info;
-  get_parameter<bool>("use_cmd_vel_stamped", use_cmd_vel_stamped_);
   get_parameter("robot_frame", tf_info.robot_frame);
   get_parameter("robot_footprint_frame", tf_info.robot_footprint_frame);
   get_parameter("odom_frame", tf_info.odom_frame);
@@ -133,12 +131,6 @@ SystemNode::on_configure(const rclcpp_lifecycle::State & state)
   navstate_pub_ = create_publisher<std_msgs::msg::String>(
     "easynav_navstate", 100);
 
-  if (use_cmd_vel_stamped_) {
-    vel_pub_stamped_ = create_publisher<geometry_msgs::msg::TwistStamped>("cmd_vel_stamped", 100);
-  } else {
-    vel_pub_ = create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 100);
-  }
-
   return CallbackReturnT::SUCCESS;
 }
 
@@ -167,11 +159,6 @@ CallbackReturnT
 SystemNode::on_deactivate(const rclcpp_lifecycle::State & state)
 {
   (void)state;
-
-  // No cycle runs outside Active, so nothing will command the robot until it is activated
-  // again: stop it now. Many drivers (and simulators) keep executing the last velocity they
-  // received, so without this the robot would keep moving, e.g. while plugins are switched.
-  stop_robot();
 
   for (auto & system_node : get_system_nodes()) {
     RCLCPP_INFO(get_logger(), "Deactivating [%s]", system_node.first.c_str());
@@ -215,8 +202,6 @@ SystemNode::on_cleanup(const rclcpp_lifecycle::State & state)
 
   // goal_manager_ is kept: the mission survives a reconfiguration (see on_configure()).
   navstate_pub_ = nullptr;
-  vel_pub_ = nullptr;
-  vel_pub_stamped_ = nullptr;
 
   return CallbackReturnT::SUCCESS;
 }
@@ -263,25 +248,6 @@ SystemNode::on_error(const rclcpp_lifecycle::State & state)
   return CallbackReturnT::FAILURE;
 }
 
-void
-SystemNode::stop_robot()
-{
-  geometry_msgs::msg::TwistStamped stop;
-  stop.header.stamp = now();
-  stop.header.frame_id = RTTFBuffer::getInstance()->get_tf_info().robot_frame;
-
-  // Also in NavState, so the last command is not published again on reactivation before the
-  // controller computes a new one.
-  nav_state_->set("cmd_vel", stop);
-
-  if (use_cmd_vel_stamped_ && vel_pub_stamped_) {
-    vel_pub_stamped_->publish(stop);
-  }
-  if (!use_cmd_vel_stamped_ && vel_pub_) {
-    vel_pub_->publish(stop.twist);
-  }
-}
-
 std::string
 SystemNode::get_shutdown_reason() const
 {
@@ -301,39 +267,12 @@ SystemNode::system_cycle_rt()
 
   RCLCPP_DEBUG(get_logger(), "SystemNode::system_cycle_rt\n%s", nav_state_->debug_string().c_str());
 
-  bool trigger_perceptions = sensors_node_->cycle_rt(nav_state_);
-  bool trigger_localization = localizer_node_->cycle_rt(nav_state_, trigger_perceptions);
+  const bool trigger_perceptions = sensors_node_->cycle_rt(nav_state_);
+  const bool trigger_localization = localizer_node_->cycle_rt(nav_state_, trigger_perceptions);
+  controller_node_->cycle_rt(nav_state_, trigger_perceptions || trigger_localization);
+  recovery_node_->cycle_rt(nav_state_);
 
-  bool trigger = trigger_perceptions || trigger_localization;
-
-  // Recovery decides who produces "cmd_vel" this cycle: the nominal controller, unless a
-  // control-owning recovery mitigation holds control.
-  bool trigger_controller = false;
-  if (!recovery_node_->has_control(*nav_state_)) {
-    trigger_controller = controller_node_->cycle_rt(nav_state_, trigger);
-  }
-
-  // Recovery RT cycle: the control-owning mitigation (if any) and the level-0 safety reflexes,
-  // which check whatever "cmd_vel" was produced right before it is published.
-  const bool recovery_commanded = recovery_node_->cycle_rt(nav_state_);
-
-  if (nav_state_->has("cmd_vel")) {
-    geometry_msgs::msg::TwistStamped current_cmd_vel;
-    current_cmd_vel = nav_state_->get<geometry_msgs::msg::TwistStamped>("cmd_vel");
-
-    if (nav_state_->get_safe<bool>("navigation_paused")) {
-      current_cmd_vel.twist = geometry_msgs::msg::Twist();
-    }
-
-    if (trigger_controller || recovery_commanded) {
-      if (use_cmd_vel_stamped_ && vel_pub_stamped_->get_subscription_count()) {
-        vel_pub_stamped_->publish(current_cmd_vel);
-      }
-      if (!use_cmd_vel_stamped_ && vel_pub_->get_subscription_count()) {
-        vel_pub_->publish(current_cmd_vel.twist);
-      }
-    }
-  }
+  controller_node_->publish_cmd_vel_rt(nav_state_);
 }
 
 void

@@ -48,6 +48,15 @@ protected:
         "--ros-args",
         "-p", "controller_types:=['dummy']",
         "-p", "dummy.plugin:=easynav_controller/DummyController",
+        // Limits high enough that the velocity smoother does not get in the way: these tests
+        // check what is commanded (paused or not), not how it ramps.
+        "-p", "robot_limits.max_linear_vel:=10.0",
+        "-p", "robot_limits.min_linear_vel:=-10.0",
+        "-p", "robot_limits.max_angular_vel:=10.0",
+        "-p", "robot_limits.max_linear_acc:=1000.0",
+        "-p", "robot_limits.max_linear_decel:=1000.0",
+        "-p", "robot_limits.max_angular_acc:=1000.0",
+        "-p", "robot_limits.max_angular_decel:=1000.0",
       };
       rclcpp::init(static_cast<int>(argv.size()), argv.data());
       initialized_ = true;
@@ -106,12 +115,14 @@ TEST_F(SystemPauseTest, PublishesZeroVelocityWhenPaused)
   nonzero_cmd.twist.angular.z = 0.5;
 
   // Keep invoking system_cycle_rt() (as the RT thread would, at rt_freq)
-  // until a message arrives: ControllerMethodBase's own internal RT-cycle
+  // until the expected command is published (the smoother may publish intermediate steps): ControllerMethodBase's own internal RT-cycle
   // timing (isTime2RunRT(), independent of pause/resume) may make the very
   // first call(s) a no-op, so a single call is not guaranteed to publish.
-  auto cycle_until_message = [&]() {
+  auto cycle_until_message = [&](double expected_x) {
       auto start = listener_node->now();
-      while (listener_node->now() - start < 1s && received.empty()) {
+      while (listener_node->now() - start < 1s &&
+        (received.empty() || received.back().linear.x != expected_x))
+      {
         system_node->system_cycle_rt();
         exe.spin_some();
         rclcpp::sleep_for(10ms);
@@ -120,7 +131,7 @@ TEST_F(SystemPauseTest, PublishesZeroVelocityWhenPaused)
 
   // Baseline: unpaused, the nonzero twist must be published unchanged.
   nav_state->set("cmd_vel", nonzero_cmd);
-  cycle_until_message();
+  cycle_until_message(1.5);
   ASSERT_FALSE(received.empty());
   EXPECT_DOUBLE_EQ(received.back().linear.x, 1.5);
   EXPECT_DOUBLE_EQ(received.back().angular.z, 0.5);
@@ -129,7 +140,7 @@ TEST_F(SystemPauseTest, PublishesZeroVelocityWhenPaused)
   received.clear();
   nav_state->set("navigation_paused", true);
   nav_state->set("cmd_vel", nonzero_cmd);
-  cycle_until_message();
+  cycle_until_message(0.0);
   ASSERT_FALSE(received.empty());
   EXPECT_DOUBLE_EQ(received.back().linear.x, 0.0);
   EXPECT_DOUBLE_EQ(received.back().linear.y, 0.0);
@@ -143,7 +154,7 @@ TEST_F(SystemPauseTest, PublishesZeroVelocityWhenPaused)
   received.clear();
   nav_state->set("navigation_paused", false);
   nav_state->set("cmd_vel", nonzero_cmd);
-  cycle_until_message();
+  cycle_until_message(1.5);
   ASSERT_FALSE(received.empty());
   EXPECT_DOUBLE_EQ(received.back().linear.x, 1.5);
   EXPECT_DOUBLE_EQ(received.back().angular.z, 0.5);
@@ -216,9 +227,11 @@ TEST_F(SystemPauseTest, PauseEndToEndThroughGoalManagerClient)
   // See PublishesZeroVelocityWhenPaused: keep invoking system_cycle_rt()
   // until a message arrives, since ControllerMethodBase's own internal
   // RT-cycle timing may make a single call a no-op.
-  auto cycle_until_message = [&]() {
+  auto cycle_until_message = [&](double expected_x) {
       auto wstart = listener_node->now();
-      while (listener_node->now() - wstart < 1s && received.empty()) {
+      while (listener_node->now() - wstart < 1s &&
+        (received.empty() || received.back().linear.x != expected_x))
+      {
         system_node->system_cycle_rt();
         exe.spin_some();
         rclcpp::sleep_for(10ms);
@@ -228,7 +241,7 @@ TEST_F(SystemPauseTest, PauseEndToEndThroughGoalManagerClient)
   // Before pausing: nonzero cmd_vel goes through.
   received.clear();
   nav_state->set("cmd_vel", nonzero_cmd);
-  cycle_until_message();
+  cycle_until_message(1.5);
   ASSERT_FALSE(received.empty());
   EXPECT_DOUBLE_EQ(received.back().linear.x, 1.5);
 
@@ -248,7 +261,7 @@ TEST_F(SystemPauseTest, PauseEndToEndThroughGoalManagerClient)
 
   received.clear();
   nav_state->set("cmd_vel", nonzero_cmd);
-  cycle_until_message();
+  cycle_until_message(0.0);
   ASSERT_FALSE(received.empty());
   EXPECT_DOUBLE_EQ(received.back().linear.x, 0.0);
 
@@ -266,7 +279,7 @@ TEST_F(SystemPauseTest, PauseEndToEndThroughGoalManagerClient)
 
   received.clear();
   nav_state->set("cmd_vel", nonzero_cmd);
-  cycle_until_message();
+  cycle_until_message(1.5);
   ASSERT_FALSE(received.empty());
   EXPECT_DOUBLE_EQ(received.back().linear.x, 1.5);
 }

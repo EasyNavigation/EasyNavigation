@@ -92,7 +92,14 @@ RecoveryMitigationBase::stop_robot(NavState & nav_state)
   }
   zero_speed.header.frame_id = RTTFBuffer::getInstance()->get_tf_info().robot_frame;
 
-  nav_state.set("cmd_vel", zero_speed);
+  command_velocity(nav_state, zero_speed);
+}
+
+void
+RecoveryMitigationBase::command_velocity(
+  NavState & nav_state, const geometry_msgs::msg::TwistStamped & cmd)
+{
+  velocity_command::propose(nav_state, VelocitySource::RECOVERY, cmd);
 }
 
 void

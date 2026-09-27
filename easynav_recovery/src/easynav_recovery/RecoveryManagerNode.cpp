@@ -422,7 +422,7 @@ RecoveryManagerNode::cycle_rt(std::shared_ptr<NavState> nav_state)
 
   bool commanded = false;
 
-  // 1. A control-owning mitigation produces "cmd_vel" instead of the controller.
+  // 1. A control-owning mitigation commands the robot instead of the controller.
   if (active_mitigation_ && active_mitigation_->requires_control()) {
     RecoveryStatus status = active_mitigation_->internal_cycle(*nav_state);
     if (status != RecoveryStatus::RUNNING) {
@@ -437,8 +437,8 @@ RecoveryManagerNode::cycle_rt(std::shared_ptr<NavState> nav_state)
     commanded = true;
   }
 
-  // 2. Level-0 safety reflexes: every RT cycle, whoever produced "cmd_vel" (controller or
-  // mitigation), right before it is published.
+  // 2. Level-0 safety reflexes: every RT cycle, against the command about to be sent (the
+  // mitigation's or the controller's), right before it is published.
   for (auto & reflex : safety_reflexes_) {
     if (reflex->internal_check_and_mitigate(*nav_state)) {
       commanded = true;
@@ -471,18 +471,6 @@ RecoveryManagerNode::reset_shared_state_if_released(NavState & nav_state)
   }
   nav_state.set("control_owner", std::string("controller"));
   nav_state.set_group("diagnostics", std::vector<std::string>{});
-}
-
-bool
-RecoveryManagerNode::has_control(NavState & nav_state)
-{
-  reset_shared_state_if_released(nav_state);
-
-  // "control_owner" (absent/"controller" by default) is written only by this manager: set to
-  // "recovery:<plugin>" when a control-owning mitigation is selected, back to "controller" when
-  // it finishes.
-  return nav_state.has("control_owner") &&
-         nav_state.get<std::string>("control_owner") != "controller";
 }
 
 std::string
