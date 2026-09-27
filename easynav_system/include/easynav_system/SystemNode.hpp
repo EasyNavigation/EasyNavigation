@@ -18,14 +18,11 @@
 #ifndef EASYNAV_SYSTEM__SYSTEMNODE_HPP_
 #define EASYNAV_SYSTEM__SYSTEMNODE_HPP_
 
-#include <atomic>
-#include <mutex>
 #include <string>
 
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp/macros.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
-#include "pluginlib/class_loader.hpp"
 
 #include "geometry_msgs/msg/twist.hpp"
 #include "geometry_msgs/msg/twist_stamped.hpp"
@@ -33,7 +30,6 @@
 
 #include "easynav_common/types/NavState.hpp"
 #include "easynav_controller/ControllerNode.hpp"
-#include "easynav_core/SafetyReflexBase.hpp"
 #include "easynav_localizer/LocalizerNode.hpp"
 #include "easynav_maps_manager/MapsManagerNode.hpp"
 #include "easynav_planner/PlannerNode.hpp"
@@ -159,11 +155,14 @@ public:
   [[nodiscard]] std::shared_ptr<NavState> get_nav_state() const {return nav_state_;}
 
   /**
-   * @brief Whether a recovery mitigation requested EasyNav to terminate
-   * ("system_shutdown_requested" in NavState). Whoever drives this node's lifecycle should then
-   * deactivate it, which ends in Finalized (see on_deactivate()/on_error()).
+   * @brief Whether a recovery mitigation requested EasyNav to terminate (as latched by
+   * RecoveryManagerNode). Whoever drives this node's lifecycle should then deactivate it, which
+   * ends in Finalized (see on_deactivate()/on_error()).
    */
-  [[nodiscard]] bool is_shutdown_requested() const {return shutdown_requested_;}
+  [[nodiscard]] bool is_shutdown_requested() const
+  {
+    return recovery_node_->is_shutdown_requested();
+  }
 
   /// @brief The diagnostics that caused the requested shutdown ("system_shutdown_reason").
   [[nodiscard]] std::string get_shutdown_reason() const;
@@ -196,12 +195,6 @@ private:
   /// @brief Goal manager.
   GoalManager::SharedPtr goal_manager_;
 
-  /// @brief Pluginlib class loader for level-0 safety reflexes.
-  std::unique_ptr<pluginlib::ClassLoader<easynav::SafetyReflexBase>> safety_reflex_loader_;
-
-  /// @brief Loaded safety reflexes, checked/mitigated every RT cycle before "cmd_vel" is
-  /// published, regardless of which controller or recovery mitigator produced it.
-  std::vector<std::shared_ptr<easynav::SafetyReflexBase>> safety_reflexes_;
 
   /// @brief Wheter publish stamped or unstamped speed
   bool use_cmd_vel_stamped_ {false};
@@ -218,12 +211,6 @@ private:
   /// @brief Publishes (and stores in NavState) a zero velocity command.
   void stop_robot();
 
-  /// @brief Set from system_cycle() once a mitigation requests EasyNav to terminate.
-  std::atomic<bool> shutdown_requested_ {false};
-
-  /// @brief Why EasyNav is terminating (see get_shutdown_reason()).
-  std::string shutdown_reason_;
-  mutable std::mutex shutdown_reason_mutex_;
 };
 
 }  // namespace easynav

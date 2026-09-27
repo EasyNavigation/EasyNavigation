@@ -336,21 +336,21 @@ cycle would be unacceptable. The system is therefore split into two levels:
 |---|---|---|
 | Frequency | RT cycle (same rate as `cmd_vel`) | non-RT cycle |
 | Logic | Synchronous, cheap, no reasoning | Diagnosis + selection + arbitration (lightweight MAPE-K) |
-| Lives in | `SystemNode`, at the single point where `cmd_vel` is published | `RecoveryManagerNode` |
+| Lives in | `RecoveryManagerNode::cycle_rt()`, right before `cmd_vel` is published | `RecoveryManagerNode::cycle()` |
 | Interface | `SafetyReflexBase` | `RecoveryEvaluatorBase` / `RecoveryMitigationBase` |
 | Example | Imminent collision → override `cmd_vel` | Repeated proximity stop → back away |
 | Can veto/override `cmd_vel` | Yes, always, regardless of who produced it | Not directly; acts through `control_owner` (§5.7) |
 
-**Why the reflex lives in `SystemNode`, not in `ControllerNode`.** With the control-arbitration
-design of §5.7, the `cmd_vel` published each cycle can come from the nominal controller **or**
-from an active movement mitigation (e.g. `SafeRetreatRecovery`). If the collision check were tied
-only to the controller, it would stop applying exactly when a recovery has control — the worst
-moment to lose that protection. `SystemNode` therefore loads `SafetyReflexBase` plugins (via
-`safety_reflex_types`, a `pluginlib::ClassLoader<SafetyReflexBase>` analogous to the ones already
-used by `ControllerNode`/`PlannerNode`) and runs them in `system_cycle_rt()`, right before the
-point where `cmd_vel` is published, regardless of who wrote it that cycle
-(`SystemNode.cpp::system_cycle_rt()`). The only reflex shipped today, **`CollisionSafetyReflex`**
-(`easynav_controller/include/easynav_controller/CollisionSafetyReflex.hpp`), replaces — not
+**Why the reflex lives in `RecoveryManagerNode`, not in `ControllerNode`.** With the
+control-arbitration design of §5.7, the `cmd_vel` published each cycle can come from the nominal
+controller **or** from an active movement mitigation (e.g. `SafeRetreatRecovery`). If the
+collision check were tied only to the controller, it would stop applying exactly when a recovery
+has control — the worst moment to lose that protection. All recovery logic, both levels, lives in
+`RecoveryManagerNode`: it loads the `SafetyReflexBase` plugins (via `safety_reflex_types` in
+`recovery_node`'s parameters) and runs them in its `cycle_rt()`, which `SystemNode` calls every RT
+cycle after the controller and right before publishing `cmd_vel`, regardless of who wrote it that
+cycle. The only reflex shipped today, **`CollisionSafetyReflex`**
+(`src/easynav_plugins/reflexes/easynav_collision_safety_reflex`), replaces — not
 supplements — the old collision check that used to live inside `ControllerMethodBase`: it
 forward-projects the commanded `cmd_vel` against nearby point-cloud perceptions and, if continuing
 would cause a collision within the current braking distance, overwrites `cmd_vel` with a
@@ -385,7 +385,8 @@ selected for it.
 |---|---|---|
 | `SafetyReflexBase`, `RecoveryEvaluatorBase`, `RecoveryMitigationBase` (interfaces) | `easynav_core` | `ControllerMethodBase`, `PlannerMethodBase`, etc. |
 | `RecoveryManagerNode` (node, plugin loading, arbitration) | `easynav_recovery` (`src/EasyNavigation`) | `easynav_controller`, `easynav_planner`, ... |
-| `CollisionSafetyReflex` (reference reflex) | `easynav_controller` | Its previous home inside `ControllerMethodBase` |
+| `CollisionSafetyReflex` (reference reflex) | `src/easynav_plugins/reflexes/easynav_collision_safety_reflex` | `easynav_simple_controller`, ... (replaces the collision check that lived inside `ControllerMethodBase`) |
+| `DummyEvaluator`, `DummyMitigation`, `DummySafetyReflex` (reference/test plugins) | `easynav_recovery` | `DummyController`, `DummyPlanner`, ... |
 | `NoPathEvaluator`, `ControllerStuckEvaluator`, `ObstacleTooCloseEvaluator` (generic evaluators) | `src/easynav_plugins/recovery_evaluators/...` | `easynav_simple_controller`, `easynav_vff_controller`, ... |
 | `SafeRetreatRecovery`, `AdvanceRecovery`, `HumanAssistanceRecovery`, `CancelMissionRecovery` (generic mitigations) | `src/easynav_plugins/recovery_mitigations/...` | ídem |
 | `AmclConvergenceEvaluator` / `AmclRelocalizeMitigation` (component-specialized recovery) | `easynav_costmap_localizer`, alongside `AMCLLocalizer` | New pattern — see §5.9 |
@@ -397,9 +398,15 @@ the same `PLUGINLIB_EXPORT_CLASS`/manifest convention as any other EasyNav plugi
 
 `RecoveryManagerNode` is a `LifecycleNode` (deployed under the name `"recovery_node"`, distinct
 from `"system_node"`) owned and lifecycle-managed by `SystemNode` exactly like the other
-subsystems. Its non-RT work (evaluation and mitigation selection) runs from
-`SystemNode::system_cycle()`; the RT part of an active, control-owning mitigation runs from
-`SystemNode::system_cycle_rt()`. The name deliberately avoids `RecoveryNode`, to not collide
+subsystems. It centralizes all the recovery logic, so `SystemNode` only calls into it:
+- non-RT, `cycle()` from `SystemNode::system_cycle()`: evaluation, mitigation selection and
+  arbitration, and latching a shutdown request (`is_shutdown_requested()`, §5.8.1);
+- RT, from `SystemNode::system_cycle_rt()`: `has_control()` tells whether the nominal controller
+  may run this cycle, and `cycle_rt()` then runs the active control-owning mitigation (if any)
+  and every level-0 safety reflex;
+- across a `cleanup`, it gives control back to the controller and drops stale diagnostics itself.
+
+The name deliberately avoids `RecoveryNode`, to not collide
 conceptually with BT.CPP's control node of that name in Nav2, which is a different thing.
 
 Unlike `ControllerNode`/`PlannerNode` (which host exactly one active plugin instance),
@@ -418,7 +425,7 @@ flowchart TB
         CTR["ControllerNode\n(active when control_owner=controller)"] --> CVEL[(candidate cmd_vel)]
         MIT --> CVEL
 
-        subgraph rt["Level 0 - SystemNode RT cycle"]
+        subgraph rt["Level 0 - RecoveryManagerNode RT cycle"]
             CVEL --> REFLEX["SafetyReflexBase plugins\n(CollisionSafetyReflex)"]
             REFLEX -->|final cmd_vel| PUB[/publish cmd_vel/]
         end
@@ -530,12 +537,13 @@ protected:
    Default/absent value: `"controller"`.
 2. When `RecoveryManagerNode` selects a mitigation with `requires_control() == true`, it calls
    `on_start()` and sets `nav_state.set("control_owner", "recovery:<name>")`.
-3. In `SystemNode::system_cycle_rt()`: if `control_owner == "controller"`, the RT cycle calls
-   `controller_node_->cycle_rt(...)` as usual; otherwise it calls `recovery_node_->cycle_rt(...)`,
-   which runs the active mitigation's `internal_cycle()` and writes its result to the same
-   `"cmd_vel"` key `SystemNode` already publishes at the end of the cycle — the publication point
-   is not duplicated, only who writes that key changes. Either way, the resulting `cmd_vel` still
-   passes through every loaded `SafetyReflexBase` before publication (§5.2).
+3. In `SystemNode::system_cycle_rt()`, `recovery_node_->has_control()` decides: if recovery does
+   not hold control, the RT cycle calls `controller_node_->cycle_rt(...)` as usual. Then it always
+   calls `recovery_node_->cycle_rt(...)`, which runs the active control-owning mitigation's
+   `internal_cycle()` (if any), writing its result to the same `"cmd_vel"` key `SystemNode`
+   publishes at the end of the cycle — the publication point is not duplicated, only who writes
+   that key changes — and then every loaded `SafetyReflexBase` (§5.2), whoever wrote it.
+   `SystemNode` never reads `control_owner` itself.
 4. When `on_cycle()` returns `SUCCEEDED` or `FAILED`, `RecoveryManagerNode` calls `on_stop()` and
    restores `control_owner = "controller"`; the nominal controller regains control the next RT
    cycle.
@@ -576,8 +584,9 @@ the one case in which a node leaves a primary state without an external request,
    `"system_shutdown_requested"` in `NavState`, plus `"mission_cancel_requested"` if there is an
    active goal, and reports at `FATAL`. While selected, it holds the robot with zero `cmd_vel`.
 2. On the next non-RT cycle, `GoalManager::update()` cancels the mission (its client receives the
-   reason), and then `SystemNode::system_cycle()` records the request
-   (`SystemNode::is_shutdown_requested()`).
+   reason), and then `RecoveryManagerNode::cycle()` latches the request
+   (`RecoveryManagerNode::is_shutdown_requested()`, which `SystemNode::is_shutdown_requested()`
+   forwards).
 3. `system_main`, as the lifecycle supervisor, stops both loops and deactivates `SystemNode`.
    `on_deactivate()` deactivates every EasyNav node, publishes a zero velocity and returns
    `ERROR`; `on_error()` logs the reason, shuts every EasyNav node down and returns `FAILURE`, so
@@ -650,11 +659,11 @@ person suddenly steps into the robot's way, close by.
 1. **[Level 0, RT, same 200 Hz cycle]** `sensors_node_->cycle_rt()` adds the new obstacle to
    `NavState`; `controller_node_->cycle_rt()` computes a forward-moving candidate `cmd_vel` (the
    nominal controller only follows the `path`, it does not react to this). Before publishing,
-   `SystemNode` runs the candidate through `CollisionSafetyReflex`, which projects the resulting
-   trajectory against the freshly updated perception and detects an imminent collision;
-   `mitigate()` replaces the candidate with a controlled brake, cycle by cycle, until the robot
-   stops — without ever going through `RecoveryManagerNode`. Along the way it writes a `WARN`
-   entry to the `"diagnostics"` group.
+   `recovery_node_->cycle_rt()` runs the candidate through `CollisionSafetyReflex`, which projects
+   the resulting trajectory against the freshly updated perception and detects an imminent
+   collision; `mitigate()` replaces the candidate with a controlled brake, cycle by cycle, until
+   the robot stops — within the same RT cycle, without waiting for any level-1 evaluation. Along
+   the way it writes a `WARN` entry to the `"diagnostics"` group.
 2. **[Level 1, non-RT]** On its own cycle, `RecoveryManagerNode` runs its evaluators.
    `ObstacleTooCloseEvaluator` could be reading `NavState` mid-brake, since the RT and non-RT
    cycles run in parallel — this is exactly why it requires the compound condition of §5.2: only
@@ -665,9 +674,9 @@ person suddenly steps into the robot's way, close by.
    and `SafeRetreatRecovery` is the highest-priority mitigation whose `can_handle()` accepts
    `hardware_id == "obstacle_proximity"`. It calls `on_start()`, which sets `control_owner =
    "recovery:retreat"`.
-4. **[Level 0, RT, every cycle while `control_owner != "controller"`]** `SystemNode` routes the RT
-   cycle to `recovery_node_->cycle_rt()`, which calls `SafeRetreatRecovery::on_cycle()`; it
-   commands a slow backward `cmd_vel`. That candidate passes through the same
+4. **[Level 0, RT, every cycle while recovery holds control]** `recovery_node_->has_control()`
+   keeps the nominal controller from running, and `recovery_node_->cycle_rt()` calls
+   `SafeRetreatRecovery::on_cycle()`; it commands a slow backward `cmd_vel`. That candidate passes through the same
    `CollisionSafetyReflex` gate as the nominal controller's output — if another obstacle appeared
    behind the robot while retreating, the reflex would intervene again. Meanwhile,
    `ControllerStuckEvaluator` checks `control_owner` before evaluating (§5.6), so the lack of
@@ -737,14 +746,11 @@ A representative configuration (from a downstream robot's parameter file, shown 
 illustrate how the pieces above are wired together):
 
 ```yaml
-system_node:
+recovery_node:
   ros__parameters:
     safety_reflex_types: [collision]
     collision:
-      plugin: easynav_controller/CollisionSafetyReflex
-
-recovery_node:
-  ros__parameters:
+      plugin: easynav_collision_safety_reflex/CollisionSafetyReflex
     evaluator_types: [no_path, obstacle_close, amcl_convergence, controller_stuck, ros_graph]
     mitigation_types: [retreat, amcl_relocalize, advance, shutdown, human_assistance, cancel_mission]
     # priorities: retreat / advance / amcl_relocalize = 10; shutdown = 100;

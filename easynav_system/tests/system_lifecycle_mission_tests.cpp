@@ -62,7 +62,7 @@ protected:
         "-p", "mitigation_types:=['dummy_mitigation']",
         "-p", "dummy_mitigation.plugin:=easynav_recovery/DummyMitigation",
         "-p", "safety_reflex_types:=['collision']",
-        "-p", "collision.plugin:=easynav_controller/CollisionSafetyReflex",
+        "-p", "collision.plugin:=easynav_recovery/DummySafetyReflex",
       };
       rclcpp::init(static_cast<int>(argv.size()), argv.data());
     }

@@ -60,10 +60,6 @@ SystemNode::SystemNode(const rclcpp::NodeOptions & options)
   sensors_node_ = SensorsNode::make_shared();
   recovery_node_ = RecoveryManagerNode::make_shared();
 
-  safety_reflex_loader_ =
-    std::make_unique<pluginlib::ClassLoader<easynav::SafetyReflexBase>>(
-    "easynav_core", "easynav::SafetyReflexBase");
-
   declare_parameter<bool>("use_cmd_vel_stamped", use_cmd_vel_stamped_);
 
   TFInfo tf_info;
@@ -88,19 +84,6 @@ SystemNode::~SystemNode()
     trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_UNCONFIGURED_SHUTDOWN);
   }
 
-  safety_reflexes_.clear();
-  std::vector<std::string> safety_reflex_types;
-  get_parameter("safety_reflex_types", safety_reflex_types);
-  for (const auto & reflex_type : safety_reflex_types) {
-    std::string plugin;
-    if (has_parameter(reflex_type + ".plugin")) {
-      get_parameter(reflex_type + ".plugin", plugin);
-      try {
-        safety_reflex_loader_->unloadLibraryForClass(plugin);
-      } catch (const std::exception &) {
-      }
-    }
-  }
 }
 
 using CallbackReturnT = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
@@ -145,45 +128,6 @@ SystemNode::on_configure(const rclcpp_lifecycle::State & state)
   // sequence used to switch plugins at runtime), so an ongoing navigation is not lost.
   if (!goal_manager_) {
     goal_manager_ = GoalManager::make_shared(*nav_state_, shared_from_this());
-  }
-
-  // Parameters stay declared after a cleanup: declare them only the first time.
-  std::vector<std::string> safety_reflex_types;
-  if (!has_parameter("safety_reflex_types")) {
-    declare_parameter("safety_reflex_types", safety_reflex_types);
-  }
-  get_parameter("safety_reflex_types", safety_reflex_types);
-
-  safety_reflexes_.clear();
-  for (const auto & reflex_type : safety_reflex_types) {
-    std::string plugin;
-    if (!has_parameter(reflex_type + std::string(".plugin"))) {
-      declare_parameter(reflex_type + std::string(".plugin"), plugin);
-    }
-    get_parameter(reflex_type + std::string(".plugin"), plugin);
-
-    try {
-      RCLCPP_INFO(
-        get_logger(), "Loading SafetyReflexBase %s [%s]", reflex_type.c_str(), plugin.c_str());
-
-      auto reflex = safety_reflex_loader_->createSharedInstance(plugin);
-
-      try {
-        reflex->initialize(shared_from_this(), reflex_type);
-      } catch (const std::runtime_error & e) {
-        RCLCPP_ERROR(
-          get_logger(), "Unable to initialize [%s]. Error: %s", plugin.c_str(), e.what());
-        return CallbackReturnT::FAILURE;
-      }
-
-      safety_reflexes_.push_back(reflex);
-      RCLCPP_INFO(
-        get_logger(), "Loaded SafetyReflexBase %s [%s]", reflex_type.c_str(), plugin.c_str());
-    } catch (pluginlib::PluginlibException & ex) {
-      RCLCPP_ERROR(
-        get_logger(), "Unable to load plugin easynav::SafetyReflexBase. Error: %s", ex.what());
-      return CallbackReturnT::FAILURE;
-    }
   }
 
   navstate_pub_ = create_publisher<std_msgs::msg::String>(
@@ -242,7 +186,7 @@ SystemNode::on_deactivate(const rclcpp_lifecycle::State & state)
     }
   }
 
-  if (shutdown_requested_) {
+  if (is_shutdown_requested()) {
     // An unrecoverable error in Active: go through ErrorProcessing (on_error()), not back to
     // Inactive as a normal deactivation would.
     return CallbackReturnT::ERROR;
@@ -270,15 +214,9 @@ SystemNode::on_cleanup(const rclcpp_lifecycle::State & state)
   }
 
   // goal_manager_ is kept: the mission survives a reconfiguration (see on_configure()).
-  safety_reflexes_.clear();
   navstate_pub_ = nullptr;
   vel_pub_ = nullptr;
   vel_pub_stamped_ = nullptr;
-
-  // The recovery plugins are gone: give control back to the controller, and drop the
-  // diagnostics of evaluators that may not be loaded again (the new ones re-register).
-  nav_state_->set("control_owner", std::string("controller"));
-  nav_state_->set_group("diagnostics", std::vector<std::string>{});
 
   return CallbackReturnT::SUCCESS;
 }
@@ -295,7 +233,7 @@ SystemNode::on_error(const rclcpp_lifecycle::State & state)
 {
   (void)state;
 
-  if (!shutdown_requested_) {
+  if (!is_shutdown_requested()) {
     return CallbackReturnT::SUCCESS;
   }
 
@@ -347,8 +285,7 @@ SystemNode::stop_robot()
 std::string
 SystemNode::get_shutdown_reason() const
 {
-  std::lock_guard<std::mutex> lock(shutdown_reason_mutex_);
-  return shutdown_reason_;
+  return recovery_node_->get_shutdown_reason();
 }
 
 rclcpp::CallbackGroup::SharedPtr
@@ -367,30 +304,18 @@ SystemNode::system_cycle_rt()
   bool trigger_perceptions = sensors_node_->cycle_rt(nav_state_);
   bool trigger_localization = localizer_node_->cycle_rt(nav_state_, trigger_perceptions);
 
-  bool trigger_controller = false;
-
   bool trigger = trigger_perceptions || trigger_localization;
 
-  // "control_owner" (absent/"controller" by default) picks who gets to produce "cmd_vel" this
-  // cycle: the nominal controller, or a control-owning recovery mitigation selected by
-  // RecoveryManagerNode.
-  const std::string control_owner = nav_state_->has("control_owner") ?
-    nav_state_->get<std::string>("control_owner") : std::string("controller");
-
-  if (control_owner == "controller") {
+  // Recovery decides who produces "cmd_vel" this cycle: the nominal controller, unless a
+  // control-owning recovery mitigation holds control.
+  bool trigger_controller = false;
+  if (!recovery_node_->has_control(*nav_state_)) {
     trigger_controller = controller_node_->cycle_rt(nav_state_, trigger);
-  } else {
-    trigger_controller = recovery_node_->cycle_rt(nav_state_);
   }
 
-  // Level-0 safety reflexes: checked every RT cycle, regardless of which controller or
-  // recovery mitigator produced "cmd_vel".
-  bool reflex_intervened = false;
-  for (auto & reflex : safety_reflexes_) {
-    if (reflex->internal_check_and_mitigate(*nav_state_)) {
-      reflex_intervened = true;
-    }
-  }
+  // Recovery RT cycle: the control-owning mitigation (if any) and the level-0 safety reflexes,
+  // which check whatever "cmd_vel" was produced right before it is published.
+  const bool recovery_commanded = recovery_node_->cycle_rt(nav_state_);
 
   if (nav_state_->has("cmd_vel")) {
     geometry_msgs::msg::TwistStamped current_cmd_vel;
@@ -400,7 +325,7 @@ SystemNode::system_cycle_rt()
       current_cmd_vel.twist = geometry_msgs::msg::Twist();
     }
 
-    if (trigger_controller || reflex_intervened) {
+    if (trigger_controller || recovery_commanded) {
       if (use_cmd_vel_stamped_ && vel_pub_stamped_->get_subscription_count()) {
         vel_pub_stamped_->publish(current_cmd_vel);
       }
@@ -423,19 +348,6 @@ SystemNode::system_cycle()
   maps_manager_node_->cycle(nav_state_);
   goal_manager_->update(*nav_state_);
 
-  // Checked right after GoalManager so that, when the mitigation also asked to cancel the active
-  // mission (in the previous cycle), its client has already been told why.
-  if (!shutdown_requested_ && nav_state_->has("system_shutdown_requested") &&
-    nav_state_->get<bool>("system_shutdown_requested"))
-  {
-    {
-      std::lock_guard<std::mutex> lock(shutdown_reason_mutex_);
-      shutdown_reason_ = nav_state_->has("system_shutdown_reason") ?
-        nav_state_->get<std::string>("system_shutdown_reason") :
-        std::string("unrecoverable diagnostic");
-    }
-    shutdown_requested_ = true;
-  }
 
   rclcpp::Time planner_ts = planner_node_->get_last_execution_ts();
   rclcpp::Time goals_ts(goal_manager_->get_goals().header.stamp, planner_ts.get_clock_type());

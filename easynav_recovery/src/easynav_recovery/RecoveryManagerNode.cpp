@@ -35,6 +35,8 @@ RecoveryManagerNode::RecoveryManagerNode(const rclcpp::NodeOptions & options)
     "easynav_core", "easynav::RecoveryEvaluatorBase");
   mitigation_loader_ = std::make_unique<pluginlib::ClassLoader<easynav::RecoveryMitigationBase>>(
     "easynav_core", "easynav::RecoveryMitigationBase");
+  safety_reflex_loader_ = std::make_unique<pluginlib::ClassLoader<easynav::SafetyReflexBase>>(
+    "easynav_core", "easynav::SafetyReflexBase");
 
   // Standard ROS 2 diagnostics topic, so existing tooling (rqt_robot_monitor,
   // diagnostic_aggregator, ...) can consume what used to live only inside NavState's internal
@@ -127,6 +129,41 @@ RecoveryManagerNode::on_configure([[maybe_unused]] const rclcpp_lifecycle::State
         declare_parameter(name, default_value);
       }
     };
+
+  // Level-0 safety reflexes.
+  std::vector<std::string> safety_reflex_types;
+  declare_once("safety_reflex_types", safety_reflex_types);
+  get_parameter("safety_reflex_types", safety_reflex_types);
+
+  safety_reflexes_.clear();
+  for (const auto & reflex_type : safety_reflex_types) {
+    std::string plugin;
+    declare_once(reflex_type + std::string(".plugin"), plugin);
+    get_parameter(reflex_type + std::string(".plugin"), plugin);
+
+    try {
+      RCLCPP_INFO(
+        get_logger(), "Loading SafetyReflexBase %s [%s]", reflex_type.c_str(), plugin.c_str());
+
+      auto reflex = safety_reflex_loader_->createSharedInstance(plugin);
+
+      try {
+        reflex->initialize(shared_from_this(), reflex_type);
+      } catch (const std::runtime_error & e) {
+        RCLCPP_ERROR(
+          get_logger(), "Unable to initialize [%s]. Error: %s", plugin.c_str(), e.what());
+        return CallbackReturnT::FAILURE;
+      }
+
+      safety_reflexes_.push_back(reflex);
+      RCLCPP_INFO(
+        get_logger(), "Loaded SafetyReflexBase %s [%s]", reflex_type.c_str(), plugin.c_str());
+    } catch (pluginlib::PluginlibException & ex) {
+      RCLCPP_ERROR(
+        get_logger(), "Unable to load plugin easynav::SafetyReflexBase. Error: %s", ex.what());
+      return CallbackReturnT::FAILURE;
+    }
+  }
 
   std::vector<std::string> evaluator_types;
   declare_once("evaluator_types", evaluator_types);
@@ -273,6 +310,23 @@ RecoveryManagerNode::on_error([[maybe_unused]] const rclcpp_lifecycle::State & s
 void
 RecoveryManagerNode::cycle(std::shared_ptr<NavState> nav_state)
 {
+  reset_shared_state_if_released(*nav_state);
+
+  // Checked before this cycle's selection, so a request made by a mitigation selected in the
+  // previous cycle is latched one cycle later: by then GoalManager (which runs before this
+  // manager) has cancelled the mission and told its client why.
+  if (!shutdown_requested_ && nav_state->has("system_shutdown_requested") &&
+    nav_state->get<bool>("system_shutdown_requested"))
+  {
+    {
+      std::lock_guard<std::mutex> lock(shutdown_reason_mutex_);
+      shutdown_reason_ = nav_state->has("system_shutdown_reason") ?
+        nav_state->get<std::string>("system_shutdown_reason") :
+        std::string("unrecoverable diagnostic");
+    }
+    shutdown_requested_ = true;
+  }
+
   for (auto & evaluator : evaluators_) {
     evaluator->internal_update(*nav_state);
   }
@@ -364,21 +418,34 @@ RecoveryManagerNode::publish_mitigation_resolved(const std::string & key)
 bool
 RecoveryManagerNode::cycle_rt(std::shared_ptr<NavState> nav_state)
 {
-  if (!active_mitigation_ || !active_mitigation_->requires_control()) {
-    return false;
-  }
+  reset_shared_state_if_released(*nav_state);
 
-  RecoveryStatus status = active_mitigation_->internal_cycle(*nav_state);
-  if (status != RecoveryStatus::RUNNING) {
-    if (status == RecoveryStatus::FAILED) {
-      excluded_mitigations_[active_diagnostic_key_].insert(active_mitigation_->get_plugin_name());
+  bool commanded = false;
+
+  // 1. A control-owning mitigation produces "cmd_vel" instead of the controller.
+  if (active_mitigation_ && active_mitigation_->requires_control()) {
+    RecoveryStatus status = active_mitigation_->internal_cycle(*nav_state);
+    if (status != RecoveryStatus::RUNNING) {
+      if (status == RecoveryStatus::FAILED) {
+        excluded_mitigations_[active_diagnostic_key_].insert(
+          active_mitigation_->get_plugin_name());
+      }
+      active_mitigation_->internal_stop(*nav_state);
+      active_mitigation_.reset();
+      nav_state->set("control_owner", std::string("controller"));
     }
-    active_mitigation_->internal_stop(*nav_state);
-    active_mitigation_.reset();
-    nav_state->set("control_owner", std::string("controller"));
+    commanded = true;
   }
 
-  return true;
+  // 2. Level-0 safety reflexes: every RT cycle, whoever produced "cmd_vel" (controller or
+  // mitigation), right before it is published.
+  for (auto & reflex : safety_reflexes_) {
+    if (reflex->internal_check_and_mitigate(*nav_state)) {
+      commanded = true;
+    }
+  }
+
+  return commanded;
 }
 
 void
@@ -390,8 +457,39 @@ RecoveryManagerNode::release_plugins()
   active_diagnostic_key_.clear();
   mitigations_.clear();
   evaluators_.clear();
+  safety_reflexes_.clear();
   excluded_mitigations_.clear();
   keys_with_mitigation_history_.clear();
+  released_ = true;
+}
+
+void
+RecoveryManagerNode::reset_shared_state_if_released(NavState & nav_state)
+{
+  if (!released_.exchange(false)) {
+    return;
+  }
+  nav_state.set("control_owner", std::string("controller"));
+  nav_state.set_group("diagnostics", std::vector<std::string>{});
+}
+
+bool
+RecoveryManagerNode::has_control(NavState & nav_state)
+{
+  reset_shared_state_if_released(nav_state);
+
+  // "control_owner" (absent/"controller" by default) is written only by this manager: set to
+  // "recovery:<plugin>" when a control-owning mitigation is selected, back to "controller" when
+  // it finishes.
+  return nav_state.has("control_owner") &&
+         nav_state.get<std::string>("control_owner") != "controller";
+}
+
+std::string
+RecoveryManagerNode::get_shutdown_reason() const
+{
+  std::lock_guard<std::mutex> lock(shutdown_reason_mutex_);
+  return shutdown_reason_;
 }
 
 void

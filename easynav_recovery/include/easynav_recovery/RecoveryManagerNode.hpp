@@ -19,9 +19,13 @@
 #ifndef EASYNAV_RECOVERY__RECOVERYMANAGERNODE_HPP_
 #define EASYNAV_RECOVERY__RECOVERYMANAGERNODE_HPP_
 
+#include <atomic>
+#include <memory>
+#include <mutex>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
+#include <vector>
 
 #include "rclcpp/macros.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
@@ -33,6 +37,7 @@
 #include "easynav_common/types/NavState.hpp"
 #include "easynav_core/RecoveryEvaluatorBase.hpp"
 #include "easynav_core/RecoveryMitigationBase.hpp"
+#include "easynav_core/SafetyReflexBase.hpp"
 
 namespace easynav
 {
@@ -79,9 +84,10 @@ public:
   ~RecoveryManagerNode();
 
   /**
-   * @brief Configure the node: loads the plugins listed in the "evaluator_types" parameter.
+   * @brief Configure the node: loads the plugins listed in "safety_reflex_types",
+   * "evaluator_types" and "mitigation_types".
    * @param state Current lifecycle state.
-   * @return SUCCESS if every configured evaluator plugin loaded and initialized correctly.
+   * @return SUCCESS if every configured plugin loaded and initialized correctly.
    */
   CallbackReturnT on_configure(const rclcpp_lifecycle::State & state);
 
@@ -134,15 +140,40 @@ public:
   void cycle(std::shared_ptr<NavState> nav_state);
 
   /**
-   * @brief Runs one RT cycle: if a control-owning mitigation is active, its internal_cycle().
-   *
-   * On SUCCEEDED/FAILED, stops the mitigation and resets "control_owner" to "controller".
+   * @brief Whether recovery holds control of the robot this RT cycle, i.e. a control-owning
+   * mitigation is active and the nominal controller must not run.
    *
    * @param nav_state Shared navigation state.
-   * @return True if a mitigation produced "cmd_vel" this cycle (so SystemNode should publish
-   * it), false if there is no active control-owning mitigation.
+   */
+  [[nodiscard]] bool has_control(NavState & nav_state);
+
+  /**
+   * @brief Runs one RT cycle, after the nominal controller (if it ran):
+   *
+   * 1. If a control-owning mitigation is active, its internal_cycle() (it produces "cmd_vel").
+   *    On SUCCEEDED/FAILED, stops it and gives control back to the controller.
+   * 2. Every level-0 safety reflex, whoever produced "cmd_vel" this cycle.
+   *
+   * @param nav_state Shared navigation state.
+   * @return True if recovery produced or overrode "cmd_vel" this cycle (a control-owning
+   * mitigation ran, or a reflex intervened), so it must be published.
    */
   bool cycle_rt(std::shared_ptr<NavState> nav_state);
+
+  /**
+   * @brief Whether a mitigation asked EasyNav to terminate ("system_shutdown_requested" in
+   * NavState). Latched at the start of the non-RT cycle after the request, so that GoalManager
+   * has already told the client why its mission ended (see ShutdownRecovery).
+   */
+  [[nodiscard]] bool is_shutdown_requested() const {return shutdown_requested_;}
+
+  /// @brief The diagnostics that caused the requested shutdown ("system_shutdown_reason").
+  [[nodiscard]] std::string get_shutdown_reason() const;
+
+  /**
+   * @brief Number of currently loaded safety reflex plugins. Exposed mainly for testing.
+   */
+  [[nodiscard]] size_t get_num_safety_reflexes() const {return safety_reflexes_.size();}
 
   /**
    * @brief Number of currently loaded evaluator plugins. Exposed mainly for testing.
@@ -181,9 +212,29 @@ private:
   /// alone is not enough: it only tracks FAILED attempts, not a first-try SUCCEEDED).
   std::unordered_set<std::string> keys_with_mitigation_history_;
 
-  /// @brief Drops the evaluator and mitigation instances and the arbitration state (on cleanup,
-  /// shutdown and error), so that a later configure starts from scratch.
+  /// @brief Drops the reflex, evaluator and mitigation instances and the arbitration state (on
+  /// cleanup, shutdown and error), so that a later configure starts from scratch.
   void release_plugins();
+
+  /// @brief Applies, on the first cycle after release_plugins(), what that release means for
+  /// the shared state: control back to the controller, and no diagnostics of plugins that may
+  /// not be loaded again (the new ones re-register).
+  void reset_shared_state_if_released(NavState & nav_state);
+
+  /// @brief Set by release_plugins(), consumed by reset_shared_state_if_released().
+  std::atomic<bool> released_ {false};
+
+  /// @brief Pluginlib class loader for level-0 safety reflexes. The libraries stay loaded (see
+  /// PluginSwitcher::keep_libraries_loaded()).
+  std::unique_ptr<pluginlib::ClassLoader<SafetyReflexBase>> safety_reflex_loader_;
+
+  /// @brief Level-0 safety reflexes, checked every RT cycle (see cycle_rt()).
+  std::vector<std::shared_ptr<SafetyReflexBase>> safety_reflexes_;
+
+  /// @brief Latched shutdown request (see is_shutdown_requested()).
+  std::atomic<bool> shutdown_requested_ {false};
+  std::string shutdown_reason_;
+  mutable std::mutex shutdown_reason_mutex_;
 
   /// @brief Plugin loader for recovery evaluators.
   std::unique_ptr<pluginlib::ClassLoader<RecoveryEvaluatorBase>> evaluator_loader_;

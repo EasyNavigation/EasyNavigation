@@ -15,4 +15,12 @@
       </description>
     </class>
   </library>
+  <library path="dummy_safety_reflex">
+    <class name="easynav_recovery/DummySafetyReflex" type="easynav::DummySafetyReflex" base_class_type="easynav::SafetyReflexBase">
+      <description>
+      A default "dummy" implementation for SafetyReflexBase. Never intervenes unless its
+      "trigger" parameter is true, then stops the robot. Serves as an example and a reference plugin.
+      </description>
+    </class>
+  </library>
 </class_libraries>

@@ -10,9 +10,6 @@ target_link_libraries(system_pause_tests ${PROJECT_NAME})
 ament_add_gtest(system_lifecycle_cycle_tests system_lifecycle_cycle_tests.cpp)
 target_link_libraries(system_lifecycle_cycle_tests ${PROJECT_NAME})
 
-ament_add_gtest(system_safety_reflex_tests system_safety_reflex_tests.cpp)
-target_link_libraries(system_safety_reflex_tests ${PROJECT_NAME})
-
 ament_add_gtest(system_shutdown_request_tests system_shutdown_request_tests.cpp)
 target_link_libraries(system_shutdown_request_tests ${PROJECT_NAME})
 

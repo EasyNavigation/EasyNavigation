@@ -45,6 +45,18 @@ target_link_libraries(dummy_evaluator PUBLIC
   pluginlib::pluginlib
 )
 
+add_library(dummy_safety_reflex SHARED
+  src/easynav_recovery/DummySafetyReflex.cpp
+)
+target_include_directories(dummy_safety_reflex PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include/${PROJECT_NAME}>
+)
+target_link_libraries(dummy_safety_reflex PUBLIC
+  easynav_core::easynav_core
+  pluginlib::pluginlib
+)
+
 add_library(dummy_mitigation SHARED
   src/easynav_recovery/DummyMitigation.cpp
 )
@@ -66,6 +78,7 @@ install(TARGETS
   ${PROJECT_NAME}
   dummy_evaluator
   dummy_mitigation
+  dummy_safety_reflex
   EXPORT export_${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
@@ -87,6 +100,7 @@ ament_export_libraries(
   ${PROJECT_NAME}
   dummy_evaluator
   dummy_mitigation
+  dummy_safety_reflex
 )
 ament_export_targets(export_${PROJECT_NAME})
 
