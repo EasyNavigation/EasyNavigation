@@ -18,6 +18,10 @@
 #ifndef EASYNAV_CORE__LOCALIZERMETHODBASE_HPP_
 #define EASYNAV_CORE__LOCALIZERMETHODBASE_HPP_
 
+#include <atomic>
+
+#include "geometry_msgs/msg/pose_with_covariance_stamped.hpp"
+
 #include "easynav_common/types/NavState.hpp"
 #include "easynav_core/MethodBase.hpp"
 
@@ -70,6 +74,27 @@ protected:
    * @param nav_state The current state of the navigation system.
    */
   virtual void update(NavState & nav_state) = 0;
+
+  /**
+   * @brief Called once, before the first cycle of this instance, with the robot pose that a
+   * previous localizer instance left in NavState ("robot_pose"), if it is valid (in the map
+   * frame, finite).
+   *
+   * That happens when EasyNav is reconfigured while running (cleanup + configure, e.g. to switch
+   * plugins mid-mission): a localizer that keeps an estimate (e.g. AMCL) can start from where the
+   * robot is instead of from its configured initial pose. Default: ignore it.
+   *
+   * @param pose Last known pose, with the covariance the previous localizer reported.
+   */
+  virtual void on_last_known_pose(
+    [[maybe_unused]] const geometry_msgs::msg::PoseWithCovarianceStamped & pose) {}
+
+private:
+  /// @brief Hands the last known pose to on_last_known_pose(), only on the first cycle (RT or
+  /// not, whichever comes first): after it, "robot_pose" is this instance's own estimate.
+  void check_last_known_pose(const NavState & nav_state);
+
+  std::atomic<bool> last_known_pose_checked_ {false};
 };
 
 }  // namespace easynav

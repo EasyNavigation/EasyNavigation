@@ -181,6 +181,10 @@ private:
   /// alone is not enough: it only tracks FAILED attempts, not a first-try SUCCEEDED).
   std::unordered_set<std::string> keys_with_mitigation_history_;
 
+  /// @brief Drops the evaluator and mitigation instances and the arbitration state (on cleanup,
+  /// shutdown and error), so that a later configure starts from scratch.
+  void release_plugins();
+
   /// @brief Plugin loader for recovery evaluators.
   std::unique_ptr<pluginlib::ClassLoader<RecoveryEvaluatorBase>> evaluator_loader_;
 

@@ -35,13 +35,27 @@ CollisionSafetyReflex::on_initialize()
   collision_marker_pub_ = node->create_publisher<visualization_msgs::msg::MarkerArray>(
     "collision_area", 10);
 
-  node->declare_parameter(param_prefix + ".debug_markers", debug_markers_);
-  node->declare_parameter(param_prefix + ".robot_radius", robot_radius_);
-  node->declare_parameter(param_prefix + ".robot_height", robot_height_);
-  node->declare_parameter(param_prefix + ".brake_acc", brake_acc_);
-  node->declare_parameter(param_prefix + ".safety_margin", safety_margin_);
-  node->declare_parameter(param_prefix + ".z_min_filter", z_min_filter_);
-  node->declare_parameter(param_prefix + ".downsample_leaf_size", downsample_leaf_size_);
+  if (!node->has_parameter(param_prefix + ".debug_markers")) {
+    node->declare_parameter(param_prefix + ".debug_markers", debug_markers_);
+  }
+  if (!node->has_parameter(param_prefix + ".robot_radius")) {
+    node->declare_parameter(param_prefix + ".robot_radius", robot_radius_);
+  }
+  if (!node->has_parameter(param_prefix + ".robot_height")) {
+    node->declare_parameter(param_prefix + ".robot_height", robot_height_);
+  }
+  if (!node->has_parameter(param_prefix + ".brake_acc")) {
+    node->declare_parameter(param_prefix + ".brake_acc", brake_acc_);
+  }
+  if (!node->has_parameter(param_prefix + ".safety_margin")) {
+    node->declare_parameter(param_prefix + ".safety_margin", safety_margin_);
+  }
+  if (!node->has_parameter(param_prefix + ".z_min_filter")) {
+    node->declare_parameter(param_prefix + ".z_min_filter", z_min_filter_);
+  }
+  if (!node->has_parameter(param_prefix + ".downsample_leaf_size")) {
+    node->declare_parameter(param_prefix + ".downsample_leaf_size", downsample_leaf_size_);
+  }
 
   node->get_parameter(param_prefix + ".debug_markers", debug_markers_);
   node->get_parameter(param_prefix + ".robot_radius", robot_radius_);

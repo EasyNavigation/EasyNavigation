@@ -25,10 +25,14 @@ void DummyMitigation::on_initialize()
   auto node = get_node();
   const auto & plugin_name = get_plugin_name();
 
-  node->declare_parameter<bool>(plugin_name + ".requires_control", requires_control_);
+  if (!node->has_parameter(plugin_name + ".requires_control")) {
+    node->declare_parameter<bool>(plugin_name + ".requires_control", requires_control_);
+  }
   node->get_parameter<bool>(plugin_name + ".requires_control", requires_control_);
 
-  node->declare_parameter<bool>(plugin_name + ".should_fail", should_fail_);
+  if (!node->has_parameter(plugin_name + ".should_fail")) {
+    node->declare_parameter<bool>(plugin_name + ".should_fail", should_fail_);
+  }
   node->get_parameter<bool>(plugin_name + ".should_fail", should_fail_);
 }
 

@@ -120,14 +120,22 @@ using CallbackReturnT = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterfac
 CallbackReturnT
 RecoveryManagerNode::on_configure([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
+  // Parameters stay declared after a cleanup (rclcpp cannot undeclare them), so a second
+  // configure must not declare them again.
+  auto declare_once = [this](const std::string & name, const auto & default_value) {
+      if (!has_parameter(name)) {
+        declare_parameter(name, default_value);
+      }
+    };
+
   std::vector<std::string> evaluator_types;
-  declare_parameter("evaluator_types", evaluator_types);
+  declare_once("evaluator_types", evaluator_types);
   get_parameter("evaluator_types", evaluator_types);
 
   evaluators_.clear();
   for (const auto & evaluator_type : evaluator_types) {
     std::string plugin;
-    declare_parameter(evaluator_type + std::string(".plugin"), plugin);
+    declare_once(evaluator_type + std::string(".plugin"), plugin);
     get_parameter(evaluator_type + std::string(".plugin"), plugin);
 
     try {
@@ -158,7 +166,7 @@ RecoveryManagerNode::on_configure([[maybe_unused]] const rclcpp_lifecycle::State
   }
 
   std::vector<std::string> mitigation_types;
-  declare_parameter("mitigation_types", mitigation_types);
+  declare_once("mitigation_types", mitigation_types);
   get_parameter("mitigation_types", mitigation_types);
 
   active_mitigation_.reset();
@@ -175,11 +183,11 @@ RecoveryManagerNode::on_configure([[maybe_unused]] const rclcpp_lifecycle::State
 
   for (const auto & mitigation_type : mitigation_types) {
     std::string plugin;
-    declare_parameter(mitigation_type + std::string(".plugin"), plugin);
+    declare_once(mitigation_type + std::string(".plugin"), plugin);
     get_parameter(mitigation_type + std::string(".plugin"), plugin);
 
     int priority = 100;
-    declare_parameter(mitigation_type + std::string(".priority"), priority);
+    declare_once(mitigation_type + std::string(".priority"), priority);
     get_parameter(mitigation_type + std::string(".priority"), priority);
 
     try {
@@ -244,18 +252,21 @@ RecoveryManagerNode::on_deactivate([[maybe_unused]] const rclcpp_lifecycle::Stat
 CallbackReturnT
 RecoveryManagerNode::on_cleanup([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
+  release_plugins();
   return CallbackReturnT::SUCCESS;
 }
 
 CallbackReturnT
 RecoveryManagerNode::on_shutdown([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
+  release_plugins();
   return CallbackReturnT::SUCCESS;
 }
 
 CallbackReturnT
 RecoveryManagerNode::on_error([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
+  release_plugins();
   return CallbackReturnT::SUCCESS;
 }
 
@@ -368,6 +379,19 @@ RecoveryManagerNode::cycle_rt(std::shared_ptr<NavState> nav_state)
   }
 
   return true;
+}
+
+void
+RecoveryManagerNode::release_plugins()
+{
+  // The libraries stay loaded (see PluginSwitcher::keep_libraries_loaded()): only the instances
+  // and the arbitration state go, so the next configure starts from scratch.
+  active_mitigation_.reset();
+  active_diagnostic_key_.clear();
+  mitigations_.clear();
+  evaluators_.clear();
+  excluded_mitigations_.clear();
+  keys_with_mitigation_history_.clear();
 }
 
 void

@@ -141,16 +141,25 @@ SystemNode::on_configure(const rclcpp_lifecycle::State & state)
     }
   }
 
-  goal_manager_ = GoalManager::make_shared(*nav_state_, shared_from_this());
+  // The GoalManager holds the mission: created once and kept across cleanup/configure (the
+  // sequence used to switch plugins at runtime), so an ongoing navigation is not lost.
+  if (!goal_manager_) {
+    goal_manager_ = GoalManager::make_shared(*nav_state_, shared_from_this());
+  }
 
+  // Parameters stay declared after a cleanup: declare them only the first time.
   std::vector<std::string> safety_reflex_types;
-  declare_parameter("safety_reflex_types", safety_reflex_types);
+  if (!has_parameter("safety_reflex_types")) {
+    declare_parameter("safety_reflex_types", safety_reflex_types);
+  }
   get_parameter("safety_reflex_types", safety_reflex_types);
 
   safety_reflexes_.clear();
   for (const auto & reflex_type : safety_reflex_types) {
     std::string plugin;
-    declare_parameter(reflex_type + std::string(".plugin"), plugin);
+    if (!has_parameter(reflex_type + std::string(".plugin"))) {
+      declare_parameter(reflex_type + std::string(".plugin"), plugin);
+    }
     get_parameter(reflex_type + std::string(".plugin"), plugin);
 
     try {
@@ -265,10 +274,16 @@ SystemNode::on_cleanup(const rclcpp_lifecycle::State & state)
     }
   }
 
-  goal_manager_ = nullptr;
+  // goal_manager_ is kept: the mission survives a reconfiguration (see on_configure()).
+  safety_reflexes_.clear();
   navstate_pub_ = nullptr;
   vel_pub_ = nullptr;
   vel_pub_stamped_ = nullptr;
+
+  // The recovery plugins are gone: give control back to the controller, and drop the
+  // diagnostics of evaluators that may not be loaded again (the new ones re-register).
+  nav_state_->set("control_owner", std::string("controller"));
+  nav_state_->set_group("diagnostics", std::vector<std::string>{});
 
   return CallbackReturnT::SUCCESS;
 }
