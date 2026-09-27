@@ -18,6 +18,7 @@
 #include "gtest/gtest.h"
 
 #include "nav_msgs/msg/odometry.hpp"
+#include "geometry_msgs/msg/twist_stamped.hpp"
 
 #include "easynav_common/types/NavState.hpp"
 #include "easynav_common/RTTFBuffer.hpp"
@@ -26,6 +27,7 @@
 #include "easynav_core/PlannerMethodBase.hpp"
 #include "easynav_core/MapsManagerBase.hpp"
 #include "easynav_core/ControllerMethodBase.hpp"
+#include "easynav_core/SafetyReflexBase.hpp"
 
 class CoreMethodTestCase : public ::testing::Test
 {
@@ -192,6 +194,113 @@ public:
 
   void on_initialize() override {}
   void update_rt(easynav::NavState &) override {rt_call_count++;}
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Plugins that throw: internal_update*/force_update must not propagate the
+// exception (see docs/recoveries_easynav.md, "Fase 0" of the recovery roadmap).
+// ─────────────────────────────────────────────────────────────────────────────
+
+class ThrowingLocalizer : public easynav::LocalizerMethodBase
+{
+public:
+  int rt_call_count {0};
+  int non_rt_call_count {0};
+
+  void on_initialize() override {}
+  void update_rt(easynav::NavState &) override
+  {
+    rt_call_count++;
+    throw std::runtime_error("boom in localizer update_rt");
+  }
+  void update(easynav::NavState &) override
+  {
+    non_rt_call_count++;
+    throw std::runtime_error("boom in localizer update");
+  }
+};
+
+class ThrowingPlanner : public easynav::PlannerMethodBase
+{
+public:
+  int call_count {0};
+
+  void on_initialize() override {}
+  void update(easynav::NavState &) override
+  {
+    call_count++;
+    throw std::runtime_error("boom in planner update");
+  }
+};
+
+class ThrowingMapsManager : public easynav::MapsManagerBase
+{
+public:
+  int call_count {0};
+
+  void on_initialize() override {}
+  void update(easynav::NavState &) override
+  {
+    call_count++;
+    throw std::runtime_error("boom in maps manager update");
+  }
+};
+
+class ThrowingController : public easynav::ControllerMethodBase
+{
+public:
+  int rt_call_count {0};
+
+  void on_initialize() override {}
+  void update_rt(easynav::NavState &) override
+  {
+    rt_call_count++;
+    throw std::runtime_error("boom in controller update_rt");
+  }
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SafetyReflexBase mocks (level 0, see docs/recoveries_easynav.md).
+// ─────────────────────────────────────────────────────────────────────────────
+
+class TrackingReflex : public easynav::SafetyReflexBase
+{
+public:
+  bool should_trigger {false};
+  int check_calls {0};
+  int mitigate_calls {0};
+
+  void on_initialize() override {}
+
+  bool check(easynav::NavState &) override
+  {
+    check_calls++;
+    return should_trigger;
+  }
+
+  void mitigate(easynav::NavState & nav_state) override
+  {
+    mitigate_calls++;
+    geometry_msgs::msg::TwistStamped applied;
+    applied.twist.linear.x = 42.0;  // sentinel value, distinguishable from a fail-safe stop
+    nav_state.set("cmd_vel", applied);
+  }
+};
+
+class ThrowingCheckReflex : public easynav::SafetyReflexBase
+{
+public:
+  void on_initialize() override {}
+  bool check(easynav::NavState &) override {throw std::runtime_error("boom in check");}
+  void mitigate(easynav::NavState &) override {}
+};
+
+class ThrowingMitigateReflex : public easynav::SafetyReflexBase
+{
+public:
+  void on_initialize() override {}
+  bool check(easynav::NavState &) override {return true;}
+  void mitigate(easynav::NavState &) override {throw std::runtime_error("boom in mitigate");}
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -489,6 +598,160 @@ TEST_F(CoreMethodTestCase, ControllerInternalUpdateRtRunsWhenTimeElapsed)
 
   EXPECT_TRUE(result);
   EXPECT_EQ(ctrl.rt_call_count, 1);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// A throwing plugin must not crash the RT thread / the process (Fase 0, see
+// docs/recoveries_easynav.md).
+// ─────────────────────────────────────────────────────────────────────────────
+
+TEST_F(CoreMethodTestCase, LocalizerUpdateRtExceptionDoesNotPropagate)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_loc_throw_rt_node");
+  ThrowingLocalizer localizer;
+  localizer.initialize(node, "loc_throw_rt");
+
+  easynav::NavState nav_state;
+  bool result = false;
+  EXPECT_NO_THROW(result = localizer.internal_update_rt(nav_state, true));
+
+  EXPECT_TRUE(result);
+  EXPECT_EQ(localizer.rt_call_count, 1);
+}
+
+TEST_F(CoreMethodTestCase, LocalizerUpdateExceptionDoesNotPropagate)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_loc_throw_node");
+  ThrowingLocalizer localizer;
+  localizer.initialize(node, "loc_throw");
+
+  std::this_thread::sleep_for(std::chrono::milliseconds(120));
+  easynav::NavState nav_state;
+  EXPECT_NO_THROW(localizer.internal_update(nav_state));
+
+  EXPECT_EQ(localizer.non_rt_call_count, 1);
+}
+
+TEST_F(CoreMethodTestCase, PlannerInternalUpdateExceptionDoesNotPropagate)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_plan_throw_node");
+  ThrowingPlanner planner;
+  planner.initialize(node, "plan_throw");
+
+  std::this_thread::sleep_for(std::chrono::milliseconds(120));
+  easynav::NavState nav_state;
+  EXPECT_NO_THROW(planner.internal_update(nav_state));
+
+  EXPECT_EQ(planner.call_count, 1);
+}
+
+TEST_F(CoreMethodTestCase, PlannerForceUpdateExceptionDoesNotPropagate)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_plan_throw_force_node");
+  ThrowingPlanner planner;
+  planner.initialize(node, "plan_throw_force");
+
+  easynav::NavState nav_state;
+  EXPECT_NO_THROW(planner.force_update(nav_state));
+
+  EXPECT_EQ(planner.call_count, 1);
+}
+
+TEST_F(CoreMethodTestCase, MapsManagerInternalUpdateExceptionDoesNotPropagate)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_maps_throw_node");
+  ThrowingMapsManager maps;
+  maps.initialize(node, "maps_throw");
+
+  std::this_thread::sleep_for(std::chrono::milliseconds(120));
+  easynav::NavState nav_state;
+  EXPECT_NO_THROW(maps.internal_update(nav_state));
+
+  EXPECT_EQ(maps.call_count, 1);
+}
+
+TEST_F(CoreMethodTestCase, ControllerInternalUpdateRtExceptionDoesNotPropagate)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_ctrl_throw_node");
+  ThrowingController ctrl;
+  ctrl.initialize(node, "ctrl_throw");
+
+  easynav::NavState nav_state;
+  bool result = false;
+  EXPECT_NO_THROW(result = ctrl.internal_update_rt(nav_state, true));
+
+  EXPECT_TRUE(result);
+  EXPECT_EQ(ctrl.rt_call_count, 1);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SafetyReflexBase: internal_check_and_mitigate (level 0, see
+// docs/recoveries_easynav.md).
+// ─────────────────────────────────────────────────────────────────────────────
+
+TEST_F(CoreMethodTestCase, ReflexDoesNotMitigateWhenCheckReturnsFalse)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_reflex_no_trigger_node");
+  TrackingReflex reflex;
+  reflex.initialize(node, "reflex_p");
+  reflex.should_trigger = false;
+
+  easynav::NavState nav_state;
+  bool result = reflex.internal_check_and_mitigate(nav_state);
+
+  EXPECT_FALSE(result);
+  EXPECT_EQ(reflex.check_calls, 1);
+  EXPECT_EQ(reflex.mitigate_calls, 0);
+}
+
+TEST_F(CoreMethodTestCase, ReflexMitigatesWhenCheckReturnsTrue)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_reflex_trigger_node");
+  TrackingReflex reflex;
+  reflex.initialize(node, "reflex_p2");
+  reflex.should_trigger = true;
+
+  easynav::NavState nav_state;
+  bool result = reflex.internal_check_and_mitigate(nav_state);
+
+  EXPECT_TRUE(result);
+  EXPECT_EQ(reflex.mitigate_calls, 1);
+  EXPECT_DOUBLE_EQ(
+    nav_state.get<geometry_msgs::msg::TwistStamped>("cmd_vel").twist.linear.x, 42.0);
+}
+
+TEST_F(CoreMethodTestCase, ReflexFailsSafeWhenCheckThrows)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_reflex_check_throw_node");
+  ThrowingCheckReflex reflex;
+  reflex.initialize(node, "reflex_p3");
+
+  easynav::NavState nav_state;
+  bool result = false;
+  EXPECT_NO_THROW(result = reflex.internal_check_and_mitigate(nav_state));
+
+  EXPECT_TRUE(result);
+  ASSERT_TRUE(nav_state.has("cmd_vel"));
+  const auto & applied = nav_state.get<geometry_msgs::msg::TwistStamped>("cmd_vel");
+  EXPECT_DOUBLE_EQ(applied.twist.linear.x, 0.0);
+  EXPECT_DOUBLE_EQ(applied.twist.angular.z, 0.0);
+}
+
+TEST_F(CoreMethodTestCase, ReflexFailsSafeWhenMitigateThrows)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>(
+    "test_reflex_mitigate_throw_node");
+  ThrowingMitigateReflex reflex;
+  reflex.initialize(node, "reflex_p4");
+
+  easynav::NavState nav_state;
+  bool result = false;
+  EXPECT_NO_THROW(result = reflex.internal_check_and_mitigate(nav_state));
+
+  EXPECT_TRUE(result);
+  ASSERT_TRUE(nav_state.has("cmd_vel"));
+  const auto & applied = nav_state.get<geometry_msgs::msg::TwistStamped>("cmd_vel");
+  EXPECT_DOUBLE_EQ(applied.twist.linear.x, 0.0);
 }
 
 int main(int argc, char ** argv)
