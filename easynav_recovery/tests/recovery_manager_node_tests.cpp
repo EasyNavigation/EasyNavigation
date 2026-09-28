@@ -13,6 +13,9 @@
 // limitations under the License.
 
 #include <algorithm>
+#include <memory>
+#include <string>
+#include <vector>
 #include <chrono>
 #include <thread>
 
@@ -24,7 +27,31 @@
 #include "lifecycle_msgs/msg/transition.hpp"
 #include "lifecycle_msgs/msg/state.hpp"
 
+#include "easynav_recovery/DefaultRecoveryManager.hpp"
 #include "easynav_recovery/RecoveryManagerNode.hpp"
+
+
+namespace
+{
+
+// The recovery system RecoveryManagerNode loaded (the default one unless configured otherwise).
+std::shared_ptr<easynav::DefaultRecoveryManager> default_manager(
+  const std::shared_ptr<easynav::RecoveryManagerNode> & node)
+{
+  return std::dynamic_pointer_cast<easynav::DefaultRecoveryManager>(node->get_recovery_manager());
+}
+
+// Records what the recovery system asks of the navigation system.
+class RecordingSystemActions : public easynav::SystemActions
+{
+public:
+  void abort_mission(const std::string & reason) override {aborted.push_back(reason);}
+  void request_shutdown(const std::string & reason) override {shutdowns.push_back(reason);}
+  std::vector<std::string> aborted;
+  std::vector<std::string> shutdowns;
+};
+
+}  // namespace
 
 class RecoveryManagerNodeTestCase : public ::testing::Test
 {
@@ -51,7 +78,7 @@ TEST_F(RecoveryManagerNodeTestCase, configure_no_evaluators)
   EXPECT_EQ(
     node->get_current_state().id(),
     lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE);
-  EXPECT_EQ(node->get_num_evaluators(), 0u);
+  EXPECT_EQ(default_manager(node)->get_num_evaluators(), 0u);
 }
 
 TEST_F(RecoveryManagerNodeTestCase, configure_loads_multiple_evaluators)
@@ -60,18 +87,18 @@ TEST_F(RecoveryManagerNodeTestCase, configure_loads_multiple_evaluators)
   auto node = std::make_shared<easynav::RecoveryManagerNode>(
     rclcpp::NodeOptions()
     .append_parameter_override(
-      "evaluator_types", std::vector<std::string>{"eval_a", "eval_b"})
+      "recovery_manager.evaluator_types", std::vector<std::string>{"eval_a", "eval_b"})
     .append_parameter_override(
-      "eval_a.plugin", std::string("easynav_recovery/DummyEvaluator"))
+      "recovery_manager.eval_a.plugin", std::string("easynav_recovery/DummyEvaluator"))
     .append_parameter_override(
-      "eval_b.plugin", std::string("easynav_recovery/DummyEvaluator")));
+      "recovery_manager.eval_b.plugin", std::string("easynav_recovery/DummyEvaluator")));
 
   node->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_CONFIGURE);
 
   EXPECT_EQ(
     node->get_current_state().id(),
     lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE);
-  EXPECT_EQ(node->get_num_evaluators(), 2u);
+  EXPECT_EQ(default_manager(node)->get_num_evaluators(), 2u);
 }
 
 TEST_F(RecoveryManagerNodeTestCase, configure_fails_with_nonexistent_plugin)
@@ -79,9 +106,9 @@ TEST_F(RecoveryManagerNodeTestCase, configure_fails_with_nonexistent_plugin)
   auto node = std::make_shared<easynav::RecoveryManagerNode>(
     rclcpp::NodeOptions()
     .append_parameter_override(
-      "evaluator_types", std::vector<std::string>{"eval_a"})
+      "recovery_manager.evaluator_types", std::vector<std::string>{"eval_a"})
     .append_parameter_override(
-      "eval_a.plugin", std::string("easynav_recovery/NoSuchEvaluator")));
+      "recovery_manager.eval_a.plugin", std::string("easynav_recovery/NoSuchEvaluator")));
 
   node->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_CONFIGURE);
 
@@ -95,9 +122,9 @@ TEST_F(RecoveryManagerNodeTestCase, cycle_runs_loaded_evaluators)
   auto node = std::make_shared<easynav::RecoveryManagerNode>(
     rclcpp::NodeOptions()
     .append_parameter_override(
-      "evaluator_types", std::vector<std::string>{"eval_a"})
+      "recovery_manager.evaluator_types", std::vector<std::string>{"eval_a"})
     .append_parameter_override(
-      "eval_a.plugin", std::string("easynav_recovery/DummyEvaluator")));
+      "recovery_manager.eval_a.plugin", std::string("easynav_recovery/DummyEvaluator")));
 
   node->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_CONFIGURE);
   ASSERT_EQ(
@@ -110,10 +137,11 @@ TEST_F(RecoveryManagerNodeTestCase, cycle_runs_loaded_evaluators)
   auto nav_state = std::make_shared<easynav::NavState>();
   node->cycle(nav_state);
 
-  EXPECT_TRUE(nav_state->has("diagnostics.eval_a"));
+  EXPECT_TRUE(nav_state->has("diagnostics.recovery_manager.eval_a"));
   auto members = nav_state->get_group_keys("diagnostics");
   EXPECT_NE(
-    std::find(members.begin(), members.end(), "diagnostics.eval_a"), members.end());
+    std::find(members.begin(), members.end(), "diagnostics.recovery_manager.eval_a"),
+    members.end());
 }
 
 TEST_F(RecoveryManagerNodeTestCase, configure_loads_mitigations)
@@ -121,17 +149,17 @@ TEST_F(RecoveryManagerNodeTestCase, configure_loads_mitigations)
   auto node = std::make_shared<easynav::RecoveryManagerNode>(
     rclcpp::NodeOptions()
     .append_parameter_override(
-      "mitigation_types", std::vector<std::string>{"mit_a"})
+      "recovery_manager.mitigation_types", std::vector<std::string>{"mit_a"})
     .append_parameter_override(
-      "mit_a.plugin", std::string("easynav_recovery/DummyMitigation")));
+      "recovery_manager.mit_a.plugin", std::string("easynav_recovery/DummyMitigation")));
 
   node->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_CONFIGURE);
 
   EXPECT_EQ(
     node->get_current_state().id(),
     lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE);
-  EXPECT_EQ(node->get_num_mitigations(), 1u);
-  EXPECT_TRUE(node->get_active_mitigation_name().empty());
+  EXPECT_EQ(default_manager(node)->get_num_mitigations(), 1u);
+  EXPECT_TRUE(default_manager(node)->get_active_mitigation_name().empty());
 }
 
 TEST_F(RecoveryManagerNodeTestCase, cycle_selects_and_resolves_non_control_mitigation)
@@ -139,9 +167,9 @@ TEST_F(RecoveryManagerNodeTestCase, cycle_selects_and_resolves_non_control_mitig
   auto node = std::make_shared<easynav::RecoveryManagerNode>(
     rclcpp::NodeOptions()
     .append_parameter_override(
-      "mitigation_types", std::vector<std::string>{"mit_a"})
+      "recovery_manager.mitigation_types", std::vector<std::string>{"mit_a"})
     .append_parameter_override(
-      "mit_a.plugin", std::string("easynav_recovery/DummyMitigation")));
+      "recovery_manager.mit_a.plugin", std::string("easynav_recovery/DummyMitigation")));
   // requires_control defaults to false: this mitigation is cycled from cycle(), not cycle_rt().
 
   node->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_CONFIGURE);
@@ -157,12 +185,12 @@ TEST_F(RecoveryManagerNodeTestCase, cycle_selects_and_resolves_non_control_mitig
 
   // First cycle(): evaluators (none configured), then selection picks mit_a.
   node->cycle(nav_state);
-  EXPECT_EQ(node->get_active_mitigation_name(), "mit_a");
+  EXPECT_EQ(default_manager(node)->get_active_mitigation_name(), "recovery_manager.mit_a");
 
   // Second cycle(): the active (non-control) mitigation is cycled; DummyMitigation always
   // reports SUCCEEDED on its first on_cycle(), so it is stopped and cleared immediately.
   node->cycle(nav_state);
-  EXPECT_TRUE(node->get_active_mitigation_name().empty());
+  EXPECT_TRUE(default_manager(node)->get_active_mitigation_name().empty());
 }
 
 TEST_F(RecoveryManagerNodeTestCase, cycle_rt_drives_control_owning_mitigation_and_resets_owner)
@@ -170,10 +198,10 @@ TEST_F(RecoveryManagerNodeTestCase, cycle_rt_drives_control_owning_mitigation_an
   auto node = std::make_shared<easynav::RecoveryManagerNode>(
     rclcpp::NodeOptions()
     .append_parameter_override(
-      "mitigation_types", std::vector<std::string>{"mit_a"})
+      "recovery_manager.mitigation_types", std::vector<std::string>{"mit_a"})
     .append_parameter_override(
-      "mit_a.plugin", std::string("easynav_recovery/DummyMitigation"))
-    .append_parameter_override("mit_a.requires_control", true));
+      "recovery_manager.mit_a.plugin", std::string("easynav_recovery/DummyMitigation"))
+    .append_parameter_override("recovery_manager.mit_a.requires_control", true));
 
   node->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_CONFIGURE);
   ASSERT_EQ(
@@ -188,15 +216,15 @@ TEST_F(RecoveryManagerNodeTestCase, cycle_rt_drives_control_owning_mitigation_an
 
   // cycle() selects it and, because it requires control, sets "control_owner".
   node->cycle(nav_state);
-  ASSERT_EQ(node->get_active_mitigation_name(), "mit_a");
+  ASSERT_EQ(default_manager(node)->get_active_mitigation_name(), "recovery_manager.mit_a");
   ASSERT_TRUE(nav_state->has("control_owner"));
-  EXPECT_EQ(nav_state->get<std::string>("control_owner"), "recovery:mit_a");
+  EXPECT_EQ(nav_state->get<std::string>("control_owner"), "recovery:recovery_manager.mit_a");
 
   // cycle_rt() drives it (not cycle(), since it requires control); DummyMitigation succeeds
   // immediately, so control_owner is handed back to "controller".
   bool wrote_cmd_vel = node->cycle_rt(nav_state);
   EXPECT_TRUE(wrote_cmd_vel);
-  EXPECT_TRUE(node->get_active_mitigation_name().empty());
+  EXPECT_TRUE(default_manager(node)->get_active_mitigation_name().empty());
   EXPECT_EQ(nav_state->get<std::string>("control_owner"), "controller");
 }
 
@@ -208,12 +236,12 @@ TEST_F(RecoveryManagerNodeTestCase, failed_mitigation_is_excluded_and_next_candi
   auto node = std::make_shared<easynav::RecoveryManagerNode>(
     rclcpp::NodeOptions()
     .append_parameter_override(
-      "mitigation_types", std::vector<std::string>{"mit_a", "mit_b"})
+      "recovery_manager.mitigation_types", std::vector<std::string>{"mit_a", "mit_b"})
     .append_parameter_override(
-      "mit_a.plugin", std::string("easynav_recovery/DummyMitigation"))
-    .append_parameter_override("mit_a.should_fail", true)
+      "recovery_manager.mit_a.plugin", std::string("easynav_recovery/DummyMitigation"))
+    .append_parameter_override("recovery_manager.mit_a.should_fail", true)
     .append_parameter_override(
-      "mit_b.plugin", std::string("easynav_recovery/DummyMitigation")));
+      "recovery_manager.mit_b.plugin", std::string("easynav_recovery/DummyMitigation")));
 
   node->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_CONFIGURE);
   ASSERT_EQ(
@@ -228,16 +256,16 @@ TEST_F(RecoveryManagerNodeTestCase, failed_mitigation_is_excluded_and_next_candi
 
   // cycle() selects mit_a (first candidate).
   node->cycle(nav_state);
-  ASSERT_EQ(node->get_active_mitigation_name(), "mit_a");
+  ASSERT_EQ(default_manager(node)->get_active_mitigation_name(), "recovery_manager.mit_a");
 
   // cycle() runs it: FAILED, so it is excluded for "diagnostics.fake" and cleared.
   node->cycle(nav_state);
-  ASSERT_TRUE(node->get_active_mitigation_name().empty());
+  ASSERT_TRUE(default_manager(node)->get_active_mitigation_name().empty());
 
   // Diagnostic is still ERROR (nothing re-evaluated it to OK): the next cycle() must select
   // mit_b, not reselect the excluded mit_a.
   node->cycle(nav_state);
-  EXPECT_EQ(node->get_active_mitigation_name(), "mit_b");
+  EXPECT_EQ(default_manager(node)->get_active_mitigation_name(), "recovery_manager.mit_b");
 }
 
 TEST_F(RecoveryManagerNodeTestCase, exclusion_is_forgotten_once_diagnostic_is_ok_again)
@@ -245,10 +273,10 @@ TEST_F(RecoveryManagerNodeTestCase, exclusion_is_forgotten_once_diagnostic_is_ok
   auto node = std::make_shared<easynav::RecoveryManagerNode>(
     rclcpp::NodeOptions()
     .append_parameter_override(
-      "mitigation_types", std::vector<std::string>{"mit_a"})
+      "recovery_manager.mitigation_types", std::vector<std::string>{"mit_a"})
     .append_parameter_override(
-      "mit_a.plugin", std::string("easynav_recovery/DummyMitigation"))
-    .append_parameter_override("mit_a.should_fail", true));
+      "recovery_manager.mit_a.plugin", std::string("easynav_recovery/DummyMitigation"))
+    .append_parameter_override("recovery_manager.mit_a.should_fail", true));
 
   node->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_CONFIGURE);
   ASSERT_EQ(
@@ -263,9 +291,9 @@ TEST_F(RecoveryManagerNodeTestCase, exclusion_is_forgotten_once_diagnostic_is_ok
 
   node->cycle(nav_state);  // selects mit_a
   node->cycle(nav_state);  // mit_a fails, gets excluded, no other candidate: nothing active
-  ASSERT_TRUE(node->get_active_mitigation_name().empty());
+  ASSERT_TRUE(default_manager(node)->get_active_mitigation_name().empty());
   node->cycle(nav_state);  // try_select_mitigation() runs again: still excluded, still nothing
-  ASSERT_TRUE(node->get_active_mitigation_name().empty());
+  ASSERT_TRUE(default_manager(node)->get_active_mitigation_name().empty());
 
   // The diagnostic resolves...
   status.level = diagnostic_msgs::msg::DiagnosticStatus::OK;
@@ -276,7 +304,7 @@ TEST_F(RecoveryManagerNodeTestCase, exclusion_is_forgotten_once_diagnostic_is_ok
   status.level = diagnostic_msgs::msg::DiagnosticStatus::ERROR;
   nav_state->set("diagnostics.fake", status);
   node->cycle(nav_state);
-  EXPECT_EQ(node->get_active_mitigation_name(), "mit_a");
+  EXPECT_EQ(default_manager(node)->get_active_mitigation_name(), "recovery_manager.mit_a");
 }
 
 TEST_F(RecoveryManagerNodeTestCase,
@@ -287,13 +315,13 @@ TEST_F(RecoveryManagerNodeTestCase,
   auto node = std::make_shared<easynav::RecoveryManagerNode>(
     rclcpp::NodeOptions()
     .append_parameter_override(
-      "mitigation_types", std::vector<std::string>{"mit_a", "mit_b"})
+      "recovery_manager.mitigation_types", std::vector<std::string>{"mit_a", "mit_b"})
     .append_parameter_override(
-      "mit_a.plugin", std::string("easynav_recovery/DummyMitigation"))
-    .append_parameter_override("mit_a.priority", 100)
+      "recovery_manager.mit_a.plugin", std::string("easynav_recovery/DummyMitigation"))
+    .append_parameter_override("recovery_manager.mit_a.priority", 100)
     .append_parameter_override(
-      "mit_b.plugin", std::string("easynav_recovery/DummyMitigation"))
-    .append_parameter_override("mit_b.priority", 1));
+      "recovery_manager.mit_b.plugin", std::string("easynav_recovery/DummyMitigation"))
+    .append_parameter_override("recovery_manager.mit_b.priority", 1));
 
   node->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_CONFIGURE);
   ASSERT_EQ(
@@ -307,7 +335,7 @@ TEST_F(RecoveryManagerNodeTestCase,
   nav_state->set_group("diagnostics", {"diagnostics.fake"});
 
   node->cycle(nav_state);
-  EXPECT_EQ(node->get_active_mitigation_name(), "mit_b");
+  EXPECT_EQ(default_manager(node)->get_active_mitigation_name(), "recovery_manager.mit_b");
 }
 
 TEST_F(RecoveryManagerNodeTestCase, equal_priority_falls_back_to_mitigation_types_list_order)
@@ -317,11 +345,11 @@ TEST_F(RecoveryManagerNodeTestCase, equal_priority_falls_back_to_mitigation_type
   auto node = std::make_shared<easynav::RecoveryManagerNode>(
     rclcpp::NodeOptions()
     .append_parameter_override(
-      "mitigation_types", std::vector<std::string>{"mit_a", "mit_b"})
+      "recovery_manager.mitigation_types", std::vector<std::string>{"mit_a", "mit_b"})
     .append_parameter_override(
-      "mit_a.plugin", std::string("easynav_recovery/DummyMitigation"))
+      "recovery_manager.mit_a.plugin", std::string("easynav_recovery/DummyMitigation"))
     .append_parameter_override(
-      "mit_b.plugin", std::string("easynav_recovery/DummyMitigation")));
+      "recovery_manager.mit_b.plugin", std::string("easynav_recovery/DummyMitigation")));
 
   node->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_CONFIGURE);
   ASSERT_EQ(
@@ -335,7 +363,7 @@ TEST_F(RecoveryManagerNodeTestCase, equal_priority_falls_back_to_mitigation_type
   nav_state->set_group("diagnostics", {"diagnostics.fake"});
 
   node->cycle(nav_state);
-  EXPECT_EQ(node->get_active_mitigation_name(), "mit_a");
+  EXPECT_EQ(default_manager(node)->get_active_mitigation_name(), "recovery_manager.mit_a");
 }
 
 TEST_F(RecoveryManagerNodeTestCase, cycle_rt_is_noop_without_a_control_owning_mitigation)

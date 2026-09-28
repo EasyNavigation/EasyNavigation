@@ -20,6 +20,10 @@
 
 #include <string>
 
+#include <atomic>
+#include <mutex>
+#include <string>
+
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp/macros.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
@@ -31,6 +35,7 @@
 #include "easynav_localizer/LocalizerNode.hpp"
 #include "easynav_maps_manager/MapsManagerNode.hpp"
 #include "easynav_planner/PlannerNode.hpp"
+#include "easynav_core/SystemActions.hpp"
 #include "easynav_recovery/RecoveryManagerNode.hpp"
 #include "easynav_sensors/SensorsNode.hpp"
 #include "easynav_system/GoalManager.hpp"
@@ -55,7 +60,7 @@ struct SystemNodeInfo
  * Manages lifecycle transitions, real-time execution, and communication
  * between planner, controller, localizer, map manager, and sensor nodes.
  */
-class SystemNode : public rclcpp_lifecycle::LifecycleNode
+class SystemNode : public rclcpp_lifecycle::LifecycleNode, public SystemActions
 {
 public:
   RCLCPP_SMART_PTR_DEFINITIONS(SystemNode)
@@ -155,13 +160,22 @@ public:
    * RecoveryManagerNode). Whoever drives this node's lifecycle should then deactivate it, which
    * ends in Finalized (see on_deactivate()/on_error()).
    */
-  [[nodiscard]] bool is_shutdown_requested() const
-  {
-    return recovery_node_->is_shutdown_requested();
-  }
+  [[nodiscard]] bool is_shutdown_requested() const {return shutdown_requested_;}
 
   /// @brief The diagnostics that caused the requested shutdown ("system_shutdown_reason").
   [[nodiscard]] std::string get_shutdown_reason() const;
+
+  /**
+   * @brief SystemActions: aborts the active mission, if any, telling its client why (the
+   * recovery system calls it through RecoveryManagerBase::abort_mission()).
+   */
+  void abort_mission(const std::string & reason) override;
+
+  /**
+   * @brief SystemActions: records that EasyNav must terminate (the recovery system calls it
+   * through RecoveryManagerBase::request_shutdown()); see is_shutdown_requested().
+   */
+  void request_shutdown(const std::string & reason) override;
 
 private:
   /// @brief Real-time callback group.
@@ -190,6 +204,11 @@ private:
 
   /// @brief Goal manager.
   GoalManager::SharedPtr goal_manager_;
+
+  /// @brief Set by request_shutdown(), see is_shutdown_requested().
+  std::atomic<bool> shutdown_requested_ {false};
+  std::string shutdown_reason_;
+  mutable std::mutex shutdown_reason_mutex_;
 
 
   /// @brief Publisher for nav_state as string.

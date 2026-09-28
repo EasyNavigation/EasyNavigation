@@ -93,7 +93,7 @@ protected:
       "cmd_vel_stamped", 1000,
       [this](geometry_msgs::msg::TwistStamped::UniquePtr msg) {
         received_.push_back(msg->twist.linear.x);
-        stamps_.push_back(rclcpp::Time(msg->header.stamp).seconds());
+        stamps_.push_back(rclcpp::Time(msg->header.stamp));
       });
     exe_ = std::make_unique<rclcpp::executors::SingleThreadedExecutor>();
     exe_->add_node(listener_);
@@ -136,7 +136,7 @@ protected:
   std::unique_ptr<rclcpp::executors::SingleThreadedExecutor> exe_;
   std::shared_ptr<easynav::NavState> nav_state_ = std::make_shared<easynav::NavState>();
   std::vector<double> received_;
-  std::vector<double> stamps_;
+  std::vector<rclcpp::Time> stamps_;
 
   // Every change between consecutive commands respects the acceleration (speeding up) or the
   // deceleration (slowing down) limit, over the time between them.
@@ -144,7 +144,8 @@ protected:
   {
     for (size_t i = from + 1; i < received_.size(); ++i) {
       const double dv = received_[i] - received_[i - 1];
-      const double dt = stamps_[i] - stamps_[i - 1];
+      // Difference first: absolute times as doubles lose ~0.2 us of resolution.
+      const double dt = (stamps_[i] - stamps_[i - 1]).seconds();
       const bool slowing = std::abs(received_[i]) < std::abs(received_[i - 1]);
       const double limit = slowing ? kMaxLinearDecel : kMaxLinearAcc;
       EXPECT_LE(std::abs(dv), limit * dt + kTolerance) <<

@@ -15,10 +15,18 @@
 /// \file
 /// \brief Implementation of the VelocityMux class.
 
+#include <string>
+
 #include "easynav_controller/VelocityMux.hpp"
 
 namespace easynav
 {
+
+namespace
+{
+// Built once: select() runs every RT cycle, where no memory may be allocated.
+const std::string kNavigationPaused {"navigation_paused"};
+}  // namespace
 
 VelocityMux::Selection
 VelocityMux::select(NavState & nav_state)
@@ -27,8 +35,8 @@ VelocityMux::select(NavState & nav_state)
   const auto reflex = velocity_command::take(nav_state, VelocitySource::REFLEX);
   const auto recovery = velocity_command::take(nav_state, VelocitySource::RECOVERY);
   const auto controller = velocity_command::take(nav_state, VelocitySource::CONTROLLER);
-  const bool paused = nav_state.has("navigation_paused") &&
-    nav_state.get_safe<bool>("navigation_paused");
+  const bool paused = nav_state.has(kNavigationPaused) &&
+    nav_state.get_safe<bool>(kNavigationPaused);
 
   Selection selection;
   if (reflex) {

@@ -92,6 +92,11 @@ SystemNode::on_configure(const rclcpp_lifecycle::State & state)
 {
   (void)state;
 
+  // What the recovery system may ask of the navigation system: this node (see SystemActions).
+  recovery_node_->set_system_actions(
+    std::static_pointer_cast<SystemActions>(
+      std::static_pointer_cast<SystemNode>(shared_from_this())));
+
   TFInfo tf_info;
   get_parameter("robot_frame", tf_info.robot_frame);
   get_parameter("robot_footprint_frame", tf_info.robot_footprint_frame);
@@ -251,7 +256,30 @@ SystemNode::on_error(const rclcpp_lifecycle::State & state)
 std::string
 SystemNode::get_shutdown_reason() const
 {
-  return recovery_node_->get_shutdown_reason();
+  std::lock_guard<std::mutex> lock(shutdown_reason_mutex_);
+  return shutdown_reason_;
+}
+
+void
+SystemNode::abort_mission(const std::string & reason)
+{
+  if (goal_manager_ && goal_manager_->get_state() == GoalManager::State::ACTIVE) {
+    RCLCPP_ERROR(get_logger(), "Mission aborted by recovery: %s", reason.c_str());
+    goal_manager_->set_error(reason);
+  }
+}
+
+void
+SystemNode::request_shutdown(const std::string & reason)
+{
+  if (shutdown_requested_) {
+    return;
+  }
+  {
+    std::lock_guard<std::mutex> lock(shutdown_reason_mutex_);
+    shutdown_reason_ = reason;
+  }
+  shutdown_requested_ = true;
 }
 
 rclcpp::CallbackGroup::SharedPtr

@@ -28,10 +28,34 @@
 #include "rclcpp/rclcpp.hpp"
 
 #include "easynav_core/VelocityCommand.hpp"
+#include "easynav_recovery/DefaultRecoveryManager.hpp"
 #include "easynav_recovery/RecoveryManagerNode.hpp"
 
 using lifecycle_msgs::msg::State;
 using lifecycle_msgs::msg::Transition;
+
+
+namespace
+{
+
+// The recovery system RecoveryManagerNode loaded (the default one unless configured otherwise).
+std::shared_ptr<easynav::DefaultRecoveryManager> default_manager(
+  const std::shared_ptr<easynav::RecoveryManagerNode> & node)
+{
+  return std::dynamic_pointer_cast<easynav::DefaultRecoveryManager>(node->get_recovery_manager());
+}
+
+// Records what the recovery system asks of the navigation system.
+class RecordingSystemActions : public easynav::SystemActions
+{
+public:
+  void abort_mission(const std::string & reason) override {aborted.push_back(reason);}
+  void request_shutdown(const std::string & reason) override {shutdowns.push_back(reason);}
+  std::vector<std::string> aborted;
+  std::vector<std::string> shutdowns;
+};
+
+}  // namespace
 
 class RecoveryManagerReflexTest : public ::testing::Test
 {
@@ -51,20 +75,21 @@ TEST_F(RecoveryManagerReflexTest, ConfigureSucceedsWithNoReflexes)
   node->trigger_transition(Transition::TRANSITION_CONFIGURE);
 
   EXPECT_EQ(node->get_current_state().id(), State::PRIMARY_STATE_INACTIVE);
-  EXPECT_EQ(node->get_num_safety_reflexes(), 0u);
+  EXPECT_EQ(default_manager(node)->get_num_safety_reflexes(), 0u);
 }
 
 TEST_F(RecoveryManagerReflexTest, ConfigureLoadsSafetyReflex)
 {
   auto node = std::make_shared<easynav::RecoveryManagerNode>(
     rclcpp::NodeOptions()
-    .append_parameter_override("safety_reflex_types", std::vector<std::string>{"reflex"})
+    .append_parameter_override("recovery_manager.safety_reflex_types",
+    std::vector<std::string>{"reflex"})
     .append_parameter_override(
-      "reflex.plugin", std::string("easynav_recovery/DummySafetyReflex")));
+      "recovery_manager.reflex.plugin", std::string("easynav_recovery/DummySafetyReflex")));
   node->trigger_transition(Transition::TRANSITION_CONFIGURE);
 
   EXPECT_EQ(node->get_current_state().id(), State::PRIMARY_STATE_INACTIVE);
-  EXPECT_EQ(node->get_num_safety_reflexes(), 1u);
+  EXPECT_EQ(default_manager(node)->get_num_safety_reflexes(), 1u);
 
   // The reflex does not intervene, so recovery commands nothing.
   auto nav_state = std::make_shared<easynav::NavState>();
@@ -75,8 +100,10 @@ TEST_F(RecoveryManagerReflexTest, ConfigureFailsWithUnknownReflexPlugin)
 {
   auto node = std::make_shared<easynav::RecoveryManagerNode>(
     rclcpp::NodeOptions()
-    .append_parameter_override("safety_reflex_types", std::vector<std::string>{"bogus"})
-    .append_parameter_override("bogus.plugin", std::string("no_such_pkg/NoSuchReflex")));
+    .append_parameter_override("recovery_manager.safety_reflex_types",
+    std::vector<std::string>{"bogus"})
+    .append_parameter_override("recovery_manager.bogus.plugin",
+    std::string("no_such_pkg/NoSuchReflex")));
   node->trigger_transition(Transition::TRANSITION_CONFIGURE);
 
   EXPECT_NE(node->get_current_state().id(), State::PRIMARY_STATE_INACTIVE);
@@ -86,17 +113,18 @@ TEST_F(RecoveryManagerReflexTest, ReflexesSurviveReconfiguration)
 {
   auto node = std::make_shared<easynav::RecoveryManagerNode>(
     rclcpp::NodeOptions()
-    .append_parameter_override("safety_reflex_types", std::vector<std::string>{"reflex"})
+    .append_parameter_override("recovery_manager.safety_reflex_types",
+    std::vector<std::string>{"reflex"})
     .append_parameter_override(
-      "reflex.plugin", std::string("easynav_recovery/DummySafetyReflex")));
+      "recovery_manager.reflex.plugin", std::string("easynav_recovery/DummySafetyReflex")));
 
   node->trigger_transition(Transition::TRANSITION_CONFIGURE);
   node->trigger_transition(Transition::TRANSITION_CLEANUP);
-  EXPECT_EQ(node->get_num_safety_reflexes(), 0u);
+  EXPECT_EQ(node->get_recovery_manager(), nullptr) << "cleanup releases the recovery system";
   node->trigger_transition(Transition::TRANSITION_CONFIGURE);
 
   EXPECT_EQ(node->get_current_state().id(), State::PRIMARY_STATE_INACTIVE);
-  EXPECT_EQ(node->get_num_safety_reflexes(), 1u);
+  EXPECT_EQ(default_manager(node)->get_num_safety_reflexes(), 1u);
 }
 
 TEST_F(RecoveryManagerReflexTest, CleanupGivesControlBackAndDropsDiagnostics)
@@ -106,45 +134,83 @@ TEST_F(RecoveryManagerReflexTest, CleanupGivesControlBackAndDropsDiagnostics)
   auto node = std::make_shared<easynav::RecoveryManagerNode>();
   node->trigger_transition(Transition::TRANSITION_CONFIGURE);
 
-  easynav::NavState nav_state;
+  auto nav_state_ptr = std::make_shared<easynav::NavState>();
+  auto & nav_state = *nav_state_ptr;
+
+  // The first recovery system runs, and leaves this state behind.
+  node->cycle(nav_state_ptr);
   nav_state.set("control_owner", std::string("recovery:retreat"));
   nav_state.set_group("diagnostics", std::vector<std::string>{"diagnostics.stale"});
 
   node->trigger_transition(Transition::TRANSITION_CLEANUP);
   node->trigger_transition(Transition::TRANSITION_CONFIGURE);
 
-  node->cycle(std::shared_ptr<easynav::NavState>(&nav_state, [](easynav::NavState *) {}));
+  // The new one, on its first cycle, drops it.
+  node->cycle(nav_state_ptr);
   EXPECT_EQ(nav_state.get<std::string>("control_owner"), "controller");
   EXPECT_TRUE(nav_state.get_group_keys("diagnostics").empty());
 }
 
-TEST_F(RecoveryManagerReflexTest, ShutdownRequestIsLatchedOnTheNextCycle)
+TEST_F(RecoveryManagerReflexTest, HostLoadsTheDefaultRecoveryManagerUnlessConfigured)
 {
   auto node = std::make_shared<easynav::RecoveryManagerNode>();
+  node->trigger_transition(Transition::TRANSITION_CONFIGURE);
+  ASSERT_EQ(node->get_current_state().id(), State::PRIMARY_STATE_INACTIVE);
+  EXPECT_NE(default_manager(node), nullptr);
+
+  node->trigger_transition(Transition::TRANSITION_CLEANUP);
+  EXPECT_EQ(node->get_recovery_manager(), nullptr);
+}
+
+TEST_F(RecoveryManagerReflexTest, HostFailsToConfigureWithAnUnknownRecoveryManager)
+{
+  auto node = std::make_shared<easynav::RecoveryManagerNode>(
+    rclcpp::NodeOptions().append_parameter_override(
+      "recovery_manager.plugin", std::string("no_such_pkg/NoSuchRecoveryManager")));
+  node->trigger_transition(Transition::TRANSITION_CONFIGURE);
+  EXPECT_NE(node->get_current_state().id(), State::PRIMARY_STATE_INACTIVE);
+}
+
+TEST_F(RecoveryManagerReflexTest, MitigationSignalsBecomeSystemActions)
+{
+  auto actions = std::make_shared<RecordingSystemActions>();
+  auto node = std::make_shared<easynav::RecoveryManagerNode>();
+  node->set_system_actions(actions);
   node->trigger_transition(Transition::TRANSITION_CONFIGURE);
 
   auto nav_state = std::make_shared<easynav::NavState>();
   node->cycle(nav_state);
-  EXPECT_FALSE(node->is_shutdown_requested());
+  EXPECT_TRUE(actions->aborted.empty());
+  EXPECT_TRUE(actions->shutdowns.empty());
 
-  // What ShutdownRecovery leaves in the blackboard.
+  // What CancelMissionRecovery and ShutdownRecovery leave in the blackboard.
+  nav_state->set("mission_cancel_requested", true);
   nav_state->set("system_shutdown_reason", std::string("ros_graph: broken"));
   nav_state->set("system_shutdown_requested", true);
   node->cycle(nav_state);
 
-  EXPECT_TRUE(node->is_shutdown_requested());
-  EXPECT_EQ(node->get_shutdown_reason(), "ros_graph: broken");
+  ASSERT_EQ(actions->aborted.size(), 1u);
+  ASSERT_EQ(actions->shutdowns.size(), 1u);
+  EXPECT_EQ(actions->shutdowns.front(), "ros_graph: broken");
+  EXPECT_FALSE(nav_state->get<bool>("mission_cancel_requested")) << "the request is consumed";
+
+  // Requested once, not every cycle.
+  node->cycle(nav_state);
+  EXPECT_EQ(actions->aborted.size(), 1u);
+  EXPECT_EQ(actions->shutdowns.size(), 1u);
 }
 
 TEST_F(RecoveryManagerReflexTest, ReflexesRunEveryRtCycleWhoeverHasControl)
 {
   auto node = std::make_shared<easynav::RecoveryManagerNode>(
     rclcpp::NodeOptions()
-    .append_parameter_override("safety_reflex_types", std::vector<std::string>{"reflex"})
-    .append_parameter_override("reflex.plugin", std::string("easynav_recovery/DummySafetyReflex"))
-    .append_parameter_override("reflex.trigger", true));
+    .append_parameter_override("recovery_manager.safety_reflex_types",
+    std::vector<std::string>{"reflex"})
+    .append_parameter_override("recovery_manager.reflex.plugin",
+    std::string("easynav_recovery/DummySafetyReflex"))
+    .append_parameter_override("recovery_manager.reflex.trigger", true));
   node->trigger_transition(Transition::TRANSITION_CONFIGURE);
-  ASSERT_EQ(node->get_num_safety_reflexes(), 1u);
+  ASSERT_EQ(default_manager(node)->get_num_safety_reflexes(), 1u);
 
   // The controller commands motion: the reflex overrides it.
   auto nav_state = std::make_shared<easynav::NavState>();

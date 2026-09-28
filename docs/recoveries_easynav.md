@@ -293,8 +293,8 @@ pieces EasyNav already had.
   through `cmd_vel`, `NavState` signals or mission cancellation rather than forcing a replan or
   sending an alternate goal (see §5.8, §5.11).
 - **`GoalManager::set_error()`/`set_failed()`**, previously only exercised by tests, is now
-  called from a real path: `GoalManager::update()` reads the one-shot `"mission_cancel_requested"`
-  key written by `CancelMissionRecovery` and calls `set_error()` (see §5.8).
+  called from a real path: a recovery system's `abort_mission()` (`SystemActions`, implemented by
+  `SystemNode`) calls `set_error()` (see §5.4, §5.8).
 - **Plugin convention**: pluginlib + `PLUGINLIB_EXPORT_CLASS`, one `<package>_plugins.xml`
   manifest per package, selection via `<type>_types` + `<instance>.plugin` parameters, all against
   base interfaces declared in `easynav_core`. The recovery system's three new interfaces
@@ -330,28 +330,28 @@ pieces EasyNav already had.
 ### 5.2 Two levels: safety reflexes (RT) and deliberative recovery (non-RT)
 
 Not everything called "recovery" tolerates the latency of a non-RT cycle. The paradigmatic case
-is collision avoidance: at high speed, delaying that reaction until the next `RecoveryManagerNode`
+is collision avoidance: at high speed, delaying that reaction until the next `DefaultRecoveryManager`
 cycle would be unacceptable. The system is therefore split into two levels:
 
 | | **Level 0 — Safety reflexes** | **Level 1 — Deliberative recovery** |
 |---|---|---|
 | Frequency | RT cycle (same rate as `cmd_vel`) | non-RT cycle |
 | Logic | Synchronous, cheap, no reasoning | Diagnosis + selection + arbitration (lightweight MAPE-K) |
-| Lives in | `RecoveryManagerNode::cycle_rt()`, right before `cmd_vel` is published | `RecoveryManagerNode::cycle()` |
+| Lives in | `DefaultRecoveryManager::update_rt()`, right before `cmd_vel` is published | `DefaultRecoveryManager::update()` |
 | Interface | `SafetyReflexBase` | `RecoveryEvaluatorBase` / `RecoveryMitigationBase` |
 | Example | Imminent collision → override `cmd_vel` | Repeated proximity stop → back away |
 | Can veto/override `cmd_vel` | Yes, always, regardless of who produced it | Not directly; acts through `control_owner` (§5.7) |
 
-**Why the reflex lives in `RecoveryManagerNode`, not in `ControllerNode`.** With the
+**Why the reflex lives in `DefaultRecoveryManager`, not in `ControllerNode`.** With the
 control-arbitration design of §5.7, the `cmd_vel` published each cycle can come from the nominal
 controller **or** from an active movement mitigation (e.g. `SafeRetreatRecovery`). If the
 collision check were tied only to the controller, it would stop applying exactly when a recovery
 has control — the worst moment to lose that protection. All recovery logic, both levels, lives in
-`RecoveryManagerNode`: it loads the `SafetyReflexBase` plugins (via `safety_reflex_types` in
+`DefaultRecoveryManager`: it loads the `SafetyReflexBase` plugins (via `safety_reflex_types` in
 `recovery_node`'s parameters) and runs them in its `cycle_rt()`, which `SystemNode` calls every RT
 cycle after the controller and right before publishing `cmd_vel`, regardless of who wrote it that
 cycle. The only reflex shipped today, **`CollisionSafetyReflex`**
-(`src/easynav_plugins/reflexes/easynav_collision_safety_reflex`), replaces — not
+(`src/easynav_plugins/recoveries/default_recovery/reflexes/easynav_collision_safety_reflex`), replaces — not
 supplements — the old collision check that used to live inside `ControllerMethodBase`: it
 forward-projects the commanded `cmd_vel` against nearby point-cloud perceptions and, if continuing
 would cause a collision within the current braking distance, overwrites `cmd_vel` with a
@@ -371,7 +371,7 @@ the RT reaction itself ever depending on the slower cycle.
 **The transition from level 0 to level 1 is a condition on the data, not a cross-thread
 synchronization mechanism.** The RT and non-RT cycles run in parallel, in different threads, so an
 evaluator could read `NavState` mid-braking. `ObstacleTooCloseEvaluator`
-(`easynav_plugins/recovery_evaluators/easynav_obstacle_too_close_evaluator`) illustrates the
+(`easynav_plugins/recoveries/default_recovery/evaluators/easynav_obstacle_too_close_evaluator`) illustrates the
 pattern actually implemented: it only raises an `ERROR` diagnostic once (1) the robot's measured
 velocity (`robot_pose.twist`) has stayed below a small epsilon for a configurable debounce window
 (`debounce_duration`, confirming the robot has actually stopped, not just that it is decelerating)
@@ -385,36 +385,69 @@ selected for it.
 | Element | Package | Follows the precedent of |
 |---|---|---|
 | `SafetyReflexBase`, `RecoveryEvaluatorBase`, `RecoveryMitigationBase` (interfaces) | `easynav_core` | `ControllerMethodBase`, `PlannerMethodBase`, etc. |
-| `RecoveryManagerNode` (node, plugin loading, arbitration) | `easynav_recovery` (`src/EasyNavigation`) | `easynav_controller`, `easynav_planner`, ... |
-| `CollisionSafetyReflex` (reference reflex) | `src/easynav_plugins/reflexes/easynav_collision_safety_reflex` | `easynav_simple_controller`, ... (replaces the collision check that lived inside `ControllerMethodBase`) |
+| `RecoveryManagerBase` (a whole recovery system, as a plugin) and `SystemActions` (what it may ask of EasyNav) | `easynav_core` | `ControllerMethodBase`, `PlannerMethodBase`, etc. |
+| `RecoveryManagerNode` (hosts the recovery system plugin) | `easynav_recovery` (`src/EasyNavigation`) | `ControllerNode`, `PlannerNode`, ... |
+| `DefaultRecoveryManager` (the default recovery system: reflexes, evaluators, mitigations, arbitration) | `easynav_recovery` | any EasyNav plugin |
+| `CollisionSafetyReflex` (reference reflex) | `src/easynav_plugins/recoveries/default_recovery/reflexes/easynav_collision_safety_reflex` | `easynav_simple_controller`, ... (replaces the collision check that lived inside `ControllerMethodBase`) |
 | `DummyEvaluator`, `DummyMitigation`, `DummySafetyReflex` (reference/test plugins) | `easynav_recovery` | `DummyController`, `DummyPlanner`, ... |
-| `NoPathEvaluator`, `ControllerStuckEvaluator`, `ObstacleTooCloseEvaluator` (generic evaluators) | `src/easynav_plugins/recovery_evaluators/...` | `easynav_simple_controller`, `easynav_vff_controller`, ... |
-| `SafeRetreatRecovery`, `AdvanceRecovery`, `HumanAssistanceRecovery`, `CancelMissionRecovery` (generic mitigations) | `src/easynav_plugins/recovery_mitigations/...` | ídem |
+| `NoPathEvaluator`, `ControllerStuckEvaluator`, `ObstacleTooCloseEvaluator` (generic evaluators) | `src/easynav_plugins/recoveries/default_recovery/evaluators/...` | `easynav_simple_controller`, `easynav_vff_controller`, ... |
+| `SafeRetreatRecovery`, `AdvanceRecovery`, `HumanAssistanceRecovery`, `CancelMissionRecovery` (generic mitigations) | `src/easynav_plugins/recoveries/default_recovery/mitigations/...` | ídem |
 | `AmclConvergenceEvaluator` / `AmclRelocalizeMitigation` (component-specialized recovery) | `easynav_costmap_localizer`, alongside `AMCLLocalizer` | New pattern — see §5.9 |
 
 Each plugin registers against `base_class_type="easynav::<Name>Base"` from `easynav_core`, using
 the same `PLUGINLIB_EXPORT_CLASS`/manifest convention as any other EasyNav plugin category.
 
-### 5.4 `easynav_recovery`: `RecoveryManagerNode`
+### 5.4 `easynav_recovery`: a replaceable recovery system
 
-`RecoveryManagerNode` is a `LifecycleNode` (deployed under the name `"recovery_node"`, distinct
-from `"system_node"`) owned and lifecycle-managed by `SystemNode` exactly like the other
-subsystems. It centralizes all the recovery logic, so `SystemNode` only calls into it:
-- non-RT, `cycle()` from `SystemNode::system_cycle()`: evaluation, mitigation selection and
-  arbitration, and latching a shutdown request (`is_shutdown_requested()`, §5.8.1);
-- RT, `cycle_rt()` from `SystemNode::system_cycle_rt()`: runs the active control-owning
-  mitigation (if any), which proposes its velocity command, and every level-0 safety reflex,
-  which may override the command about to be sent (§5.7);
-- across a `cleanup`, it gives control back to the controller and drops stale diagnostics itself.
+The recovery system is a plugin, like every other EasyNav component. `RecoveryManagerNode`
+(deployed as `"recovery_node"`, owned and lifecycle-managed by `SystemNode` like the other
+subsystems) only **hosts** it: it loads the `RecoveryManagerBase` plugin named by
+`recovery_manager.plugin` on every configure (default `easynav_recovery/DefaultRecoveryManager`),
+releases it on cleanup, and forwards EasyNav's cycles and activation to it. Replacing the whole
+recovery system is a configuration change:
 
-The name deliberately avoids `RecoveryNode`, to not collide
-conceptually with BT.CPP's control node of that name in Nav2, which is a different thing.
+```yaml
+recovery_node:
+  ros__parameters:
+    recovery_manager:
+      plugin: my_package/MyRecoveryManager
+```
 
-Unlike `ControllerNode`/`PlannerNode` (which host exactly one active plugin instance),
-`RecoveryManagerNode` loads and runs **every** configured `RecoveryEvaluatorBase` plugin
-(`evaluator_types` parameter) every cycle — recovery evaluation is composed from several
-independent, narrowly-scoped diagnoses — and loads a set of `RecoveryMitigationBase` candidates
-(`mitigation_types` parameter), of which **at most one is active at a time**.
+`RecoveryManagerBase` (`easynav_core`) is the only recovery interface the rest of EasyNav depends
+on, and makes no assumption about how a recovery system works inside:
+
+| | What EasyNav offers the recovery system |
+|---|---|
+| `update(nav_state)` | Every non-RT cycle, after sensors, localization, maps, goals and planning |
+| `update_rt(nav_state)` | Every RT cycle, after the controller proposed its command, before it is published |
+| `on_activate()` / `on_deactivate()` | EasyNav's activation and deactivation |
+| `command_velocity()` | Take over the robot's motion (preferred over the controller, smoothed within the robot limits) |
+| `override_velocity()` | Emergency override (highest priority, published as is) |
+| `abort_mission(reason)` | Abort the active mission, telling its client why |
+| `request_shutdown(reason)` | Terminate EasyNav in an orderly way (§5.8.1) |
+
+The last two are `SystemActions`, an interface `SystemNode` implements and hands to the host, so
+neither `SystemNode` nor `GoalManager` read any recovery-specific key from `NavState`. The
+velocity commands go through ControllerNode's `VelocityMux`/`VelocitySmoother` (§5.7).
+
+The name `RecoveryManagerNode` deliberately avoids `RecoveryNode`, to not collide conceptually
+with BT.CPP's control node of that name in Nav2, which is a different thing.
+
+**`DefaultRecoveryManager`** (`easynav_recovery/DefaultRecoveryManager`) is the recovery system
+described in the rest of this document. Like any plugin, its parameters live under its name
+(`recovery_manager.*`), and so do the plugins it loads, named `recovery_manager.<type>` (their
+parameters are `recovery_manager.<type>.*`, their diagnostics
+`diagnostics.recovery_manager.<type>`); in the rest of this document they are called just by
+`<type>` for brevity. It is itself composed of plugins, loaded from its `safety_reflex_types`,
+`evaluator_types` and `mitigation_types`: it runs
+**every** configured `RecoveryEvaluatorBase` every cycle — recovery evaluation is composed from
+several independent, narrowly-scoped diagnoses —, loads a set of `RecoveryMitigationBase`
+candidates of which **at most one is active at a time**, and checks every `SafetyReflexBase` on
+each RT cycle. Its mitigations talk to it through `NavState` signals only it knows about
+(`control_owner`, `mission_cancel_requested`, `system_shutdown_requested`), which it translates
+into `SystemActions`. When a new instance replaces a previous one (EasyNav reconfigured), its
+first cycle drops the state the previous one left (control back to the controller, stale
+diagnostics removed).
 
 ```mermaid
 flowchart TB
@@ -426,7 +459,7 @@ flowchart TB
         CTR["ControllerNode\n(active when control_owner=controller)"] --> CVEL[(candidate cmd_vel)]
         MIT --> CVEL
 
-        subgraph rt["Level 0 - RecoveryManagerNode RT cycle"]
+        subgraph rt["Level 0 - DefaultRecoveryManager RT cycle"]
             CVEL --> REFLEX["SafetyReflexBase plugins\n(CollisionSafetyReflex)"]
             REFLEX -->|final cmd_vel| PUB[/publish cmd_vel/]
         end
@@ -439,12 +472,12 @@ flowchart TB
         EV2 --> DIAG
         EVn --> DIAG
 
-        DIAG --> RM["Level 1 - RecoveryManagerNode\nselection + arbitration (non-RT)"]
+        DIAG --> RM["Level 1 - DefaultRecoveryManager\nselection + arbitration (non-RT)"]
         RM --> MIT[Active mitigation plugin]
         RM -->|writes control_owner| NS
         RM -->|publishes| PUBDIAG[/diagnostics/]
         RM -->|publishes| PUBMIT[mitigation]
-        MIT -.mission_cancel_requested.-> GM[GoalManager]
+        MIT -.mission_cancel_requested.-> RM2["DefaultRecoveryManager\nabort_mission()"] --> GM[GoalManager]
     end
 ```
 
@@ -455,7 +488,7 @@ flowchart TB
 class RecoveryEvaluatorBase : public MethodBase
 {
 public:
-  void internal_update(NavState & nav_state);  // exception-safe wrapper called by RecoveryManagerNode
+  void internal_update(NavState & nav_state);  // exception-safe wrapper called by DefaultRecoveryManager
 
 protected:
   virtual void update(NavState & nav_state) = 0;  // reads NavState only, never writes cmd_vel/etc.
@@ -465,7 +498,7 @@ protected:
 ```
 
 An evaluator only reads `NavState`; deciding and acting on a diagnosis is
-`RecoveryMitigationBase`'s and `RecoveryManagerNode`'s job. Every call to `update()` is expected
+`RecoveryMitigationBase`'s and `DefaultRecoveryManager`'s job. Every call to `update()` is expected
 to call `publish_diagnostic()` with the evaluator's *current* assessment, including a benign one
 (`DiagnosticStatus::OK`) once whatever it was reporting has been resolved — `publish_diagnostic()`
 overwrites the plugin's previous entry under `"diagnostics.<plugin_name>"` rather than
@@ -486,9 +519,9 @@ navigation is paused (`"navigation_paused"`), `control_owner` is not `"controlle
 already has control), a `SafetyReflexBase` is currently intervening (`hardware_id ==
 "safety_reflex"` with a non-`OK` level), or there is no active goal.
 
-### 5.6 Selection and arbitration: `RecoveryManagerNode`
+### 5.6 Selection and arbitration: `DefaultRecoveryManager`
 
-Every non-RT cycle, `RecoveryManagerNode::cycle()`:
+Every non-RT cycle, `DefaultRecoveryManager::update()`:
 
 1. Runs `internal_update()` on every loaded evaluator.
 2. If a mitigation is already active, lets it continue (cycling it here only if it does **not**
@@ -499,7 +532,7 @@ Every non-RT cycle, `RecoveryManagerNode::cycle()`:
    already excluded for that specific diagnostic key.
 
 Priority is a plain per-instance parameter (`"<mitigation_type>.priority"`, lower value tried
-first, default 100, ties broken by `mitigation_types` list order) read by `RecoveryManagerNode` —
+first, default 100, ties broken by `mitigation_types` list order) read by `DefaultRecoveryManager` —
 not a virtual `score()` method on the mitigation itself, which keeps a mitigation plugin fully
 unaware of how arbitration works. A mitigation that returns `RecoveryStatus::FAILED` is recorded
 in `excluded_mitigations_`, keyed by the diagnostic key that selected it, so the next cycle tries
@@ -534,9 +567,9 @@ protected:
 
 ### 5.7 How a recovery mitigation takes control
 
-1. `NavState` carries a `"control_owner"` string key, written only by `RecoveryManagerNode`.
+1. `NavState` carries a `"control_owner"` string key, written only by `DefaultRecoveryManager`.
    Default/absent value: `"controller"`.
-2. When `RecoveryManagerNode` selects a mitigation with `requires_control() == true`, it calls
+2. When `DefaultRecoveryManager` selects a mitigation with `requires_control() == true`, it calls
    `on_start()` and sets `nav_state.set("control_owner", "recovery:<name>")`.
 3. Every source proposes its velocity command in its own `NavState` slot
    (`easynav_core/VelocityCommand.hpp`), nobody overwrites anybody else's: the controller
@@ -549,12 +582,12 @@ protected:
    `VelocitySmoother` (a reflex override is published as is: an emergency may need more
    deceleration than the nominal limits) and publishes it. `SystemNode` only chains the calls; it
    never reads `control_owner` or any command itself.
-4. When `on_cycle()` returns `SUCCEEDED` or `FAILED`, `RecoveryManagerNode` calls `on_stop()` and
+4. When `on_cycle()` returns `SUCCEEDED` or `FAILED`, `DefaultRecoveryManager` calls `on_stop()` and
    restores `control_owner = "controller"`; the nominal controller regains control the next RT
    cycle.
 5. Mitigations that do not `requires_control()` (e.g. `CancelMissionRecovery`) never touch
    `control_owner`: they act purely by writing a `NavState` signal that some other subsystem reads
-   and consumes (§5.8), and are cycled from `RecoveryManagerNode::cycle()` at non-RT rate.
+   and consumes (§5.8), and are cycled from `DefaultRecoveryManager::update()` at non-RT rate.
 
 A mitigation never holds a direct reference to another subsystem (`PlannerNode`, `GoalManager`,
 `MapsManagerNode`): every piece of coordination between a recovery plugin and the rest of the
@@ -565,12 +598,12 @@ without knowing about `GoalManager` or any other concrete subsystem.
 ### 5.8 Mission-level escalation
 
 The final rung of the escalation ladder is **`CancelMissionRecovery`**
-(`easynav_plugins/recovery_mitigations/easynav_cancel_mission_recovery`): a mitigation that
+(`easynav_plugins/recoveries/default_recovery/mitigations/easynav_cancel_mission_recovery`): a mitigation that
 accepts any `ERROR` diagnostic no other mitigation resolved, does not move the robot
 (`requires_control() == false`), and has no reference to `GoalManager`. `on_start()` writes a
-one-shot `"mission_cancel_requested"` key in `NavState`; `GoalManager::update()` reads it, calls
-`GoalManager::set_error(reason)` — connecting a call path that used to be exercised only by
-tests — and resets the signal. `on_cycle()` reports `FAILED`, not `SUCCEEDED`, once the signal is
+one-shot `"mission_cancel_requested"` key in `NavState`; `DefaultRecoveryManager` reads it, builds
+the reason from the diagnostics in `ERROR`, calls `abort_mission(reason)` — which `SystemNode`
+implements with `GoalManager::set_error(reason)` — and resets the signal. `on_cycle()` reports `FAILED`, not `SUCCEEDED`, once the signal is
 consumed: cancelling the mission does not resolve the diagnostic that triggered it (e.g. an AMCL
 divergence stays a divergence), and reporting success would make it immediately eligible for
 reselection.
@@ -580,7 +613,7 @@ reselection.
 Some diagnostics cannot be fixed by an automatic mitigation, by a human clearing the robot's
 surroundings, or by cancelling the mission — e.g. a miswired ROS graph (`RosGraphEvaluator`):
 EasyNav cannot navigate correctly as configured. **`ShutdownRecovery`**
-(`easynav_plugins/recovery_mitigations/easynav_shutdown_recovery`) handles them by terminating
+(`easynav_plugins/recoveries/default_recovery/mitigations/easynav_shutdown_recovery`) handles them by terminating
 EasyNav in an orderly way, following the ROS 2 managed-node design, where an error in `Active` is
 the one case in which a node leaves a primary state without an external request, and
 `ErrorProcessing` failing leads to `Finalized`:
@@ -588,10 +621,9 @@ the one case in which a node leaves a primary state without an external request,
 1. `on_start()` writes `"system_shutdown_reason"` (the offending diagnostics) and
    `"system_shutdown_requested"` in `NavState`, plus `"mission_cancel_requested"` if there is an
    active goal, and reports at `FATAL`. While selected, it holds the robot with zero `cmd_vel`.
-2. On the next non-RT cycle, `GoalManager::update()` cancels the mission (its client receives the
-   reason), and then `RecoveryManagerNode::cycle()` latches the request
-   (`RecoveryManagerNode::is_shutdown_requested()`, which `SystemNode::is_shutdown_requested()`
-   forwards).
+2. In the same non-RT cycle, `DefaultRecoveryManager` turns those signals into `SystemActions`:
+   `abort_mission(reason)` (the client receives the reason) and then `request_shutdown(reason)`,
+   which `SystemNode` records (`SystemNode::is_shutdown_requested()`).
 3. `system_main`, as the lifecycle supervisor, stops both loops and deactivates `SystemNode`.
    `on_deactivate()` deactivates every EasyNav node, publishes a zero velocity and returns
    `ERROR`; `on_error()` logs the reason, shuts every EasyNav node down and returns `FAILURE`, so
@@ -605,7 +637,7 @@ the deactivation, the usual way to materialize an error in `Active` with `rclcpp
 
 Beyond the generic catalog, an evaluator or mitigator that depends on knowledge internal to one
 specific component lives in that component's own package instead of the generic
-`recovery_evaluators`/`recovery_mitigations` catalog — no new mechanism is needed for this: a
+`recoveries/default_recovery` catalog — no new mechanism is needed for this: a
 pluginlib manifest already accepts several `<class>` entries of different `base_class_type` in the
 same file, so the component's existing `<package>_plugins.xml` simply grows two more entries.
 
@@ -621,7 +653,7 @@ The pattern is implemented today in `easynav_costmap_localizer`, alongside `AMCL
   re-checking the same covariance trace, until it drops back under threshold or `timeout` elapses
   (in which case it gives up with `FAILED`).
 
-`RecoveryManagerNode` needs no knowledge of AMCL at all: it only sees one more loaded mitigation
+`DefaultRecoveryManager` needs no knowledge of AMCL at all: it only sees one more loaded mitigation
 declaring `can_handle()` for a particular `hardware_id`, arbitrated with the same priority and
 exclusion rules as any generic mitigator (§5.6). This keeps the recovery core fully
 domain-agnostic while allowing arbitrarily deep, component-specific knowledge at the edges.
@@ -629,7 +661,7 @@ domain-agnostic while allowing arbitrarily deep, component-specific knowledge at
 ### 5.10 Observability
 
 - **`/diagnostics`** (`diagnostic_msgs/msg/DiagnosticArray`) is published by
-  `RecoveryManagerNode` from the `"diagnostics"` group of `NavState`, so standard tooling
+  `DefaultRecoveryManager` from the `"diagnostics"` group of `NavState`, so standard tooling
   (`rqt_robot_monitor`, `diagnostic_aggregator`) can consume it directly, alongside EasyNav's own
   TUI.
 - **The `"mitigation"` topic** (`rcl_interfaces/msg/Log` — the same message type `/rosout`
@@ -637,7 +669,7 @@ domain-agnostic while allowing arbitrarily deep, component-specific knowledge at
   mitigation is doing. `RecoveryMitigationBase::report()` is the single call site a mitigation
   uses to write both to rosout and to this topic at once; `NavState` holds only the single latest
   report (tagged with a global sequence number), not a queue, so a mitigation that would otherwise
-  report every cycle must throttle itself. `RecoveryManagerNode` also publishes a one-shot
+  report every cycle must throttle itself. `DefaultRecoveryManager` also publishes a one-shot
   "resolved" sentinel on this topic once a diagnostic that had an active mitigation clears back to
   `OK`.
 - The EasyNav **TUI** (`easynav_tools/easynav_tools/tui`) shows a "Diagnostics" panel fed by
@@ -669,13 +701,13 @@ person suddenly steps into the robot's way, close by.
    collision; `mitigate()` replaces the candidate with a controlled brake, cycle by cycle, until
    the robot stops — within the same RT cycle, without waiting for any level-1 evaluation. Along
    the way it writes a `WARN` entry to the `"diagnostics"` group.
-2. **[Level 1, non-RT]** On its own cycle, `RecoveryManagerNode` runs its evaluators.
+2. **[Level 1, non-RT]** On its own cycle, `DefaultRecoveryManager` runs its evaluators.
    `ObstacleTooCloseEvaluator` could be reading `NavState` mid-brake, since the RT and non-RT
    cycles run in parallel — this is exactly why it requires the compound condition of §5.2: only
    once the robot is measurably stopped for the debounce window **and** the obstacle distance is
    still below `safe_distance` does it raise the `ERROR` diagnostic. While still braking, it
    reports an informative `OK`/`WARN` with no mitigator attached.
-3. **[Level 1, non-RT]** `RecoveryManagerNode` sees the new diagnostic, no mitigation is active,
+3. **[Level 1, non-RT]** `DefaultRecoveryManager` sees the new diagnostic, no mitigation is active,
    and `SafeRetreatRecovery` is the highest-priority mitigation whose `can_handle()` accepts
    `hardware_id == "obstacle_proximity"`. It calls `on_start()`, which sets `control_owner =
    "recovery:retreat"`.
@@ -687,7 +719,7 @@ person suddenly steps into the robot's way, close by.
    `ControllerStuckEvaluator` checks `control_owner` before evaluating (§5.6), so the lack of
    progress toward the goal during the retreat is not mistaken for a new failure.
 5. **[Level 1 decides, level 0 executes]** Once the obstacle distance exceeds `safe_distance`,
-   `on_cycle()` returns `SUCCEEDED`. `RecoveryManagerNode` calls `on_stop()` and restores
+   `on_cycle()` returns `SUCCEEDED`. `DefaultRecoveryManager` calls `on_stop()` and restores
    `control_owner = "controller"`. The nominal controller regains control on the next RT cycle and
    resumes the `path`, which `PlannerNode` kept maintaining in the background throughout.
 
@@ -753,13 +785,15 @@ illustrate how the pieces above are wired together):
 ```yaml
 recovery_node:
   ros__parameters:
-    safety_reflex_types: [collision]
-    collision:
-      plugin: easynav_collision_safety_reflex/CollisionSafetyReflex
-    evaluator_types: [no_path, obstacle_close, amcl_convergence, controller_stuck, ros_graph]
-    mitigation_types: [retreat, amcl_relocalize, advance, shutdown, human_assistance, cancel_mission]
-    # priorities: retreat / advance / amcl_relocalize = 10; shutdown = 100;
-    #             human_assistance = 1000; cancel_mission = 2000
+    recovery_manager:
+      plugin: easynav_recovery/DefaultRecoveryManager
+      safety_reflex_types: [collision]
+      collision:
+        plugin: easynav_collision_safety_reflex/CollisionSafetyReflex
+      evaluator_types: [no_path, obstacle_close, amcl_convergence, controller_stuck, ros_graph]
+      mitigation_types: [retreat, amcl_relocalize, advance, shutdown, human_assistance, cancel_mission]
+      # priorities: retreat / advance / amcl_relocalize = 10; shutdown = 100;
+      #             human_assistance = 1000; cancel_mission = 2000
 ```
 
 With this configuration, a lost localization escalates as: `amcl_relocalize` (rotates for up to

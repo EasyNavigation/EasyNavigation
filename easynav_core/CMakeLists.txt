@@ -24,6 +24,7 @@ add_library(${PROJECT_NAME} SHARED
   src/easynav_core/ObstacleProximity.cpp
   src/easynav_core/PlannerMethodBase.cpp
   src/easynav_core/RecoveryEvaluatorBase.cpp
+  src/easynav_core/RecoveryManagerBase.cpp
   src/easynav_core/RecoveryMitigationBase.cpp
   src/easynav_core/SafetyReflexBase.cpp
   src/easynav_core/VelocityCommand.cpp

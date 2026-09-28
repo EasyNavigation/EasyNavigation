@@ -57,12 +57,12 @@ protected:
         "-p", "dummy_planner.plugin:=easynav_planner/DummyPlanner",
         "-p", "map_types:=['dummy_map']",
         "-p", "dummy_map.plugin:=easynav_maps_manager/DummyMapsManager",
-        "-p", "evaluator_types:=['dummy_evaluator']",
-        "-p", "dummy_evaluator.plugin:=easynav_recovery/DummyEvaluator",
-        "-p", "mitigation_types:=['dummy_mitigation']",
-        "-p", "dummy_mitigation.plugin:=easynav_recovery/DummyMitigation",
-        "-p", "safety_reflex_types:=['collision']",
-        "-p", "collision.plugin:=easynav_recovery/DummySafetyReflex",
+        "-p", "recovery_manager.evaluator_types:=['dummy_evaluator']",
+        "-p", "recovery_manager.dummy_evaluator.plugin:=easynav_recovery/DummyEvaluator",
+        "-p", "recovery_manager.mitigation_types:=['dummy_mitigation']",
+        "-p", "recovery_manager.dummy_mitigation.plugin:=easynav_recovery/DummyMitigation",
+        "-p", "recovery_manager.safety_reflex_types:=['collision']",
+        "-p", "recovery_manager.collision.plugin:=easynav_recovery/DummySafetyReflex",
       };
       rclcpp::init(static_cast<int>(argv.size()), argv.data());
     }

@@ -11,3 +11,6 @@ target_link_libraries(velocity_mux_tests easynav_controller)
 
 ament_add_gtest(controller_node_velocity_tests controller_node_velocity_tests.cpp)
 target_link_libraries(controller_node_velocity_tests easynav_controller)
+
+ament_add_gtest(rt_allocation_tests rt_allocation_tests.cpp)
+target_link_libraries(rt_allocation_tests easynav_controller)

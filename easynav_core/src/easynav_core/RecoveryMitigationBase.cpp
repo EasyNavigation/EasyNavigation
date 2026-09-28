@@ -136,7 +136,9 @@ RecoveryMitigationBase::report(NavState & nav_state, uint8_t level, const std::s
   report_entry.log.name = get_plugin_name();
   report_entry.log.msg = msg;
 
-  nav_state.set("mitigation.pending_report", report_entry);
+  // Built once: mitigations may report from the RT cycle, where no memory may be allocated.
+  static const std::string kPendingReport {"mitigation.pending_report"};
+  nav_state.set(kPendingReport, report_entry);
 }
 
 }  // namespace easynav

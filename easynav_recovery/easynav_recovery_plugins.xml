@@ -1,4 +1,13 @@
 <class_libraries>
+  <library path="easynav_recovery">
+    <class name="easynav_recovery/DefaultRecoveryManager" type="easynav::DefaultRecoveryManager" base_class_type="easynav::RecoveryManagerBase">
+      <description>
+      EasyNav's default recovery system: level-0 safety reflexes (RT) and level-1 evaluators and
+      mitigations with priority-based arbitration, loaded from its own "safety_reflex_types",
+      "evaluator_types" and "mitigation_types" parameters (under "recovery_manager.").
+      </description>
+    </class>
+  </library>
   <library path="dummy_evaluator">
     <class name="easynav_recovery/DummyEvaluator" type="easynav::DummyEvaluator" base_class_type="easynav::RecoveryEvaluatorBase">
       <description>

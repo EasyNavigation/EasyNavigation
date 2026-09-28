@@ -18,7 +18,6 @@
 #include <cmath>
 #include <string>
 
-#include "diagnostic_msgs/msg/diagnostic_status.hpp"
 #include "tf2_geometry_msgs/tf2_geometry_msgs.hpp"
 #include "tf2/utils.hpp"
 #include "nav_msgs/msg/odometry.hpp"
@@ -402,31 +401,6 @@ GoalManager::comanded_pose_callback(geometry_msgs::msg::PoseStamped::UniquePtr m
 void
 GoalManager::update(NavState & nav_state)
 {
-  // One-shot signal from CancelMissionRecovery (a RecoveryMitigationBase plugin has no
-  // reference to GoalManager — only SystemNode does): a mitigator requests the mission be
-  // cancelled, GoalManager reads it, reports why (from the current "diagnostics" group) and
-  // resets the flag.
-  if (nav_state.has("mission_cancel_requested") &&
-    nav_state.get<bool>("mission_cancel_requested"))
-  {
-    std::string reason;
-    for (const auto & key : nav_state.get_group_keys("diagnostics")) {
-      if (!nav_state.has(key)) {continue;}
-      // Some "diagnostics" entries (e.g. a SafetyReflexBase's) are written from the RT cycle;
-      // this runs on the non-RT cycle, so get_safe() (a snapshot copy) is required here, not
-      // get(). See NavState's own get()/get_safe() guidance.
-      const auto status = nav_state.get_safe<diagnostic_msgs::msg::DiagnosticStatus>(key);
-      if (status.level >= diagnostic_msgs::msg::DiagnosticStatus::ERROR) {
-        if (!reason.empty()) {reason += "; ";}
-        reason += key + " (" + status.message + ")";
-      }
-    }
-    if (reason.empty()) {reason = "mission cancelled by recovery escalation";}
-
-    set_error(reason);
-    nav_state.set("mission_cancel_requested", false);
-  }
-
   if (nav_state.get_safe<State>("navigation_state") != state_) {
     nav_state.set("navigation_state", state_);
     last_synced_navigation_state_ = state_;

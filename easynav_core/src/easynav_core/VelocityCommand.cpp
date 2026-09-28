@@ -32,14 +32,19 @@ struct VelocityProposal
   geometry_msgs::msg::TwistStamped cmd;
 };
 
-std::string key(VelocitySource source)
+// Built once: these calls run every RT cycle, where no memory may be allocated (a key longer
+// than the small-string buffer would otherwise be allocated on every call).
+const std::string & key(VelocitySource source)
 {
+  static const std::string controller {"cmd_vel.proposal.controller"};
+  static const std::string recovery {"cmd_vel.proposal.recovery"};
+  static const std::string reflex {"cmd_vel.proposal.reflex"};
   switch (source) {
-    case VelocitySource::CONTROLLER: return "cmd_vel.proposal.controller";
-    case VelocitySource::RECOVERY: return "cmd_vel.proposal.recovery";
-    case VelocitySource::REFLEX: return "cmd_vel.proposal.reflex";
+    case VelocitySource::RECOVERY: return recovery;
+    case VelocitySource::REFLEX: return reflex;
+    case VelocitySource::CONTROLLER:
+    default: return controller;
   }
-  return "cmd_vel.proposal.unknown";
 }
 
 }  // namespace
@@ -56,7 +61,7 @@ void propose(
 std::optional<geometry_msgs::msg::TwistStamped> peek(
   const NavState & nav_state, VelocitySource source)
 {
-  const auto k = key(source);
+  const auto & k = key(source);
   if (!nav_state.has(k)) {
     return std::nullopt;
   }
