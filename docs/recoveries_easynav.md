@@ -424,9 +424,10 @@ on, and makes no assumption about how a recovery system works inside:
 | `command_velocity()` | Take over the robot's motion (preferred over the controller, smoothed within the robot limits) |
 | `override_velocity()` | Emergency override (highest priority, published as is) |
 | `abort_mission(reason)` | Abort the active mission, telling its client why |
+| `hold_mission_progress(hold)` | While held, the mission stays active but no goal is taken as reached (the robot pose cannot be trusted while recovering) |
 | `request_shutdown(reason)` | Terminate EasyNav in an orderly way (§5.8.1) |
 
-The last two are `SystemActions`, an interface `SystemNode` implements and hands to the host, so
+The last three are `SystemActions`, an interface `SystemNode` implements and hands to the host, so
 neither `SystemNode` nor `GoalManager` read any recovery-specific key from `NavState`. The
 velocity commands go through ControllerNode's `VelocityMux`/`VelocitySmoother` (§5.7).
 
@@ -445,7 +446,10 @@ several independent, narrowly-scoped diagnoses —, loads a set of `RecoveryMiti
 candidates of which **at most one is active at a time**, and checks every `SafetyReflexBase` on
 each RT cycle. Its mitigations talk to it through `NavState` signals only it knows about
 (`control_owner`, `mission_cancel_requested`, `system_shutdown_requested`), which it translates
-into `SystemActions`. When a new instance replaces a previous one (EasyNav reconfigured), its
+into `SystemActions`. It also holds the mission's progress while a mitigation is active or a
+diagnostic is in `ERROR`, so a wrong pose (e.g. AMCL diverged) that happens to pass within the
+goal tolerance does not finish the mission; unloading the recovery system releases the hold.
+When a new instance replaces a previous one (EasyNav reconfigured), its
 first cycle drops the state the previous one left (control back to the controller, stale
 diagnostics removed).
 

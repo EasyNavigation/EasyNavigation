@@ -270,6 +270,14 @@ SystemNode::abort_mission(const std::string & reason)
 }
 
 void
+SystemNode::hold_mission_progress(bool hold)
+{
+  if (goal_manager_) {
+    goal_manager_->set_progress_held(hold);
+  }
+}
+
+void
 SystemNode::request_shutdown(const std::string & reason)
 {
   if (shutdown_requested_) {

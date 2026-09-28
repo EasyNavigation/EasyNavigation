@@ -43,6 +43,18 @@ public:
   virtual void abort_mission(const std::string & reason) = 0;
 
   /**
+   * @brief Holds (or releases) the mission's progress.
+   *
+   * While held, the mission stays active and its feedback keeps flowing, but no goal is taken
+   * as reached: the recovery system is handling a problem (e.g. localization diverged), so the
+   * robot pose cannot be trusted to decide that the robot arrived. The hold lasts until
+   * released, across missions.
+   *
+   * @param hold True to hold the mission's progress, false to release it.
+   */
+  virtual void hold_mission_progress(bool hold) = 0;
+
+  /**
    * @brief Asks EasyNav to terminate because of an unrecoverable problem.
    *
    * EasyNav stops the robot, leaves Active through the lifecycle's error path

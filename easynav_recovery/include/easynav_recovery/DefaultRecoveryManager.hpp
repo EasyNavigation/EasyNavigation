@@ -62,6 +62,8 @@ namespace easynav
  * "mission_cancel_requested" (see CancelMissionRecovery) into abort_mission(), and
  * "system_shutdown_requested"/"system_shutdown_reason" (see ShutdownRecovery) into
  * request_shutdown(). No other component knows about those keys, nor about "control_owner".
+ * While a mitigation is active or a diagnostic is in ERROR, it holds the mission's progress
+ * (hold_mission_progress()), so a goal is not taken as reached from an untrusted robot pose.
  *
  * It also publishes the diagnostics on "diagnostics" (diagnostic_msgs/DiagnosticArray) and what
  * mitigations report doing on "mitigation" (plus a "resolved" sentinel once a diagnostic that
@@ -108,6 +110,10 @@ private:
   /// @brief Translates the mitigations' NavState signals into SystemActions.
   void handle_system_requests(NavState & nav_state);
 
+  /// @brief Holds the mission's progress while recovering: a mitigation is active or a
+  /// diagnostic is in ERROR (SystemActions::hold_mission_progress()).
+  void update_mission_hold(NavState & nav_state);
+
   void try_select_mitigation(NavState & nav_state);
   void publish_diagnostics(NavState & nav_state);
   void publish_mitigation_log(NavState & nav_state);
@@ -144,6 +150,9 @@ private:
   const uint64_t instance_id_ {next_instance_id_++};
   static inline std::atomic<uint64_t> next_instance_id_ {1};
   bool shutdown_requested_ {false};
+  bool mission_progress_held_ {false};
+  /// @brief The first update always sets the hold: a previous instance may have left it held.
+  bool first_hold_update_ {true};
 };
 
 }  // namespace easynav

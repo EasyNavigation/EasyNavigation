@@ -50,7 +50,7 @@ namespace easynav
  * - command_velocity(): take over the robot's motion (preferred over the controller's command,
  *   smoothed within the robot limits).
  * - override_velocity(): emergency override (highest priority, published as is).
- * - abort_mission() and request_shutdown(): see SystemActions.
+ * - abort_mission(), hold_mission_progress() and request_shutdown(): see SystemActions.
  * - Anything written to NavState for others to read (e.g. diagnostics).
  */
 class RecoveryManagerBase : public MethodBase
@@ -96,6 +96,9 @@ protected:
 
   /// @brief Aborts the active mission (see SystemActions::abort_mission()).
   void abort_mission(const std::string & reason);
+
+  /// @brief Holds or releases the mission's progress (see SystemActions::hold_mission_progress()).
+  void hold_mission_progress(bool hold);
 
   /// @brief Asks EasyNav to terminate (see SystemActions::request_shutdown()).
   void request_shutdown(const std::string & reason);

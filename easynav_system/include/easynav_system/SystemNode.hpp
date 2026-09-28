@@ -172,6 +172,12 @@ public:
   void abort_mission(const std::string & reason) override;
 
   /**
+   * @brief SystemActions: while held, GoalManager takes no goal as reached (the recovery system
+   * calls it through RecoveryManagerBase::hold_mission_progress()).
+   */
+  void hold_mission_progress(bool hold) override;
+
+  /**
    * @brief SystemActions: records that EasyNav must terminate (the recovery system calls it
    * through RecoveryManagerBase::request_shutdown()); see is_shutdown_requested().
    */

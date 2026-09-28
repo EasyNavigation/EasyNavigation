@@ -146,8 +146,19 @@ RecoveryManagerNode::get_recovery_manager() const
 void
 RecoveryManagerNode::set_manager(std::shared_ptr<RecoveryManagerBase> manager)
 {
-  std::lock_guard<std::mutex> lock(manager_mutex_);
-  manager_ = std::move(manager);
+  bool released = false;
+  {
+    std::lock_guard<std::mutex> lock(manager_mutex_);
+    released = manager_ && !manager;
+    manager_ = std::move(manager);
+  }
+
+  // A recovery system that goes away cannot release a hold it left on the mission's progress.
+  if (released) {
+    if (auto actions = system_actions_.lock()) {
+      actions->hold_mission_progress(false);
+    }
+  }
 }
 
 }  // namespace easynav

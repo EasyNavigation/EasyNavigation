@@ -24,6 +24,7 @@
 
 #include "lifecycle_msgs/msg/state.hpp"
 #include "lifecycle_msgs/msg/transition.hpp"
+#include "diagnostic_msgs/msg/diagnostic_status.hpp"
 #include "geometry_msgs/msg/twist_stamped.hpp"
 #include "rclcpp/rclcpp.hpp"
 
@@ -51,8 +52,10 @@ class RecordingSystemActions : public easynav::SystemActions
 public:
   void abort_mission(const std::string & reason) override {aborted.push_back(reason);}
   void request_shutdown(const std::string & reason) override {shutdowns.push_back(reason);}
+  void hold_mission_progress(bool hold) override {holds.push_back(hold);}
   std::vector<std::string> aborted;
   std::vector<std::string> shutdowns;
+  std::vector<bool> holds;
 };
 
 }  // namespace
@@ -198,6 +201,40 @@ TEST_F(RecoveryManagerReflexTest, MitigationSignalsBecomeSystemActions)
   node->cycle(nav_state);
   EXPECT_EQ(actions->aborted.size(), 1u);
   EXPECT_EQ(actions->shutdowns.size(), 1u);
+}
+
+TEST_F(RecoveryManagerReflexTest, HoldsMissionProgressWhileRecovering)
+{
+  auto actions = std::make_shared<RecordingSystemActions>();
+  auto node = std::make_shared<easynav::RecoveryManagerNode>();
+  node->set_system_actions(actions);
+  node->trigger_transition(Transition::TRANSITION_CONFIGURE);
+
+  auto nav_state = std::make_shared<easynav::NavState>();
+  node->cycle(nav_state);
+  ASSERT_EQ(actions->holds, std::vector<bool>({false})) << "the first cycle sets it anyway";
+
+  // A diagnostic in ERROR (e.g. AMCL diverged) holds the mission's progress...
+  diagnostic_msgs::msg::DiagnosticStatus status;
+  status.level = diagnostic_msgs::msg::DiagnosticStatus::ERROR;
+  nav_state->set("diagnostics.fake", status);
+  nav_state->set_group("diagnostics", {"diagnostics.fake"});
+  node->cycle(nav_state);
+  node->cycle(nav_state);
+  ASSERT_EQ(actions->holds, std::vector<bool>({false, true})) << "only on changes";
+
+  // ...until it is resolved.
+  status.level = diagnostic_msgs::msg::DiagnosticStatus::OK;
+  nav_state->set("diagnostics.fake", status);
+  node->cycle(nav_state);
+  ASSERT_EQ(actions->holds, std::vector<bool>({false, true, false}));
+
+  // Unloading the recovery system releases a hold it left.
+  status.level = diagnostic_msgs::msg::DiagnosticStatus::ERROR;
+  nav_state->set("diagnostics.fake", status);
+  node->cycle(nav_state);
+  node->trigger_transition(Transition::TRANSITION_CLEANUP);
+  ASSERT_EQ(actions->holds, std::vector<bool>({false, true, false, true, false}));
 }
 
 TEST_F(RecoveryManagerReflexTest, ReflexesRunEveryRtCycleWhoeverHasControl)

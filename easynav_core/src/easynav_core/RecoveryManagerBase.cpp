@@ -85,6 +85,18 @@ RecoveryManagerBase::abort_mission(const std::string & reason)
 }
 
 void
+RecoveryManagerBase::hold_mission_progress(bool hold)
+{
+  if (auto actions = system_actions_.lock()) {
+    actions->hold_mission_progress(hold);
+  } else {
+    RCLCPP_WARN(
+      get_node()->get_logger(), "Recovery manager [%s] cannot %s the mission progress: no system",
+      get_plugin_name().c_str(), hold ? "hold" : "release");
+  }
+}
+
+void
 RecoveryManagerBase::request_shutdown(const std::string & reason)
 {
   if (auto actions = system_actions_.lock()) {

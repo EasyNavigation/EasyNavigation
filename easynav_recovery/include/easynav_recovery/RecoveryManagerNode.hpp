@@ -108,6 +108,8 @@ public:
 private:
   std::unique_ptr<pluginlib::ClassLoader<RecoveryManagerBase>> loader_;
 
+  /// @brief Replaces the loaded recovery system. Releasing it (nullptr) also releases any hold it
+  /// left on the mission's progress (SystemActions::hold_mission_progress()).
   void set_manager(std::shared_ptr<RecoveryManagerBase> manager);
 
   /// @brief Handed out as copies (get_recovery_manager()), so a cycle running in another thread

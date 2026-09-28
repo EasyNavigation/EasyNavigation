@@ -47,8 +47,10 @@ class RecordingSystemActions : public easynav::SystemActions
 public:
   void abort_mission(const std::string & reason) override {aborted.push_back(reason);}
   void request_shutdown(const std::string & reason) override {shutdowns.push_back(reason);}
+  void hold_mission_progress(bool hold) override {holds.push_back(hold);}
   std::vector<std::string> aborted;
   std::vector<std::string> shutdowns;
+  std::vector<bool> holds;
 };
 
 }  // namespace

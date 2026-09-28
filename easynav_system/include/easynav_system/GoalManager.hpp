@@ -18,6 +18,8 @@
 #ifndef EASYNAV_SYSTEM__GOALMANAGER_HPP_
 #define EASYNAV_SYSTEM__GOALMANAGER_HPP_
 
+#include <atomic>
+
 #include "rclcpp/subscription.hpp"
 #include "rclcpp/publisher.hpp"
 #include "rclcpp/macros.hpp"
@@ -111,6 +113,18 @@ public:
    * @param reason Textual explanation.
    */
   void set_error(const std::string & reason);
+
+  /**
+   * @brief Holds or releases the mission's progress.
+   *
+   * While held, update() keeps publishing feedback but takes no goal as reached: the robot pose
+   * cannot be trusted (a recovery is in progress, see SystemActions::hold_mission_progress()).
+   * @param held True to hold, false to release.
+   */
+  void set_progress_held(bool held);
+
+  /// @brief Whether the mission's progress is held (see set_progress_held()).
+  [[nodiscard]] inline bool is_progress_held() const {return progress_held_;}
 
   /**
    * @brief Update internal logic, including preemption and timeout checks.
@@ -216,6 +230,19 @@ private:
   /// @brief True once NavState's "goals" has been synced to an empty Goals() since
   /// the last time goals_ became non-empty (see accept_request()).
   bool goals_synced_empty_ {true};
+
+  /// @brief Atomic: also released from a lifecycle transition (recovery system unloaded).
+  std::atomic<bool> progress_held_ {false};
+
+  /// @brief Latest GoalManagerInfo, kept up to date every active cycle (published throttled).
+  easynav_interfaces::msg::GoalManagerInfo info_;
+
+  /// @brief An ACTIVE GoalManagerInfo was published, so the end of the mission must be too.
+  bool info_active_published_ {false};
+
+  /// @brief Publishes the final (IDLE) GoalManagerInfo once the mission ends, whatever the
+  /// reason (finished, error, failed, cancelled), unthrottled.
+  void publish_final_info();
 };
 
 }  // namespace easynav

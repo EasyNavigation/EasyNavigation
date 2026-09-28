@@ -269,6 +269,7 @@ DefaultRecoveryManager::update(NavState & nav_state)
   }
 
   handle_system_requests(nav_state);
+  update_mission_hold(nav_state);
   publish_diagnostics(nav_state);
   publish_mitigation_log(nav_state);
 }
@@ -338,6 +339,31 @@ DefaultRecoveryManager::handle_system_requests(NavState & nav_state)
       nav_state.has("system_shutdown_reason") ?
       nav_state.get<std::string>("system_shutdown_reason") :
       std::string("unrecoverable diagnostic"));
+  }
+}
+
+void
+DefaultRecoveryManager::update_mission_hold(NavState & nav_state)
+{
+  // While recovering (a mitigation running, or a diagnostic in ERROR that none resolved), the
+  // robot pose may be wrong (e.g. AMCL diverged), so arriving at the goal must not count yet.
+  bool hold = static_cast<bool>(active_mitigation_);
+  if (!hold) {
+    for (const auto & key : nav_state.get_group_keys("diagnostics")) {
+      if (!nav_state.has(key)) {continue;}
+      // Some entries (e.g. a SafetyReflexBase's) are written from the RT cycle: get_safe().
+      const auto status = nav_state.get_safe<diagnostic_msgs::msg::DiagnosticStatus>(key);
+      if (status.level >= diagnostic_msgs::msg::DiagnosticStatus::ERROR) {
+        hold = true;
+        break;
+      }
+    }
+  }
+
+  if (hold != mission_progress_held_ || first_hold_update_) {
+    hold_mission_progress(hold);
+    mission_progress_held_ = hold;
+    first_hold_update_ = false;
   }
 }
 

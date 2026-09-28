@@ -13,6 +13,9 @@
 // limitations under the License.
 
 
+#include <algorithm>
+#include <vector>
+
 #include "easynav_system/GoalManager.hpp"
 #include "easynav_system/GoalManagerClient.hpp"
 #include "easynav_common/types/NavState.hpp"
@@ -1709,4 +1712,145 @@ TEST_F(GoalManagerTestCase, PauseFlagResetOnCancelAndFinish)
   ASSERT_EQ(gm_server->get_state(), easynav::GoalManager::State::IDLE);
   ASSERT_FALSE(gm_server->is_paused());
   ASSERT_FALSE(nav_state->get_safe<bool>("navigation_paused"));
+}
+
+TEST_F(GoalManagerTestCase, HeldProgressDoesNotFinishGoal)
+{
+  // A recovery is handling a problem (e.g. AMCL diverged): the robot pose, which happens to be
+  // on the goal, cannot be trusted, so the goal must not be taken as reached.
+  auto nav_state = std::make_shared<easynav::NavState>();
+  nav_state->set("robot_pose", nav_msgs::msg::Odometry());
+
+  auto client_node = rclcpp::Node::make_shared("client_node");
+  auto system_node = rclcpp_lifecycle::LifecycleNode::make_shared("system_node");
+
+  rclcpp::executors::SingleThreadedExecutor exe;
+  exe.add_node(client_node);
+  exe.add_node(system_node->get_node_base_interface());
+
+  std::vector<uint8_t> control_types;
+  auto control_sub = client_node->create_subscription<easynav_interfaces::msg::NavigationControl>(
+    "easynav_control", 100,
+    [&control_types](easynav_interfaces::msg::NavigationControl::UniquePtr msg) {
+      control_types.push_back(msg->type);
+    });
+
+  auto pose_pub = client_node->create_publisher<geometry_msgs::msg::PoseStamped>(
+    "goal_pose", 100);
+
+  auto gm_server = easynav::GoalManager::make_shared(*nav_state, system_node);
+  gm_server->set_progress_held(true);
+  ASSERT_TRUE(gm_server->is_progress_held());
+
+  auto spin_for = [&](std::chrono::milliseconds duration) {
+      rclcpp::Rate rate(20);
+      auto start = client_node->now();
+      while (client_node->now() - start < duration) {
+        gm_server->update(*nav_state);
+        exe.spin_some();
+        rate.sleep();
+      }
+    };
+
+  geometry_msgs::msg::PoseStamped goal;
+  goal.header.frame_id = "map";
+  goal.header.stamp = system_node->now();
+  goal.pose.orientation.w = 1.0;  // Exactly where the robot is.
+  pose_pub->publish(goal);
+
+  spin_for(500ms);
+  ASSERT_EQ(gm_server->get_state(), easynav::GoalManager::State::ACTIVE);
+
+  // The recovery gives up and aborts the mission: the client gets ERROR, never FINISHED.
+  gm_server->set_error("localization diverged");
+  spin_for(200ms);
+  ASSERT_EQ(gm_server->get_state(), easynav::GoalManager::State::IDLE);
+  auto received = [&control_types](uint8_t type) {
+      return std::find(control_types.begin(), control_types.end(), type) != control_types.end();
+    };
+  ASSERT_TRUE(received(easynav_interfaces::msg::NavigationControl::ERROR));
+  ASSERT_FALSE(received(easynav_interfaces::msg::NavigationControl::FINISHED));
+
+  // The hold outlives the mission; once released, the same goal is reached.
+  goal.header.stamp = system_node->now();
+  pose_pub->publish(goal);
+  spin_for(300ms);
+  ASSERT_EQ(gm_server->get_state(), easynav::GoalManager::State::ACTIVE);
+
+  gm_server->set_progress_held(false);
+  spin_for(300ms);
+  ASSERT_EQ(gm_server->get_state(), easynav::GoalManager::State::IDLE);
+  ASSERT_EQ(control_types.back(), easynav_interfaces::msg::NavigationControl::FINISHED);
+}
+
+TEST_F(GoalManagerTestCase, FinalInfoPublishedWhenMissionEnds)
+{
+  // GoalManagerInfo is throttled while navigating; the end of the mission must still be
+  // published, or its subscribers (the TUI) keep showing the last ACTIVE one.
+  auto nav_state = std::make_shared<easynav::NavState>();
+  nav_state->set("robot_pose", nav_msgs::msg::Odometry());
+
+  auto client_node = rclcpp::Node::make_shared("client_node");
+  auto system_node = rclcpp_lifecycle::LifecycleNode::make_shared("system_node");
+
+  rclcpp::executors::SingleThreadedExecutor exe;
+  exe.add_node(client_node);
+  exe.add_node(system_node->get_node_base_interface());
+
+  std::vector<easynav_interfaces::msg::GoalManagerInfo> infos;
+  auto info_sub = client_node->create_subscription<easynav_interfaces::msg::GoalManagerInfo>(
+    "easynav_manager_info", 100,
+    [&infos](easynav_interfaces::msg::GoalManagerInfo::UniquePtr msg) {
+      infos.push_back(*msg);
+    });
+
+  auto pose_pub = client_node->create_publisher<geometry_msgs::msg::PoseStamped>(
+    "goal_pose", 100);
+
+  auto gm_server = easynav::GoalManager::make_shared(*nav_state, system_node);
+
+  auto spin_for = [&](std::chrono::milliseconds duration) {
+      rclcpp::Rate rate(20);
+      auto start = client_node->now();
+      while (client_node->now() - start < duration) {
+        gm_server->update(*nav_state);
+        exe.spin_some();
+        rate.sleep();
+      }
+    };
+
+  geometry_msgs::msg::PoseStamped goal;
+  goal.header.frame_id = "map";
+  goal.header.stamp = system_node->now();
+  goal.pose.position.x = 1.0;
+  goal.pose.orientation.w = 1.0;
+  pose_pub->publish(goal);
+
+  spin_for(500ms);
+  ASSERT_EQ(gm_server->get_state(), easynav::GoalManager::State::ACTIVE);
+  ASSERT_FALSE(infos.empty());
+  ASSERT_EQ(infos.back().status, easynav_interfaces::msg::GoalManagerInfo::ACTIVE);
+
+  // The robot arrives: the last info is IDLE, with no goals left and the distance it had.
+  nav_msgs::msg::Odometry at_goal;
+  at_goal.pose.pose.position.x = 0.99;
+  at_goal.pose.pose.orientation.w = 1.0;
+  nav_state->set("robot_pose", at_goal);
+
+  spin_for(300ms);
+  ASSERT_EQ(gm_server->get_state(), easynav::GoalManager::State::IDLE);
+  ASSERT_EQ(infos.back().status, easynav_interfaces::msg::GoalManagerInfo::IDLE);
+  ASSERT_TRUE(infos.back().goals.goals.empty());
+  ASSERT_NEAR(infos.back().position_distance, 0.01, 1e-6);
+
+  // Same when the mission ends outside update() (e.g. aborted by the recovery system).
+  goal.header.stamp = system_node->now();
+  goal.pose.position.x = 1000.0;
+  pose_pub->publish(goal);
+  spin_for(500ms);
+  ASSERT_EQ(infos.back().status, easynav_interfaces::msg::GoalManagerInfo::ACTIVE);
+
+  gm_server->set_error("aborted");
+  spin_for(200ms);
+  ASSERT_EQ(infos.back().status, easynav_interfaces::msg::GoalManagerInfo::IDLE);
 }

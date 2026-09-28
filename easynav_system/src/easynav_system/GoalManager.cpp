@@ -417,6 +417,8 @@ GoalManager::update(NavState & nav_state)
   nav_state.set("goal_tolerance.yaw", goal_tolerance_.yaw);
 
   if (state_ == State::IDLE) {
+    // The mission may have ended outside update() (set_error(), a CANCEL...).
+    publish_final_info();
     if (!goals_synced_empty_) {
       goals_ = nav_msgs::msg::Goals();
       nav_state.set("goals", goals_);
@@ -471,7 +473,14 @@ GoalManager::update(NavState & nav_state)
     last_update_time_ = now;
   }
 
-  check_goals(robot_pose, goal_tolerance_);
+  info_.position_tolerance = goal_tolerance_.position;
+  info_.angle_tolerance = goal_tolerance_.yaw;
+  info_.position_distance = feedback.distance_to_goal;
+  info_.angle_distance = calculate_angle(robot_pose, first_goal);
+
+  if (!progress_held_) {
+    check_goals(robot_pose, goal_tolerance_);
+  }
 
   if (!nav_state.has("goals")) {
     nav_state.set("goals", goals_);
@@ -492,15 +501,41 @@ GoalManager::update(NavState & nav_state)
     last_synced_navigation_state_ = state_;
   }
 
-  if (should_publish && info_pub_->get_subscription_count() > 0) {
-    easynav_interfaces::msg::GoalManagerInfo msg;
-    msg.status = static_cast<int>(get_state());
-    msg.goals = get_goals();
-    msg.position_tolerance = goal_tolerance_.position;
-    msg.angle_tolerance = goal_tolerance_.yaw;
-    msg.position_distance = feedback.distance_to_goal;
-    msg.angle_distance = calculate_angle(robot_pose, first_goal);
-    info_pub_->publish(msg);
+  if (state_ == State::IDLE) {
+    publish_final_info();
+  } else if (should_publish && info_pub_->get_subscription_count() > 0) {
+    info_.status = easynav_interfaces::msg::GoalManagerInfo::ACTIVE;
+    info_.goals = goals_;
+    info_pub_->publish(info_);
+    info_active_published_ = true;
+  }
+}
+
+void
+GoalManager::publish_final_info()
+{
+  if (!info_active_published_) {return;}
+  info_active_published_ = false;
+
+  info_.status = easynav_interfaces::msg::GoalManagerInfo::IDLE;
+  info_.goals = goals_;
+  if (info_pub_->get_subscription_count() > 0) {
+    info_pub_->publish(info_);
+  }
+}
+
+void
+GoalManager::set_progress_held(bool held)
+{
+  if (progress_held_.exchange(held) == held) {return;}
+
+  if (auto node = get_node()) {
+    if (held) {
+      RCLCPP_WARN(
+        node->get_logger(), "Mission progress held by recovery: no goal will be taken as reached");
+    } else {
+      RCLCPP_INFO(node->get_logger(), "Mission progress released by recovery");
+    }
   }
 }
 
