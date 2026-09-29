@@ -18,6 +18,8 @@
 #ifndef EASYNAV_SYSTEM__SYSTEMNODE_HPP_
 #define EASYNAV_SYSTEM__SYSTEMNODE_HPP_
 
+#include <mutex>
+
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp/macros.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
@@ -142,6 +144,12 @@ public:
 private:
   /// @brief Publishes a zero velocity (also in NavState's "cmd_vel").
   void stop_robot();
+
+  /// @brief Serializes the RT cycle with activation/deactivation.
+  std::mutex rt_mutex_;
+
+  /// @brief Whether the RT cycle may run and publish (guarded by rt_mutex_).
+  bool active_ {false};
 
   /// @brief Real-time callback group.
   rclcpp::CallbackGroup::SharedPtr realtime_cbg_;

@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <atomic>
 #include <chrono>
 #include <string>
 #include <vector>
@@ -294,27 +295,38 @@ public:
   void update_rt(easynav::NavState &) override {calls++; throw 42;}
 };
 
-// Throws on odd calls, counts successful ones in NavState.
-// Writes a command, then throws on odd calls.
 // Records the last known poses it is handed; optionally throws from the hook.
 class RecordingLocalizer : public easynav::LocalizerMethodBase
 {
 public:
   std::vector<geometry_msgs::msg::PoseWithCovarianceStamped> last_known;
-  int updates {0};
+  std::atomic<int> updates {0};
   bool throw_in_hook {false};
+  std::chrono::milliseconds hook_delay {0};
+  std::atomic<bool> hook_done {false};
+  std::atomic<bool> updated_before_hook_done {false};
   void on_initialize() override {}
-  void update_rt(easynav::NavState &) override {updates++;}
-  void update(easynav::NavState &) override {updates++;}
+  void update_rt(easynav::NavState &) override {record_update();}
+  void update(easynav::NavState &) override {record_update();}
 
 protected:
   void on_last_known_pose(const geometry_msgs::msg::PoseWithCovarianceStamped & pose) override
   {
     last_known.push_back(pose);
+    std::this_thread::sleep_for(hook_delay);
+    hook_done = true;
     if (throw_in_hook) {throw std::runtime_error("bad pose");}
+  }
+
+private:
+  void record_update()
+  {
+    if (!last_known.empty() && !hook_done) {updated_before_hook_done = true;}
+    updates++;
   }
 };
 
+// Writes a command, then throws on odd calls.
 class FlakyController : public easynav::ControllerMethodBase
 {
 public:
@@ -329,6 +341,7 @@ public:
   }
 };
 
+// Throws on odd calls, counts successful ones in NavState.
 class FlakyPlanner : public easynav::PlannerMethodBase
 {
 public:
@@ -964,6 +977,10 @@ TEST_F(CoreMethodTestCase, InvalidLastKnownPosesAreIgnored)
   invalid.push_back(robot_pose(1.0, std::numeric_limits<double>::infinity()));
   invalid.push_back(robot_pose(1.0, 1.0));
   invalid.back().pose.pose.orientation.w = 0.0;  // Zero quaternion.
+  invalid.push_back(robot_pose(1.0, 1.0));
+  invalid.back().pose.pose.position.z = nan;
+  invalid.push_back(robot_pose(1.0, 1.0));
+  invalid.back().pose.pose.orientation.x = nan;
 
   for (std::size_t i = 0; i < invalid.size(); ++i) {
     auto localizer = make_localizer(node, "loc_invalid_" + std::to_string(i));
@@ -1003,6 +1020,46 @@ TEST_F(CoreMethodTestCase, EachNewLocalizerInstanceGetsTheLastKnownPose)
     ASSERT_EQ(localizer->last_known.size(), 1u) << "instance " << i;
     EXPECT_DOUBLE_EQ(localizer->last_known.front().pose.pose.position.x, i - 1.0);
     nav_state.set("robot_pose", robot_pose(i, 0.0));  // Where it leaves the robot.
+  }
+}
+
+TEST_F(CoreMethodTestCase, NonZeroQuaternionWithZeroWIsValid)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_last_pose_quat_node");
+  auto localizer = make_localizer(node, "loc");
+
+  easynav::NavState nav_state;
+  auto odom = robot_pose(1.0, 1.0);
+  odom.pose.pose.orientation.w = 0.0;
+  odom.pose.pose.orientation.x = 1.0;  // 180 deg about x: unusual, but a valid rotation.
+  nav_state.set("robot_pose", odom);
+  localizer->internal_update_rt(nav_state, true);
+
+  EXPECT_EQ(localizer->last_known.size(), 1u);
+}
+
+TEST_F(CoreMethodTestCase, NoUpdateRunsBeforeTheLastKnownPoseHookFinishes)
+{
+  // The RT and non-RT loops run concurrently: whichever comes second waits for the hook.
+  for (int round = 0; round < 5; ++round) {
+    auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>(
+      "test_last_pose_race_node_" + std::to_string(round));
+    auto localizer = std::make_shared<RecordingLocalizer>();
+    localizer->hook_delay = std::chrono::milliseconds(50);
+    localizer->initialize(node, "loc");
+
+    easynav::NavState nav_state;
+    nav_state.set("robot_pose", robot_pose(1.0, 1.0));
+    std::this_thread::sleep_for(std::chrono::milliseconds(120));  // Non-RT is due.
+
+    std::thread rt([&]() {localizer->internal_update_rt(nav_state, true);});
+    std::thread nort([&]() {localizer->internal_update(nav_state);});
+    rt.join();
+    nort.join();
+
+    EXPECT_EQ(localizer->last_known.size(), 1u) << "round " << round;
+    EXPECT_EQ(localizer->updates, 2) << "round " << round;
+    EXPECT_FALSE(localizer->updated_before_hook_done) << "round " << round;
   }
 }
 

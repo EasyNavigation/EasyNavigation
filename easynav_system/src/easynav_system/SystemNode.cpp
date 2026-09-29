@@ -158,6 +158,11 @@ SystemNode::on_activate(const rclcpp_lifecycle::State & state)
     }
   }
 
+  {
+    std::lock_guard<std::mutex> lock(rt_mutex_);
+    active_ = true;
+  }
+
   return CallbackReturnT::SUCCESS;
 }
 
@@ -166,8 +171,13 @@ SystemNode::on_deactivate(const rclcpp_lifecycle::State & state)
 {
   (void)state;
 
-  // Drivers usually keep executing the last command: leave the robot stopped.
-  stop_robot();
+  {
+    // Once no RT cycle is in flight, none will publish again: the stop is the last command
+    // (drivers usually keep executing the last command received).
+    std::lock_guard<std::mutex> lock(rt_mutex_);
+    active_ = false;
+    stop_robot();
+  }
 
   for (auto & system_node : get_system_nodes()) {
     RCLCPP_INFO(get_logger(), "Deactivating [%s]", system_node.first.c_str());
@@ -252,6 +262,11 @@ void
 SystemNode::system_cycle_rt()
 {
   EASYNAV_TRACE_EVENT;
+
+  std::lock_guard<std::mutex> lock(rt_mutex_);
+  if (!active_) {
+    return;
+  }
 
   RCLCPP_DEBUG(get_logger(), "SystemNode::system_cycle_rt\n%s", nav_state_->debug_string().c_str());
 

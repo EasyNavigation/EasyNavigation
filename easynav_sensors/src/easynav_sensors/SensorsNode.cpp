@@ -26,6 +26,7 @@
 
 #include "sensor_msgs/msg/point_cloud2.hpp"
 
+#include "easynav_common/Parameters.hpp"
 #include "easynav_sensors/SensorsNode.hpp"
 
 #include "easynav_sensors/types/ImagePerception.hpp"
@@ -47,13 +48,9 @@ SensorsNode::SensorsNode(const rclcpp::NodeOptions & options)
   percept_pub_ = create_publisher<sensor_msgs::msg::PointCloud2>(
     "sensors_node/perceptions", rclcpp::SensorDataQoS().reliable());
 
-  if (!has_parameter("sensors")) {
-    declare_parameter("sensors", std::vector<std::string>());
-  }
+  easynav::declare_parameter_if_absent(*this, "sensors", std::vector<std::string>());
 
-  if (!has_parameter("forget_time")) {
-    declare_parameter("forget_time", 1.0);
-  }
+  easynav::declare_parameter_if_absent(*this, "forget_time", 1.0);
 
   handler_loader_ = std::make_unique<pluginlib::ClassLoader<PerceptionHandler>>(
     "easynav_sensors", "easynav::PerceptionHandler");
@@ -105,15 +102,9 @@ SensorsNode::on_configure([[maybe_unused]] const rclcpp_lifecycle::State & state
   for (const auto & sensor_id : sensors) {
     std::string topic, msg_type, plugin;
 
-    if (!has_parameter(sensor_id + ".topic")) {
-      declare_parameter(sensor_id + ".topic", std::string{});
-    }
-    if (!has_parameter(sensor_id + ".type")) {
-      declare_parameter(sensor_id + ".type", std::string{});
-    }
-    if (!has_parameter(sensor_id + ".plugin")) {
-      declare_parameter(sensor_id + ".plugin", std::string{});
-    }
+    easynav::declare_parameter_if_absent(*this, sensor_id + ".topic", std::string{});
+    easynav::declare_parameter_if_absent(*this, sensor_id + ".type", std::string{});
+    easynav::declare_parameter_if_absent(*this, sensor_id + ".plugin", std::string{});
 
     get_parameter(sensor_id + ".topic", topic);
     get_parameter(sensor_id + ".type", msg_type);
@@ -153,9 +144,7 @@ SensorsNode::on_configure([[maybe_unused]] const rclcpp_lifecycle::State & state
     handler->initialize(shared_from_this(), realtime_cbg_, sensor_id);
 
     std::string group = "";
-    if (!has_parameter(sensor_id + ".group")) {
-      declare_parameter(sensor_id + ".group", "");
-    }
+    easynav::declare_parameter_if_absent(*this, sensor_id + ".group", "");
     get_parameter(sensor_id + ".group", group);
 
     // Store the handler and add sensor to the group

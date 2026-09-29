@@ -20,6 +20,7 @@
 #include "tf2/utils.hpp"
 #include "nav_msgs/msg/odometry.hpp"
 
+#include "easynav_common/Parameters.hpp"
 #include "easynav_system/GoalManager.hpp"
 
 
@@ -83,21 +84,12 @@ GoalManager::GoalManager(
 
   // Use the constructor parameter directly here, not parent_node_: it's a live
   // shared_ptr for the duration of this constructor, no need to lock() it.
-  if (!parent_node->has_parameter("allow_preempt_goal")) {
-    parent_node->declare_parameter("allow_preempt_goal", allow_preempt_goal_);
-  }
-  if (!parent_node->has_parameter("position_tolerance")) {
-    parent_node->declare_parameter("position_tolerance", goal_tolerance_.position);
-  }
-  if (!parent_node->has_parameter("height_tolerance")) {
-    parent_node->declare_parameter("height_tolerance", goal_tolerance_.height);
-  }
-  if (!parent_node->has_parameter("angle_tolerance")) {
-    parent_node->declare_parameter("angle_tolerance", goal_tolerance_.yaw);
-  }
-  if (!parent_node->has_parameter("update_frequency")) {
-    parent_node->declare_parameter("update_frequency", update_frequency_);
-  }
+  easynav::declare_parameter_if_absent(*parent_node, "allow_preempt_goal", allow_preempt_goal_);
+  easynav::declare_parameter_if_absent(*parent_node, "position_tolerance",
+      goal_tolerance_.position);
+  easynav::declare_parameter_if_absent(*parent_node, "height_tolerance", goal_tolerance_.height);
+  easynav::declare_parameter_if_absent(*parent_node, "angle_tolerance", goal_tolerance_.yaw);
+  easynav::declare_parameter_if_absent(*parent_node, "update_frequency", update_frequency_);
   read_parameters(nav_state);
 
   control_sub_ = parent_node->create_subscription<easynav_interfaces::msg::NavigationControl>(

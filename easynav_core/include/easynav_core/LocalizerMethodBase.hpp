@@ -18,7 +18,7 @@
 #ifndef EASYNAV_CORE__LOCALIZERMETHODBASE_HPP_
 #define EASYNAV_CORE__LOCALIZERMETHODBASE_HPP_
 
-#include <atomic>
+#include <mutex>
 
 #include "geometry_msgs/msg/pose_with_covariance_stamped.hpp"
 
@@ -90,7 +90,8 @@ private:
   /// @brief Hands the last known pose to on_last_known_pose(), on the first cycle only.
   void check_last_known_pose(const NavState & nav_state);
 
-  std::atomic<bool> last_known_pose_checked_ {false};
+  /// @brief Also makes the other loop (RT/non-RT) wait until the hook has finished.
+  std::once_flag last_known_pose_once_;
 };
 
 }  // namespace easynav

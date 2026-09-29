@@ -20,6 +20,7 @@
 #include "rclcpp/time.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 
+#include "easynav_common/Parameters.hpp"
 #include "easynav_sensors/types/DetectionsPerception.hpp"
 
 namespace easynav
@@ -34,12 +35,8 @@ void DetectionsPerceptionsHandler::on_initialize()
   auto node = get_node();
   std::string topic, msg_type;
 
-  if (!node->has_parameter(get_sensor_name() + ".topic")) {
-    node->declare_parameter(get_sensor_name() + ".topic", std::string{});
-  }
-  if (!node->has_parameter(get_sensor_name() + ".type")) {
-    node->declare_parameter(get_sensor_name() + ".type", std::string{});
-  }
+  easynav::declare_parameter_if_absent(*node, get_sensor_name() + ".topic", std::string{});
+  easynav::declare_parameter_if_absent(*node, get_sensor_name() + ".type", std::string{});
 
   node->get_parameter(get_sensor_name() + ".topic", topic);
   node->get_parameter(get_sensor_name() + ".type", msg_type);

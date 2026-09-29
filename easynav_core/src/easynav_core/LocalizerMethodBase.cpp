@@ -31,34 +31,37 @@ namespace easynav
 void
 LocalizerMethodBase::check_last_known_pose(const NavState & nav_state)
 {
-  if (last_known_pose_checked_.exchange(true) || !nav_state.has("robot_pose")) {
-    return;
-  }
+  std::call_once(
+    last_known_pose_once_, [&]() {
+      if (!nav_state.has("robot_pose")) {
+        return;
+      }
+      try {
+        const auto odom = nav_state.get_safe<nav_msgs::msg::Odometry>("robot_pose");
+        const auto & p = odom.pose.pose.position;
+        const auto & q = odom.pose.pose.orientation;
+        const bool valid = std::isfinite(p.x) && std::isfinite(p.y) && std::isfinite(p.z) &&
+        std::isfinite(q.x) && std::isfinite(q.y) && std::isfinite(q.z) && std::isfinite(q.w) &&
+        (q.x != 0.0 || q.y != 0.0 || q.z != 0.0 || q.w != 0.0) &&
+        odom.header.frame_id == RTTFBuffer::getInstance()->get_tf_info().map_frame;
+        if (!valid) {
+          return;
+        }
 
-  try {
-    const auto odom = nav_state.get_safe<nav_msgs::msg::Odometry>("robot_pose");
-    const auto & p = odom.pose.pose;
-    const bool valid = std::isfinite(p.position.x) && std::isfinite(p.position.y) &&
-      std::isfinite(p.orientation.z) && std::isfinite(p.orientation.w) &&
-      (p.orientation.z != 0.0 || p.orientation.w != 0.0) &&
-      odom.header.frame_id == RTTFBuffer::getInstance()->get_tf_info().map_frame;
-    if (!valid) {
-      return;
-    }
-
-    geometry_msgs::msg::PoseWithCovarianceStamped pose;
-    pose.header = odom.header;
-    pose.pose = odom.pose;
-    on_last_known_pose(pose);
-  } catch (const std::exception & e) {
-    RCLCPP_WARN(
-      get_node()->get_logger(), "Localizer [%s] could not reuse the last known pose: %s",
-      get_plugin_name().c_str(), e.what());
-  } catch (...) {
-    RCLCPP_WARN(
-      get_node()->get_logger(), "Localizer [%s] could not reuse the last known pose",
-      get_plugin_name().c_str());
-  }
+        geometry_msgs::msg::PoseWithCovarianceStamped pose;
+        pose.header = odom.header;
+        pose.pose = odom.pose;
+        on_last_known_pose(pose);
+      } catch (const std::exception & e) {
+        RCLCPP_WARN(
+          get_node()->get_logger(), "Localizer [%s] could not reuse the last known pose: %s",
+          get_plugin_name().c_str(), e.what());
+      } catch (...) {
+        RCLCPP_WARN(
+          get_node()->get_logger(), "Localizer [%s] could not reuse the last known pose",
+          get_plugin_name().c_str());
+      }
+    });
 }
 
 bool
