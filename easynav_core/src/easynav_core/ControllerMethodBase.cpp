@@ -63,6 +63,72 @@ ControllerMethodBase::initialize(
   MethodBase::initialize(parent_node, plugin_name);
 }
 
+RobotLimits
+ControllerMethodBase::get_robot_limits(const LegacyRobotLimitNames & legacy)
+{
+  auto * provider = dynamic_cast<RobotLimitsProvider *>(get_node().get());
+  RobotLimits limits = provider ? provider->get_robot_limits() : RobotLimits{};
+
+  auto apply = [&](const std::string & name, const std::string & field, double & value) {
+      if (name.empty()) {
+        return;
+      }
+      const auto replacement = "controller_node.robot_limits." + field;
+      if (provider && provider->is_robot_limit_configured(field)) {
+        double ignored = value;
+        if (read_deprecated_parameter(name, ignored)) {
+          RCLCPP_WARN(
+            get_node()->get_logger(), "[%s] '%s.%s' is deprecated and ignored: '%s' takes "
+            "precedence", get_plugin_name().c_str(), get_plugin_name().c_str(), name.c_str(),
+            replacement.c_str());
+        }
+        return;
+      }
+      get_deprecated_parameter(name, replacement, value);
+    };
+  apply(legacy.max_linear_vel, "max_linear_vel", limits.max_linear_vel);
+  apply(legacy.min_linear_vel, "min_linear_vel", limits.min_linear_vel);
+  apply(legacy.max_angular_vel, "max_angular_vel", limits.max_angular_vel);
+  apply(legacy.max_linear_acc, "max_linear_acc", limits.max_linear_acc);
+  apply(legacy.max_linear_decel, "max_linear_decel", limits.max_linear_decel);
+  apply(legacy.max_angular_acc, "max_angular_acc", limits.max_angular_acc);
+  apply(legacy.max_angular_decel, "max_angular_decel", limits.max_angular_decel);
+
+  if (provider) {
+    provider->set_robot_limits(limits);  // What the smoother enforces too.
+  }
+  return limits;
+}
+
+bool
+ControllerMethodBase::get_deprecated_parameter(
+  const std::string & name, const std::string & replacement, double & value)
+{
+  if (!read_deprecated_parameter(name, value)) {
+    return false;
+  }
+  RCLCPP_WARN(
+    get_node()->get_logger(),
+    "[%s] '%s.%s' is deprecated: configure '%s' instead. It will stop working soon.",
+    get_plugin_name().c_str(), get_plugin_name().c_str(), name.c_str(), replacement.c_str());
+  return true;
+}
+
+bool
+ControllerMethodBase::read_deprecated_parameter(const std::string & name, double & value)
+{
+  auto node = get_node();
+  const auto full_name = get_plugin_name() + "." + name;
+  // Configured: given in the parameters (files/overrides), or declared by a previous instance.
+  const auto & overrides = node->get_node_parameters_interface()->get_parameter_overrides();
+  if (overrides.count(full_name) == 0 && !node->has_parameter(full_name)) {
+    return false;
+  }
+  declare_parameter_if_absent(*node, full_name, value);
+  node->get_parameter(full_name, value);
+  return true;
+}
+
 bool
 ControllerMethodBase::internal_update_rt(NavState & nav_state, bool trigger)
 {

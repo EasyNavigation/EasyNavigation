@@ -48,6 +48,15 @@ protected:
         "--ros-args",
         "-p", "controller_types:=['dummy']",
         "-p", "dummy.plugin:=easynav_controller/DummyController",
+        // Limits high enough that the velocity smoother does not get in the way: these tests
+        // check what is commanded, not how it ramps (see ControllerNode's tests).
+        "-p", "robot_limits.max_linear_vel:=10.0",
+        "-p", "robot_limits.min_linear_vel:=-10.0",
+        "-p", "robot_limits.max_angular_vel:=10.0",
+        "-p", "robot_limits.max_linear_acc:=1000.0",
+        "-p", "robot_limits.max_linear_decel:=1000.0",
+        "-p", "robot_limits.max_angular_acc:=1000.0",
+        "-p", "robot_limits.max_angular_decel:=1000.0",
       };
       rclcpp::init(static_cast<int>(argv.size()), argv.data());
       initialized_ = true;

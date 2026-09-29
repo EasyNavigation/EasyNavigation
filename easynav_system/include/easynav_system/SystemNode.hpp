@@ -142,8 +142,11 @@ public:
   [[nodiscard]] std::shared_ptr<NavState> get_nav_state() const {return nav_state_;}
 
 private:
-  /// @brief Publishes a zero velocity (also in NavState's "cmd_vel").
-  void stop_robot();
+  /// @brief Leaves a zero "cmd_vel" in NavState (ControllerNode stops the robot).
+  void clear_cmd_vel();
+
+  /// @brief Applies a deprecated "system_node.use_cmd_vel_stamped" to controller_node.
+  void forward_deprecated_use_cmd_vel_stamped();
 
   /// @brief Serializes the RT cycle with activation/deactivation.
   std::mutex rt_mutex_;
@@ -175,17 +178,11 @@ private:
   /// @brief Goal manager.
   GoalManager::SharedPtr goal_manager_;
 
-  /// @brief Wheter publish stamped or unstamped speed
-  bool use_cmd_vel_stamped_ {false};
 
   /// @brief Publisher for nav_state as string.
   rclcpp::Publisher<std_msgs::msg::String>::SharedPtr navstate_pub_;
 
-  /// @brief Publisher for velocity command (stamped).
-  rclcpp::Publisher<geometry_msgs::msg::TwistStamped>::SharedPtr vel_pub_stamped_;
 
-  /// @brief Publisher for velocity command (legacy Twist).
-  rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr vel_pub_;
 };
 
 }  // namespace easynav

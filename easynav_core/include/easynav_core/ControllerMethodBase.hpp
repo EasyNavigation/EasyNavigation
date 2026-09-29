@@ -25,6 +25,7 @@
 
 #include "easynav_common/types/NavState.hpp"
 #include "easynav_core/MethodBase.hpp"
+#include "easynav_core/RobotLimits.hpp"
 
 namespace easynav
 {
@@ -70,6 +71,30 @@ public:
    * @return True if update_rt() was called, false otherwise.
    */
   bool internal_update_rt(NavState & nav_state, bool trigger = false);
+
+  /**
+   * @brief The robot limits, configured in the node that loaded this plugin (ControllerNode,
+   * "robot_limits.*"); the RobotLimits defaults without such a node (e.g. a plain node in a test).
+   *
+   * Controllers must use them instead of declaring their own: the velocity smoother enforces the
+   * same limits on every command. \p legacy lists this controller's deprecated parameters: a
+   * value still configured under one of them is applied, with a deprecation warning, unless
+   * "robot_limits.*" configures that limit. The resulting limits are the ones the node enforces.
+   */
+  RobotLimits get_robot_limits(const LegacyRobotLimitNames & legacy = {});
+
+protected:
+  /**
+   * @brief Reads the deprecated parameter "<plugin>.<name>" if it is configured, warning that
+   * \p replacement should be used instead.
+   * @return Whether it was configured (then \p value holds it).
+   */
+  bool get_deprecated_parameter(
+    const std::string & name, const std::string & replacement, double & value);
+
+private:
+  /// @brief As get_deprecated_parameter(), without warning.
+  bool read_deprecated_parameter(const std::string & name, double & value);
 
 protected:
   /**
