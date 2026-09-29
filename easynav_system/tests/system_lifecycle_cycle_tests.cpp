@@ -17,6 +17,7 @@
 /// repeated full cycles, including active -> inactive -> unconfigured ->
 /// inactive -> active.
 
+#include <functional>
 #include <vector>
 
 #include "easynav_system/SystemNode.hpp"
@@ -136,7 +137,10 @@ TEST_F(SystemLifecycleCycleTest, ActiveToUnconfiguredAndBackRepeatedly)
 
     received.clear();
     auto start = listener_node->now();
-    while (listener_node->now() - start < 2s && received.empty()) {
+    // The stop published on deactivation may still arrive: wait for the new command.
+    while (listener_node->now() - start < 2s &&
+      (received.empty() || received.back().linear.x != 1.5 + cycle))
+    {
       system_node->system_cycle();
       system_node->system_cycle_rt();
       exe.spin_some();
@@ -180,4 +184,58 @@ TEST_F(SystemLifecycleCycleTest, AllPrimaryTransitionsRepeatedly)
 
   ASSERT_NO_THROW(system_node->system_cycle());
   ASSERT_NO_THROW(system_node->system_cycle_rt());
+}
+
+TEST_F(SystemLifecycleCycleTest, DeactivationStopsTheRobot)
+{
+  // Drivers usually keep executing the last command received.
+  auto system_node = std::make_shared<easynav::SystemNode>();
+  ASSERT_TRUE(expect_transition(
+    system_node, Transition::TRANSITION_CONFIGURE, State::PRIMARY_STATE_INACTIVE));
+  ASSERT_TRUE(expect_transition(
+    system_node, Transition::TRANSITION_ACTIVATE, State::PRIMARY_STATE_ACTIVE));
+
+  auto listener_node = rclcpp::Node::make_shared("cmd_vel_stop_listener");
+  std::vector<geometry_msgs::msg::Twist> received;
+  auto sub = listener_node->create_subscription<geometry_msgs::msg::Twist>(
+    "cmd_vel", 10,
+    [&received](geometry_msgs::msg::Twist::UniquePtr msg) {received.push_back(*msg);});
+  rclcpp::executors::SingleThreadedExecutor exe;
+  exe.add_node(listener_node);
+  auto spin_until = [&](const std::function<bool()> & done, bool cycle) {
+      const auto start = listener_node->now();
+      while (listener_node->now() - start < 2s && !done()) {
+        if (cycle) {system_node->system_cycle_rt();}
+        exe.spin_some();
+        rclcpp::sleep_for(10ms);
+      }
+      return done();
+    };
+  ASSERT_TRUE(spin_until([&]() {return sub->get_publisher_count() > 0;}, false));
+
+  auto nav_state = system_node->get_nav_state();
+  for (int round = 1; round <= 2; ++round) {
+    // Moving.
+    geometry_msgs::msg::TwistStamped moving;
+    moving.twist.linear.x = 0.5 * round;
+    moving.twist.angular.z = 0.2;
+    nav_state->set("cmd_vel", moving);
+    ASSERT_TRUE(
+      spin_until(
+        [&]() {return !received.empty() && received.back().linear.x == 0.5 * round;}, true));
+
+    // Deactivated: the last command sent is a stop, also left in NavState.
+    received.clear();
+    ASSERT_TRUE(expect_transition(
+      system_node, Transition::TRANSITION_DEACTIVATE, State::PRIMARY_STATE_INACTIVE));
+    ASSERT_TRUE(spin_until([&]() {return !received.empty();}, false)) << "round " << round;
+    EXPECT_DOUBLE_EQ(received.back().linear.x, 0.0);
+    EXPECT_DOUBLE_EQ(received.back().angular.z, 0.0);
+    EXPECT_DOUBLE_EQ(nav_state->get<geometry_msgs::msg::TwistStamped>("cmd_vel").twist.linear.x,
+      0.0);
+
+    // Active again: commands flow again.
+    ASSERT_TRUE(expect_transition(
+      system_node, Transition::TRANSITION_ACTIVATE, State::PRIMARY_STATE_ACTIVE));
+  }
 }

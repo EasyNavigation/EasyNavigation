@@ -15,6 +15,11 @@
 /// \file
 /// \brief Implementation of the abstract base class LocalizerMethodBase.
 
+#include <cmath>
+
+#include "nav_msgs/msg/odometry.hpp"
+
+#include "easynav_common/RTTFBuffer.hpp"
 #include "easynav_common/types/NavState.hpp"
 #include "easynav_common/YTSession.hpp"
 
@@ -22,6 +27,39 @@
 
 namespace easynav
 {
+
+void
+LocalizerMethodBase::check_last_known_pose(const NavState & nav_state)
+{
+  if (last_known_pose_checked_.exchange(true) || !nav_state.has("robot_pose")) {
+    return;
+  }
+
+  try {
+    const auto odom = nav_state.get_safe<nav_msgs::msg::Odometry>("robot_pose");
+    const auto & p = odom.pose.pose;
+    const bool valid = std::isfinite(p.position.x) && std::isfinite(p.position.y) &&
+      std::isfinite(p.orientation.z) && std::isfinite(p.orientation.w) &&
+      (p.orientation.z != 0.0 || p.orientation.w != 0.0) &&
+      odom.header.frame_id == RTTFBuffer::getInstance()->get_tf_info().map_frame;
+    if (!valid) {
+      return;
+    }
+
+    geometry_msgs::msg::PoseWithCovarianceStamped pose;
+    pose.header = odom.header;
+    pose.pose = odom.pose;
+    on_last_known_pose(pose);
+  } catch (const std::exception & e) {
+    RCLCPP_WARN(
+      get_node()->get_logger(), "Localizer [%s] could not reuse the last known pose: %s",
+      get_plugin_name().c_str(), e.what());
+  } catch (...) {
+    RCLCPP_WARN(
+      get_node()->get_logger(), "Localizer [%s] could not reuse the last known pose",
+      get_plugin_name().c_str());
+  }
+}
 
 bool
 LocalizerMethodBase::internal_update_rt(NavState & nav_state, bool trigger)
@@ -31,6 +69,7 @@ LocalizerMethodBase::internal_update_rt(NavState & nav_state, bool trigger)
 
     // Save last execution time, even if triggered
     setRunRT();
+    check_last_known_pose(nav_state);
 
     try {
       update_rt(nav_state);
@@ -59,6 +98,7 @@ LocalizerMethodBase::internal_update(NavState & nav_state)
     EASYNAV_TRACE_EVENT;
     // Save last execution time, even if triggered
     setRun();
+    check_last_known_pose(nav_state);
 
     try {
       update(nav_state);

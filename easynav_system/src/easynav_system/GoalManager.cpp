@@ -98,24 +98,7 @@ GoalManager::GoalManager(
   if (!parent_node->has_parameter("update_frequency")) {
     parent_node->declare_parameter("update_frequency", update_frequency_);
   }
-  parent_node->get_parameter("allow_preempt_goal", allow_preempt_goal_);
-  parent_node->get_parameter("position_tolerance", goal_tolerance_.position);
-  parent_node->get_parameter("height_tolerance", goal_tolerance_.height);
-  parent_node->get_parameter("angle_tolerance", goal_tolerance_.yaw);
-  parent_node->get_parameter("update_frequency", update_frequency_);
-  if (update_frequency_ <= 0.0) {
-    RCLCPP_WARN(
-      parent_node->get_logger(),
-      "Parameter 'update_frequency' must be > 0.0 (got %.3f); falling back to 20.0",
-      update_frequency_);
-    update_frequency_ = 20.0;
-  }
-
-  update_period_ = rclcpp::Duration::from_seconds(1.0 / update_frequency_);
-  // Expose initial goal tolerances in NavState so controllers can reuse them
-  nav_state.set("goal_tolerance.position", goal_tolerance_.position);
-  nav_state.set("goal_tolerance.height", goal_tolerance_.height);
-  nav_state.set("goal_tolerance.yaw", goal_tolerance_.yaw);
+  read_parameters(nav_state);
 
   control_sub_ = parent_node->create_subscription<easynav_interfaces::msg::NavigationControl>(
     "easynav_control", 100,
@@ -148,6 +131,32 @@ GoalManager::GoalManager(
     });
 
   // parent_node->get_logger().set_level(rclcpp::Logger::Level::Debug);
+}
+
+void
+GoalManager::read_parameters(NavState & nav_state)
+{
+  auto node = get_node();
+  if (!node) {return;}
+
+  node->get_parameter("allow_preempt_goal", allow_preempt_goal_);
+  node->get_parameter("position_tolerance", goal_tolerance_.position);
+  node->get_parameter("height_tolerance", goal_tolerance_.height);
+  node->get_parameter("angle_tolerance", goal_tolerance_.yaw);
+  node->get_parameter("update_frequency", update_frequency_);
+  if (update_frequency_ <= 0.0) {
+    RCLCPP_WARN(
+      node->get_logger(),
+      "Parameter 'update_frequency' must be > 0.0 (got %.3f); falling back to 20.0",
+      update_frequency_);
+    update_frequency_ = 20.0;
+  }
+  update_period_ = rclcpp::Duration::from_seconds(1.0 / update_frequency_);
+
+  // Tolerances in NavState, so controllers can reuse them.
+  nav_state.set("goal_tolerance.position", goal_tolerance_.position);
+  nav_state.set("goal_tolerance.height", goal_tolerance_.height);
+  nav_state.set("goal_tolerance.yaw", goal_tolerance_.yaw);
 }
 
 rclcpp_lifecycle::LifecycleNode::SharedPtr

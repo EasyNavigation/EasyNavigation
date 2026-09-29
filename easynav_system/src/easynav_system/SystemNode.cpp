@@ -121,7 +121,12 @@ SystemNode::on_configure(const rclcpp_lifecycle::State & state)
     }
   }
 
-  goal_manager_ = GoalManager::make_shared(*nav_state_, shared_from_this());
+  // Kept across cleanup/configure: a reconfiguration does not lose the mission.
+  if (!goal_manager_) {
+    goal_manager_ = GoalManager::make_shared(*nav_state_, shared_from_this());
+  } else {
+    goal_manager_->read_parameters(*nav_state_);
+  }
 
   navstate_pub_ = create_publisher<std_msgs::msg::String>(
     "easynav_navstate", 100);
@@ -161,6 +166,9 @@ SystemNode::on_deactivate(const rclcpp_lifecycle::State & state)
 {
   (void)state;
 
+  // Drivers usually keep executing the last command: leave the robot stopped.
+  stop_robot();
+
   for (auto & system_node : get_system_nodes()) {
     RCLCPP_INFO(get_logger(), "Deactivating [%s]", system_node.first.c_str());
     system_node.second.node_ptr->trigger_transition(
@@ -175,6 +183,23 @@ SystemNode::on_deactivate(const rclcpp_lifecycle::State & state)
   }
 
   return CallbackReturnT::SUCCESS;
+}
+
+void
+SystemNode::stop_robot()
+{
+  geometry_msgs::msg::TwistStamped stop;
+  stop.header.stamp = now();
+  stop.header.frame_id = RTTFBuffer::getInstance()->get_tf_info().robot_frame;
+  if (use_cmd_vel_stamped_ && vel_pub_stamped_) {
+    vel_pub_stamped_->publish(stop);
+  }
+  if (!use_cmd_vel_stamped_ && vel_pub_) {
+    vel_pub_->publish(stop.twist);
+  }
+  if (nav_state_) {
+    nav_state_->set("cmd_vel", stop);
+  }
 }
 
 CallbackReturnT
@@ -195,7 +220,7 @@ SystemNode::on_cleanup(const rclcpp_lifecycle::State & state)
     }
   }
 
-  goal_manager_ = nullptr;
+  // goal_manager_ is kept (see on_configure()).
   navstate_pub_ = nullptr;
   vel_pub_ = nullptr;
   vel_pub_stamped_ = nullptr;

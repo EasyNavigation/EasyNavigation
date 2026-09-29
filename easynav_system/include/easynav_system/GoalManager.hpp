@@ -117,6 +117,9 @@ public:
    */
   void update(NavState & nav_state);
 
+  /// @brief (Re)reads the parameters (on every configure: the GoalManager outlives cleanup).
+  void read_parameters(NavState & nav_state);
+
   /**
    * @brief Check if the robot is currently at the first goal.
    *

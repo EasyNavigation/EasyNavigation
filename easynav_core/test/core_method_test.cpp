@@ -13,11 +13,16 @@
 // limitations under the License.
 
 #include <chrono>
+#include <string>
+#include <vector>
+#include <memory>
+#include <limits>
 #include <stdexcept>
 #include <thread>
 
 #include "gtest/gtest.h"
 
+#include "geometry_msgs/msg/pose_with_covariance_stamped.hpp"
 #include "geometry_msgs/msg/twist_stamped.hpp"
 #include "nav_msgs/msg/odometry.hpp"
 
@@ -291,6 +296,25 @@ public:
 
 // Throws on odd calls, counts successful ones in NavState.
 // Writes a command, then throws on odd calls.
+// Records the last known poses it is handed; optionally throws from the hook.
+class RecordingLocalizer : public easynav::LocalizerMethodBase
+{
+public:
+  std::vector<geometry_msgs::msg::PoseWithCovarianceStamped> last_known;
+  int updates {0};
+  bool throw_in_hook {false};
+  void on_initialize() override {}
+  void update_rt(easynav::NavState &) override {updates++;}
+  void update(easynav::NavState &) override {updates++;}
+
+protected:
+  void on_last_known_pose(const geometry_msgs::msg::PoseWithCovarianceStamped & pose) override
+  {
+    last_known.push_back(pose);
+    if (throw_in_hook) {throw std::runtime_error("bad pose");}
+  }
+};
+
 class FlakyController : public easynav::ControllerMethodBase
 {
 public:
@@ -842,6 +866,143 @@ TEST_F(CoreMethodTestCase, ControllerRecoversAfterAFailedCycle)
     EXPECT_TRUE(ctrl.internal_update_rt(nav_state, true));
     const double x = nav_state.get<geometry_msgs::msg::TwistStamped>("cmd_vel").twist.linear.x;
     EXPECT_DOUBLE_EQ(x, i % 2 == 1 ? 0.0 : 0.4) << "cycle " << i;
+  }
+}
+
+namespace
+{
+nav_msgs::msg::Odometry robot_pose(double x, double y, const std::string & frame = "")
+{
+  nav_msgs::msg::Odometry odom;
+  odom.header.frame_id =
+    frame.empty() ? easynav::RTTFBuffer::getInstance()->get_tf_info().map_frame : frame;
+  odom.pose.pose.position.x = x;
+  odom.pose.pose.position.y = y;
+  odom.pose.pose.orientation.w = 1.0;
+  odom.pose.covariance[0] = 0.25;
+  return odom;
+}
+
+std::shared_ptr<RecordingLocalizer> make_localizer(
+  const rclcpp_lifecycle::LifecycleNode::SharedPtr & node, const std::string & name)
+{
+  auto localizer = std::make_shared<RecordingLocalizer>();
+  localizer->initialize(node, name);
+  return localizer;
+}
+}  // namespace
+
+TEST_F(CoreMethodTestCase, LastKnownPoseIsHandedOnTheFirstCycle)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_last_pose_node");
+  auto localizer = make_localizer(node, "loc");
+
+  easynav::NavState nav_state;
+  nav_state.set("robot_pose", robot_pose(1.5, -2.0));
+  localizer->internal_update_rt(nav_state, true);
+
+  ASSERT_EQ(localizer->last_known.size(), 1u);
+  const auto & pose = localizer->last_known.front();
+  EXPECT_DOUBLE_EQ(pose.pose.pose.position.x, 1.5);
+  EXPECT_DOUBLE_EQ(pose.pose.pose.position.y, -2.0);
+  EXPECT_DOUBLE_EQ(pose.pose.covariance[0], 0.25) << "covariance kept";
+  EXPECT_EQ(localizer->updates, 1);
+}
+
+TEST_F(CoreMethodTestCase, LastKnownPoseAlsoOnAFirstNonRtCycle)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_last_pose_nort_node");
+  auto localizer = make_localizer(node, "loc");
+
+  easynav::NavState nav_state;
+  nav_state.set("robot_pose", robot_pose(1.0, 1.0));
+  std::this_thread::sleep_for(std::chrono::milliseconds(120));
+  localizer->internal_update(nav_state);
+  EXPECT_EQ(localizer->last_known.size(), 1u);
+}
+
+TEST_F(CoreMethodTestCase, LastKnownPoseOnlyOnce)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_last_pose_once_node");
+  auto localizer = make_localizer(node, "loc");
+
+  easynav::NavState nav_state;
+  nav_state.set("robot_pose", robot_pose(1.0, 1.0));
+  for (int i = 0; i < 5; ++i) {
+    nav_state.set("robot_pose", robot_pose(1.0 + i, 1.0));  // Its own estimate from now on.
+    localizer->internal_update_rt(nav_state, true);
+  }
+  std::this_thread::sleep_for(std::chrono::milliseconds(120));
+  localizer->internal_update(nav_state);
+
+  ASSERT_EQ(localizer->last_known.size(), 1u);
+  EXPECT_DOUBLE_EQ(localizer->last_known.front().pose.pose.position.x, 1.0);
+}
+
+TEST_F(CoreMethodTestCase, NoLastKnownPoseOnAFreshStart)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_last_pose_fresh_node");
+  auto localizer = make_localizer(node, "loc");
+
+  easynav::NavState nav_state;
+  localizer->internal_update_rt(nav_state, true);
+  // A pose written afterwards is this localizer's own: not handed back.
+  nav_state.set("robot_pose", robot_pose(1.0, 1.0));
+  localizer->internal_update_rt(nav_state, true);
+
+  EXPECT_TRUE(localizer->last_known.empty());
+  EXPECT_EQ(localizer->updates, 2);
+}
+
+TEST_F(CoreMethodTestCase, InvalidLastKnownPosesAreIgnored)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_last_pose_invalid_node");
+  const double nan = std::numeric_limits<double>::quiet_NaN();
+  std::vector<nav_msgs::msg::Odometry> invalid;
+  invalid.push_back(robot_pose(1.0, 1.0, "odom"));  // Not the map frame.
+  invalid.push_back(robot_pose(nan, 1.0));
+  invalid.push_back(robot_pose(1.0, std::numeric_limits<double>::infinity()));
+  invalid.push_back(robot_pose(1.0, 1.0));
+  invalid.back().pose.pose.orientation.w = 0.0;  // Zero quaternion.
+
+  for (std::size_t i = 0; i < invalid.size(); ++i) {
+    auto localizer = make_localizer(node, "loc_invalid_" + std::to_string(i));
+    easynav::NavState nav_state;
+    nav_state.set("robot_pose", invalid[i]);
+    localizer->internal_update_rt(nav_state, true);
+    EXPECT_TRUE(localizer->last_known.empty()) << "case " << i;
+    EXPECT_EQ(localizer->updates, 1) << "case " << i;
+  }
+}
+
+TEST_F(CoreMethodTestCase, ThrowingLastKnownPoseHookDoesNotStopTheLocalizer)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_last_pose_throw_node");
+  auto localizer = std::make_shared<RecordingLocalizer>();
+  localizer->throw_in_hook = true;
+  localizer->initialize(node, "loc");
+
+  easynav::NavState nav_state;
+  nav_state.set("robot_pose", robot_pose(1.0, 1.0));
+  EXPECT_NO_THROW(localizer->internal_update_rt(nav_state, true));
+  EXPECT_NO_THROW(localizer->internal_update_rt(nav_state, true));
+  EXPECT_EQ(localizer->last_known.size(), 1u);
+  EXPECT_EQ(localizer->updates, 2);
+}
+
+TEST_F(CoreMethodTestCase, EachNewLocalizerInstanceGetsTheLastKnownPose)
+{
+  // Reconfiguration: every configure creates a new instance, even of another localizer type.
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_last_pose_reconf_node");
+  easynav::NavState nav_state;
+  nav_state.set("robot_pose", robot_pose(0.0, 0.0));
+
+  for (int i = 1; i <= 3; ++i) {
+    auto localizer = make_localizer(node, "loc_" + std::to_string(i));
+    localizer->internal_update_rt(nav_state, true);
+    ASSERT_EQ(localizer->last_known.size(), 1u) << "instance " << i;
+    EXPECT_DOUBLE_EQ(localizer->last_known.front().pose.pose.position.x, i - 1.0);
+    nav_state.set("robot_pose", robot_pose(i, 0.0));  // Where it leaves the robot.
   }
 }
 

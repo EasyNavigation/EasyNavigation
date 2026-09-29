@@ -140,6 +140,9 @@ public:
   [[nodiscard]] std::shared_ptr<NavState> get_nav_state() const {return nav_state_;}
 
 private:
+  /// @brief Publishes a zero velocity (also in NavState's "cmd_vel").
+  void stop_robot();
+
   /// @brief Real-time callback group.
   rclcpp::CallbackGroup::SharedPtr realtime_cbg_;
 
