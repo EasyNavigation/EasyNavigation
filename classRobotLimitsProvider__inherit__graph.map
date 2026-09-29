@@ -1,0 +1,5 @@
+<map id="RobotLimitsProvider" name="RobotLimitsProvider">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,145,31"/>
+<area shape="rect" id="Node000002" href="$classeasynav_1_1ControllerNode.html" title="ROS 2 lifecycle node that manages calculating speeds for the Easy Navigation system." alt="" coords="21,79,129,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="78,46,78,79,72,79,72,46"/>
+</map>

@@ -119,9 +119,11 @@ Inheritance diagram for ControllerNode:</div>
 <div class="dyncontent">
 <div class="center"><img src="classeasynav_1_1ControllerNode__inherit__graph.png" border="0" usemap="#aControllerNode_inherit__map" loading="lazy" alt="Inheritance graph"/></div>
 <map name="aControllerNode_inherit__map" id="aControllerNode_inherit__map">
-<area shape="rect" title="ROS 2 lifecycle node that manages calculating speeds for the Easy Navigation system." alt="" coords="5,79,113,105"/>
-<area shape="rect" title=" " alt="" coords="7,5,111,31"/>
-<area shape="poly" title=" " alt="" coords="62,46,62,79,56,79,56,46"/>
+<area shape="rect" title="ROS 2 lifecycle node that manages calculating speeds for the Easy Navigation system." alt="" coords="76,79,183,105"/>
+<area shape="rect" title=" " alt="" coords="5,5,110,31"/>
+<area shape="poly" title=" " alt="" coords="82,40,119,77,115,80,78,44"/>
+<area shape="rect" href="classRobotLimitsProvider.html" title=" " alt="" coords="133,5,272,31"/>
+<area shape="poly" title=" " alt="" coords="182,44,144,80,140,77,178,40"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
@@ -129,9 +131,11 @@ Collaboration diagram for ControllerNode:</div>
 <div class="dyncontent">
 <div class="center"><img src="classeasynav_1_1ControllerNode__coll__graph.png" border="0" usemap="#aControllerNode_coll__map" loading="lazy" alt="Collaboration graph"/></div>
 <map name="aControllerNode_coll__map" id="aControllerNode_coll__map">
-<area shape="rect" title="ROS 2 lifecycle node that manages calculating speeds for the Easy Navigation system." alt="" coords="5,79,113,105"/>
-<area shape="rect" title=" " alt="" coords="7,5,111,31"/>
-<area shape="poly" title=" " alt="" coords="62,46,62,79,56,79,56,46"/>
+<area shape="rect" title="ROS 2 lifecycle node that manages calculating speeds for the Easy Navigation system." alt="" coords="76,79,183,105"/>
+<area shape="rect" title=" " alt="" coords="5,5,110,31"/>
+<area shape="poly" title=" " alt="" coords="82,40,119,77,115,80,78,44"/>
+<area shape="rect" href="classRobotLimitsProvider.html" title=" " alt="" coords="133,5,272,31"/>
+<area shape="poly" title=" " alt="" coords="182,44,144,80,140,77,178,40"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -149,6 +153,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a3f369f4ff834a49eb5d098f75b42686c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alias of the loaded controller (its "controller_types" entry).  <br /></td></tr>
 <tr class="memitem:a8366fef9515c0b0cd47949fbfc018641" id="r_a8366fef9515c0b0cd47949fbfc018641"><td class="memItemLeft">rclcpp::CallbackGroup::SharedPtr&#160;</td><td class="memItemRight"><a class="el" href="#a8366fef9515c0b0cd47949fbfc018641">get_real_time_cbg</a> ()</td></tr>
 <tr class="memdesc:a8366fef9515c0b0cd47949fbfc018641"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the real-time callback group.  <br /></td></tr>
+<tr class="memitem:aab59db30d6627aa74ee7325e9a8a0c59" id="r_aab59db30d6627aa74ee7325e9a8a0c59"><td class="memItemLeft">RobotLimits&#160;</td><td class="memItemRight"><a class="el" href="#aab59db30d6627aa74ee7325e9a8a0c59">get_robot_limits</a> () const override</td></tr>
+<tr class="memdesc:aab59db30d6627aa74ee7325e9a8a0c59"><td class="mdescLeft">&#160;</td><td class="mdescRight">Robot limits being enforced.  <br /></td></tr>
+<tr class="memitem:aa519cb557b9bb5dc6fb67add8a28e976" id="r_aa519cb557b9bb5dc6fb67add8a28e976"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#aa519cb557b9bb5dc6fb67add8a28e976">is_robot_limit_configured</a> (const std::string &amp;field) const override</td></tr>
+<tr class="memdesc:aa519cb557b9bb5dc6fb67add8a28e976"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether "robot_limits.&lt;field&gt;" was configured explicitly.  <br /></td></tr>
 <tr class="memitem:a26f6915d7f6c74f8cf2e766e352ef4a1" id="r_a26f6915d7f6c74f8cf2e766e352ef4a1"><td class="memItemLeft"><a class="el" href="#ad09d90f1fe35c9e2f2fd7fc1902312f4">CallbackReturnT</a>&#160;</td><td class="memItemRight"><a class="el" href="#a26f6915d7f6c74f8cf2e766e352ef4a1">on_activate</a> (const rclcpp_lifecycle::State &amp;state)</td></tr>
 <tr class="memdesc:a26f6915d7f6c74f8cf2e766e352ef4a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Activates the <a class="el" href="classeasynav_1_1ControllerNode.html" title="ROS 2 lifecycle node that manages calculating speeds for the Easy Navigation system.">ControllerNode</a> node.  <br /></td></tr>
 <tr class="memitem:a51a30cb3859b0fc27bd0aafaa778acb2" id="r_a51a30cb3859b0fc27bd0aafaa778acb2"><td class="memItemLeft"><a class="el" href="#ad09d90f1fe35c9e2f2fd7fc1902312f4">CallbackReturnT</a>&#160;</td><td class="memItemRight"><a class="el" href="#a51a30cb3859b0fc27bd0aafaa778acb2">on_cleanup</a> (const rclcpp_lifecycle::State &amp;state)</td></tr>
@@ -161,12 +169,21 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a9b0782b915f4798a61ae8b9e56ebd5fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles errors in the <a class="el" href="classeasynav_1_1ControllerNode.html" title="ROS 2 lifecycle node that manages calculating speeds for the Easy Navigation system.">ControllerNode</a> node.  <br /></td></tr>
 <tr class="memitem:a38b74771f6ab23805f990786e4d6f806" id="r_a38b74771f6ab23805f990786e4d6f806"><td class="memItemLeft"><a class="el" href="#ad09d90f1fe35c9e2f2fd7fc1902312f4">CallbackReturnT</a>&#160;</td><td class="memItemRight"><a class="el" href="#a38b74771f6ab23805f990786e4d6f806">on_shutdown</a> (const rclcpp_lifecycle::State &amp;state)</td></tr>
 <tr class="memdesc:a38b74771f6ab23805f990786e4d6f806"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shuts down the <a class="el" href="classeasynav_1_1ControllerNode.html" title="ROS 2 lifecycle node that manages calculating speeds for the Easy Navigation system.">ControllerNode</a> node.  <br /></td></tr>
+<tr class="memitem:ae64f7d19d2c3c77f5b0a61a3a47222c7" id="r_ae64f7d19d2c3c77f5b0a61a3a47222c7"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ae64f7d19d2c3c77f5b0a61a3a47222c7">publish_cmd_vel_rt</a> (std::shared_ptr&lt; <a class="el" href="classeasynav_1_1NavState.html">NavState</a> &gt; nav_state, bool fresh)</td></tr>
+<tr class="memdesc:ae64f7d19d2c3c77f5b0a61a3a47222c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Smooths and publishes this RT cycle's command: the controller's "cmd_vel", or zero while navigation is paused.  <br /></td></tr>
+<tr class="memitem:ac1467f70ce53b06450896af587298141" id="r_ac1467f70ce53b06450896af587298141"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ac1467f70ce53b06450896af587298141">set_robot_limits</a> (const RobotLimits &amp;limits) override</td></tr>
+<tr class="memdesc:ac1467f70ce53b06450896af587298141"><td class="mdescLeft">&#160;</td><td class="mdescRight">Replaces the limits enforced until the next configure.  <br /></td></tr>
 <tr class="memitem:ad51c340f85daa6f2ef4bd8b7bee2c47c" id="r_ad51c340f85daa6f2ef4bd8b7bee2c47c"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#ad51c340f85daa6f2ef4bd8b7bee2c47c">~ControllerNode</a> ()</td></tr>
 <tr class="memdesc:ad51c340f85daa6f2ef4bd8b7bee2c47c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroys the <a class="el" href="classeasynav_1_1ControllerNode.html" title="ROS 2 lifecycle node that manages calculating speeds for the Easy Navigation system.">ControllerNode</a> object.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>ROS 2 lifecycle node that manages calculating speeds for the Easy Navigation system. </p>
-<p>This node provides the interface between the controller module in EasyNav and the ROS 2 ecosystem. It handles lifecycle transitions, real-time scheduling of periodic tasks, and parameter setup. </p>
+<p>This node provides the interface between the controller module in EasyNav and the ROS 2 ecosystem. It handles lifecycle transitions, real-time scheduling of periodic tasks, and parameter setup.</p>
+<p>It is also the single point where the velocity command leaves EasyNav:</p><ul>
+<li>it owns the robot limits ("robot_limits.*"), which controller plugins query through ControllerMethodBase::get_robot_limits();</li>
+<li>every RT cycle, <a class="el" href="#ae64f7d19d2c3c77f5b0a61a3a47222c7" title="Smooths and publishes this RT cycle&#39;s command: the controller&#39;s &quot;cmd_vel&quot;, or zero while navigation i...">publish_cmd_vel_rt()</a> smooths the command within those limits and publishes it on "cmd_vel" (or "cmd_vel_stamped", see "use_cmd_vel_stamped");</li>
+<li>on deactivation or shutdown, it brakes within the deceleration limits and ends by publishing an exact zero. </li>
+</ul>
 </div><a name="doc-typedef-members" id="doc-typedef-members"></a><h2 id="header-doc-typedef-members" class="groupheader">Member Typedef Documentation</h2>
 <a id="ad09d90f1fe35c9e2f2fd7fc1902312f4" name="ad09d90f1fe35c9e2f2fd7fc1902312f4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad09d90f1fe35c9e2f2fd7fc1902312f4">&#9670;&#160;</a></span>CallbackReturnT</h2>
@@ -304,6 +321,60 @@ Public Member Functions</h2></td></tr>
 <p>Returns the real-time callback group. </p>
 <p>This callback group can be used to assign callbacks that require low latency or have real-time constraints.</p>
 <dl class="section return"><dt>Returns</dt><dd>Shared pointer to the real-time callback group. </dd></dl>
+
+</div>
+</div>
+<a id="aab59db30d6627aa74ee7325e9a8a0c59" name="aab59db30d6627aa74ee7325e9a8a0c59"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aab59db30d6627aa74ee7325e9a8a0c59">&#9670;&#160;</a></span>get_robot_limits()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">RobotLimits get_robot_limits </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel override">override</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Robot limits being enforced. </p>
+
+</div>
+</div>
+<a id="aa519cb557b9bb5dc6fb67add8a28e976" name="aa519cb557b9bb5dc6fb67add8a28e976"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa519cb557b9bb5dc6fb67add8a28e976">&#9670;&#160;</a></span>is_robot_limit_configured()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool is_robot_limit_configured </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>field</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel override">override</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Whether "robot_limits.&lt;field&gt;" was configured explicitly. </p>
 
 </div>
 </div>
@@ -466,6 +537,63 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>CallbackReturnT::SUCCESS indicating shutdown is complete. </dd></dl>
+
+</div>
+</div>
+<a id="ae64f7d19d2c3c77f5b0a61a3a47222c7" name="ae64f7d19d2c3c77f5b0a61a3a47222c7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae64f7d19d2c3c77f5b0a61a3a47222c7">&#9670;&#160;</a></span>publish_cmd_vel_rt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void publish_cmd_vel_rt </td>
+          <td>(</td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classeasynav_1_1NavState.html">NavState</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>nav_state</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>fresh</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Smooths and publishes this RT cycle's command: the controller's "cmd_vel", or zero while navigation is paused. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">nav_state</td><td>Shared navigation state. </td></tr>
+    <tr><td class="paramname">fresh</td><td>Whether the controller produced a command this cycle. Otherwise, it only publishes while the smoother is still ramping towards the last one. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ac1467f70ce53b06450896af587298141" name="ac1467f70ce53b06450896af587298141"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac1467f70ce53b06450896af587298141">&#9670;&#160;</a></span>set_robot_limits()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void set_robot_limits </td>
+          <td>(</td>
+          <td class="paramtype">const RobotLimits &amp;</td>          <td class="paramname"><span class="paramname"><em>limits</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel override">override</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Replaces the limits enforced until the next configure. </p>
 
 </div>
 </div>

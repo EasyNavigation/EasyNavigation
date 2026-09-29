@@ -1,0 +1,13 @@
+<map id="SystemVelocitySmoothingTest" name="SystemVelocitySmoothingTest">
+<area shape="rect" id="Node000001" title=" " alt="" coords="325,123,524,148"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="71,5,119,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="135,16,213,23,258,32,302,46,334,63,365,83,411,120,407,124,362,87,332,67,300,51,257,38,212,29,134,21"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="55,69,135,95"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="151,86,301,109,358,119,357,125,300,114,150,92"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="55,120,135,146"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="150,131,209,132,324,133,324,138,209,137,150,136"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="5,170,185,226"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="200,179,300,161,368,146,369,152,301,166,201,185"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="15,250,175,290"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="189,244,244,227,300,205,357,176,402,147,405,151,359,180,302,210,246,232,191,249"/>
+</map>

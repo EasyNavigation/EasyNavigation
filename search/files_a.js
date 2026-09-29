@@ -10,6 +10,7 @@ var searchData=
   ['system_5fmain_2ecpp_7',['system_main.cpp',['../system__main_8cpp.html',1,'']]],
   ['system_5fpause_5ftests_2ecpp_8',['system_pause_tests.cpp',['../system__pause__tests_8cpp.html',1,'']]],
   ['system_5ftfinfo_5ftests_2ecpp_9',['system_tfinfo_tests.cpp',['../system__tfinfo__tests_8cpp.html',1,'']]],
-  ['systemnode_2ecpp_10',['SystemNode.cpp',['../SystemNode_8cpp.html',1,'']]],
-  ['systemnode_2ehpp_11',['SystemNode.hpp',['../SystemNode_8hpp.html',1,'']]]
+  ['system_5fvelocity_5fsmoothing_5ftests_2ecpp_10',['system_velocity_smoothing_tests.cpp',['../system__velocity__smoothing__tests_8cpp.html',1,'']]],
+  ['systemnode_2ecpp_11',['SystemNode.cpp',['../SystemNode_8cpp.html',1,'']]],
+  ['systemnode_2ehpp_12',['SystemNode.hpp',['../SystemNode_8hpp.html',1,'']]]
 ];

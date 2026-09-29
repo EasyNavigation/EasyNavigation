@@ -1,0 +1,7 @@
+<map id="easynav_controller/include/easynav_controller/VelocitySmoother.hpp" name="easynav_controller/include/easynav_controller/VelocitySmoother.hpp">
+<area shape="rect" id="Node000001" title="Declaration of the VelocitySmoother class." alt="" coords="126,5,304,61"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,109,204,135"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="182,63,134,101,130,97,179,59"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="228,109,427,135"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="252,59,301,97,298,101,248,63"/>
+</map>

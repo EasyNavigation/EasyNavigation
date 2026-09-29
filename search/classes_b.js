@@ -12,5 +12,6 @@ var searchData=
   ['systemnode_9',['SystemNode',['../classeasynav_1_1SystemNode.html',1,'easynav']]],
   ['systemnodeinfo_10',['SystemNodeInfo',['../structeasynav_1_1SystemNodeInfo.html',1,'easynav']]],
   ['systempausetest_11',['SystemPauseTest',['../classSystemPauseTest.html',1,'']]],
-  ['systemtfinfotest_12',['SystemTFInfoTest',['../classSystemTFInfoTest.html',1,'']]]
+  ['systemtfinfotest_12',['SystemTFInfoTest',['../classSystemTFInfoTest.html',1,'']]],
+  ['systemvelocitysmoothingtest_13',['SystemVelocitySmoothingTest',['../classSystemVelocitySmoothingTest.html',1,'']]]
 ];

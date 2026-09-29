@@ -5,5 +5,6 @@ var searchData=
   ['initialize_2',['initialize',['../classeasynav_1_1PerceptionHandler.html#a380e843c8336262e18110e480d8a85e9',1,'easynav::PerceptionHandler::initialize()'],['../classPerceptionHandler.html#a380e843c8336262e18110e480d8a85e9',1,'PerceptionHandler::initialize()']]],
   ['integrate_5fpending_5fperceptions_3',['integrate_pending_perceptions',['../classeasynav_1_1PointPerception.html#af8124b1de9bcb177570f59cbf6ded6b9',1,'easynav::PointPerception']]],
   ['is_5fconnected_4',['is_connected',['../classeasynav_1_1GoalManagerClient.html#accf4ef6f99c7c6194b487ce7b9f45273',1,'easynav::GoalManagerClient']]],
-  ['is_5fpaused_5',['is_paused',['../classeasynav_1_1GoalManager.html#aa3bde2742b0e5c8bb77370b03e3d1489',1,'easynav::GoalManager::is_paused()'],['../classeasynav_1_1GoalManagerClient.html#aa3bde2742b0e5c8bb77370b03e3d1489',1,'easynav::GoalManagerClient::is_paused()']]]
+  ['is_5fpaused_5',['is_paused',['../classeasynav_1_1GoalManager.html#aa3bde2742b0e5c8bb77370b03e3d1489',1,'easynav::GoalManager::is_paused()'],['../classeasynav_1_1GoalManagerClient.html#aa3bde2742b0e5c8bb77370b03e3d1489',1,'easynav::GoalManagerClient::is_paused()']]],
+  ['is_5frobot_5flimit_5fconfigured_6',['is_robot_limit_configured',['../classeasynav_1_1ControllerNode.html#aa519cb557b9bb5dc6fb67add8a28e976',1,'easynav::ControllerNode']]]
 ];

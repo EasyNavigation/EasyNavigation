@@ -39,5 +39,6 @@ var searchData=
   ['position_36',['position',['../structeasynav_1_1GoalManager_1_1GoalTolerance.html#aa1b2c258efdc9e057ee99a45179692fd',1,'easynav::GoalManager::GoalTolerance']]],
   ['print_5fstacktrace_37',['print_stacktrace',['../classeasynav_1_1NavState.html#a7fdd1e3b7c0cc5f8ae63d98ef8496f30',1,'easynav::NavState']]],
   ['project_20maintainers_38',['👥 Project Maintainers',['../index.html#autotoc_md5',1,'']]],
-  ['push_39',['push',['../classeasynav_1_1CircularBuffer.html#a66e2c9b574936551d45b46892e16a87e',1,'easynav::CircularBuffer::push(const T &amp;value)'],['../classeasynav_1_1CircularBuffer.html#a14e342e46e25c0badae4026a93e0c153',1,'easynav::CircularBuffer::push(T &amp;&amp;value)']]]
+  ['publish_5fcmd_5fvel_5frt_39',['publish_cmd_vel_rt',['../classeasynav_1_1ControllerNode.html#ae64f7d19d2c3c77f5b0a61a3a47222c7',1,'easynav::ControllerNode']]],
+  ['push_40',['push',['../classeasynav_1_1CircularBuffer.html#a66e2c9b574936551d45b46892e16a87e',1,'easynav::CircularBuffer::push(const T &amp;value)'],['../classeasynav_1_1CircularBuffer.html#a14e342e46e25c0badae4026a93e0c153',1,'easynav::CircularBuffer::push(T &amp;&amp;value)']]]
 ];

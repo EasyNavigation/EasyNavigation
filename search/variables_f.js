@@ -4,5 +4,7 @@ var searchData=
   ['singleton_3c_20c_20_3e_3a_3ainstance_5f_1',['instance_',['../namespaceeasynav.html#af63183b88c39f568dffa0d77e441e468',1,'easynav']]],
   ['singleton_3c_20c_20_3e_3a_3amutex_5f_2',['mutex_',['../namespaceeasynav.html#aea6f80498fbc28235e7a690b577c46fd',1,'easynav']]],
   ['stamp_3',['stamp',['../classeasynav_1_1PerceptionBase.html#a3ace6024cedb403facddccc6842dce24',1,'easynav::PerceptionBase::stamp'],['../structeasynav_1_1PointPerceptionBufferType.html#a3ace6024cedb403facddccc6842dce24',1,'easynav::PointPerceptionBufferType::stamp']]],
-  ['system_5fnode_5f_4',['system_node_',['../classGoalManagerInfoTest.html#a7a6a3642aeb2ffb6cb6780564fb9ce2c',1,'GoalManagerInfoTest::system_node_'],['../classGoalManagerHeightTest.html#a7a6a3642aeb2ffb6cb6780564fb9ce2c',1,'GoalManagerHeightTest::system_node_']]]
+  ['stamps_5f_4',['stamps_',['../classControllerNodeVelocityTest.html#ad9f4275de9ac5db21966bf46fef42d09',1,'ControllerNodeVelocityTest']]],
+  ['sub_5f_5',['sub_',['../classControllerNodeVelocityTest.html#aaec72741a7b87366d7be4be55cf2c714',1,'ControllerNodeVelocityTest::sub_'],['../classSystemVelocitySmoothingTest.html#aaec72741a7b87366d7be4be55cf2c714',1,'SystemVelocitySmoothingTest::sub_']]],
+  ['system_5fnode_5f_6',['system_node_',['../classGoalManagerInfoTest.html#a7a6a3642aeb2ffb6cb6780564fb9ce2c',1,'GoalManagerInfoTest::system_node_'],['../classGoalManagerHeightTest.html#a7a6a3642aeb2ffb6cb6780564fb9ce2c',1,'GoalManagerHeightTest::system_node_'],['../classSystemVelocitySmoothingTest.html#ac479e1ebfd275eafd8c7718f92306554',1,'SystemVelocitySmoothingTest::system_node_']]]
 ];

@@ -8,19 +8,21 @@
 <area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="603,58,560,96,556,92,599,54"/>
 <area shape="rect" id="Node000005" href="$sensors__node__tests_8cpp.html" title=" " alt="" coords="652,94,818,135"/>
 <area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="671,54,714,92,711,96,668,58"/>
-<area shape="rect" id="Node000006" href="$SystemNode_8hpp.html" title="Declaration of the SystemNode class, the central coordinator node for Easy Navigation components." alt="" coords="1008,94,1233,135"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="761,47,1010,91,1010,96,760,52"/>
+<area shape="rect" id="Node000006" href="$SystemNode_8hpp.html" title="Declaration of the SystemNode class, the central coordinator node for Easy Navigation components." alt="" coords="1103,94,1328,135"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="767,44,1103,94,1102,99,767,49"/>
 <area shape="rect" id="Node000007" href="$SystemNode_8cpp.html" title="Implementation of the SystemNode class." alt="" coords="628,190,853,231"/>
-<area shape="poly" id="edge12_Node000001_Node000007" title=" " alt="" coords="768,45,803,64,832,92,839,106,839,121,827,148,803,172,776,192,773,187,799,168,822,145,834,120,833,108,828,96,800,68,765,50"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="1027,142,821,192,820,187,1026,136"/>
+<area shape="poly" id="edge13_Node000001_Node000007" title=" " alt="" coords="768,45,803,64,832,92,839,106,839,121,827,148,803,172,776,192,773,187,799,168,822,145,834,120,833,108,828,96,800,68,765,50"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="1095,141,865,185,832,192,831,187,864,180,1094,136"/>
 <area shape="rect" id="Node000008" href="$system__main_8cpp.html" title=" " alt="" coords="877,190,1018,231"/>
-<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="1072,145,985,192,982,187,1070,140"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="1146,143,1004,192,1003,187,1144,138"/>
 <area shape="rect" id="Node000009" href="$system__lifecycle__cycle__tests_8cpp.html" title="Exercises SystemNode&#39;s own lifecycle state machine through repeated full cycles, including active &#45;&gt; ..." alt="" coords="1042,183,1200,238"/>
-<area shape="poly" id="edge8_Node000006_Node000009" title=" " alt="" coords="1123,150,1123,182,1118,182,1118,150"/>
+<area shape="poly" id="edge8_Node000006_Node000009" title=" " alt="" coords="1187,148,1150,184,1146,180,1183,144"/>
 <area shape="rect" id="Node000010" href="$system__lifecycle__mission__tests_8cpp.html" title="A mission survives reconfiguring EasyNav (active &#45;&gt; inactive &#45;&gt; unconfigured &#45;&gt; inactive &#45;&gt; active,..." alt="" coords="1223,183,1397,238"/>
-<area shape="poly" id="edge9_Node000006_Node000010" title=" " alt="" coords="1175,140,1256,180,1254,185,1173,144"/>
+<area shape="poly" id="edge9_Node000006_Node000010" title=" " alt="" coords="1248,144,1284,180,1281,184,1244,148"/>
 <area shape="rect" id="Node000011" href="$system__pause__tests_8cpp.html" title=" " alt="" coords="1421,190,1591,231"/>
-<area shape="poly" id="edge10_Node000006_Node000011" title=" " alt="" coords="1224,136,1409,180,1436,187,1435,192,1408,185,1223,141"/>
+<area shape="poly" id="edge10_Node000006_Node000011" title=" " alt="" coords="1292,137,1446,187,1444,192,1290,142"/>
 <area shape="rect" id="Node000012" href="$system__tfinfo__tests_8cpp.html" title=" " alt="" coords="1614,190,1776,231"/>
-<area shape="poly" id="edge11_Node000006_Node000012" title=" " alt="" coords="1249,126,1418,147,1604,180,1632,187,1631,192,1603,185,1417,153,1248,131"/>
+<area shape="poly" id="edge11_Node000006_Node000012" title=" " alt="" coords="1344,132,1470,153,1604,180,1631,187,1630,192,1603,185,1469,158,1343,137"/>
+<area shape="rect" id="Node000013" href="$system__velocity__smoothing__tests_8cpp.html" title="End to end through SystemNode: with very low accelerations, the published commands are smoothed,..." alt="" coords="1800,183,1985,238"/>
+<area shape="poly" id="edge12_Node000006_Node000013" title=" " alt="" coords="1344,123,1553,145,1672,161,1789,180,1800,182,1799,187,1788,185,1671,166,1553,150,1343,128"/>
 </map>
