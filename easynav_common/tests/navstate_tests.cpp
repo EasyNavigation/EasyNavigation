@@ -14,6 +14,8 @@
 
 #include <thread>
 #include <atomic>
+#include <sstream>
+#include <string>
 #include <vector>
 
 #include "gtest/gtest.h"
@@ -170,6 +172,95 @@ TEST_F(NavStateTest, VectorStringPrinterMultipleElements)
   std::string s = state.debug_string();
   EXPECT_NE(s.find("[sensor_a, sensor_b, sensor_c]"), std::string::npos)
     << "Multiple elements must render comma-separated\n" << s;
+}
+
+TEST_F(NavStateTest, DebugStringListsKeysInAlphabeticalOrder)
+{
+  easynav::NavState state;
+  state.set("zebra", 1);
+  state.set("apple", 2);
+  state.set("mango", 3);
+
+  const std::string s = state.debug_string();
+  const auto apple_pos = s.find("apple");
+  const auto mango_pos = s.find("mango");
+  const auto zebra_pos = s.find("zebra");
+
+  ASSERT_NE(apple_pos, std::string::npos);
+  ASSERT_NE(mango_pos, std::string::npos);
+  ASSERT_NE(zebra_pos, std::string::npos);
+  EXPECT_LT(apple_pos, mango_pos) << s;
+  EXPECT_LT(mango_pos, zebra_pos) << s;
+}
+
+namespace
+{
+// Keys of debug_string(), in output order ("key = ..." lines).
+std::vector<std::string> debug_keys(const easynav::NavState & state)
+{
+  std::vector<std::string> keys;
+  std::istringstream lines(state.debug_string());
+  std::string line;
+  while (std::getline(lines, line)) {
+    const auto sep = line.find(" = ");
+    if (sep != std::string::npos) {
+      keys.push_back(line.substr(0, sep));
+    }
+  }
+  return keys;
+}
+}  // namespace
+
+TEST_F(NavStateTest, DebugStringOfAnEmptyStateIsEmpty)
+{
+  easynav::NavState state;
+  EXPECT_TRUE(debug_keys(state).empty());
+}
+
+TEST_F(NavStateTest, DebugStringDoesNotDependOnInsertionOrder)
+{
+  easynav::NavState a;
+  a.set("robot_pose.x", 1);
+  a.set("goals", 2);
+  a.set("map", 3);
+
+  easynav::NavState b;
+  b.set("map", 3);
+  b.set("robot_pose.x", 1);
+  b.set("goals", 2);
+
+  EXPECT_EQ(debug_keys(a), debug_keys(b));
+  EXPECT_EQ(debug_keys(a), std::vector<std::string>({"goals", "map", "robot_pose.x"}));
+}
+
+TEST_F(NavStateTest, DebugStringSortsKeysWithCommonPrefixes)
+{
+  easynav::NavState state;
+  for (const auto & key : {"map.b", "map", "map.a", "map_time", "Z", "a10", "a2"}) {
+    state.set(key, 0);
+  }
+  EXPECT_EQ(
+    debug_keys(state),
+    std::vector<std::string>({"Z", "a10", "a2", "map", "map.a", "map.b", "map_time"}));
+}
+
+TEST_F(NavStateTest, DebugStringKeepsEachValueWithItsKey)
+{
+  easynav::NavState state;
+  state.set("zeta", 30);
+  state.set("alpha", 10);
+  state.set("mid", 20);
+  state.set("mid", 21);  // Overwritten: listed once, with the new value.
+
+  std::istringstream lines(state.debug_string());
+  std::string line;
+  int found = 0;
+  while (std::getline(lines, line)) {
+    if (line.rfind("alpha = ", 0) == 0) {EXPECT_NE(line.find(": 10"), std::string::npos); ++found;}
+    if (line.rfind("mid = ", 0) == 0) {EXPECT_NE(line.find(": 21"), std::string::npos); ++found;}
+    if (line.rfind("zeta = ", 0) == 0) {EXPECT_NE(line.find(": 30"), std::string::npos); ++found;}
+  }
+  EXPECT_EQ(found, 3);
 }
 
 TEST_F(NavStateTest, SetGroupIsVisibleInDebugString)

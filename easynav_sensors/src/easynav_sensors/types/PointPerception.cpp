@@ -35,6 +35,7 @@
 #include "sensor_msgs/msg/laser_scan.hpp"
 #include "sensor_msgs/msg/point_cloud2.hpp"
 
+#include "rclcpp/clock.hpp"
 #include "rclcpp/time.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 
@@ -680,19 +681,23 @@ PointPerceptionsOpsView::fuse(
       tf_valid_[i] = true;
     } catch (const tf2::TransformException & ex) {
       auto logger = rclcpp::get_logger("PointPerceptionsOpsView");
+      // Throttled: frequent at startup, before TFs are available.
+      static rclcpp::Clock steady_clock(RCL_STEADY_TIME);
 
       if (allow_backtrace_now()) {
         const std::string bt = backtrace_to_string(64, 1);
         if (!bt.empty()) {
-          RCLCPP_WARN(
-            logger,
+          RCLCPP_WARN_THROTTLE(
+            logger, steady_clock, 2000,
             "TF lookup failed in fuse(): %s\nBacktrace:\n%s",
             ex.what(), bt.c_str());
         } else {
-          RCLCPP_WARN(logger, "TF lookup failed in fuse(): %s", ex.what());
+          RCLCPP_WARN_THROTTLE(
+            logger, steady_clock, 2000, "TF lookup failed in fuse(): %s", ex.what());
         }
       } else {
-        RCLCPP_WARN(logger, "TF lookup failed in fuse(): %s", ex.what());
+        RCLCPP_WARN_THROTTLE(
+          logger, steady_clock, 2000, "TF lookup failed in fuse(): %s", ex.what());
       }
       tf_valid_[i] = false;
     }

@@ -62,8 +62,8 @@ public:
   {
     /// Positional tolerance for x/y in meters.
     double position {0.03};
-    /// Positional tolerance for z axis in meters. Very big number as default.
-    double height {std::numeric_limits<double>::max()};
+    /// Positional tolerance for z axis in meters. Large default: height ignored.
+    double height {10000.0};
     /// Angular tolerance in radians for the yaw angle.
     double yaw {0.01};
   };
@@ -216,6 +216,15 @@ private:
   /// @brief True once NavState's "goals" has been synced to an empty Goals() since
   /// the last time goals_ became non-empty (see accept_request()).
   bool goals_synced_empty_ {true};
+
+  /// @brief Latest GoalManagerInfo, updated every active cycle (published throttled).
+  easynav_interfaces::msg::GoalManagerInfo info_;
+
+  /// @brief An ACTIVE info was published, so the end of the mission must be too.
+  bool info_active_published_ {false};
+
+  /// @brief Publishes the final (IDLE) info once the mission ends, unthrottled.
+  void publish_final_info();
 };
 
 }  // namespace easynav
