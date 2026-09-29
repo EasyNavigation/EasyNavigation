@@ -13,10 +13,12 @@
 // limitations under the License.
 
 #include <chrono>
+#include <stdexcept>
 #include <thread>
 
 #include "gtest/gtest.h"
 
+#include "geometry_msgs/msg/twist_stamped.hpp"
 #include "nav_msgs/msg/odometry.hpp"
 
 #include "easynav_common/types/NavState.hpp"
@@ -192,6 +194,127 @@ public:
 
   void on_initialize() override {}
   void update_rt(easynav::NavState &) override {rt_call_count++;}
+};
+
+// Plugins that throw on every update.
+class ThrowingLocalizer : public easynav::LocalizerMethodBase
+{
+public:
+  int rt_call_count {0};
+  int non_rt_call_count {0};
+
+  void on_initialize() override {}
+  void update_rt(easynav::NavState &) override
+  {
+    rt_call_count++;
+    throw std::runtime_error("boom in localizer update_rt");
+  }
+  void update(easynav::NavState &) override
+  {
+    non_rt_call_count++;
+    throw std::runtime_error("boom in localizer update");
+  }
+};
+
+class ThrowingPlanner : public easynav::PlannerMethodBase
+{
+public:
+  int call_count {0};
+
+  void on_initialize() override {}
+  void update(easynav::NavState &) override
+  {
+    call_count++;
+    throw std::runtime_error("boom in planner update");
+  }
+};
+
+class ThrowingMapsManager : public easynav::MapsManagerBase
+{
+public:
+  int call_count {0};
+
+  void on_initialize() override {}
+  void update(easynav::NavState &) override
+  {
+    call_count++;
+    throw std::runtime_error("boom in maps manager update");
+  }
+};
+
+class ThrowingController : public easynav::ControllerMethodBase
+{
+public:
+  int rt_call_count {0};
+
+  void on_initialize() override {}
+  void update_rt(easynav::NavState &) override
+  {
+    rt_call_count++;
+    throw std::runtime_error("boom in controller update_rt");
+  }
+};
+
+// Throws something that is not a std::exception.
+class NonStdThrowingLocalizer : public easynav::LocalizerMethodBase
+{
+public:
+  int calls {0};
+  void on_initialize() override {}
+  void update_rt(easynav::NavState &) override {calls++; throw 42;}
+  void update(easynav::NavState &) override {calls++; throw 42;}
+};
+
+class NonStdThrowingPlanner : public easynav::PlannerMethodBase
+{
+public:
+  int calls {0};
+  void on_initialize() override {}
+  void update(easynav::NavState &) override {calls++; throw 42;}
+};
+
+class NonStdThrowingMapsManager : public easynav::MapsManagerBase
+{
+public:
+  int calls {0};
+  void on_initialize() override {}
+  void update(easynav::NavState &) override {calls++; throw 42;}
+};
+
+class NonStdThrowingController : public easynav::ControllerMethodBase
+{
+public:
+  int calls {0};
+  void on_initialize() override {}
+  void update_rt(easynav::NavState &) override {calls++; throw 42;}
+};
+
+// Throws on odd calls, counts successful ones in NavState.
+// Writes a command, then throws on odd calls.
+class FlakyController : public easynav::ControllerMethodBase
+{
+public:
+  int calls {0};
+  void on_initialize() override {}
+  void update_rt(easynav::NavState & nav_state) override
+  {
+    geometry_msgs::msg::TwistStamped cmd;
+    cmd.twist.linear.x = 0.4;
+    nav_state.set("cmd_vel", cmd);
+    if (++calls % 2 == 1) {throw std::runtime_error("flaky");}
+  }
+};
+
+class FlakyPlanner : public easynav::PlannerMethodBase
+{
+public:
+  int calls {0};
+  void on_initialize() override {}
+  void update(easynav::NavState & nav_state) override
+  {
+    if (++calls % 2 == 1) {throw std::runtime_error("flaky");}
+    nav_state.set("ok", nav_state.has("ok") ? nav_state.get<int>("ok") + 1 : 1);
+  }
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -489,6 +612,237 @@ TEST_F(CoreMethodTestCase, ControllerInternalUpdateRtRunsWhenTimeElapsed)
 
   EXPECT_TRUE(result);
   EXPECT_EQ(ctrl.rt_call_count, 1);
+}
+
+// A throwing plugin must not propagate the exception.
+
+TEST_F(CoreMethodTestCase, LocalizerUpdateRtExceptionDoesNotPropagate)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_loc_throw_rt_node");
+  ThrowingLocalizer localizer;
+  localizer.initialize(node, "loc_throw_rt");
+
+  easynav::NavState nav_state;
+  bool result = false;
+  EXPECT_NO_THROW(result = localizer.internal_update_rt(nav_state, true));
+
+  EXPECT_TRUE(result);
+  EXPECT_EQ(localizer.rt_call_count, 1);
+}
+
+TEST_F(CoreMethodTestCase, LocalizerUpdateExceptionDoesNotPropagate)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_loc_throw_node");
+  ThrowingLocalizer localizer;
+  localizer.initialize(node, "loc_throw");
+
+  std::this_thread::sleep_for(std::chrono::milliseconds(120));
+  easynav::NavState nav_state;
+  EXPECT_NO_THROW(localizer.internal_update(nav_state));
+
+  EXPECT_EQ(localizer.non_rt_call_count, 1);
+}
+
+TEST_F(CoreMethodTestCase, PlannerInternalUpdateExceptionDoesNotPropagate)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_plan_throw_node");
+  ThrowingPlanner planner;
+  planner.initialize(node, "plan_throw");
+
+  std::this_thread::sleep_for(std::chrono::milliseconds(120));
+  easynav::NavState nav_state;
+  EXPECT_NO_THROW(planner.internal_update(nav_state));
+
+  EXPECT_EQ(planner.call_count, 1);
+}
+
+TEST_F(CoreMethodTestCase, PlannerForceUpdateExceptionDoesNotPropagate)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_plan_throw_force_node");
+  ThrowingPlanner planner;
+  planner.initialize(node, "plan_throw_force");
+
+  easynav::NavState nav_state;
+  EXPECT_NO_THROW(planner.force_update(nav_state));
+
+  EXPECT_EQ(planner.call_count, 1);
+}
+
+TEST_F(CoreMethodTestCase, MapsManagerInternalUpdateExceptionDoesNotPropagate)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_maps_throw_node");
+  ThrowingMapsManager maps;
+  maps.initialize(node, "maps_throw");
+
+  std::this_thread::sleep_for(std::chrono::milliseconds(120));
+  easynav::NavState nav_state;
+  EXPECT_NO_THROW(maps.internal_update(nav_state));
+
+  EXPECT_EQ(maps.call_count, 1);
+}
+
+TEST_F(CoreMethodTestCase, ControllerInternalUpdateRtExceptionDoesNotPropagate)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_ctrl_throw_node");
+  ThrowingController ctrl;
+  ctrl.initialize(node, "ctrl_throw");
+
+  easynav::NavState nav_state;
+  bool result = false;
+  EXPECT_NO_THROW(result = ctrl.internal_update_rt(nav_state, true));
+
+  EXPECT_TRUE(result);
+  EXPECT_EQ(ctrl.rt_call_count, 1);
+}
+
+TEST_F(CoreMethodTestCase, ThrowingPluginsKeepBeingCalled)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_keep_called_node");
+  ThrowingLocalizer localizer;
+  localizer.initialize(node, "loc_keep");
+  ThrowingController ctrl;
+  ctrl.initialize(node, "ctrl_keep");
+  ThrowingPlanner planner;
+  planner.initialize(node, "plan_keep");
+
+  easynav::NavState nav_state;
+  for (int i = 1; i <= 3; ++i) {
+    EXPECT_TRUE(localizer.internal_update_rt(nav_state, true));
+    EXPECT_TRUE(ctrl.internal_update_rt(nav_state, true));
+    EXPECT_NO_THROW(planner.force_update(nav_state));
+    EXPECT_EQ(localizer.rt_call_count, i);
+    EXPECT_EQ(ctrl.rt_call_count, i);
+    EXPECT_EQ(planner.call_count, i);
+  }
+}
+
+TEST_F(CoreMethodTestCase, IntermittentFailuresDoNotAffectGoodCycles)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_flaky_node");
+  FlakyPlanner planner;
+  planner.initialize(node, "flaky");
+
+  easynav::NavState nav_state;
+  for (int i = 0; i < 6; ++i) {
+    EXPECT_NO_THROW(planner.force_update(nav_state));
+  }
+  EXPECT_EQ(planner.calls, 6);
+  ASSERT_TRUE(nav_state.has("ok"));
+  EXPECT_EQ(nav_state.get<int>("ok"), 3);
+}
+
+TEST_F(CoreMethodTestCase, AFailedCycleStillCountsForTheRate)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_fail_rate_node");
+  ThrowingPlanner planner;
+  planner.initialize(node, "plan_rate");
+  easynav::NavState nav_state;
+
+  std::this_thread::sleep_for(std::chrono::milliseconds(120));
+  planner.internal_update(nav_state);
+  EXPECT_EQ(planner.call_count, 1);
+
+  // Too soon after the failed run: not retried every cycle.
+  planner.internal_update(nav_state);
+  EXPECT_EQ(planner.call_count, 1);
+
+  std::this_thread::sleep_for(std::chrono::milliseconds(120));
+  planner.internal_update(nav_state);
+  EXPECT_EQ(planner.call_count, 2);
+}
+
+TEST_F(CoreMethodTestCase, NonStdExceptionsDoNotPropagate)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_non_std_node");
+  NonStdThrowingLocalizer localizer;
+  localizer.initialize(node, "loc_non_std");
+  NonStdThrowingPlanner planner;
+  planner.initialize(node, "plan_non_std");
+  NonStdThrowingMapsManager maps;
+  maps.initialize(node, "maps_non_std");
+  NonStdThrowingController ctrl;
+  ctrl.initialize(node, "ctrl_non_std");
+
+  easynav::NavState nav_state;
+  EXPECT_NO_THROW(localizer.internal_update_rt(nav_state, true));
+  EXPECT_NO_THROW(ctrl.internal_update_rt(nav_state, true));
+  EXPECT_NO_THROW(planner.force_update(nav_state));
+
+  std::this_thread::sleep_for(std::chrono::milliseconds(120));
+  EXPECT_NO_THROW(localizer.internal_update(nav_state));
+  EXPECT_NO_THROW(planner.internal_update(nav_state));
+  EXPECT_NO_THROW(maps.internal_update(nav_state));
+
+  EXPECT_EQ(localizer.calls, 2);
+  EXPECT_EQ(planner.calls, 2);
+  EXPECT_EQ(maps.calls, 1);
+  EXPECT_EQ(ctrl.calls, 1);
+}
+
+namespace
+{
+geometry_msgs::msg::TwistStamped moving_cmd()
+{
+  geometry_msgs::msg::TwistStamped cmd;
+  cmd.twist.linear.x = 0.5;
+  cmd.twist.angular.z = 0.3;
+  return cmd;
+}
+
+bool is_stop(const easynav::NavState & nav_state)
+{
+  const auto & t = nav_state.get<geometry_msgs::msg::TwistStamped>("cmd_vel").twist;
+  return t.linear.x == 0.0 && t.linear.y == 0.0 && t.angular.z == 0.0;
+}
+}  // namespace
+
+TEST_F(CoreMethodTestCase, ControllerExceptionStopsTheRobot)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_ctrl_stop_node");
+  ThrowingController ctrl;
+  ctrl.initialize(node, "ctrl_stop");
+
+  easynav::NavState nav_state;
+  nav_state.set("cmd_vel", moving_cmd());  // Last command, from a previous cycle.
+  EXPECT_TRUE(ctrl.internal_update_rt(nav_state, true)) << "the stop must be published";
+  EXPECT_TRUE(is_stop(nav_state));
+}
+
+TEST_F(CoreMethodTestCase, ControllerNonStdExceptionStopsTheRobot)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_ctrl_stop_non_std_node");
+  NonStdThrowingController ctrl;
+  ctrl.initialize(node, "ctrl_stop_non_std");
+
+  easynav::NavState nav_state;
+  nav_state.set("cmd_vel", moving_cmd());
+  EXPECT_TRUE(ctrl.internal_update_rt(nav_state, true));
+  EXPECT_TRUE(is_stop(nav_state));
+}
+
+TEST_F(CoreMethodTestCase, ControllerCommandWrittenBeforeThrowingIsDiscarded)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_ctrl_partial_node");
+  FlakyController ctrl;  // First call writes 0.4 and throws.
+  ctrl.initialize(node, "ctrl_partial");
+
+  easynav::NavState nav_state;
+  EXPECT_TRUE(ctrl.internal_update_rt(nav_state, true));
+  EXPECT_TRUE(is_stop(nav_state));
+}
+
+TEST_F(CoreMethodTestCase, ControllerRecoversAfterAFailedCycle)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_ctrl_recover_node");
+  FlakyController ctrl;  // Fails on odd calls.
+  ctrl.initialize(node, "ctrl_recover");
+
+  easynav::NavState nav_state;
+  for (int i = 1; i <= 4; ++i) {
+    EXPECT_TRUE(ctrl.internal_update_rt(nav_state, true));
+    const double x = nav_state.get<geometry_msgs::msg::TwistStamped>("cmd_vel").twist.linear.x;
+    EXPECT_DOUBLE_EQ(x, i % 2 == 1 ? 0.0 : 0.4) << "cycle " << i;
+  }
 }
 
 int main(int argc, char ** argv)

@@ -22,11 +22,13 @@
 #ifndef EASYNAV__TYPES__NAVSTATE_HPP_
 #define EASYNAV__TYPES__NAVSTATE_HPP_
 
+#include <algorithm>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
 #include <memory>
 #include <mutex>
+#include <optional>
 #include <stdexcept>
 #include <sstream>
 #include <type_traits>
@@ -34,6 +36,7 @@
 #include <functional>
 #include <execinfo.h>
 #include <typeinfo>
+#include <vector>
 #include <cxxabi.h>
 #include <execinfo.h>
 
@@ -439,18 +442,38 @@ public:
   /// \return Multi-line string with one entry per key.
   std::string debug_string() const
   {
+    // Snapshot under the lock, format outside it (printers may be slow).
+    struct Entry
+    {
+      std::string key;
+      std::shared_ptr<void> ptr;
+      std::optional<size_t> type;
+    };
+    std::vector<Entry> entries;
+    {
+      std::lock_guard<std::mutex> lock(state_mutex_);
+      entries.reserve(values_.size());
+      for (const auto & [key, ptr] : values_) {
+        const auto type_it = types_.find(key);
+        entries.push_back(
+          {key, ptr, type_it != types_.end() ? std::optional(type_it->second) : std::nullopt});
+      }
+    }
+    // Sorted keys: stable, readable output.
+    std::sort(
+      entries.begin(), entries.end(),
+      [](const Entry & a, const Entry & b) {return a.key < b.key;});
+
     std::stringstream ss;
-    for (const auto & kv : values_) {
-      ss << kv.first << " = ";
-      auto ptr = kv.second;
+    for (const auto & [key, ptr, type] : entries) {
+      ss << key << " = ";
       if (ptr) {
-        auto type_it = types_.find(kv.first);
-        if (type_it != types_.end()) {
+        if (type) {
           AnyPrinter printer;
           {
             auto & registry = printer_registry();
             std::lock_guard<std::mutex> lock(registry.mutex);
-            const auto printer_it = registry.printers.find(type_it->second);
+            const auto printer_it = registry.printers.find(*type);
             if (printer_it != registry.printers.end()) {
               printer = printer_it->second;
             }
@@ -458,7 +481,7 @@ public:
           if (printer) {
             ss << "[" << ptr.get() << "] : " << printer(ptr);
           } else {
-            ss << "[" << ptr.get() << "] : " << type_it->second << "]";
+            ss << "[" << ptr.get() << "] : " << *type << "]";
           }
         } else {
           ss << "[" << ptr.get() << "] : unknown]";

@@ -13,6 +13,11 @@
 // limitations under the License.
 
 
+#include <algorithm>
+#include <sstream>
+#include <string>
+#include <vector>
+
 #include "easynav_system/GoalManager.hpp"
 #include "easynav_system/GoalManagerClient.hpp"
 #include "easynav_common/types/NavState.hpp"
@@ -1709,4 +1714,384 @@ TEST_F(GoalManagerTestCase, PauseFlagResetOnCancelAndFinish)
   ASSERT_EQ(gm_server->get_state(), easynav::GoalManager::State::IDLE);
   ASSERT_FALSE(gm_server->is_paused());
   ASSERT_FALSE(nav_state->get_safe<bool>("navigation_paused"));
+}
+
+TEST_F(GoalManagerTestCase, FinalInfoPublishedWhenMissionEnds)
+{
+  // Info is throttled while navigating, but the end of the mission is always published.
+  auto nav_state = std::make_shared<easynav::NavState>();
+  nav_state->set("robot_pose", nav_msgs::msg::Odometry());
+
+  auto client_node = rclcpp::Node::make_shared("client_node");
+  auto system_node = rclcpp_lifecycle::LifecycleNode::make_shared("system_node");
+
+  rclcpp::executors::SingleThreadedExecutor exe;
+  exe.add_node(client_node);
+  exe.add_node(system_node->get_node_base_interface());
+
+  std::vector<easynav_interfaces::msg::GoalManagerInfo> infos;
+  auto info_sub = client_node->create_subscription<easynav_interfaces::msg::GoalManagerInfo>(
+    "easynav_manager_info", 100,
+    [&infos](easynav_interfaces::msg::GoalManagerInfo::UniquePtr msg) {
+      infos.push_back(*msg);
+    });
+
+  auto pose_pub = client_node->create_publisher<geometry_msgs::msg::PoseStamped>(
+    "goal_pose", 100);
+
+  auto gm_server = easynav::GoalManager::make_shared(*nav_state, system_node);
+
+  auto spin_for = [&](std::chrono::milliseconds duration) {
+      rclcpp::Rate rate(20);
+      auto start = client_node->now();
+      while (client_node->now() - start < duration) {
+        gm_server->update(*nav_state);
+        exe.spin_some();
+        rate.sleep();
+      }
+    };
+
+  geometry_msgs::msg::PoseStamped goal;
+  goal.header.frame_id = "map";
+  goal.header.stamp = system_node->now();
+  goal.pose.position.x = 1.0;
+  goal.pose.orientation.w = 1.0;
+  pose_pub->publish(goal);
+
+  spin_for(500ms);
+  ASSERT_EQ(gm_server->get_state(), easynav::GoalManager::State::ACTIVE);
+  ASSERT_FALSE(infos.empty());
+  ASSERT_EQ(infos.back().status, easynav_interfaces::msg::GoalManagerInfo::ACTIVE);
+
+  // Arrival: last info is IDLE, no goals, last distance.
+  nav_msgs::msg::Odometry at_goal;
+  at_goal.pose.pose.position.x = 0.99;
+  at_goal.pose.pose.orientation.w = 1.0;
+  nav_state->set("robot_pose", at_goal);
+
+  spin_for(300ms);
+  ASSERT_EQ(gm_server->get_state(), easynav::GoalManager::State::IDLE);
+  ASSERT_EQ(infos.back().status, easynav_interfaces::msg::GoalManagerInfo::IDLE);
+  ASSERT_TRUE(infos.back().goals.goals.empty());
+  ASSERT_NEAR(infos.back().position_distance, 0.01, 1e-6);
+
+  // Same when the mission ends outside update().
+  goal.header.stamp = system_node->now();
+  goal.pose.position.x = 1000.0;
+  pose_pub->publish(goal);
+  spin_for(500ms);
+  ASSERT_EQ(infos.back().status, easynav_interfaces::msg::GoalManagerInfo::ACTIVE);
+
+  gm_server->set_error("aborted");
+  spin_for(200ms);
+  ASSERT_EQ(infos.back().status, easynav_interfaces::msg::GoalManagerInfo::IDLE);
+}
+
+// GoalManagerInfo across mission ends, sequences and multi-goal missions.
+class GoalManagerInfoTest : public GoalManagerTestCase
+{
+protected:
+  void SetUp() override
+  {
+    GoalManagerTestCase::SetUp();
+    nav_state_ = std::make_shared<easynav::NavState>();
+    set_robot(0.0, 0.0);
+
+    client_node_ = rclcpp::Node::make_shared("info_client_node");
+    system_node_ = rclcpp_lifecycle::LifecycleNode::make_shared("info_system_node");
+    exe_ = std::make_unique<rclcpp::executors::SingleThreadedExecutor>();
+    exe_->add_node(client_node_);
+    exe_->add_node(system_node_->get_node_base_interface());
+
+    info_sub_ = client_node_->create_subscription<easynav_interfaces::msg::GoalManagerInfo>(
+      "easynav_manager_info", 100,
+      [this](easynav_interfaces::msg::GoalManagerInfo::UniquePtr msg) {infos_.push_back(*msg);});
+
+    gm_server_ = easynav::GoalManager::make_shared(*nav_state_, system_node_);
+    gm_client_ = easynav::GoalManagerClient::make_shared(client_node_);
+  }
+
+  void set_robot(double x, double y)
+  {
+    nav_msgs::msg::Odometry odom;
+    odom.pose.pose.position.x = x;
+    odom.pose.pose.position.y = y;
+    odom.pose.pose.orientation.w = 1.0;
+    nav_state_->set("robot_pose", odom);
+  }
+
+  static geometry_msgs::msg::PoseStamped goal_at(double x, double y)
+  {
+    geometry_msgs::msg::PoseStamped goal;
+    goal.header.frame_id = "map";
+    goal.pose.position.x = x;
+    goal.pose.position.y = y;
+    goal.pose.orientation.w = 1.0;
+    return goal;
+  }
+
+  void spin_for(std::chrono::milliseconds duration)
+  {
+    rclcpp::Rate rate(20);
+    const auto start = client_node_->now();
+    while (client_node_->now() - start < duration) {
+      gm_server_->update(*nav_state_);
+      exe_->spin_some();
+      rate.sleep();
+    }
+  }
+
+  int count(uint8_t status) const
+  {
+    return static_cast<int>(std::count_if(
+             infos_.begin(), infos_.end(),
+             [status](const auto & i) {return i.status == status;}));
+  }
+
+  static constexpr uint8_t kActive = easynav_interfaces::msg::GoalManagerInfo::ACTIVE;
+  static constexpr uint8_t kIdle = easynav_interfaces::msg::GoalManagerInfo::IDLE;
+
+  std::shared_ptr<easynav::NavState> nav_state_;
+  rclcpp::Node::SharedPtr client_node_;
+  rclcpp_lifecycle::LifecycleNode::SharedPtr system_node_;
+  // Created in SetUp(): needs rclcpp initialized.
+  std::unique_ptr<rclcpp::executors::SingleThreadedExecutor> exe_;
+  rclcpp::Subscription<easynav_interfaces::msg::GoalManagerInfo>::SharedPtr info_sub_;
+  std::vector<easynav_interfaces::msg::GoalManagerInfo> infos_;
+  easynav::GoalManager::SharedPtr gm_server_;
+  easynav::GoalManagerClient::SharedPtr gm_client_;
+};
+
+TEST_F(GoalManagerInfoTest, NothingPublishedWhileIdle)
+{
+  spin_for(400ms);
+  EXPECT_TRUE(infos_.empty());
+}
+
+TEST_F(GoalManagerInfoTest, FinalInfoOnClientCancel)
+{
+  gm_client_->send_goal(goal_at(100.0, 0.0));
+  spin_for(400ms);
+  ASSERT_EQ(gm_server_->get_state(), easynav::GoalManager::State::ACTIVE);
+  ASSERT_FALSE(infos_.empty());
+  ASSERT_EQ(infos_.back().status, kActive);
+
+  gm_client_->cancel();
+  spin_for(300ms);
+  ASSERT_EQ(gm_server_->get_state(), easynav::GoalManager::State::IDLE);
+  EXPECT_EQ(infos_.back().status, kIdle);
+  EXPECT_TRUE(infos_.back().goals.goals.empty());
+}
+
+TEST_F(GoalManagerInfoTest, FinalInfoOnFailure)
+{
+  gm_client_->send_goal(goal_at(100.0, 0.0));
+  spin_for(400ms);
+  ASSERT_EQ(infos_.back().status, kActive);
+
+  gm_server_->set_failed("no way");
+  spin_for(200ms);
+  EXPECT_EQ(infos_.back().status, kIdle);
+}
+
+TEST_F(GoalManagerInfoTest, MultiGoalMissionStaysActiveUntilTheLastGoal)
+{
+  nav_msgs::msg::Goals goals;
+  goals.header.frame_id = "map";
+  goals.goals = {goal_at(1.0, 0.0), goal_at(2.0, 0.0)};
+  gm_client_->send_goals(goals);
+  spin_for(400ms);
+  ASSERT_EQ(infos_.back().goals.goals.size(), 2u);
+
+  // First goal reached: still active, one goal left.
+  set_robot(1.0, 0.0);
+  spin_for(300ms);
+  ASSERT_EQ(gm_server_->get_state(), easynav::GoalManager::State::ACTIVE);
+  EXPECT_EQ(infos_.back().status, kActive);
+  EXPECT_EQ(infos_.back().goals.goals.size(), 1u);
+  EXPECT_EQ(count(kIdle), 0);
+
+  // Last goal reached.
+  set_robot(2.0, 0.0);
+  spin_for(300ms);
+  ASSERT_EQ(gm_server_->get_state(), easynav::GoalManager::State::IDLE);
+  EXPECT_EQ(infos_.back().status, kIdle);
+  EXPECT_TRUE(infos_.back().goals.goals.empty());
+  EXPECT_NEAR(infos_.back().position_distance, 0.0, 1e-6);
+}
+
+TEST_F(GoalManagerInfoTest, FinalInfoPublishedOnlyOnce)
+{
+  gm_client_->send_goal(goal_at(1.0, 0.0));
+  spin_for(400ms);
+  set_robot(1.0, 0.0);
+  spin_for(1000ms);  // Many idle cycles after the end.
+
+  EXPECT_EQ(count(kIdle), 1);
+  EXPECT_EQ(infos_.back().status, kIdle);
+}
+
+TEST_F(GoalManagerInfoTest, ConsecutiveMissionsEachEndIdle)
+{
+  for (int mission = 1; mission <= 3; ++mission) {
+    const double x = static_cast<double>(mission);
+    gm_client_->reset();  // The client must be reset after a finished mission.
+    gm_client_->send_goal(goal_at(x, 0.0));
+    spin_for(400ms);
+    ASSERT_EQ(infos_.back().status, kActive) << "mission " << mission;
+
+    set_robot(x, 0.0);
+    spin_for(300ms);
+    ASSERT_EQ(infos_.back().status, kIdle) << "mission " << mission;
+    EXPECT_EQ(count(kIdle), mission);
+  }
+}
+
+TEST_F(GoalManagerInfoTest, MissionFinishedOnItsFirstCycleEndsIdle)
+{
+  // Goal where the robot already is: finished before any ACTIVE info.
+  gm_client_->send_goal(goal_at(0.0, 0.0));
+  spin_for(400ms);
+
+  ASSERT_EQ(gm_server_->get_state(), easynav::GoalManager::State::IDLE);
+  ASSERT_FALSE(infos_.empty());
+  EXPECT_EQ(infos_.back().status, kIdle);
+  EXPECT_EQ(count(kIdle), 1);
+  EXPECT_NEAR(infos_.back().position_distance, 0.0, 1e-6);
+}
+
+TEST_F(GoalManagerInfoTest, MissionCancelledBeforeAnyCycleEndsIdle)
+{
+  // Accept and cancel without running update() in between.
+  auto spin_until = [this](easynav::GoalManager::State state) {
+      const auto start = client_node_->now();
+      while (client_node_->now() - start < 1s && gm_server_->get_state() != state) {
+        exe_->spin_some();
+        rclcpp::sleep_for(10ms);
+      }
+      return gm_server_->get_state() == state;
+    };
+  gm_client_->send_goal(goal_at(100.0, 0.0));
+  ASSERT_TRUE(spin_until(easynav::GoalManager::State::ACTIVE));
+  // The client can only cancel once it got the acceptance.
+  const auto start = client_node_->now();
+  while (client_node_->now() - start < 1s &&
+    gm_client_->get_state() != easynav::GoalManagerClient::State::ACCEPTED_AND_NAVIGATING)
+  {
+    exe_->spin_some();
+    rclcpp::sleep_for(10ms);
+  }
+  ASSERT_EQ(
+    gm_client_->get_state(), easynav::GoalManagerClient::State::ACCEPTED_AND_NAVIGATING);
+  gm_client_->cancel();
+  ASSERT_TRUE(spin_until(easynav::GoalManager::State::IDLE));
+  ASSERT_TRUE(infos_.empty());
+
+  spin_for(200ms);
+  ASSERT_FALSE(infos_.empty());
+  EXPECT_EQ(infos_.back().status, kIdle);
+  EXPECT_EQ(count(kActive), 0);
+  EXPECT_EQ(count(kIdle), 1);
+}
+
+// Height tolerance: readable default that ignores height, and a configured one that does not.
+class GoalManagerHeightTest : public GoalManagerTestCase
+{
+protected:
+  void make_server(std::vector<rclcpp::Parameter> overrides = {})
+  {
+    nav_state_ = std::make_shared<easynav::NavState>();
+    system_node_ = rclcpp_lifecycle::LifecycleNode::make_shared(
+      "height_system_node", rclcpp::NodeOptions().parameter_overrides(overrides));
+    gm_server_ = easynav::GoalManager::make_shared(*nav_state_, system_node_);
+    set_robot_z(0.0);
+  }
+
+  void set_robot_z(double z)
+  {
+    nav_msgs::msg::Odometry odom;
+    odom.pose.pose.position.z = z;
+    odom.pose.pose.orientation.w = 1.0;
+    nav_state_->set("robot_pose", odom);
+  }
+
+  // Sends a goal above the robot (same x/y) and runs a few cycles.
+  bool reaches_goal_at_height(double goal_z)
+  {
+    auto client_node = rclcpp::Node::make_shared("height_client_node");
+    rclcpp::executors::SingleThreadedExecutor exe;
+    exe.add_node(client_node);
+    exe.add_node(system_node_->get_node_base_interface());
+    auto pose_pub = client_node->create_publisher<geometry_msgs::msg::PoseStamped>(
+      "goal_pose", 100);
+
+    geometry_msgs::msg::PoseStamped goal;
+    goal.header.frame_id = "map";
+    goal.header.stamp = system_node_->now();
+    goal.pose.position.z = goal_z;
+    goal.pose.orientation.w = 1.0;
+    pose_pub->publish(goal);
+
+    // Wait for the goal, then let the manager check it.
+    const auto start = client_node->now();
+    while (client_node->now() - start < 500ms &&
+      gm_server_->get_state() == easynav::GoalManager::State::IDLE)
+    {
+      exe.spin_some();
+      rclcpp::sleep_for(10ms);
+    }
+    if (gm_server_->get_state() != easynav::GoalManager::State::ACTIVE) {
+      ADD_FAILURE() << "goal at z = " << goal_z << " was not accepted";
+      return false;
+    }
+    for (int i = 0; i < 5; ++i) {
+      gm_server_->update(*nav_state_);
+      exe.spin_some();
+    }
+    return gm_server_->get_state() == easynav::GoalManager::State::IDLE;
+  }
+
+  std::shared_ptr<easynav::NavState> nav_state_;
+  rclcpp_lifecycle::LifecycleNode::SharedPtr system_node_;
+  easynav::GoalManager::SharedPtr gm_server_;
+};
+
+TEST_F(GoalManagerHeightTest, DefaultIsReadableInNavState)
+{
+  make_server();
+  ASSERT_DOUBLE_EQ(nav_state_->get<double>("goal_tolerance.height"), 10000.0);
+
+  // Its line in the NavState dump stays short (DBL_MAX printed 300+ digits).
+  std::istringstream lines(nav_state_->debug_string());
+  std::string line;
+  bool found = false;
+  while (std::getline(lines, line)) {
+    if (line.rfind("goal_tolerance.height", 0) == 0) {
+      found = true;
+      EXPECT_LT(line.size(), 80u) << line;
+    }
+  }
+  EXPECT_TRUE(found);
+}
+
+TEST_F(GoalManagerHeightTest, DefaultIgnoresHeight)
+{
+  make_server();
+  EXPECT_TRUE(reaches_goal_at_height(0.0));
+  EXPECT_TRUE(reaches_goal_at_height(3.0));
+  EXPECT_TRUE(reaches_goal_at_height(-50.0));
+}
+
+TEST_F(GoalManagerHeightTest, ConfiguredToleranceLimitsHeight)
+{
+  make_server({rclcpp::Parameter("height_tolerance", 0.5)});
+  ASSERT_DOUBLE_EQ(nav_state_->get<double>("goal_tolerance.height"), 0.5);
+
+  EXPECT_FALSE(reaches_goal_at_height(3.0)) << "3 m above, tolerance 0.5 m";
+}
+
+TEST_F(GoalManagerHeightTest, ConfiguredToleranceAcceptsCloseHeights)
+{
+  make_server({rclcpp::Parameter("height_tolerance", 0.5)});
+  EXPECT_TRUE(reaches_goal_at_height(0.3));
 }

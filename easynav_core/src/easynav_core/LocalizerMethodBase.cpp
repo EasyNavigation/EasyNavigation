@@ -32,7 +32,18 @@ LocalizerMethodBase::internal_update_rt(NavState & nav_state, bool trigger)
     // Save last execution time, even if triggered
     setRunRT();
 
-    update_rt(nav_state);
+    try {
+      update_rt(nav_state);
+    } catch (const std::exception & e) {
+      // A faulty plugin must not bring down EasyNav.
+      RCLCPP_ERROR_THROTTLE(
+        get_node()->get_logger(), *get_node()->get_clock(), 1000,
+        "Exception in update_rt() of localizer [%s]: %s", get_plugin_name().c_str(), e.what());
+    } catch (...) {
+      RCLCPP_ERROR_THROTTLE(
+        get_node()->get_logger(), *get_node()->get_clock(), 1000,
+        "Unknown exception in update_rt() of localizer [%s]", get_plugin_name().c_str());
+    }
 
     return true;
   } else {
@@ -49,7 +60,18 @@ LocalizerMethodBase::internal_update(NavState & nav_state)
     // Save last execution time, even if triggered
     setRun();
 
-    update(nav_state);
+    try {
+      update(nav_state);
+    } catch (const std::exception & e) {
+      // A faulty plugin must not bring down EasyNav.
+      RCLCPP_ERROR_THROTTLE(
+        get_node()->get_logger(), *get_node()->get_clock(), 1000,
+        "Exception in update() of localizer [%s]: %s", get_plugin_name().c_str(), e.what());
+    } catch (...) {
+      RCLCPP_ERROR_THROTTLE(
+        get_node()->get_logger(), *get_node()->get_clock(), 1000,
+        "Unknown exception in update() of localizer [%s]", get_plugin_name().c_str());
+    }
   }
 }
 
