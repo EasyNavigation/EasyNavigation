@@ -110,7 +110,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 <p>Implementation of the DummyPlanner class.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="DummyPlanner_8hpp_source.html">easynav_planner/DummyPlanner.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="Parameters_8hpp_source.html">easynav_common/Parameters.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="DummyPlanner_8hpp_source.html">easynav_planner/DummyPlanner.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="RTTFBuffer_8hpp_source.html">easynav_common/RTTFBuffer.hpp</a>&quot;</code><br />
 <code>#include &lt;pluginlib/class_list_macros.hpp&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
@@ -118,32 +119,35 @@ Include dependency graph for DummyPlanner.cpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="DummyPlanner_8cpp__incl.png" border="0" usemap="#aeasynav__planner_2src_2easynav__planner_2DummyPlanner_8cpp" loading="lazy" alt=""/></div>
 <map name="aeasynav__planner_2src_2easynav__planner_2DummyPlanner_8cpp" id="aeasynav__planner_2src_2easynav__planner_2DummyPlanner_8cpp">
-<area shape="rect" title="Implementation of the DummyPlanner class." alt="" coords="444,5,682,46"/>
-<area shape="rect" href="DummyPlanner_8hpp.html" title="Declaration of the DummyPlanner class, a default fallback planner plugin." alt="" coords="171,102,406,127"/>
-<area shape="poly" title=" " alt="" coords="501,49,342,99,341,94,500,44"/>
-<area shape="rect" href="RTTFBuffer_8hpp.html" title=" " alt="" coords="452,102,674,127"/>
-<area shape="poly" title=" " alt="" coords="566,47,566,86,560,86,560,47"/>
-<area shape="rect" title=" " alt="" coords="698,94,825,135"/>
-<area shape="poly" title=" " alt="" coords="609,44,704,85,701,90,607,49"/>
-<area shape="rect" title=" " alt="" coords="5,190,169,216"/>
-<area shape="poly" title=" " alt="" coords="261,130,130,186,128,181,259,125"/>
-<area shape="rect" title=" " alt="" coords="192,183,384,223"/>
-<area shape="poly" title=" " alt="" coords="291,128,291,168,286,168,286,128"/>
-<area shape="rect" title=" " alt="" coords="408,271,464,297"/>
-<area shape="poly" title=" " alt="" coords="525,130,484,151,465,166,449,184,441,201,437,220,436,256,430,256,431,219,436,199,445,181,461,162,481,147,523,125"/>
-<area shape="rect" href="Singleton_8hpp.html" title=" " alt="" coords="459,190,667,216"/>
-<area shape="poly" title=" " alt="" coords="566,128,566,174,560,174,560,128"/>
-<area shape="rect" href="TFInfo_8hpp.html" title=" " alt="" coords="692,183,853,223"/>
-<area shape="poly" title=" " alt="" coords="594,125,712,174,710,179,592,130"/>
-<area shape="rect" title=" " alt="" coords="877,190,998,216"/>
-<area shape="poly" title=" " alt="" coords="622,125,866,180,879,183,878,188,865,185,621,130"/>
-<area shape="poly" title=" " alt="" coords="545,219,470,265,467,261,542,214"/>
-<area shape="rect" title=" " alt="" coords="501,271,569,297"/>
-<area shape="poly" title=" " alt="" coords="561,217,547,257,542,255,556,215"/>
-<area shape="rect" title=" " alt="" coords="593,271,645,297"/>
-<area shape="poly" title=" " alt="" coords="574,215,604,257,599,260,569,218"/>
-<area shape="rect" title=" " alt="" coords="746,271,799,297"/>
-<area shape="poly" title=" " alt="" coords="775,224,775,256,770,256,770,224"/>
+<area shape="rect" title="Implementation of the DummyPlanner class." alt="" coords="408,5,646,46"/>
+<area shape="rect" href="Parameters_8hpp.html" title="Parameter helpers for plugins that may be initialized several times on the same node." alt="" coords="5,102,227,127"/>
+<area shape="poly" title=" " alt="" coords="434,49,189,100,188,95,432,44"/>
+<area shape="rect" href="DummyPlanner_8hpp.html" title="Declaration of the DummyPlanner class, a default fallback planner plugin." alt="" coords="284,102,518,127"/>
+<area shape="poly" title=" " alt="" coords="500,49,433,95,430,90,497,44"/>
+<area shape="rect" href="RTTFBuffer_8hpp.html" title=" " alt="" coords="576,102,797,127"/>
+<area shape="poly" title=" " alt="" coords="564,44,652,91,650,96,562,49"/>
+<area shape="rect" title=" " alt="" coords="822,94,949,135"/>
+<area shape="poly" title=" " alt="" coords="611,44,807,91,806,96,610,49"/>
+<area shape="rect" title=" " alt="" coords="316,271,369,297"/>
+<area shape="poly" title=" " alt="" coords="113,128,105,148,99,173,99,199,109,222,121,232,139,241,190,257,301,276,300,281,189,262,137,246,118,236,105,225,94,200,94,173,100,147,108,127"/>
+<area shape="rect" title=" " alt="" coords="118,190,282,216"/>
+<area shape="poly" title=" " alt="" coords="374,130,243,186,241,181,372,125"/>
+<area shape="rect" title=" " alt="" coords="305,183,498,223"/>
+<area shape="poly" title=" " alt="" coords="404,128,404,168,399,168,399,128"/>
+<area shape="rect" title=" " alt="" coords="706,271,763,297"/>
+<area shape="poly" title=" " alt="" coords="693,127,730,255,724,257,688,128"/>
+<area shape="rect" href="Singleton_8hpp.html" title=" " alt="" coords="758,190,967,216"/>
+<area shape="poly" title=" " alt="" coords="713,125,825,181,823,185,710,130"/>
+<area shape="rect" href="TFInfo_8hpp.html" title=" " alt="" coords="522,183,683,223"/>
+<area shape="poly" title=" " alt="" coords="677,129,634,173,630,170,673,126"/>
+<area shape="rect" title=" " alt="" coords="991,190,1113,216"/>
+<area shape="poly" title=" " alt="" coords="742,125,979,180,992,183,991,188,978,185,741,130"/>
+<area shape="poly" title=" " alt="" coords="845,219,769,265,766,261,842,214"/>
+<area shape="rect" title=" " alt="" coords="814,271,882,297"/>
+<area shape="poly" title=" " alt="" coords="863,217,856,256,850,255,858,216"/>
+<area shape="rect" title=" " alt="" coords="906,271,958,297"/>
+<area shape="poly" title=" " alt="" coords="875,214,913,258,909,261,871,218"/>
+<area shape="poly" title=" " alt="" coords="538,226,385,273,384,268,537,221"/>
 </map>
 </div>
 </div><table class="memberdecls">

@@ -115,73 +115,77 @@ document.addEventListener('DOMContentLoaded', () => {
 <code>#include &quot;tf2_geometry_msgs/tf2_geometry_msgs.hpp&quot;</code><br />
 <code>#include &quot;tf2/utils.hpp&quot;</code><br />
 <code>#include &quot;nav_msgs/msg/odometry.hpp&quot;</code><br />
+<code>#include &quot;<a class="el" href="Parameters_8hpp_source.html">easynav_common/Parameters.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="GoalManager_8hpp_source.html">easynav_system/GoalManager.hpp</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for GoalManager.cpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="GoalManager_8cpp__incl.png" border="0" usemap="#aeasynav__system_2src_2easynav__system_2GoalManager_8cpp" loading="lazy" alt=""/></div>
 <map name="aeasynav__system_2src_2easynav__system_2GoalManager_8cpp" id="aeasynav__system_2src_2easynav__system_2GoalManager_8cpp">
-<area shape="rect" title="Implementation of the GoalManager class." alt="" coords="262,5,490,46"/>
-<area shape="rect" title=" " alt="" coords="72,102,130,127"/>
-<area shape="poly" title=" " alt="" coords="296,49,220,70,142,97,140,97,138,92,140,91,219,65,294,44"/>
-<area shape="rect" title=" " alt="" coords="153,94,308,135"/>
-<area shape="poly" title=" " alt="" coords="344,49,278,88,275,84,341,44"/>
-<area shape="rect" title=" " alt="" coords="332,102,420,127"/>
-<area shape="poly" title=" " alt="" coords="378,47,378,86,373,86,373,47"/>
-<area shape="rect" title=" " alt="" coords="444,102,636,127"/>
-<area shape="poly" title=" " alt="" coords="414,44,505,92,502,96,412,49"/>
-<area shape="rect" href="GoalManager_8hpp.html" title="Declaration of the GoalManager class." alt="" coords="660,102,884,127"/>
-<area shape="poly" title=" " alt="" coords="467,44,702,95,701,100,466,49"/>
-<area shape="rect" title=" " alt="" coords="5,190,160,216"/>
-<area shape="poly" title=" " alt="" coords="698,130,648,137,514,152,410,159,305,168,172,185,150,189,149,184,171,180,305,162,409,154,514,146,648,132,697,125"/>
-<area shape="rect" title=" " alt="" coords="184,190,320,216"/>
-<area shape="poly" title=" " alt="" coords="694,130,648,137,490,159,332,185,315,189,314,184,331,180,489,154,647,132,693,125"/>
-<area shape="rect" title=" " alt="" coords="344,190,472,216"/>
-<area shape="poly" title=" " alt="" coords="719,130,484,185,471,189,470,183,483,180,718,125"/>
-<area shape="rect" title=" " alt="" coords="495,183,656,223"/>
-<area shape="poly" title=" " alt="" coords="745,130,635,178,633,174,743,125"/>
-<area shape="rect" title=" " alt="" coords="680,183,864,223"/>
-<area shape="poly" title=" " alt="" coords="774,128,774,168,769,168,769,128"/>
-<area shape="rect" title=" " alt="" coords="888,183,1075,223"/>
-<area shape="poly" title=" " alt="" coords="802,125,921,174,919,179,800,130"/>
-<area shape="rect" title=" " alt="" coords="1099,183,1274,223"/>
-<area shape="poly" title=" " alt="" coords="831,125,1085,178,1084,183,830,130"/>
-<area shape="rect" title=" " alt="" coords="1298,190,1467,216"/>
-<area shape="poly" title=" " alt="" coords="881,125,1070,149,1286,180,1309,184,1308,189,1285,185,1069,154,880,130"/>
-<area shape="rect" href="NavState_8hpp.html" title="A blackboard&#45;like structure to hold the current state of the navigation system." alt="" coords="1491,183,1652,223"/>
-<area shape="poly" title=" " alt="" coords="884,120,1150,141,1312,158,1476,180,1475,185,1311,163,1150,146,884,125"/>
-<area shape="rect" title=" " alt="" coords="785,271,860,297"/>
-<area shape="poly" title=" " alt="" coords="1491,224,1480,226,1312,244,1179,249,1045,255,875,274,875,269,1045,249,1179,244,1312,238,1479,221,1490,219"/>
-<area shape="rect" title=" " alt="" coords="884,271,937,297"/>
-<area shape="poly" title=" " alt="" coords="1491,224,1480,226,1333,242,1217,246,1101,253,953,274,952,269,1100,248,1217,241,1333,236,1479,221,1490,219"/>
-<area shape="rect" title=" " alt="" coords="961,271,1071,297"/>
-<area shape="poly" title=" " alt="" coords="1491,224,1480,226,1371,242,1285,251,1087,273,1086,268,1284,246,1371,236,1479,221,1490,219"/>
-<area shape="rect" title=" " alt="" coords="1095,271,1198,297"/>
-<area shape="poly" title=" " alt="" coords="1491,224,1480,226,1214,273,1213,268,1479,221,1490,219"/>
-<area shape="rect" title=" " alt="" coords="1222,271,1290,297"/>
-<area shape="poly" title=" " alt="" coords="1493,226,1305,273,1304,268,1492,221"/>
-<area shape="rect" title=" " alt="" coords="1313,271,1369,297"/>
-<area shape="poly" title=" " alt="" coords="1515,226,1384,271,1383,266,1513,221"/>
-<area shape="rect" title=" " alt="" coords="1393,271,1460,297"/>
-<area shape="poly" title=" " alt="" coords="1537,226,1463,266,1460,261,1534,222"/>
-<area shape="rect" title=" " alt="" coords="1484,271,1561,297"/>
-<area shape="poly" title=" " alt="" coords="1562,225,1540,259,1536,257,1557,222"/>
-<area shape="rect" title=" " alt="" coords="1586,271,1654,297"/>
-<area shape="poly" title=" " alt="" coords="1586,222,1607,257,1602,259,1581,225"/>
-<area shape="rect" title=" " alt="" coords="1678,271,1759,297"/>
-<area shape="poly" title=" " alt="" coords="1610,222,1684,261,1682,266,1607,226"/>
-<area shape="rect" title=" " alt="" coords="1783,271,1854,297"/>
-<area shape="poly" title=" " alt="" coords="1634,221,1769,264,1768,269,1633,226"/>
-<area shape="rect" title=" " alt="" coords="1878,271,1956,297"/>
-<area shape="poly" title=" " alt="" coords="1653,220,1864,268,1863,273,1652,225"/>
-<area shape="rect" title=" " alt="" coords="1980,271,2060,297"/>
-<area shape="poly" title=" " alt="" coords="1653,214,1965,268,1964,273,1652,219"/>
-<area shape="rect" title=" " alt="" coords="2084,271,2150,297"/>
-<area shape="poly" title=" " alt="" coords="1653,210,1839,232,2069,268,2068,274,1839,237,1653,215"/>
-<area shape="rect" title=" " alt="" coords="2174,271,2231,297"/>
-<area shape="poly" title=" " alt="" coords="1653,207,1878,227,2017,244,2159,268,2158,274,2016,250,1877,232,1653,212"/>
-<area shape="rect" title=" " alt="" coords="2256,271,2323,297"/>
-<area shape="poly" title=" " alt="" coords="1653,206,1911,226,2074,244,2240,268,2240,274,2073,249,1911,231,1653,211"/>
+<area shape="rect" title="Implementation of the GoalManager class." alt="" coords="276,5,504,46"/>
+<area shape="rect" title=" " alt="" coords="5,102,63,127"/>
+<area shape="poly" title=" " alt="" coords="277,47,177,68,75,97,72,98,70,93,73,91,176,62,275,42"/>
+<area shape="rect" title=" " alt="" coords="86,94,240,135"/>
+<area shape="poly" title=" " alt="" coords="340,49,230,91,228,86,338,44"/>
+<area shape="rect" title=" " alt="" coords="264,102,353,127"/>
+<area shape="poly" title=" " alt="" coords="373,48,332,92,328,89,370,45"/>
+<area shape="rect" title=" " alt="" coords="377,102,568,127"/>
+<area shape="poly" title=" " alt="" coords="411,45,453,89,449,92,407,48"/>
+<area shape="rect" href="Parameters_8hpp.html" title="Parameter helpers for plugins that may be initialized several times on the same node." alt="" coords="593,102,814,127"/>
+<area shape="poly" title=" " alt="" coords="462,44,645,94,644,99,461,49"/>
+<area shape="rect" href="GoalManager_8hpp.html" title="Declaration of the GoalManager class." alt="" coords="1117,102,1340,127"/>
+<area shape="poly" title=" " alt="" coords="504,36,1102,97,1101,103,504,41"/>
+<area shape="rect" title=" " alt="" coords="894,271,947,297"/>
+<area shape="poly" title=" " alt="" coords="657,130,610,146,567,168,552,180,543,193,541,207,549,222,571,238,605,251,696,268,796,277,879,280,878,285,795,282,695,274,604,256,569,242,545,225,536,208,538,191,548,176,564,163,608,141,655,125"/>
+<area shape="rect" title=" " alt="" coords="560,190,714,216"/>
+<area shape="poly" title=" " alt="" coords="1119,130,935,154,726,185,705,189,704,184,726,180,934,148,1119,125"/>
+<area shape="rect" title=" " alt="" coords="738,190,874,216"/>
+<area shape="poly" title=" " alt="" coords="1163,130,887,185,871,189,870,184,885,180,1162,125"/>
+<area shape="rect" title=" " alt="" coords="898,190,1026,216"/>
+<area shape="poly" title=" " alt="" coords="1192,130,1015,187,1013,182,1190,125"/>
+<area shape="rect" title=" " alt="" coords="1049,183,1211,223"/>
+<area shape="poly" title=" " alt="" coords="1217,130,1166,174,1162,170,1213,126"/>
+<area shape="rect" title=" " alt="" coords="1234,183,1418,223"/>
+<area shape="poly" title=" " alt="" coords="1244,126,1294,170,1291,174,1240,130"/>
+<area shape="rect" title=" " alt="" coords="1442,183,1629,223"/>
+<area shape="poly" title=" " alt="" coords="1273,125,1452,175,1450,181,1271,130"/>
+<area shape="rect" title=" " alt="" coords="1654,183,1828,223"/>
+<area shape="poly" title=" " alt="" coords="1308,125,1638,180,1637,185,1307,130"/>
+<area shape="rect" title=" " alt="" coords="1852,190,2021,216"/>
+<area shape="poly" title=" " alt="" coords="1341,122,1571,145,1840,180,1864,184,1863,189,1839,185,1571,151,1340,128"/>
+<area shape="rect" href="NavState_8hpp.html" title="A blackboard&#45;like structure to hold the current state of the navigation system." alt="" coords="2045,183,2207,223"/>
+<area shape="poly" title=" " alt="" coords="1341,118,1648,138,1837,156,2030,180,2029,185,1836,161,1647,144,1340,123"/>
+<area shape="poly" title=" " alt="" coords="2045,224,2034,226,1802,246,1485,263,963,284,963,279,1485,258,1801,241,2034,221,2044,219"/>
+<area shape="rect" title=" " alt="" coords="1369,271,1443,297"/>
+<area shape="poly" title=" " alt="" coords="2045,224,2034,226,1874,243,1748,249,1621,255,1459,274,1458,268,1620,250,1748,244,1874,238,2034,221,2044,219"/>
+<area shape="rect" title=" " alt="" coords="1467,271,1577,297"/>
+<area shape="poly" title=" " alt="" coords="2045,224,2034,226,1912,242,1815,251,1717,259,1593,274,1592,268,1717,254,1815,246,1911,237,2034,221,2044,219"/>
+<area shape="rect" title=" " alt="" coords="1601,271,1704,297"/>
+<area shape="poly" title=" " alt="" coords="2045,224,2034,226,1879,250,1720,274,1719,268,1878,245,2034,221,2044,219"/>
+<area shape="rect" title=" " alt="" coords="1728,271,1796,297"/>
+<area shape="poly" title=" " alt="" coords="2045,224,1811,273,1810,268,2044,219"/>
+<area shape="rect" title=" " alt="" coords="1819,271,1876,297"/>
+<area shape="poly" title=" " alt="" coords="2057,226,1891,273,1890,268,2055,221"/>
+<area shape="rect" title=" " alt="" coords="1900,271,1966,297"/>
+<area shape="poly" title=" " alt="" coords="2079,226,1977,268,1975,263,2077,221"/>
+<area shape="rect" title=" " alt="" coords="1990,271,2067,297"/>
+<area shape="poly" title=" " alt="" coords="2104,226,2057,263,2054,259,2100,222"/>
+<area shape="rect" title=" " alt="" coords="2092,271,2160,297"/>
+<area shape="poly" title=" " alt="" coords="2129,224,2129,256,2123,256,2123,224"/>
+<area shape="rect" title=" " alt="" coords="2184,271,2265,297"/>
+<area shape="poly" title=" " alt="" coords="2152,222,2199,259,2196,263,2149,226"/>
+<area shape="rect" title=" " alt="" coords="2289,271,2360,297"/>
+<area shape="poly" title=" " alt="" coords="2177,221,2281,263,2279,268,2175,226"/>
+<area shape="rect" title=" " alt="" coords="2385,271,2462,297"/>
+<area shape="poly" title=" " alt="" coords="2201,221,2370,266,2369,271,2200,227"/>
+<area shape="rect" title=" " alt="" coords="2486,271,2566,297"/>
+<area shape="poly" title=" " alt="" coords="2208,217,2472,268,2471,273,2206,222"/>
+<area shape="rect" title=" " alt="" coords="2590,271,2656,297"/>
+<area shape="poly" title=" " alt="" coords="2208,211,2373,234,2575,268,2574,274,2372,239,2207,217"/>
+<area shape="rect" title=" " alt="" coords="2680,271,2737,297"/>
+<area shape="poly" title=" " alt="" coords="2207,208,2412,229,2537,246,2665,268,2664,274,2536,251,2411,234,2207,213"/>
+<area shape="rect" title=" " alt="" coords="2762,271,2829,297"/>
+<area shape="poly" title=" " alt="" coords="2208,207,2446,227,2594,245,2747,268,2746,274,2594,250,2445,233,2207,212"/>
 </map>
 </div>
 </div><table class="memberdecls">
