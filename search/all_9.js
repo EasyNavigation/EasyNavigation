@@ -1,11 +1,5 @@
 var searchData=
 [
-  ['latest_0',['latest',['../classeasynav_1_1CircularBuffer.html#a6f6e74f2c9785bad7c76b2a46dd213b8',1,'easynav::CircularBuffer']]],
-  ['load_1',['load',['../classPluginTestCase.html#ae25727c6d3ad0a0c419734d4a38ad0c5',1,'PluginTestCase']]],
-  ['loader_5f_2',['loader_',['../classPluginTestCase.html#a5392daebb8a83d02754cad00ef7d9149',1,'PluginTestCase']]],
-  ['localizer_5fnode_5ftests_2ecpp_3',['localizer_node_tests.cpp',['../localizer__node__tests_8cpp.html',1,'']]],
-  ['localizernode_4',['LocalizerNode',['../classeasynav_1_1LocalizerNode.html',1,'LocalizerNode'],['../classeasynav_1_1LocalizerNode.html#ae1de0a7f82d29fc56a673e668f316eb6',1,'easynav::LocalizerNode::LocalizerNode()']]],
-  ['localizernode_2ecpp_5',['LocalizerNode.cpp',['../LocalizerNode_8cpp.html',1,'']]],
-  ['localizernode_2ehpp_6',['LocalizerNode.hpp',['../LocalizerNode_8hpp.html',1,'']]],
-  ['localizernodetestcase_7',['LocalizerNodeTestCase',['../classLocalizerNodeTestCase.html',1,'']]]
+  ['kactive_0',['kActive',['../classGoalManagerInfoTest.html#a45cecf981474cd181aac31e956d44cd0',1,'GoalManagerInfoTest']]],
+  ['kidle_1',['kIdle',['../classGoalManagerInfoTest.html#ad0d5544976442fe7fb4007f15f13142f',1,'GoalManagerInfoTest']]]
 ];

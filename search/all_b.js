@@ -1,15 +1,15 @@
 var searchData=
 [
-  ['navigation_5fcancelled_0',['NAVIGATION_CANCELLED',['../classeasynav_1_1GoalManagerClient.html#a5d74787dedbc4e11c1ab15bf487e61f8ac43b37a363736d955c243a93b83518b8',1,'easynav::GoalManagerClient']]],
-  ['navigation_5ffailed_1',['NAVIGATION_FAILED',['../classeasynav_1_1GoalManagerClient.html#a5d74787dedbc4e11c1ab15bf487e61f8a6cfded39fd342a218f4490648ade209c',1,'easynav::GoalManagerClient']]],
-  ['navigation_5ffinished_2',['NAVIGATION_FINISHED',['../classeasynav_1_1GoalManagerClient.html#a5d74787dedbc4e11c1ab15bf487e61f8ad67237f05b6cafb3d0d73e39e3bee812',1,'easynav::GoalManagerClient']]],
-  ['navigation_5frejected_3',['NAVIGATION_REJECTED',['../classeasynav_1_1GoalManagerClient.html#a5d74787dedbc4e11c1ab15bf487e61f8ae6b80bfbe7653acc8ef4bfa7678e3f26',1,'easynav::GoalManagerClient']]],
-  ['navstate_4',['NavState',['../classeasynav_1_1NavState.html',1,'NavState'],['../classeasynav_1_1NavState.html#abd38e1587ce9ba1a3306460dbeb3c49f',1,'easynav::NavState::NavState()']]],
-  ['navstate_2ehpp_5',['NavState.hpp',['../NavState_8hpp.html',1,'']]],
-  ['navstate_5ftests_2ecpp_6',['navstate_tests.cpp',['../navstate__tests_8cpp.html',1,'']]],
-  ['navstatetest_7',['NavStateTest',['../classNavStateTest.html',1,'']]],
-  ['new_5fdata_8',['new_data',['../classeasynav_1_1PerceptionBase.html#a5a4ba60143c31271df0f72bf0e503876',1,'easynav::PerceptionBase']]],
-  ['node_5f_9',['node_',['../classPluginTestCase.html#a9f83d0a03ffbc5bfc6fb9b87bff09fba',1,'PluginTestCase']]],
-  ['node_5fptr_10',['node_ptr',['../structeasynav_1_1SystemNodeInfo.html#a676636486b490302c0c8692b459ad78e',1,'easynav::SystemNodeInfo']]],
-  ['norm_5fangle_11',['norm_angle',['../namespaceeasynav.html#aaf7b2449dfa550dee63301e3d721ab3a',1,'easynav']]]
+  ['main_0',['main',['../controller__node__tests_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627',1,'main(int argc, char **argv):&#160;controller_node_tests.cpp'],['../localizer__node__tests_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627',1,'main(int argc, char **argv):&#160;localizer_node_tests.cpp'],['../maps__manager__node__tests_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627',1,'main(int argc, char **argv):&#160;maps_manager_node_tests.cpp'],['../planner__node__tests_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627',1,'main(int argc, char **argv):&#160;planner_node_tests.cpp'],['../sensors__lifecycle__tests_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627',1,'main(int argc, char **argv):&#160;sensors_lifecycle_tests.cpp'],['../goalmanager__test__main_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627',1,'main(int argc, char **argv):&#160;goalmanager_test_main.cpp'],['../system__main_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627',1,'main(int argc, char **argv):&#160;system_main.cpp']]],
+  ['main_20repositories_1',['📦 Main Repositories',['../index.html#autotoc_md3',1,'']]],
+  ['maintainers_2',['👥 Project Maintainers',['../index.html#autotoc_md5',1,'']]],
+  ['make_5fserver_3',['make_server',['../classGoalManagerHeightTest.html#a3d26e1fe65f638c48ad248cf59050e36',1,'GoalManagerHeightTest']]],
+  ['map_5fframe_4',['map_frame',['../structeasynav_1_1TFInfo.html#a934dcd62e92c1a8333b6d1745aa77f1b',1,'easynav::TFInfo']]],
+  ['maps_5fmanager_5fnode_5ftests_2ecpp_5',['maps_manager_node_tests.cpp',['../maps__manager__node__tests_8cpp.html',1,'']]],
+  ['mapsmanagernode_6',['MapsManagerNode',['../classeasynav_1_1MapsManagerNode.html',1,'MapsManagerNode'],['../classeasynav_1_1MapsManagerNode.html#a03a1cd33d6a3eaa802fa457a172cc646',1,'easynav::MapsManagerNode::MapsManagerNode()']]],
+  ['mapsmanagernode_2ecpp_7',['MapsManagerNode.cpp',['../MapsManagerNode_8cpp.html',1,'']]],
+  ['mapsmanagernode_2ehpp_8',['MapsManagerNode.hpp',['../MapsManagerNode_8hpp.html',1,'']]],
+  ['mapsmanagernodetestcase_9',['MapsManagerNodeTestCase',['../classMapsManagerNodeTestCase.html',1,'']]],
+  ['mark_5finvalid_10',['mark_invalid',['../classeasynav_1_1ImagePerception.html#abfa2f4259419073935d50d6173ac27de',1,'easynav::ImagePerception']]],
+  ['mutex_5f_11',['mutex_',['../classeasynav_1_1DetectionsPerception.html#a281b5ec791338d4378e22ef44a51b4a1',1,'easynav::DetectionsPerception::mutex_'],['../classeasynav_1_1GNSSPerception.html#a281b5ec791338d4378e22ef44a51b4a1',1,'easynav::GNSSPerception::mutex_'],['../classeasynav_1_1ImagePerception.html#a281b5ec791338d4378e22ef44a51b4a1',1,'easynav::ImagePerception::mutex_'],['../classeasynav_1_1IMUPerception.html#a281b5ec791338d4378e22ef44a51b4a1',1,'easynav::IMUPerception::mutex_'],['../classeasynav_1_1PointPerception.html#a281b5ec791338d4378e22ef44a51b4a1',1,'easynav::PointPerception::mutex_']]]
 ];

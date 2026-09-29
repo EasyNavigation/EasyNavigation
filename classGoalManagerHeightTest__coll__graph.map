@@ -1,0 +1,15 @@
+<map id="GoalManagerHeightTest" name="GoalManagerHeightTest">
+<area shape="rect" id="Node000001" title=" " alt="" coords="236,214,398,239"/>
+<area shape="rect" id="Node000002" href="$classGoalManagerTestCase.html" title=" " alt="" coords="5,110,160,135"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="125,139,290,211,288,216,123,144"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="24,5,72,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="59,45,81,108,76,110,54,47"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="96,5,141,31"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="112,46,89,110,84,108,107,45"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="184,102,325,143"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="266,157,281,188,303,211,299,215,276,191,261,159"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="350,110,429,135"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="378,150,353,191,332,215,328,212,348,188,374,147"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="463,110,542,135"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="495,150,483,172,464,192,433,209,400,219,398,214,431,204,461,188,478,169,491,148"/>
+</map>
