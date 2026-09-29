@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['error_0',['ERROR',['../classeasynav_1_1GoalManagerClient.html#a5d74787dedbc4e11c1ab15bf487e61f8abb1ca97ec761fc37101737ba0aa2e7c5',1,'easynav::GoalManagerClient']]]
+  ['controller_0',['CONTROLLER',['../classeasynav_1_1VelocityMux.html#ac5102e0b11ce43d0b9ef595c3c3ab0c3a42e074e8564dad9034ef033c6a6cf8b6',1,'easynav::VelocityMux']]]
 ];

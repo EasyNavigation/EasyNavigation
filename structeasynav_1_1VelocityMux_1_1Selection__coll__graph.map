@@ -1,0 +1,9 @@
+<map id="VelocityMux::Selection" name="VelocityMux::Selection">
+<area shape="rect" id="Node000001" title="This cycle&#39;s selection." alt="" coords="90,122,242,148"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,111,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="80,41,130,96,154,120,150,124,126,100,76,45"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="135,5,197,31"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="169,47,169,122,163,122,163,47"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="221,5,266,31"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="240,47,231,73,216,100,189,124,186,120,212,97,226,71,235,45"/>
+</map>

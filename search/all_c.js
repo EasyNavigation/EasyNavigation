@@ -12,5 +12,6 @@ var searchData=
   ['new_5fdata_9',['new_data',['../classeasynav_1_1PerceptionBase.html#a5a4ba60143c31271df0f72bf0e503876',1,'easynav::PerceptionBase']]],
   ['node_5f_10',['node_',['../classControllerNodeVelocityTest.html#adf9ba1d80c87883454de3fa3c6261e27',1,'ControllerNodeVelocityTest::node_'],['../classPluginTestCase.html#a9f83d0a03ffbc5bfc6fb9b87bff09fba',1,'PluginTestCase::node_']]],
   ['node_5fptr_11',['node_ptr',['../structeasynav_1_1SystemNodeInfo.html#a676636486b490302c0c8692b459ad78e',1,'easynav::SystemNodeInfo']]],
-  ['norm_5fangle_12',['norm_angle',['../namespaceeasynav.html#aaf7b2449dfa550dee63301e3d721ab3a',1,'easynav']]]
+  ['none_12',['NONE',['../classeasynav_1_1VelocityMux.html#ac5102e0b11ce43d0b9ef595c3c3ab0c3ab50339a10e1de285ac99d4c3990b8693',1,'easynav::VelocityMux']]],
+  ['norm_5fangle_13',['norm_angle',['../namespaceeasynav.html#aaf7b2449dfa550dee63301e3d721ab3a',1,'easynav']]]
 ];

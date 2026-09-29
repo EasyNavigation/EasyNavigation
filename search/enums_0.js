@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['state_0',['State',['../classeasynav_1_1GoalManager.html#a5d74787dedbc4e11c1ab15bf487e61f8',1,'easynav::GoalManager::State'],['../classeasynav_1_1GoalManagerClient.html#a5d74787dedbc4e11c1ab15bf487e61f8',1,'easynav::GoalManagerClient::State']]]
+  ['choice_0',['Choice',['../classeasynav_1_1VelocityMux.html#ac5102e0b11ce43d0b9ef595c3c3ab0c3',1,'easynav::VelocityMux::Choice'],['../classVelocityMux.html#ac5102e0b11ce43d0b9ef595c3c3ab0c3',1,'VelocityMux::Choice']]]
 ];

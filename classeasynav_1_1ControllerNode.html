@@ -169,8 +169,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a9b0782b915f4798a61ae8b9e56ebd5fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles errors in the <a class="el" href="classeasynav_1_1ControllerNode.html" title="ROS 2 lifecycle node that manages calculating speeds for the Easy Navigation system.">ControllerNode</a> node.  <br /></td></tr>
 <tr class="memitem:a38b74771f6ab23805f990786e4d6f806" id="r_a38b74771f6ab23805f990786e4d6f806"><td class="memItemLeft"><a class="el" href="#ad09d90f1fe35c9e2f2fd7fc1902312f4">CallbackReturnT</a>&#160;</td><td class="memItemRight"><a class="el" href="#a38b74771f6ab23805f990786e4d6f806">on_shutdown</a> (const rclcpp_lifecycle::State &amp;state)</td></tr>
 <tr class="memdesc:a38b74771f6ab23805f990786e4d6f806"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shuts down the <a class="el" href="classeasynav_1_1ControllerNode.html" title="ROS 2 lifecycle node that manages calculating speeds for the Easy Navigation system.">ControllerNode</a> node.  <br /></td></tr>
-<tr class="memitem:ae64f7d19d2c3c77f5b0a61a3a47222c7" id="r_ae64f7d19d2c3c77f5b0a61a3a47222c7"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ae64f7d19d2c3c77f5b0a61a3a47222c7">publish_cmd_vel_rt</a> (std::shared_ptr&lt; <a class="el" href="classeasynav_1_1NavState.html">NavState</a> &gt; nav_state, bool fresh)</td></tr>
-<tr class="memdesc:ae64f7d19d2c3c77f5b0a61a3a47222c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Smooths and publishes this RT cycle's command: the controller's "cmd_vel", or zero while navigation is paused.  <br /></td></tr>
+<tr class="memitem:a7d1c4c40dae2bdcf07ce464cd58bba03" id="r_a7d1c4c40dae2bdcf07ce464cd58bba03"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a7d1c4c40dae2bdcf07ce464cd58bba03">publish_cmd_vel_rt</a> (std::shared_ptr&lt; <a class="el" href="classeasynav_1_1NavState.html">NavState</a> &gt; nav_state)</td></tr>
+<tr class="memdesc:a7d1c4c40dae2bdcf07ce464cd58bba03"><td class="mdescLeft">&#160;</td><td class="mdescRight">Selects, smooths and publishes this RT cycle's velocity command.  <br /></td></tr>
 <tr class="memitem:ac1467f70ce53b06450896af587298141" id="r_ac1467f70ce53b06450896af587298141"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ac1467f70ce53b06450896af587298141">set_robot_limits</a> (const RobotLimits &amp;limits) override</td></tr>
 <tr class="memdesc:ac1467f70ce53b06450896af587298141"><td class="mdescLeft">&#160;</td><td class="mdescRight">Replaces the limits enforced until the next configure.  <br /></td></tr>
 <tr class="memitem:ad51c340f85daa6f2ef4bd8b7bee2c47c" id="r_ad51c340f85daa6f2ef4bd8b7bee2c47c"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#ad51c340f85daa6f2ef4bd8b7bee2c47c">~ControllerNode</a> ()</td></tr>
@@ -181,7 +181,7 @@ Public Member Functions</h2></td></tr>
 <p>This node provides the interface between the controller module in EasyNav and the ROS 2 ecosystem. It handles lifecycle transitions, real-time scheduling of periodic tasks, and parameter setup.</p>
 <p>It is also the single point where the velocity command leaves EasyNav:</p><ul>
 <li>it owns the robot limits ("robot_limits.*"), which controller plugins query through ControllerMethodBase::get_robot_limits();</li>
-<li>every RT cycle, <a class="el" href="#ae64f7d19d2c3c77f5b0a61a3a47222c7" title="Smooths and publishes this RT cycle&#39;s command: the controller&#39;s &quot;cmd_vel&quot;, or zero while navigation i...">publish_cmd_vel_rt()</a> smooths the command within those limits and publishes it on "cmd_vel" (or "cmd_vel_stamped", see "use_cmd_vel_stamped");</li>
+<li>every RT cycle, <a class="el" href="#a7d1c4c40dae2bdcf07ce464cd58bba03" title="Selects, smooths and publishes this RT cycle&#39;s velocity command.">publish_cmd_vel_rt()</a> selects the command (<a class="el" href="classeasynav_1_1VelocityMux.html" title="Decides, every RT cycle, which velocity command is sent to the robot.">VelocityMux</a>: override &gt; takeover &gt; pause &gt; controller), smooths it within those limits (except an override) and publishes it on "cmd_vel" (or "cmd_vel_stamped", see "use_cmd_vel_stamped");</li>
 <li>on deactivation or shutdown, it brakes within the deceleration limits and ends by publishing an exact zero. </li>
 </ul>
 </div><a name="doc-typedef-members" id="doc-typedef-members"></a><h2 id="header-doc-typedef-members" class="groupheader">Member Typedef Documentation</h2>
@@ -540,8 +540,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ae64f7d19d2c3c77f5b0a61a3a47222c7" name="ae64f7d19d2c3c77f5b0a61a3a47222c7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae64f7d19d2c3c77f5b0a61a3a47222c7">&#9670;&#160;</a></span>publish_cmd_vel_rt()</h2>
+<a id="a7d1c4c40dae2bdcf07ce464cd58bba03" name="a7d1c4c40dae2bdcf07ce464cd58bba03"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7d1c4c40dae2bdcf07ce464cd58bba03">&#9670;&#160;</a></span>publish_cmd_vel_rt()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -549,21 +549,16 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void publish_cmd_vel_rt </td>
           <td>(</td>
-          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classeasynav_1_1NavState.html">NavState</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>nav_state</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classeasynav_1_1NavState.html">NavState</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>nav_state</em></span></td><td>)</td>
           <td></td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>fresh</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Smooths and publishes this RT cycle's command: the controller's "cmd_vel", or zero while navigation is paused. </p>
-<dl class="params"><dt>Parameters</dt><dd>
+<p>Selects, smooths and publishes this RT cycle's velocity command. </p>
+<p><a class="el" href="classeasynav_1_1VelocityMux.html" title="Decides, every RT cycle, which velocity command is sent to the robot.">VelocityMux</a> picks, by priority, among the commands proposed this cycle (see velocity_command): an override (published as is), a takeover, zero while paused, or the controller's. Publishes when a new command was proposed, or while the smoother is still ramping towards the last one. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">nav_state</td><td>Shared navigation state. </td></tr>
-    <tr><td class="paramname">fresh</td><td>Whether the controller produced a command this cycle. Otherwise, it only publishes while the smoother is still ramping towards the last one. </td></tr>
   </table>
   </dd>
 </dl>
