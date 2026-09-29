@@ -220,8 +220,8 @@ private:
   /// @brief Latest GoalManagerInfo, updated every active cycle (published throttled).
   easynav_interfaces::msg::GoalManagerInfo info_;
 
-  /// @brief An ACTIVE info was published, so the end of the mission must be too.
-  bool info_active_published_ {false};
+  /// @brief A mission was accepted and its end (IDLE info) not yet published.
+  bool info_final_pending_ {false};
 
   /// @brief Publishes the final (IDLE) info once the mission ends, unthrottled.
   void publish_final_info();

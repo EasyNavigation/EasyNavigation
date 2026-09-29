@@ -86,6 +86,7 @@ ControllerMethodBase::internal_update_rt(NavState & nav_state, bool trigger)
     // Save last execution time, even if triggered
     setRunRT();
 
+    bool failed = false;
     try {
       update_rt(nav_state);
     } catch (const std::exception & e) {
@@ -93,10 +94,21 @@ ControllerMethodBase::internal_update_rt(NavState & nav_state, bool trigger)
       RCLCPP_ERROR_THROTTLE(
         get_node()->get_logger(), *get_node()->get_clock(), 1000,
         "Exception in update_rt() of controller [%s]: %s", get_plugin_name().c_str(), e.what());
+      failed = true;
     } catch (...) {
       RCLCPP_ERROR_THROTTLE(
         get_node()->get_logger(), *get_node()->get_clock(), 1000,
         "Unknown exception in update_rt() of controller [%s]", get_plugin_name().c_str());
+      failed = true;
+    }
+
+    if (failed) {
+      // No valid command: stop the robot rather than resend the last one.
+      geometry_msgs::msg::TwistStamped zero_speed;
+      zero_speed.header.stamp = get_node()->now();
+      zero_speed.header.frame_id = RTTFBuffer::getInstance()->get_tf_info().robot_frame;
+      nav_state.set("cmd_vel", zero_speed);
+      return true;
     }
 
     if (collision_checker_active_ && is_inminent_collision(nav_state)) {

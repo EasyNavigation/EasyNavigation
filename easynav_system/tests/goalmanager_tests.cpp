@@ -1947,6 +1947,53 @@ TEST_F(GoalManagerInfoTest, ConsecutiveMissionsEachEndIdle)
   }
 }
 
+TEST_F(GoalManagerInfoTest, MissionFinishedOnItsFirstCycleEndsIdle)
+{
+  // Goal where the robot already is: finished before any ACTIVE info.
+  gm_client_->send_goal(goal_at(0.0, 0.0));
+  spin_for(400ms);
+
+  ASSERT_EQ(gm_server_->get_state(), easynav::GoalManager::State::IDLE);
+  ASSERT_FALSE(infos_.empty());
+  EXPECT_EQ(infos_.back().status, kIdle);
+  EXPECT_EQ(count(kIdle), 1);
+  EXPECT_NEAR(infos_.back().position_distance, 0.0, 1e-6);
+}
+
+TEST_F(GoalManagerInfoTest, MissionCancelledBeforeAnyCycleEndsIdle)
+{
+  // Accept and cancel without running update() in between.
+  auto spin_until = [this](easynav::GoalManager::State state) {
+      const auto start = client_node_->now();
+      while (client_node_->now() - start < 1s && gm_server_->get_state() != state) {
+        exe_->spin_some();
+        rclcpp::sleep_for(10ms);
+      }
+      return gm_server_->get_state() == state;
+    };
+  gm_client_->send_goal(goal_at(100.0, 0.0));
+  ASSERT_TRUE(spin_until(easynav::GoalManager::State::ACTIVE));
+  // The client can only cancel once it got the acceptance.
+  const auto start = client_node_->now();
+  while (client_node_->now() - start < 1s &&
+    gm_client_->get_state() != easynav::GoalManagerClient::State::ACCEPTED_AND_NAVIGATING)
+  {
+    exe_->spin_some();
+    rclcpp::sleep_for(10ms);
+  }
+  ASSERT_EQ(
+    gm_client_->get_state(), easynav::GoalManagerClient::State::ACCEPTED_AND_NAVIGATING);
+  gm_client_->cancel();
+  ASSERT_TRUE(spin_until(easynav::GoalManager::State::IDLE));
+  ASSERT_TRUE(infos_.empty());
+
+  spin_for(200ms);
+  ASSERT_FALSE(infos_.empty());
+  EXPECT_EQ(infos_.back().status, kIdle);
+  EXPECT_EQ(count(kActive), 0);
+  EXPECT_EQ(count(kIdle), 1);
+}
+
 // Height tolerance: readable default that ignores height, and a configured one that does not.
 class GoalManagerHeightTest : public GoalManagerTestCase
 {

@@ -28,6 +28,7 @@
 #include <unordered_set>
 #include <memory>
 #include <mutex>
+#include <optional>
 #include <stdexcept>
 #include <sstream>
 #include <type_traits>
@@ -441,26 +442,38 @@ public:
   /// \return Multi-line string with one entry per key.
   std::string debug_string() const
   {
-    // Sorted keys: stable, readable output.
-    std::vector<std::string> keys;
-    keys.reserve(values_.size());
-    for (const auto & kv : values_) {
-      keys.push_back(kv.first);
+    // Snapshot under the lock, format outside it (printers may be slow).
+    struct Entry
+    {
+      std::string key;
+      std::shared_ptr<void> ptr;
+      std::optional<size_t> type;
+    };
+    std::vector<Entry> entries;
+    {
+      std::lock_guard<std::mutex> lock(state_mutex_);
+      entries.reserve(values_.size());
+      for (const auto & [key, ptr] : values_) {
+        const auto type_it = types_.find(key);
+        entries.push_back(
+          {key, ptr, type_it != types_.end() ? std::optional(type_it->second) : std::nullopt});
+      }
     }
-    std::sort(keys.begin(), keys.end());
+    // Sorted keys: stable, readable output.
+    std::sort(
+      entries.begin(), entries.end(),
+      [](const Entry & a, const Entry & b) {return a.key < b.key;});
 
     std::stringstream ss;
-    for (const auto & key : keys) {
+    for (const auto & [key, ptr, type] : entries) {
       ss << key << " = ";
-      auto ptr = values_.at(key);
       if (ptr) {
-        auto type_it = types_.find(key);
-        if (type_it != types_.end()) {
+        if (type) {
           AnyPrinter printer;
           {
             auto & registry = printer_registry();
             std::lock_guard<std::mutex> lock(registry.mutex);
-            const auto printer_it = registry.printers.find(type_it->second);
+            const auto printer_it = registry.printers.find(*type);
             if (printer_it != registry.printers.end()) {
               printer = printer_it->second;
             }
@@ -468,7 +481,7 @@ public:
           if (printer) {
             ss << "[" << ptr.get() << "] : " << printer(ptr);
           } else {
-            ss << "[" << ptr.get() << "] : " << type_it->second << "]";
+            ss << "[" << ptr.get() << "] : " << *type << "]";
           }
         } else {
           ss << "[" << ptr.get() << "] : unknown]";

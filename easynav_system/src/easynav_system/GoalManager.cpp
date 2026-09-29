@@ -173,6 +173,9 @@ GoalManager::accept_request(
   paused_ = false;
 
   current_client_id_ = msg.user_id;
+  // A new mission: its end will be published, however it ends.
+  info_ = easynav_interfaces::msg::GoalManagerInfo();
+  info_final_pending_ = true;
   response.status_message = "Goal accepted";
   response.type = easynav_interfaces::msg::NavigationControl::ACCEPT;
   response.nav_current_user_id = current_client_id_;
@@ -503,15 +506,14 @@ GoalManager::update(NavState & nav_state)
     info_.status = easynav_interfaces::msg::GoalManagerInfo::ACTIVE;
     info_.goals = goals_;
     info_pub_->publish(info_);
-    info_active_published_ = true;
   }
 }
 
 void
 GoalManager::publish_final_info()
 {
-  if (!info_active_published_) {return;}
-  info_active_published_ = false;
+  if (!info_final_pending_) {return;}
+  info_final_pending_ = false;
 
   info_.status = easynav_interfaces::msg::GoalManagerInfo::IDLE;
   info_.goals = goals_;

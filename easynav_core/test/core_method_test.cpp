@@ -18,6 +18,7 @@
 
 #include "gtest/gtest.h"
 
+#include "geometry_msgs/msg/twist_stamped.hpp"
 #include "nav_msgs/msg/odometry.hpp"
 
 #include "easynav_common/types/NavState.hpp"
@@ -289,6 +290,21 @@ public:
 };
 
 // Throws on odd calls, counts successful ones in NavState.
+// Writes a command, then throws on odd calls.
+class FlakyController : public easynav::ControllerMethodBase
+{
+public:
+  int calls {0};
+  void on_initialize() override {}
+  void update_rt(easynav::NavState & nav_state) override
+  {
+    geometry_msgs::msg::TwistStamped cmd;
+    cmd.twist.linear.x = 0.4;
+    nav_state.set("cmd_vel", cmd);
+    if (++calls % 2 == 1) {throw std::runtime_error("flaky");}
+  }
+};
+
 class FlakyPlanner : public easynav::PlannerMethodBase
 {
 public:
@@ -761,6 +777,72 @@ TEST_F(CoreMethodTestCase, NonStdExceptionsDoNotPropagate)
   EXPECT_EQ(planner.calls, 2);
   EXPECT_EQ(maps.calls, 1);
   EXPECT_EQ(ctrl.calls, 1);
+}
+
+namespace
+{
+geometry_msgs::msg::TwistStamped moving_cmd()
+{
+  geometry_msgs::msg::TwistStamped cmd;
+  cmd.twist.linear.x = 0.5;
+  cmd.twist.angular.z = 0.3;
+  return cmd;
+}
+
+bool is_stop(const easynav::NavState & nav_state)
+{
+  const auto & t = nav_state.get<geometry_msgs::msg::TwistStamped>("cmd_vel").twist;
+  return t.linear.x == 0.0 && t.linear.y == 0.0 && t.angular.z == 0.0;
+}
+}  // namespace
+
+TEST_F(CoreMethodTestCase, ControllerExceptionStopsTheRobot)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_ctrl_stop_node");
+  ThrowingController ctrl;
+  ctrl.initialize(node, "ctrl_stop");
+
+  easynav::NavState nav_state;
+  nav_state.set("cmd_vel", moving_cmd());  // Last command, from a previous cycle.
+  EXPECT_TRUE(ctrl.internal_update_rt(nav_state, true)) << "the stop must be published";
+  EXPECT_TRUE(is_stop(nav_state));
+}
+
+TEST_F(CoreMethodTestCase, ControllerNonStdExceptionStopsTheRobot)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_ctrl_stop_non_std_node");
+  NonStdThrowingController ctrl;
+  ctrl.initialize(node, "ctrl_stop_non_std");
+
+  easynav::NavState nav_state;
+  nav_state.set("cmd_vel", moving_cmd());
+  EXPECT_TRUE(ctrl.internal_update_rt(nav_state, true));
+  EXPECT_TRUE(is_stop(nav_state));
+}
+
+TEST_F(CoreMethodTestCase, ControllerCommandWrittenBeforeThrowingIsDiscarded)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_ctrl_partial_node");
+  FlakyController ctrl;  // First call writes 0.4 and throws.
+  ctrl.initialize(node, "ctrl_partial");
+
+  easynav::NavState nav_state;
+  EXPECT_TRUE(ctrl.internal_update_rt(nav_state, true));
+  EXPECT_TRUE(is_stop(nav_state));
+}
+
+TEST_F(CoreMethodTestCase, ControllerRecoversAfterAFailedCycle)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_ctrl_recover_node");
+  FlakyController ctrl;  // Fails on odd calls.
+  ctrl.initialize(node, "ctrl_recover");
+
+  easynav::NavState nav_state;
+  for (int i = 1; i <= 4; ++i) {
+    EXPECT_TRUE(ctrl.internal_update_rt(nav_state, true));
+    const double x = nav_state.get<geometry_msgs::msg::TwistStamped>("cmd_vel").twist.linear.x;
+    EXPECT_DOUBLE_EQ(x, i % 2 == 1 ? 0.0 : 0.4) << "cycle " << i;
+  }
 }
 
 int main(int argc, char ** argv)

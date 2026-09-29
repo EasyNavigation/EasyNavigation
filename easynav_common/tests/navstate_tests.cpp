@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <algorithm>
+#include <chrono>
 #include <thread>
 #include <atomic>
 #include <sstream>
@@ -261,6 +263,35 @@ TEST_F(NavStateTest, DebugStringKeepsEachValueWithItsKey)
     if (line.rfind("zeta = ", 0) == 0) {EXPECT_NE(line.find(": 30"), std::string::npos); ++found;}
   }
   EXPECT_EQ(found, 3);
+}
+
+TEST_F(NavStateTest, DebugStringIsSafeWhileOtherThreadsWrite)
+{
+  // The RT and non-RT loops write while the TUI/topic dumps the state.
+  easynav::NavState state;
+  std::atomic<bool> stop {false};
+
+  std::thread writer([&]() {
+      for (int i = 0; !stop.load(); ++i) {
+        state.set("key_" + std::to_string(i % 50), i);  // new keys and overwrites
+        state.set("counter", i);
+      }
+    });
+
+  int dumps = 0;
+  const auto end = std::chrono::steady_clock::now() + std::chrono::milliseconds(300);
+  while (std::chrono::steady_clock::now() < end) {
+    std::string s;
+    ASSERT_NO_THROW(s = state.debug_string());
+    ++dumps;
+  }
+  stop = true;
+  writer.join();
+
+  EXPECT_GT(dumps, 0);
+  const auto keys = debug_keys(state);
+  EXPECT_EQ(keys.size(), 51u);
+  EXPECT_TRUE(std::is_sorted(keys.begin(), keys.end()));
 }
 
 TEST_F(NavStateTest, SetGroupIsVisibleInDebugString)
