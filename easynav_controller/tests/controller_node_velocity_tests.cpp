@@ -14,12 +14,15 @@
 
 /// \file
 /// \brief ControllerNode as the single exit of the velocity command: robot limits for the
-/// controller plugins, smoothing, publication, and braking on deactivation.
+/// controller plugins, selection among sources (mux), smoothing, publication, and braking on
+/// deactivation.
 
 #include <chrono>
 #include <cmath>
 #include <memory>
 #include <optional>
+#include <sstream>
+#include <string>
 #include <vector>
 
 #include "gtest/gtest.h"
@@ -33,6 +36,7 @@
 
 #include "easynav_controller/ControllerNode.hpp"
 #include "easynav_core/ControllerMethodBase.hpp"
+#include "easynav_core/VelocityCommand.hpp"
 
 using namespace std::chrono_literals;
 using lifecycle_msgs::msg::State;
@@ -105,13 +109,24 @@ protected:
     ASSERT_GT(sub_->get_publisher_count(), 0u);
   }
 
-  // One RT cycle: optionally a new controller command, then the velocity output.
-  void cycle(std::optional<double> controller)
+  // One RT cycle: the commands proposed by each source, then the velocity output.
+  void cycle(
+    std::optional<double> controller, std::optional<double> takeover = std::nullopt,
+    std::optional<double> override_vel = std::nullopt)
   {
     if (controller) {
-      nav_state_->set("cmd_vel", cmd(*controller));
+      easynav::velocity_command::propose(
+        *nav_state_, easynav::VelocitySource::CONTROLLER, cmd(*controller));
     }
-    node_->publish_cmd_vel_rt(nav_state_, controller.has_value());
+    if (takeover) {
+      easynav::velocity_command::propose(
+        *nav_state_, easynav::VelocitySource::TAKEOVER, cmd(*takeover));
+    }
+    if (override_vel) {
+      easynav::velocity_command::propose(
+        *nav_state_, easynav::VelocitySource::OVERRIDE, cmd(*override_vel));
+    }
+    node_->publish_cmd_vel_rt(nav_state_);
     rclcpp::sleep_for(10ms);
     exe_->spin_some();
   }
@@ -429,4 +444,129 @@ TEST_F(ControllerNodeVelocityTest, DeprecatedLimitsOutsideAControllerNode)
   LimitsReadingController controller;
   controller.initialize(plain, "ctrl");
   EXPECT_DOUBLE_EQ(controller.get_robot_limits(kLegacy).max_linear_vel, 0.8);
+}
+
+// Selection among sources (VelocityMux), end to end through ControllerNode.
+
+TEST_F(ControllerNodeVelocityTest, OverrideBypassesTheSmoother)
+{
+  make_active_node();
+  for (int i = 0; i < 100; ++i) {
+    cycle(1.0);
+  }
+  spin_for(100ms);
+  ASSERT_DOUBLE_EQ(received_.back(), 1.0);
+
+  // Emergency: from 1.0 m/s to 0 in a single cycle, beyond the deceleration limit.
+  received_.clear();
+  stamps_.clear();
+  cycle(1.0, std::nullopt, 0.0);
+  spin_for(100ms);
+  ASSERT_EQ(received_.size(), 1u);
+  EXPECT_DOUBLE_EQ(received_.back(), 0.0);
+}
+
+TEST_F(ControllerNodeVelocityTest, AfterAnOverrideTheRampStartsFromIt)
+{
+  make_active_node();
+  for (int i = 0; i < 100; ++i) {
+    cycle(1.0);
+  }
+  cycle(1.0, std::nullopt, 0.0);  // Emergency stop.
+  spin_for(100ms);
+  ASSERT_DOUBLE_EQ(received_.back(), 0.0);
+
+  // The controller asks for 1.0 again: from 0, not from where it was before the override.
+  received_.clear();
+  stamps_.clear();
+  for (int i = 0; i < 100; ++i) {
+    cycle(1.0);
+  }
+  spin_for(100ms);
+  ASSERT_GT(received_.size(), 3u);
+  EXPECT_LT(received_.front(), 0.5);
+  EXPECT_DOUBLE_EQ(received_.back(), 1.0);
+  expect_within_acceleration_limits();
+}
+
+TEST_F(ControllerNodeVelocityTest, TakeoverIsPreferredAndSmoothedThenControlReturns)
+{
+  make_active_node();
+  for (int i = 0; i < 100; ++i) {
+    cycle(1.0);
+  }
+  spin_for(100ms);
+  ASSERT_DOUBLE_EQ(received_.back(), 1.0);
+
+  // A takeover (e.g. a recovery backing up) wins over the controller, within the limits.
+  received_.clear();
+  stamps_.clear();
+  for (int i = 0; i < 100; ++i) {
+    cycle(1.0, -0.2);
+  }
+  spin_for(100ms);
+  ASSERT_GT(received_.size(), 3u);
+  EXPECT_GT(received_.front(), 0.0) << "smoothed: no jump to the takeover's command";
+  EXPECT_DOUBLE_EQ(received_.back(), -0.2);
+  expect_within_acceleration_limits();
+
+  // The takeover ends: the controller's command applies again, also in a ramp.
+  received_.clear();
+  stamps_.clear();
+  for (int i = 0; i < 100; ++i) {
+    cycle(1.0);
+  }
+  spin_for(100ms);
+  ASSERT_GT(received_.size(), 3u);
+  EXPECT_LE(received_.front(), 0.0) << "no sign jump: through zero first";
+  EXPECT_DOUBLE_EQ(received_.back(), 1.0);
+  expect_within_acceleration_limits();
+}
+
+TEST_F(ControllerNodeVelocityTest, TakeoverWinsOverPauseAndOverrideOverEverything)
+{
+  make_active_node();
+  nav_state_->set("navigation_paused", true);
+
+  // Paused, but something takes over the motion: it moves.
+  for (int i = 0; i < 100; ++i) {
+    cycle(1.0, 0.3);
+  }
+  spin_for(100ms);
+  ASSERT_FALSE(received_.empty());
+  EXPECT_DOUBLE_EQ(received_.back(), 0.3);
+
+  // An override beats the takeover, the pause and the controller.
+  cycle(1.0, 0.3, 0.05);
+  spin_for(100ms);
+  EXPECT_DOUBLE_EQ(received_.back(), 0.05);
+
+  // Nothing but the controller while paused: back to zero, in a ramp.
+  for (int i = 0; i < 60; ++i) {
+    cycle(1.0);
+  }
+  spin_for(100ms);
+  EXPECT_DOUBLE_EQ(received_.back(), 0.0);
+}
+
+TEST_F(ControllerNodeVelocityTest, ProposalsArePrintedInTheNavStateDump)
+{
+  make_active_node();  // Registers the printers.
+  easynav::velocity_command::propose(
+    *nav_state_, easynav::VelocitySource::CONTROLLER, cmd(0.5));
+
+  auto line = [this](const std::string & key) {
+      std::istringstream lines(nav_state_->debug_string());
+      std::string l;
+      while (std::getline(lines, l)) {
+        if (l.rfind(key + " = ", 0) == 0) {return l;}
+      }
+      return std::string();
+    };
+  EXPECT_NE(line("cmd_vel.proposal.controller").find("pending Twist with (0.5, 0, 0)"),
+    std::string::npos) << line("cmd_vel.proposal.controller");
+
+  node_->publish_cmd_vel_rt(nav_state_);  // The mux takes it.
+  EXPECT_NE(line("cmd_vel.proposal.controller").find("taken Twist with (0.5, 0, 0)"),
+    std::string::npos) << line("cmd_vel.proposal.controller");
 }

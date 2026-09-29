@@ -30,6 +30,7 @@
 #include "easynav_common/Parameters.hpp"
 #include "easynav_common/RTTFBuffer.hpp"
 #include "easynav_controller/ControllerNode.hpp"
+#include "easynav_core/VelocityCommand.hpp"
 
 namespace easynav
 {
@@ -81,6 +82,22 @@ ControllerNode::ControllerNode(
       return ret.str();
     });
 
+  // "cmd_vel.proposal.<source>" slots.
+  NavState::register_printer<VelocityProposal>(
+    [](const VelocityProposal & proposal) {
+      const auto & twist = proposal.cmd;
+      std::ostringstream ret;
+
+      ret << "{ " << rclcpp::Time(twist.header.stamp).seconds() << "} " <<
+        (proposal.pending ? "pending" : "taken") << " Twist with (" <<
+        twist.twist.linear.x << ", " <<
+        twist.twist.linear.y << ", " <<
+        twist.twist.linear.z << ") (" << twist.twist.angular.x << ", " <<
+        twist.twist.angular.y << ", " << twist.twist.angular.z << ")";
+
+      return ret.str();
+    });
+
   // Declared before any plugin is loaded, so plugins can query them while initializing.
   const RobotLimits defaults;
   for (const auto & [field, member] : limit_fields()) {
@@ -121,7 +138,7 @@ ControllerNode::on_configure([[maybe_unused]] const rclcpp_lifecycle::State & st
 
   // The robot was left stopped (see stop_robot()).
   smoother_.reset();
-  last_target_ = geometry_msgs::msg::TwistStamped();
+  mux_.reset();
   last_smoother_step_.reset();
 
   return controller_.configure() ? CallbackReturnT::SUCCESS : CallbackReturnT::FAILURE;
@@ -182,7 +199,15 @@ ControllerNode::cycle_rt(std::shared_ptr<NavState> nav_state, bool trigger)
   auto controller_method = controller_.get();
   if (controller_method == nullptr) {return false;}
 
-  return controller_method->internal_update_rt(*nav_state, trigger);
+  const bool ran = controller_method->internal_update_rt(*nav_state, trigger);
+
+  // Controller plugins write their command to "cmd_vel": propose it for this cycle.
+  if (ran && nav_state->has("cmd_vel")) {
+    velocity_command::propose(
+      *nav_state, VelocitySource::CONTROLLER,
+      nav_state->get<geometry_msgs::msg::TwistStamped>("cmd_vel"));
+  }
+  return ran;
 }
 
 std::string
@@ -193,28 +218,27 @@ ControllerNode::get_loaded_controller() const
 }
 
 void
-ControllerNode::publish_cmd_vel_rt(std::shared_ptr<NavState> nav_state, bool fresh)
+ControllerNode::publish_cmd_vel_rt(std::shared_ptr<NavState> nav_state)
 {
-  if (fresh && nav_state->has("cmd_vel")) {
-    last_target_ = nav_state->get<geometry_msgs::msg::TwistStamped>("cmd_vel");
-  }
-  auto target = last_target_;
-  if (nav_state->has("navigation_paused") && nav_state->get_safe<bool>("navigation_paused")) {
-    target.twist = geometry_msgs::msg::Twist();  // Brakes within the limits too.
-  }
+  const auto selection = mux_.select(*nav_state);
 
   const auto now = this->now();
   const double dt = last_smoother_step_ ?
     std::clamp((now - *last_smoother_step_).seconds(), 0.0, kMaxSmootherStep) : 0.0;
   last_smoother_step_ = now;
 
-  const bool ramping = !smoother_.reached(target.twist);
-  if (!fresh && !ramping) {
-    return;  // Nothing new, and the robot is already at the last target.
+  auto cmd = selection.cmd;
+  if (selection.smooth) {
+    const bool ramping = !smoother_.reached(selection.cmd.twist);
+    if (!selection.fresh && !ramping) {
+      return;  // Nothing new, and the robot is already at the last target.
+    }
+    cmd.twist = smoother_.step(selection.cmd.twist, dt);
+  } else {
+    // An emergency override: published as is; the smoother continues from it.
+    smoother_.reset(cmd.twist);
   }
 
-  auto cmd = target;
-  cmd.twist = smoother_.step(target.twist, dt);
   cmd.header.stamp = now;
   publish(cmd);
 }
@@ -305,7 +329,7 @@ ControllerNode::stop_robot()
   cmd.twist = geometry_msgs::msg::Twist();
   publish(cmd);
   smoother_.reset();
-  last_target_ = geometry_msgs::msg::TwistStamped();
+  mux_.reset();
 }
 
 }  // namespace easynav
