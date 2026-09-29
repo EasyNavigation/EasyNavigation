@@ -20,6 +20,7 @@
 #include "tf2/utils.hpp"
 #include "nav_msgs/msg/odometry.hpp"
 
+#include "easynav_common/Parameters.hpp"
 #include "easynav_system/GoalManager.hpp"
 
 
@@ -83,39 +84,13 @@ GoalManager::GoalManager(
 
   // Use the constructor parameter directly here, not parent_node_: it's a live
   // shared_ptr for the duration of this constructor, no need to lock() it.
-  if (!parent_node->has_parameter("allow_preempt_goal")) {
-    parent_node->declare_parameter("allow_preempt_goal", allow_preempt_goal_);
-  }
-  if (!parent_node->has_parameter("position_tolerance")) {
-    parent_node->declare_parameter("position_tolerance", goal_tolerance_.position);
-  }
-  if (!parent_node->has_parameter("height_tolerance")) {
-    parent_node->declare_parameter("height_tolerance", goal_tolerance_.height);
-  }
-  if (!parent_node->has_parameter("angle_tolerance")) {
-    parent_node->declare_parameter("angle_tolerance", goal_tolerance_.yaw);
-  }
-  if (!parent_node->has_parameter("update_frequency")) {
-    parent_node->declare_parameter("update_frequency", update_frequency_);
-  }
-  parent_node->get_parameter("allow_preempt_goal", allow_preempt_goal_);
-  parent_node->get_parameter("position_tolerance", goal_tolerance_.position);
-  parent_node->get_parameter("height_tolerance", goal_tolerance_.height);
-  parent_node->get_parameter("angle_tolerance", goal_tolerance_.yaw);
-  parent_node->get_parameter("update_frequency", update_frequency_);
-  if (update_frequency_ <= 0.0) {
-    RCLCPP_WARN(
-      parent_node->get_logger(),
-      "Parameter 'update_frequency' must be > 0.0 (got %.3f); falling back to 20.0",
-      update_frequency_);
-    update_frequency_ = 20.0;
-  }
-
-  update_period_ = rclcpp::Duration::from_seconds(1.0 / update_frequency_);
-  // Expose initial goal tolerances in NavState so controllers can reuse them
-  nav_state.set("goal_tolerance.position", goal_tolerance_.position);
-  nav_state.set("goal_tolerance.height", goal_tolerance_.height);
-  nav_state.set("goal_tolerance.yaw", goal_tolerance_.yaw);
+  easynav::declare_parameter_if_absent(*parent_node, "allow_preempt_goal", allow_preempt_goal_);
+  easynav::declare_parameter_if_absent(*parent_node, "position_tolerance",
+      goal_tolerance_.position);
+  easynav::declare_parameter_if_absent(*parent_node, "height_tolerance", goal_tolerance_.height);
+  easynav::declare_parameter_if_absent(*parent_node, "angle_tolerance", goal_tolerance_.yaw);
+  easynav::declare_parameter_if_absent(*parent_node, "update_frequency", update_frequency_);
+  read_parameters(nav_state);
 
   control_sub_ = parent_node->create_subscription<easynav_interfaces::msg::NavigationControl>(
     "easynav_control", 100,
@@ -148,6 +123,32 @@ GoalManager::GoalManager(
     });
 
   // parent_node->get_logger().set_level(rclcpp::Logger::Level::Debug);
+}
+
+void
+GoalManager::read_parameters(NavState & nav_state)
+{
+  auto node = get_node();
+  if (!node) {return;}
+
+  node->get_parameter("allow_preempt_goal", allow_preempt_goal_);
+  node->get_parameter("position_tolerance", goal_tolerance_.position);
+  node->get_parameter("height_tolerance", goal_tolerance_.height);
+  node->get_parameter("angle_tolerance", goal_tolerance_.yaw);
+  node->get_parameter("update_frequency", update_frequency_);
+  if (update_frequency_ <= 0.0) {
+    RCLCPP_WARN(
+      node->get_logger(),
+      "Parameter 'update_frequency' must be > 0.0 (got %.3f); falling back to 20.0",
+      update_frequency_);
+    update_frequency_ = 20.0;
+  }
+  update_period_ = rclcpp::Duration::from_seconds(1.0 / update_frequency_);
+
+  // Tolerances in NavState, so controllers can reuse them.
+  nav_state.set("goal_tolerance.position", goal_tolerance_.position);
+  nav_state.set("goal_tolerance.height", goal_tolerance_.height);
+  nav_state.set("goal_tolerance.yaw", goal_tolerance_.yaw);
 }
 
 rclcpp_lifecycle::LifecycleNode::SharedPtr

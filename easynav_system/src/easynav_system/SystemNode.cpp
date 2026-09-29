@@ -121,7 +121,12 @@ SystemNode::on_configure(const rclcpp_lifecycle::State & state)
     }
   }
 
-  goal_manager_ = GoalManager::make_shared(*nav_state_, shared_from_this());
+  // Kept across cleanup/configure: a reconfiguration does not lose the mission.
+  if (!goal_manager_) {
+    goal_manager_ = GoalManager::make_shared(*nav_state_, shared_from_this());
+  } else {
+    goal_manager_->read_parameters(*nav_state_);
+  }
 
   navstate_pub_ = create_publisher<std_msgs::msg::String>(
     "easynav_navstate", 100);
@@ -153,6 +158,11 @@ SystemNode::on_activate(const rclcpp_lifecycle::State & state)
     }
   }
 
+  {
+    std::lock_guard<std::mutex> lock(rt_mutex_);
+    active_ = true;
+  }
+
   return CallbackReturnT::SUCCESS;
 }
 
@@ -160,6 +170,14 @@ CallbackReturnT
 SystemNode::on_deactivate(const rclcpp_lifecycle::State & state)
 {
   (void)state;
+
+  {
+    // Once no RT cycle is in flight, none will publish again: the stop is the last command
+    // (drivers usually keep executing the last command received).
+    std::lock_guard<std::mutex> lock(rt_mutex_);
+    active_ = false;
+    stop_robot();
+  }
 
   for (auto & system_node : get_system_nodes()) {
     RCLCPP_INFO(get_logger(), "Deactivating [%s]", system_node.first.c_str());
@@ -175,6 +193,23 @@ SystemNode::on_deactivate(const rclcpp_lifecycle::State & state)
   }
 
   return CallbackReturnT::SUCCESS;
+}
+
+void
+SystemNode::stop_robot()
+{
+  geometry_msgs::msg::TwistStamped stop;
+  stop.header.stamp = now();
+  stop.header.frame_id = RTTFBuffer::getInstance()->get_tf_info().robot_frame;
+  if (use_cmd_vel_stamped_ && vel_pub_stamped_) {
+    vel_pub_stamped_->publish(stop);
+  }
+  if (!use_cmd_vel_stamped_ && vel_pub_) {
+    vel_pub_->publish(stop.twist);
+  }
+  if (nav_state_) {
+    nav_state_->set("cmd_vel", stop);
+  }
 }
 
 CallbackReturnT
@@ -195,7 +230,7 @@ SystemNode::on_cleanup(const rclcpp_lifecycle::State & state)
     }
   }
 
-  goal_manager_ = nullptr;
+  // goal_manager_ is kept (see on_configure()).
   navstate_pub_ = nullptr;
   vel_pub_ = nullptr;
   vel_pub_stamped_ = nullptr;
@@ -227,6 +262,11 @@ void
 SystemNode::system_cycle_rt()
 {
   EASYNAV_TRACE_EVENT;
+
+  std::lock_guard<std::mutex> lock(rt_mutex_);
+  if (!active_) {
+    return;
+  }
 
   RCLCPP_DEBUG(get_logger(), "SystemNode::system_cycle_rt\n%s", nav_state_->debug_string().c_str());
 

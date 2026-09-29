@@ -15,6 +15,7 @@
 /// \file
 /// \brief Implementation of the DummyLocalizer class.
 
+#include "easynav_common/Parameters.hpp"
 #include "easynav_localizer/DummyLocalizer.hpp"
 
 #include "easynav_common/RTTFBuffer.hpp"
@@ -27,12 +28,8 @@ void DummyLocalizer::on_initialize()
   auto node = get_node();
   const auto & plugin_name = get_plugin_name();
 
-  if (!node->has_parameter(plugin_name + ".cycle_time_rt")) {
-    node->declare_parameter<double>(plugin_name + ".cycle_time_rt", 0.0);
-  }
-  if (!node->has_parameter(plugin_name + ".cycle_time_nort")) {
-    node->declare_parameter<double>(plugin_name + ".cycle_time_nort", 0.0);
-  }
+  easynav::declare_parameter_if_absent<double>(*node, plugin_name + ".cycle_time_rt", 0.0);
+  easynav::declare_parameter_if_absent<double>(*node, plugin_name + ".cycle_time_nort", 0.0);
   node->get_parameter<double>(plugin_name + ".cycle_time_rt", cycle_time_rt_);
   node->get_parameter<double>(plugin_name + ".cycle_time_nort", cycle_time_nort_);
 

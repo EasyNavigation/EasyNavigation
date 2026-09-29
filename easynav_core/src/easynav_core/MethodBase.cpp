@@ -20,6 +20,7 @@
 
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 
+#include "easynav_common/Parameters.hpp"
 #include "easynav_core/MethodBase.hpp"
 
 namespace easynav
@@ -36,12 +37,8 @@ MethodBase::initialize(
   rt_frequency_ = 10.0;
   frequency_ = 10.0;
 
-  if (!parent_node->has_parameter(plugin_name + ".rt_freq")) {
-    parent_node->declare_parameter(plugin_name + ".rt_freq", rt_frequency_);
-  }
-  if (!parent_node->has_parameter(plugin_name + ".freq")) {
-    parent_node->declare_parameter(plugin_name + ".freq", frequency_);
-  }
+  easynav::declare_parameter_if_absent(*parent_node, plugin_name + ".rt_freq", rt_frequency_);
+  easynav::declare_parameter_if_absent(*parent_node, plugin_name + ".freq", frequency_);
   parent_node->get_parameter(plugin_name + ".rt_freq", rt_frequency_);
   parent_node->get_parameter(plugin_name + ".freq", frequency_);
 

@@ -9,3 +9,6 @@ target_link_libraries(system_pause_tests ${PROJECT_NAME})
 
 ament_add_gtest(system_lifecycle_cycle_tests system_lifecycle_cycle_tests.cpp)
 target_link_libraries(system_lifecycle_cycle_tests ${PROJECT_NAME})
+
+ament_add_gtest(system_lifecycle_mission_tests system_lifecycle_mission_tests.cpp)
+target_link_libraries(system_lifecycle_mission_tests ${PROJECT_NAME})
