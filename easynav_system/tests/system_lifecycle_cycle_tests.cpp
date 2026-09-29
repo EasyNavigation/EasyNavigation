@@ -53,6 +53,15 @@ protected:
         "-p", "dummy_planner.plugin:=easynav_planner/DummyPlanner",
         "-p", "map_types:=['dummy_map']",
         "-p", "dummy_map.plugin:=easynav_maps_manager/DummyMapsManager",
+        // Limits high enough that the velocity smoother does not get in the way: these tests
+        // check what is commanded, not how it ramps (see ControllerNode's tests).
+        "-p", "robot_limits.max_linear_vel:=10.0",
+        "-p", "robot_limits.min_linear_vel:=-10.0",
+        "-p", "robot_limits.max_angular_vel:=10.0",
+        "-p", "robot_limits.max_linear_acc:=1000.0",
+        "-p", "robot_limits.max_linear_decel:=1000.0",
+        "-p", "robot_limits.max_angular_acc:=1000.0",
+        "-p", "robot_limits.max_angular_decel:=1000.0",
       };
       rclcpp::init(static_cast<int>(argv.size()), argv.data());
       initialized_ = true;
@@ -320,9 +329,10 @@ TEST_F(SystemLifecycleCycleTest, StopIsTheLastCommandEvenWithAnRtCycleRunning)
       system_node, Transition::TRANSITION_ACTIVATE, State::PRIMARY_STATE_ACTIVE));
     std::atomic<bool> stop_loop {false};
     std::thread rt_loop([&]() {
-        while (!stop_loop) {
+        while (!stop_loop) {  // At the RT rate of system_main (200 Hz).
           system_node->get_nav_state()->set("cmd_vel", moving);
           system_node->system_cycle_rt();
+          std::this_thread::sleep_for(5ms);
         }
       });
     std::this_thread::sleep_for(50ms);
@@ -332,8 +342,9 @@ TEST_F(SystemLifecycleCycleTest, StopIsTheLastCommandEvenWithAnRtCycleRunning)
     stop_loop = true;
     rt_loop.join();
 
+    // Braking in a ramp: everything published, the stop last.
     const auto start = listener_node->now();
-    while (listener_node->now() - start < 300ms) {
+    while (listener_node->now() - start < 1s) {
       exe.spin_some();
       rclcpp::sleep_for(10ms);
     }

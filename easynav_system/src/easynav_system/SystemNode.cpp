@@ -25,6 +25,7 @@
 #include "easynav_sensors/SensorsNode.hpp"
 #include "easynav_common/YTSession.hpp"
 #include "easynav_sensors/types/PointPerception.hpp"
+#include "easynav_common/Parameters.hpp"
 #include "easynav_common/RTTFBuffer.hpp"
 
 #include "easynav_system/SystemNode.hpp"
@@ -58,7 +59,6 @@ SystemNode::SystemNode(const rclcpp::NodeOptions & options)
   planner_node_ = PlannerNode::make_shared();
   sensors_node_ = SensorsNode::make_shared();
 
-  declare_parameter<bool>("use_cmd_vel_stamped", use_cmd_vel_stamped_);
 
   TFInfo tf_info;
   declare_parameter<std::string>("tf_prefix", tf_info.tf_prefix);
@@ -90,8 +90,9 @@ SystemNode::on_configure(const rclcpp_lifecycle::State & state)
 {
   (void)state;
 
+  forward_deprecated_use_cmd_vel_stamped();
+
   TFInfo tf_info;
-  get_parameter<bool>("use_cmd_vel_stamped", use_cmd_vel_stamped_);
   get_parameter("robot_frame", tf_info.robot_frame);
   get_parameter("robot_footprint_frame", tf_info.robot_footprint_frame);
   get_parameter("odom_frame", tf_info.odom_frame);
@@ -131,12 +132,6 @@ SystemNode::on_configure(const rclcpp_lifecycle::State & state)
   navstate_pub_ = create_publisher<std_msgs::msg::String>(
     "easynav_navstate", 100);
 
-  if (use_cmd_vel_stamped_) {
-    vel_pub_stamped_ = create_publisher<geometry_msgs::msg::TwistStamped>("cmd_vel_stamped", 100);
-  } else {
-    vel_pub_ = create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 100);
-  }
-
   return CallbackReturnT::SUCCESS;
 }
 
@@ -172,11 +167,11 @@ SystemNode::on_deactivate(const rclcpp_lifecycle::State & state)
   (void)state;
 
   {
-    // Once no RT cycle is in flight, none will publish again: the stop is the last command
-    // (drivers usually keep executing the last command received).
+    // Once no RT cycle is in flight, none will publish again: ControllerNode's stop, on its
+    // deactivation below, is the last command.
     std::lock_guard<std::mutex> lock(rt_mutex_);
     active_ = false;
-    stop_robot();
+    clear_cmd_vel();
   }
 
   for (auto & system_node : get_system_nodes()) {
@@ -196,20 +191,39 @@ SystemNode::on_deactivate(const rclcpp_lifecycle::State & state)
 }
 
 void
-SystemNode::stop_robot()
+SystemNode::clear_cmd_vel()
 {
   geometry_msgs::msg::TwistStamped stop;
   stop.header.stamp = now();
   stop.header.frame_id = RTTFBuffer::getInstance()->get_tf_info().robot_frame;
-  if (use_cmd_vel_stamped_ && vel_pub_stamped_) {
-    vel_pub_stamped_->publish(stop);
+  nav_state_->set("cmd_vel", stop);
+}
+
+void
+SystemNode::forward_deprecated_use_cmd_vel_stamped()
+{
+  const std::string name = "use_cmd_vel_stamped";
+  const auto & overrides = get_node_parameters_interface()->get_parameter_overrides();
+  if (overrides.count(name) == 0 && !has_parameter(name)) {
+    return;
   }
-  if (!use_cmd_vel_stamped_ && vel_pub_) {
-    vel_pub_->publish(stop.twist);
+
+  bool stamped = false;
+  declare_parameter_if_absent(*this, name, stamped);
+  get_parameter(name, stamped);
+
+  const auto & controller_overrides =
+    controller_node_->get_node_parameters_interface()->get_parameter_overrides();
+  if (controller_overrides.count(name) > 0) {
+    RCLCPP_WARN(
+      get_logger(), "'system_node.%s' is deprecated and ignored: 'controller_node.%s' takes "
+      "precedence", name.c_str(), name.c_str());
+    return;
   }
-  if (nav_state_) {
-    nav_state_->set("cmd_vel", stop);
-  }
+  RCLCPP_WARN(
+    get_logger(), "'system_node.%s' is deprecated: configure 'controller_node.%s' instead. "
+    "It will stop working soon.", name.c_str(), name.c_str());
+  controller_node_->set_parameter(rclcpp::Parameter(name, stamped));
 }
 
 CallbackReturnT
@@ -232,8 +246,6 @@ SystemNode::on_cleanup(const rclcpp_lifecycle::State & state)
 
   // goal_manager_ is kept (see on_configure()).
   navstate_pub_ = nullptr;
-  vel_pub_ = nullptr;
-  vel_pub_stamped_ = nullptr;
 
   return CallbackReturnT::SUCCESS;
 }
@@ -273,28 +285,11 @@ SystemNode::system_cycle_rt()
   bool trigger_perceptions = sensors_node_->cycle_rt(nav_state_);
   bool trigger_localization = localizer_node_->cycle_rt(nav_state_, trigger_perceptions);
 
-  bool trigger_controller = false;
+  const bool trigger = trigger_perceptions || trigger_localization;
+  const bool trigger_controller = controller_node_->cycle_rt(nav_state_, trigger);
 
-  bool trigger = trigger_perceptions || trigger_localization;
-  trigger_controller = controller_node_->cycle_rt(nav_state_, trigger);
-
-  if (nav_state_->has("cmd_vel")) {
-    geometry_msgs::msg::TwistStamped current_cmd_vel;
-    current_cmd_vel = nav_state_->get<geometry_msgs::msg::TwistStamped>("cmd_vel");
-
-    if (nav_state_->get_safe<bool>("navigation_paused")) {
-      current_cmd_vel.twist = geometry_msgs::msg::Twist();
-    }
-
-    if (trigger_controller) {
-      if (use_cmd_vel_stamped_ && vel_pub_stamped_->get_subscription_count()) {
-        vel_pub_stamped_->publish(current_cmd_vel);
-      }
-      if (!use_cmd_vel_stamped_ && vel_pub_->get_subscription_count()) {
-        vel_pub_->publish(current_cmd_vel.twist);
-      }
-    }
-  }
+  // Smoothed within the robot limits, and published.
+  controller_node_->publish_cmd_vel_rt(nav_state_, trigger_controller);
 }
 
 void

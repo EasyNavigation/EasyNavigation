@@ -2,3 +2,9 @@ ament_add_gtest(controller_node_tests controller_node_tests.cpp)
 target_link_libraries(controller_node_tests
   easynav_controller
 )
+
+ament_add_gtest(velocity_smoother_tests velocity_smoother_tests.cpp)
+target_link_libraries(velocity_smoother_tests easynav_controller)
+
+ament_add_gtest(controller_node_velocity_tests controller_node_velocity_tests.cpp)
+target_link_libraries(controller_node_velocity_tests easynav_controller)
