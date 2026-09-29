@@ -27,6 +27,7 @@
 #include "geometry_msgs/msg/twist.hpp"
 #include "geometry_msgs/msg/twist_stamped.hpp"
 
+#include "easynav_controller/VelocityMux.hpp"
 #include "easynav_controller/VelocitySmoother.hpp"
 #include "easynav_core/ControllerMethodBase.hpp"
 #include "easynav_core/RobotLimits.hpp"
@@ -50,8 +51,9 @@ namespace easynav
  * It is also the single point where the velocity command leaves EasyNav:
  * - it owns the robot limits ("robot_limits.*"), which controller plugins query through
  *   ControllerMethodBase::get_robot_limits();
- * - every RT cycle, publish_cmd_vel_rt() smooths the command within those limits and publishes
- *   it on "cmd_vel" (or "cmd_vel_stamped", see "use_cmd_vel_stamped");
+ * - every RT cycle, publish_cmd_vel_rt() selects the command (VelocityMux: override > takeover >
+ *   pause > controller), smooths it within those limits (except an override) and publishes it
+ *   on "cmd_vel" (or "cmd_vel_stamped", see "use_cmd_vel_stamped");
  * - on deactivation or shutdown, it brakes within the deceleration limits and ends by
  *   publishing an exact zero.
  */
@@ -154,13 +156,15 @@ public:
   std::string get_loaded_controller() const;
 
   /**
-   * @brief Smooths and publishes this RT cycle's command: the controller's "cmd_vel", or zero
-   * while navigation is paused.
+   * @brief Selects, smooths and publishes this RT cycle's velocity command.
+   *
+   * VelocityMux picks, by priority, among the commands proposed this cycle (see
+   * velocity_command): an override (published as is), a takeover, zero while paused, or the
+   * controller's. Publishes when a new command was proposed, or while the smoother is still
+   * ramping towards the last one.
    * @param nav_state Shared navigation state.
-   * @param fresh Whether the controller produced a command this cycle. Otherwise, it only
-   * publishes while the smoother is still ramping towards the last one.
    */
-  void publish_cmd_vel_rt(std::shared_ptr<NavState> nav_state, bool fresh);
+  void publish_cmd_vel_rt(std::shared_ptr<NavState> nav_state);
 
   /// @brief Robot limits being enforced.
   RobotLimits get_robot_limits() const override;
@@ -189,8 +193,8 @@ private:
   rclcpp::Publisher<geometry_msgs::msg::TwistStamped>::SharedPtr vel_pub_stamped_;
   rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr vel_pub_;
 
+  VelocityMux mux_;
   VelocitySmoother smoother_;
-  geometry_msgs::msg::TwistStamped last_target_;
 
   /// @brief When the smoother last stepped (node clock), to know how much time it covers.
   std::optional<rclcpp::Time> last_smoother_step_;

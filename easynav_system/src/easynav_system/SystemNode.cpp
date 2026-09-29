@@ -286,10 +286,10 @@ SystemNode::system_cycle_rt()
   bool trigger_localization = localizer_node_->cycle_rt(nav_state_, trigger_perceptions);
 
   const bool trigger = trigger_perceptions || trigger_localization;
-  const bool trigger_controller = controller_node_->cycle_rt(nav_state_, trigger);
+  controller_node_->cycle_rt(nav_state_, trigger);
 
-  // Smoothed within the robot limits, and published.
-  controller_node_->publish_cmd_vel_rt(nav_state_, trigger_controller);
+  // Selected, smoothed within the robot limits, and published.
+  controller_node_->publish_cmd_vel_rt(nav_state_);
 }
 
 void
