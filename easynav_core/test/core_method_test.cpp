@@ -29,8 +29,8 @@
 
 #include "easynav_common/types/NavState.hpp"
 #include "easynav_common/RobotGeometry.hpp"
-#include "easynav_common/testing/LogCapture.hpp"
 #include "easynav_common/RTTFBuffer.hpp"
+#include "easynav_sensors/types/PointPerception.hpp"
 #include "easynav_core/MethodBase.hpp"
 #include "easynav_core/LocalizerMethodBase.hpp"
 #include "easynav_core/PlannerMethodBase.hpp"
@@ -202,9 +202,6 @@ public:
 
   void on_initialize() override {}
   void update_rt(easynav::NavState &) override {rt_call_count++;}
-
-  double radius() const {return robot_radius_;}
-  double height() const {return robot_height_;}
 };
 
 // Plugins that throw on every update.
@@ -601,18 +598,54 @@ TEST_F(CoreMethodTestCase, MapsManagerInternalUpdateRunsWhenTimeElapsed)
 // ControllerMethodBase: initialize and internal_update_rt
 // ─────────────────────────────────────────────────────────────────────────────
 
-TEST_F(CoreMethodTestCase, ControllerInitializeDeclaresCollisionParams)
+// The collision checker moved to the recovery system.
+class CollisionCheckerRemovedTest : public CoreMethodTestCase {};
+
+// A controller that always commands forward.
+class ForwardController : public easynav::ControllerMethodBase
+{
+public:
+  void on_initialize() override {}
+  void update_rt(easynav::NavState & nav_state) override
+  {
+    geometry_msgs::msg::TwistStamped cmd;
+    cmd.twist.linear.x = 0.5;
+    nav_state.set("cmd_vel", cmd);
+  }
+};
+
+TEST_F(CollisionCheckerRemovedTest, NoCollisionCheckerParameters)
 {
   auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_ctrl_init_node");
   TrackingController ctrl;
   ctrl.initialize(node, "ctrl_p");
+  for (const auto & name : {"active", "debug_markers", "robot_radius", "robot_height",
+      "brake_acc", "safety_margin", "z_min_filter", "downsample_leaf_size"})
+  {
+    EXPECT_FALSE(node->has_parameter(std::string("colision_checker.") + name)) << name;
+  }
+}
 
-  // All collision checker parameters should have been declared
-  EXPECT_TRUE(node->has_parameter("colision_checker.active"));
-  EXPECT_FALSE(node->has_parameter("colision_checker.robot_radius")) << "robot_geometry now";
-  EXPECT_FALSE(node->has_parameter("colision_checker.robot_height")) << "robot_geometry now";
-  EXPECT_TRUE(node->has_parameter("colision_checker.brake_acc"));
-  EXPECT_TRUE(node->has_parameter("colision_checker.safety_margin"));
+TEST_F(CollisionCheckerRemovedTest, TheControllerCommandIsNotAltered)
+{
+  // Even configured as before and with an obstacle right ahead: braking is the recovery
+  // system's job now.
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>(
+    "test_ctrl_checker_node", rclcpp::NodeOptions().parameter_overrides(
+      {{"colision_checker.active", true}, {"colision_checker.robot_radius", 0.3}}));
+  ForwardController ctrl;
+  ctrl.initialize(node, "ctrl");
+
+  easynav::NavState nav_state;
+  easynav::PointPerception perception;
+  perception.data.push_back(pcl::PointXYZ(0.2, 0.0, 0.2));
+  perception.frame_id = "base_link";
+  perception.stamp = node->now();
+  perception.valid = true;
+  nav_state.set("scan", perception);
+  ASSERT_TRUE(ctrl.internal_update_rt(nav_state, true));
+  EXPECT_DOUBLE_EQ(
+    nav_state.get<geometry_msgs::msg::TwistStamped>("cmd_vel").twist.linear.x, 0.5);
 }
 
 // ─── Robot geometry ──────────────────────────────────────────────────────────────────────────
@@ -639,60 +672,6 @@ protected:
       "test_geometry_node", rclcpp::NodeOptions().parameter_overrides(overrides));
   }
 };
-
-TEST_F(RobotGeometryCoreTest, CollisionCheckerUsesTheRobotGeometry)
-{
-  easynav::RobotGeometryRegistry::getInstance()->set_geometry({0.45, 0.4, 1.1},
-    {"radius", "height"});
-  TrackingController ctrl;
-  ctrl.initialize(node(), "ctrl");
-  EXPECT_DOUBLE_EQ(ctrl.radius(), 0.45);
-  EXPECT_DOUBLE_EQ(ctrl.height(), 1.1);
-}
-
-TEST_F(RobotGeometryCoreTest, CollisionCheckerDeprecatedParametersStillApply)
-{
-  easynav::testing::LogCapture log;
-  TrackingController ctrl;
-  ctrl.initialize(
-    node({{"colision_checker.robot_radius", 0.25}, {"colision_checker.robot_height", 0.4}}),
-    "ctrl");
-  EXPECT_DOUBLE_EQ(ctrl.radius(), 0.25);
-  EXPECT_DOUBLE_EQ(ctrl.height(), 0.4);
-  EXPECT_EQ(
-    log.count(
-      {"'colision_checker.robot_radius' is deprecated: configure",
-        "system_node.robot_geometry.radius"}), 1u);
-  EXPECT_EQ(
-    log.count(
-      {"'colision_checker.robot_height' is deprecated: configure",
-        "system_node.robot_geometry.height"}), 1u);
-}
-
-TEST_F(RobotGeometryCoreTest, CollisionCheckerRobotGeometryTakesPrecedence)
-{
-  easynav::RobotGeometryRegistry::getInstance()->set_geometry({0.45, 0.45, 1.1}, {"radius"});
-  easynav::testing::LogCapture log;
-  TrackingController ctrl;
-  ctrl.initialize(
-    node({{"colision_checker.robot_radius", 0.25}, {"colision_checker.robot_height", 0.4}}),
-    "ctrl");
-  EXPECT_DOUBLE_EQ(ctrl.radius(), 0.45) << "configured in robot_geometry";
-  EXPECT_DOUBLE_EQ(ctrl.height(), 0.4) << "height not configured: the deprecated one applies";
-  EXPECT_EQ(
-    log.count(
-      {"'colision_checker.robot_radius' is deprecated and ignored",
-        "'system_node.robot_geometry.radius' takes precedence"}), 1u);
-  EXPECT_EQ(log.count({"'colision_checker.robot_height' is deprecated: configure"}), 1u);
-}
-
-TEST_F(RobotGeometryCoreTest, CollisionCheckerNoWarningWithoutDeprecatedParameters)
-{
-  easynav::testing::LogCapture log;
-  TrackingController ctrl;
-  ctrl.initialize(node(), "ctrl");
-  EXPECT_EQ(log.count({"deprecated"}), 0u);
-}
 
 TEST_F(RobotGeometryCoreTest, PluginDeprecatedNamesAreRelativeToThePlugin)
 {
