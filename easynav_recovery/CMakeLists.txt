@@ -1,43 +1,44 @@
 cmake_minimum_required(VERSION 3.20)
-project(easynav_core)
+project(easynav_recovery)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
 find_package(ament_cmake REQUIRED)
-find_package(easynav_common REQUIRED)
-find_package(easynav_sensors REQUIRED)
+find_package(rclcpp REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
+find_package(easynav_core REQUIRED)
+find_package(easynav_common REQUIRED)
 find_package(pluginlib REQUIRED)
-find_package(visualization_msgs REQUIRED)
-find_package(tf2_ros REQUIRED)
-find_package(tf2_geometry_msgs REQUIRED)
-find_package(PCL REQUIRED COMPONENTS common io)
+find_package(lifecycle_msgs REQUIRED)
 
 add_library(${PROJECT_NAME} SHARED
-  src/easynav_core/ControllerMethodBase.cpp
-  src/easynav_core/LocalizerMethodBase.cpp
-  src/easynav_core/MapsManagerBase.cpp
-  src/easynav_core/MethodBase.cpp
-  src/easynav_core/PlannerMethodBase.cpp
-  src/easynav_core/RecoveryManagerBase.cpp
-  src/easynav_core/VelocityCommand.cpp
+  src/easynav_recovery/RecoveryManagerNode.cpp
 )
 target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include/${PROJECT_NAME}>
-  ${PCL_INCLUDE_DIRS}
 )
 target_link_libraries(${PROJECT_NAME} PUBLIC
-  easynav_common::easynav_common
-  easynav_sensors::easynav_sensors
+  rclcpp::rclcpp
   rclcpp_lifecycle::rclcpp_lifecycle
+  easynav_common::easynav_common
+  easynav_core::easynav_core
   pluginlib::pluginlib
-  tf2_ros::tf2_ros
-  tf2_geometry_msgs::tf2_geometry_msgs
-  ${visualization_msgs_TARGETS}
-  ${PCL_LIBRARIES}
+  ${lifecycle_msgs_TARGETS}
+)
+
+add_library(dummy_recovery_manager SHARED
+  src/easynav_recovery/DummyRecoveryManager.cpp
+)
+target_include_directories(dummy_recovery_manager PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include/${PROJECT_NAME}>
+)
+target_link_libraries(dummy_recovery_manager PUBLIC
+  easynav_core::easynav_core
+  pluginlib::pluginlib
 )
 
 install(
@@ -47,6 +48,7 @@ install(
 
 install(TARGETS
   ${PROJECT_NAME}
+  dummy_recovery_manager
   EXPORT export_${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
@@ -60,21 +62,25 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 
   find_package(ament_cmake_gtest REQUIRED)
-  add_subdirectory(test)
+  add_subdirectory(tests)
 endif()
 
 ament_export_include_directories("include/${PROJECT_NAME}")
-ament_export_dependencies(${package_dependencies})
-ament_export_libraries(${PROJECT_NAME})
+ament_export_libraries(
+  ${PROJECT_NAME}
+  dummy_recovery_manager
+)
 ament_export_targets(export_${PROJECT_NAME})
 
+# Register the recovery system plugins
+pluginlib_export_plugin_description_file(easynav_core easynav_recovery_plugins.xml)
+
 ament_export_dependencies(
-  easynav_common
-  easynav_sensors
+  rclcpp
   rclcpp_lifecycle
+  easynav_common
+  easynav_core
   pluginlib
-  visualization_msgs
-  tf2_ros
-  PCL
+  lifecycle_msgs
 )
 ament_package()

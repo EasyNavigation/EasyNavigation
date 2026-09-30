@@ -15,3 +15,9 @@ target_link_libraries(system_lifecycle_mission_tests ${PROJECT_NAME})
 
 ament_add_gtest(system_velocity_smoothing_tests system_velocity_smoothing_tests.cpp)
 target_link_libraries(system_velocity_smoothing_tests ${PROJECT_NAME})
+
+ament_add_gtest(system_shutdown_request_tests system_shutdown_request_tests.cpp)
+target_link_libraries(system_shutdown_request_tests ${PROJECT_NAME})
+
+ament_add_gtest(system_actions_tests system_actions_tests.cpp)
+target_link_libraries(system_actions_tests ${PROJECT_NAME})

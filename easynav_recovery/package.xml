@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>easynav</name>
+  <name>easynav_recovery</name>
   <version>0.4.2</version>
-  <description>Easy Navigation:Mata package for installing all EasyNav.</description>
+  <description>Easy Navigation: hosts the recovery system, a RecoveryManagerBase plugin (recovery_node).</description>
 
   <maintainer email="fmrico@gmail.com">Francisco Martín Rico</maintainer>
   <maintainer email="franciscom.moreno@urjc.es">Francisco Miguel Moreno Olivo</maintainer>
@@ -18,18 +18,16 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <depend>easynav_common</depend>
-  <depend>easynav_controller</depend>
+  <depend>rclcpp</depend>
+  <depend>rclcpp_lifecycle</depend>
   <depend>easynav_core</depend>
-  <depend>easynav_interfaces</depend>
-  <depend>easynav_maps_manager</depend>
-  <depend>easynav_planner</depend>
-  <depend>easynav_recovery</depend>
-  <depend>easynav_localizer</depend>
-  <depend>easynav_sensors</depend>
-  <depend>easynav_support_py</depend>
-  <depend>easynav_system</depend>
-  <depend>easynav_tools</depend>
+  <depend>easynav_common</depend>
+  <depend>pluginlib</depend>
+  <depend>lifecycle_msgs</depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+  <test_depend>ament_cmake_gtest</test_depend>
 
   <export>
     <build_type>ament_cmake</build_type>

@@ -413,6 +413,19 @@ public:
     return groups_.find(key) != groups_.end();
   }
 
+  /// \brief Member keys of \p group_key, as recorded by \ref set_group() (without dereferencing
+  /// them). Useful to grow a group incrementally.
+  /// \return The member keys, or an empty vector if the group does not exist.
+  std::vector<std::string> get_group_keys(const std::string & group_key) const
+  {
+    std::lock_guard<std::mutex> lock(group_mutex_);
+    auto it = groups_.find(group_key);
+    if (it == groups_.end()) {
+      return {};
+    }
+    return it->second;
+  }
+
   /// \brief Type alias for a generic printer functor used by \ref debug_string().
   ///
   /// The functor receives the stored value as a \c std::shared_ptr<void>

@@ -18,6 +18,8 @@
 #ifndef EASYNAV_SYSTEM__GOALMANAGER_HPP_
 #define EASYNAV_SYSTEM__GOALMANAGER_HPP_
 
+#include <atomic>
+
 #include "rclcpp/subscription.hpp"
 #include "rclcpp/publisher.hpp"
 #include "rclcpp/macros.hpp"
@@ -111,6 +113,17 @@ public:
    * @param reason Textual explanation.
    */
   void set_error(const std::string & reason);
+
+  /**
+   * @brief Holds or releases the mission's progress.
+   *
+   * While held, update() keeps publishing feedback but takes no goal as reached: the robot pose
+   * cannot be trusted (see SystemActions::hold_mission_progress()).
+   */
+  void set_progress_held(bool held);
+
+  /// @brief Whether the mission's progress is held (see set_progress_held()).
+  [[nodiscard]] bool is_progress_held() const {return progress_held_;}
 
   /**
    * @brief Update internal logic, including preemption and timeout checks.
@@ -207,6 +220,9 @@ private:
   /// @brief Whether the current navigation is paused: EasyNav still runs its
   /// full cycle, but SystemNode publishes zero velocity while this is true.
   bool paused_ {false};
+
+  /// @brief Atomic: also released from a lifecycle transition (recovery system unloaded).
+  std::atomic<bool> progress_held_ {false};
 
   /// @brief Value of "navigation_state" as last pushed to NavState by this class
   /// (the sole writer of that key).

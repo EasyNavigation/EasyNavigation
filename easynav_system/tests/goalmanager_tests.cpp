@@ -2095,3 +2095,135 @@ TEST_F(GoalManagerHeightTest, ConfiguredToleranceAcceptsCloseHeights)
   make_server({rclcpp::Parameter("height_tolerance", 0.5)});
   EXPECT_TRUE(reaches_goal_at_height(0.3));
 }
+
+TEST_F(GoalManagerTestCase, ProgressHoldIsOffByDefaultAndToggles)
+{
+  easynav::NavState nav_state;
+  auto system_node = rclcpp_lifecycle::LifecycleNode::make_shared("hold_toggle_node");
+  auto gm_server = easynav::GoalManager::make_shared(nav_state, system_node);
+
+  EXPECT_FALSE(gm_server->is_progress_held());
+  gm_server->set_progress_held(true);
+  gm_server->set_progress_held(true);  // Idempotent
+  EXPECT_TRUE(gm_server->is_progress_held());
+  gm_server->set_progress_held(false);
+  EXPECT_FALSE(gm_server->is_progress_held());
+  gm_server->set_progress_held(false);
+  EXPECT_FALSE(gm_server->is_progress_held());
+}
+
+TEST_F(GoalManagerTestCase, HeldProgressDoesNotFinishGoal)
+{
+  // A recovery is handling a problem (e.g. AMCL diverged): the robot pose, which happens to be
+  // on the goal, cannot be trusted, so the goal must not be taken as reached.
+  auto nav_state = std::make_shared<easynav::NavState>();
+  nav_msgs::msg::Odometry odom;
+  odom.pose.pose.orientation.w = 1.0;
+  nav_state->set("robot_pose", odom);
+
+  auto client_node = rclcpp::Node::make_shared("hold_client_node");
+  auto system_node = rclcpp_lifecycle::LifecycleNode::make_shared("hold_system_node");
+
+  rclcpp::executors::SingleThreadedExecutor exe;
+  exe.add_node(client_node);
+  exe.add_node(system_node->get_node_base_interface());
+
+  std::vector<uint8_t> control_types;
+  auto control_sub = client_node->create_subscription<easynav_interfaces::msg::NavigationControl>(
+    "easynav_control", 100,
+    [&control_types](easynav_interfaces::msg::NavigationControl::UniquePtr msg) {
+      control_types.push_back(msg->type);
+    });
+
+  auto pose_pub = client_node->create_publisher<geometry_msgs::msg::PoseStamped>(
+    "goal_pose", 100);
+
+  auto gm_server = easynav::GoalManager::make_shared(*nav_state, system_node);
+  gm_server->set_progress_held(true);
+  ASSERT_TRUE(gm_server->is_progress_held());
+
+  auto spin_for = [&](std::chrono::milliseconds duration) {
+      rclcpp::Rate rate(20);
+      auto start = client_node->now();
+      while (client_node->now() - start < duration) {
+        gm_server->update(*nav_state);
+        exe.spin_some();
+        rate.sleep();
+      }
+    };
+  auto received = [&control_types](uint8_t type) {
+      return std::find(control_types.begin(), control_types.end(), type) != control_types.end();
+    };
+
+  geometry_msgs::msg::PoseStamped goal;
+  goal.header.frame_id = "map";
+  goal.header.stamp = system_node->now();
+  goal.pose.orientation.w = 1.0;  // Exactly where the robot is.
+  pose_pub->publish(goal);
+
+  spin_for(500ms);
+  ASSERT_EQ(gm_server->get_state(), easynav::GoalManager::State::ACTIVE);
+  // Feedback keeps flowing while held.
+  EXPECT_TRUE(received(easynav_interfaces::msg::NavigationControl::FEEDBACK));
+  EXPECT_FALSE(received(easynav_interfaces::msg::NavigationControl::FINISHED));
+
+  // The recovery gives up and aborts the mission: the client gets ERROR, never FINISHED.
+  gm_server->set_error("localization diverged");
+  spin_for(200ms);
+  ASSERT_EQ(gm_server->get_state(), easynav::GoalManager::State::IDLE);
+  ASSERT_TRUE(received(easynav_interfaces::msg::NavigationControl::ERROR));
+  ASSERT_FALSE(received(easynav_interfaces::msg::NavigationControl::FINISHED));
+
+  // The hold outlives the mission; once released, the same goal is reached.
+  goal.header.stamp = system_node->now();
+  pose_pub->publish(goal);
+  spin_for(300ms);
+  ASSERT_EQ(gm_server->get_state(), easynav::GoalManager::State::ACTIVE);
+
+  gm_server->set_progress_held(false);
+  spin_for(300ms);
+  ASSERT_EQ(gm_server->get_state(), easynav::GoalManager::State::IDLE);
+  ASSERT_EQ(control_types.back(), easynav_interfaces::msg::NavigationControl::FINISHED);
+}
+
+TEST_F(GoalManagerTestCase, HeldProgressCanBeCancelled)
+{
+  auto nav_state = std::make_shared<easynav::NavState>();
+  nav_msgs::msg::Odometry odom;
+  odom.pose.pose.orientation.w = 1.0;
+  nav_state->set("robot_pose", odom);
+
+  auto system_node = rclcpp_lifecycle::LifecycleNode::make_shared("hold_cancel_system_node");
+  auto client_node = rclcpp::Node::make_shared("hold_cancel_client_node");
+  rclcpp::executors::SingleThreadedExecutor exe;
+  exe.add_node(client_node);
+  exe.add_node(system_node->get_node_base_interface());
+
+  auto gm_server = easynav::GoalManager::make_shared(*nav_state, system_node);
+  auto gm_client = easynav::GoalManagerClient::make_shared(client_node);
+  gm_server->set_progress_held(true);
+
+  auto spin_for = [&](std::chrono::milliseconds duration) {
+      auto start = client_node->now();
+      while (client_node->now() - start < duration) {
+        gm_server->update(*nav_state);
+        exe.spin_some();
+        rclcpp::sleep_for(10ms);
+      }
+    };
+
+  geometry_msgs::msg::PoseStamped goal;
+  goal.header.frame_id = "map";
+  goal.pose.orientation.w = 1.0;
+  nav_msgs::msg::Goals goals;
+  goals.goals.push_back(goal);
+  gm_client->send_goals(goals);
+
+  spin_for(300ms);
+  ASSERT_EQ(gm_server->get_state(), easynav::GoalManager::State::ACTIVE);
+
+  gm_client->cancel();
+  spin_for(300ms);
+  EXPECT_EQ(gm_server->get_state(), easynav::GoalManager::State::IDLE);
+  EXPECT_EQ(gm_client->get_state(), easynav::GoalManagerClient::State::NAVIGATION_CANCELLED);
+}
