@@ -188,6 +188,8 @@ int main(int argc, char ** argv)
         EASYNAV_TRACE_NAMED_EVENT("easynav_system::spin_nort=cycle");
         system_node->system_cycle();
       }
+      // Between cycles: a reconfiguration requested by the recovery system.
+      system_node->apply_pending_reconfigure();
       {
         EASYNAV_TRACE_NAMED_EVENT("easynav_system::spin_nort=callbacks");
         exe_nort.spin_all(spin_duration_nort);

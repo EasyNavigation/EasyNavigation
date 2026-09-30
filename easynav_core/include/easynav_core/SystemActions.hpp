@@ -19,9 +19,19 @@
 #define EASYNAV_CORE__SYSTEMACTIONS_HPP_
 
 #include <string>
+#include <vector>
+
+#include "rclcpp/parameter.hpp"
 
 namespace easynav
 {
+
+/// @brief A parameter to change on one of EasyNav's nodes (e.g. "controller_node").
+struct ParameterChange
+{
+  std::string node;
+  rclcpp::Parameter parameter;
+};
 
 /**
  * @class SystemActions
@@ -63,6 +73,29 @@ public:
    * @param reason Human-readable cause, reported on termination.
    */
   virtual void request_shutdown(const std::string & reason) = 0;
+
+  /**
+   * @brief Asks EasyNav to change parameters and reconfigure to apply them.
+   *
+   * Applied between cycles, not during the call: EasyNav goes active -> inactive -> unconfigured,
+   * sets the parameters, and goes back to active. The mission goes on, and the robot only stops
+   * during the transitions. The recovery system is reloaded too (a new instance): keep in
+   * NavState anything to remember. "reconfigured_parameters" in NavState lists the parameters
+   * changed so far ("node/parameter"). If the new values do not apply, the previous ones are
+   * restored. A newer request replaces a pending one.
+   *
+   * @param changes Parameters to change.
+   * @param reason Human-readable cause, logged.
+   */
+  virtual void request_reconfigure(
+    const std::vector<ParameterChange> & changes, const std::string & reason) = 0;
+
+  /**
+   * @brief Asks EasyNav to restore every parameter changed by request_reconfigure() to its value
+   * before the first change, and reconfigure to apply them. Nothing to do if none changed.
+   * @param reason Human-readable cause, logged.
+   */
+  virtual void request_restore_parameters(const std::string & reason) = 0;
 };
 
 }  // namespace easynav

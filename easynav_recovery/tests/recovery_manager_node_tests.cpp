@@ -50,9 +50,17 @@ public:
   void abort_mission(const std::string & reason) override {aborted.push_back(reason);}
   void request_shutdown(const std::string & reason) override {shutdowns.push_back(reason);}
   void hold_mission_progress(bool hold) override {holds.push_back(hold);}
+  void request_reconfigure(
+    const std::vector<easynav::ParameterChange> & changes, const std::string &) override
+  {
+    reconfigures.push_back(changes);
+  }
+  void request_restore_parameters(const std::string &) override {++restores;}
   std::vector<std::string> aborted;
   std::vector<std::string> shutdowns;
   std::vector<bool> holds;
+  std::vector<std::vector<easynav::ParameterChange>> reconfigures;
+  int restores {0};
 };
 
 }  // namespace

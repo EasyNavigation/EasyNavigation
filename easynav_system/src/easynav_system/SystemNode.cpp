@@ -337,6 +337,144 @@ SystemNode::request_shutdown(const std::string & reason)
   RCLCPP_FATAL(get_logger(), "Shutdown requested by recovery: %s", reason.c_str());
 }
 
+void
+SystemNode::request_reconfigure(
+  const std::vector<ParameterChange> & changes, const std::string & reason)
+{
+  std::lock_guard<std::mutex> lock(reconfigure_mutex_);
+  pending_reconfigure_ = ReconfigureRequest{changes, false, reason};
+}
+
+void
+SystemNode::request_restore_parameters(const std::string & reason)
+{
+  std::lock_guard<std::mutex> lock(reconfigure_mutex_);
+  pending_reconfigure_ = ReconfigureRequest{{}, true, reason};
+}
+
+bool
+SystemNode::is_reconfigure_pending() const
+{
+  std::lock_guard<std::mutex> lock(reconfigure_mutex_);
+  return pending_reconfigure_.has_value();
+}
+
+rclcpp_lifecycle::LifecycleNode::SharedPtr
+SystemNode::find_node(const std::string & name)
+{
+  if (name == get_name()) {
+    return std::static_pointer_cast<rclcpp_lifecycle::LifecycleNode>(shared_from_this());
+  }
+  auto nodes = get_system_nodes();
+  auto it = nodes.find(name);
+  return it == nodes.end() ? nullptr : it->second.node_ptr;
+}
+
+bool
+SystemNode::apply_pending_reconfigure()
+{
+  using lifecycle_msgs::msg::State;
+
+  ReconfigureRequest request;
+  {
+    std::lock_guard<std::mutex> lock(reconfigure_mutex_);
+    if (!pending_reconfigure_ || is_shutdown_requested() ||
+      get_current_state().id() != State::PRIMARY_STATE_ACTIVE)
+    {
+      return false;
+    }
+    request = std::move(*pending_reconfigure_);
+    pending_reconfigure_.reset();
+  }
+
+  std::vector<ParameterChange> changes = request.changes;
+  if (request.restore) {
+    changes.clear();
+    for (const auto & [key, original] : original_parameters_) {
+      changes.push_back(original);
+    }
+  }
+  if (changes.empty()) {
+    return false;
+  }
+
+  // Current values: the originals of first changes, and what to go back to if these fail.
+  std::vector<ParameterChange> previous;
+  for (const auto & change : changes) {
+    auto node = find_node(change.node);
+    if (!node || !node->has_parameter(change.parameter.get_name())) {
+      RCLCPP_ERROR(
+        get_logger(), "Reconfiguration rejected (%s): no parameter [%s] in [%s]",
+        request.reason.c_str(), change.parameter.get_name().c_str(), change.node.c_str());
+      return false;
+    }
+    previous.push_back({change.node, node->get_parameter(change.parameter.get_name())});
+  }
+
+  RCLCPP_WARN(get_logger(), "Reconfiguring EasyNav: %s", request.reason.c_str());
+  if (!restart_with(changes)) {
+    RCLCPP_ERROR(get_logger(), "Reconfiguration failed, restoring the previous values");
+    if (!restart_with(previous)) {
+      request_shutdown("unable to reconfigure (" + request.reason + ") or restore");
+    }
+    return true;
+  }
+
+  if (request.restore) {
+    original_parameters_.clear();
+  } else {
+    for (const auto & value : previous) {
+      original_parameters_.emplace(value.node + "/" + value.parameter.get_name(), value);
+    }
+  }
+
+  std::vector<std::string> changed;
+  for (const auto & [key, original] : original_parameters_) {
+    changed.push_back(key);
+  }
+  nav_state_->set("reconfigured_parameters", changed);
+  return true;
+}
+
+bool
+SystemNode::restart_with(const std::vector<ParameterChange> & changes)
+{
+  using lifecycle_msgs::msg::State;
+  using lifecycle_msgs::msg::Transition;
+
+  if (get_current_state().id() == State::PRIMARY_STATE_ACTIVE) {
+    trigger_transition(Transition::TRANSITION_DEACTIVATE);
+  }
+  if (get_current_state().id() == State::PRIMARY_STATE_INACTIVE) {
+    trigger_transition(Transition::TRANSITION_CLEANUP);
+  }
+  if (get_current_state().id() != State::PRIMARY_STATE_UNCONFIGURED) {
+    return false;
+  }
+  // A failed configure may leave some subnodes configured.
+  for (auto & [name, info] : get_system_nodes()) {
+    if (info.node_ptr->get_current_state().id() == State::PRIMARY_STATE_INACTIVE) {
+      info.node_ptr->trigger_transition(Transition::TRANSITION_CLEANUP);
+    }
+  }
+
+  bool all_set = true;
+  for (const auto & change : changes) {
+    const auto result = find_node(change.node)->set_parameter(change.parameter);
+    if (!result.successful) {
+      RCLCPP_ERROR(
+        get_logger(), "Unable to set [%s/%s]: %s", change.node.c_str(),
+        change.parameter.get_name().c_str(), result.reason.c_str());
+      all_set = false;
+    }
+  }
+
+  return trigger_transition(Transition::TRANSITION_CONFIGURE).id() ==
+         State::PRIMARY_STATE_INACTIVE &&
+         trigger_transition(Transition::TRANSITION_ACTIVATE).id() == State::PRIMARY_STATE_ACTIVE &&
+         all_set;
+}
+
 rclcpp::CallbackGroup::SharedPtr
 SystemNode::get_real_time_cbg()
 {

@@ -253,3 +253,215 @@ TEST_F(SystemActionsTest, ShutdownRequestWithoutCyclesEndsFinalized)
     EXPECT_EQ(info.node_ptr->get_current_state().id(), State::PRIMARY_STATE_FINALIZED) << name;
   }
 }
+
+// ─── Reconfiguration ─────────────────────────────────────────────────────────────────────────
+
+class SystemReconfigureTest : public SystemActionsTest
+{
+protected:
+  void make_active()
+  {
+    system_node_ = std::make_shared<easynav::SystemNode>();
+    ASSERT_TRUE(transition_to(Transition::TRANSITION_CONFIGURE, State::PRIMARY_STATE_INACTIVE));
+    ASSERT_TRUE(transition_to(Transition::TRANSITION_ACTIVATE, State::PRIMARY_STATE_ACTIVE));
+  }
+
+  rclcpp_lifecycle::LifecycleNode::SharedPtr node(const std::string & name)
+  {
+    return system_node_->get_system_nodes().at(name).node_ptr;
+  }
+
+  easynav::RobotLimits limits()
+  {
+    return std::dynamic_pointer_cast<easynav::ControllerNode>(node("controller_node"))
+           ->get_robot_limits();
+  }
+
+  double max_linear_vel() {return limits().max_linear_vel;}
+
+  static std::vector<easynav::ParameterChange> max_linear_vel_to(double value)
+  {
+    return {{"controller_node", rclcpp::Parameter("robot_limits.max_linear_vel", value)}};
+  }
+
+  std::vector<std::string> reconfigured()
+  {
+    auto nav_state = system_node_->get_nav_state();
+    return nav_state->has("reconfigured_parameters") ?
+           nav_state->get<std::vector<std::string>>("reconfigured_parameters") :
+           std::vector<std::string>();
+  }
+
+  bool active() {return system_node_->get_current_state().id() == State::PRIMARY_STATE_ACTIVE;}
+};
+
+TEST_F(SystemReconfigureTest, NothingPendingByDefault)
+{
+  make_active();
+  EXPECT_FALSE(system_node_->is_reconfigure_pending());
+  EXPECT_FALSE(system_node_->apply_pending_reconfigure());
+  EXPECT_TRUE(active());
+}
+
+TEST_F(SystemReconfigureTest, AppliedOnlyByTheSupervisor)
+{
+  make_active();
+  const double original = max_linear_vel();
+  system_node_->request_reconfigure(max_linear_vel_to(0.1), "slow down");
+  EXPECT_TRUE(system_node_->is_reconfigure_pending());
+  system_node_->system_cycle();
+  EXPECT_DOUBLE_EQ(max_linear_vel(), original) << "not applied by the request itself";
+
+  EXPECT_TRUE(system_node_->apply_pending_reconfigure());
+  EXPECT_FALSE(system_node_->is_reconfigure_pending());
+  EXPECT_TRUE(active());
+  EXPECT_DOUBLE_EQ(max_linear_vel(), 0.1);
+  EXPECT_EQ(
+    reconfigured(), std::vector<std::string>({"controller_node/robot_limits.max_linear_vel"}));
+  for (auto & [name, info] : system_node_->get_system_nodes()) {
+    EXPECT_EQ(info.node_ptr->get_current_state().id(), State::PRIMARY_STATE_ACTIVE) << name;
+  }
+}
+
+TEST_F(SystemReconfigureTest, RestoreBringsBackTheOriginalValues)
+{
+  make_active();
+  const double original = max_linear_vel();
+
+  system_node_->request_reconfigure(max_linear_vel_to(0.2), "slower");
+  ASSERT_TRUE(system_node_->apply_pending_reconfigure());
+  system_node_->request_reconfigure(max_linear_vel_to(0.1), "even slower");
+  ASSERT_TRUE(system_node_->apply_pending_reconfigure());
+  ASSERT_DOUBLE_EQ(max_linear_vel(), 0.1);
+
+  system_node_->request_restore_parameters("done");
+  EXPECT_TRUE(system_node_->apply_pending_reconfigure());
+  EXPECT_DOUBLE_EQ(max_linear_vel(), original) << "the value before the first change";
+  EXPECT_TRUE(reconfigured().empty());
+  EXPECT_TRUE(active());
+
+  system_node_->request_restore_parameters("nothing changed");
+  EXPECT_FALSE(system_node_->apply_pending_reconfigure()) << "nothing to restore";
+  EXPECT_FALSE(system_node_->is_reconfigure_pending());
+}
+
+TEST_F(SystemReconfigureTest, SeveralNodesAtOnce)
+{
+  make_active();
+  system_node_->request_reconfigure(
+    {{"controller_node", rclcpp::Parameter("robot_limits.max_linear_vel", 0.1)},
+      {"controller_node", rclcpp::Parameter("robot_limits.max_angular_vel", 0.3)},
+      {"system_node", rclcpp::Parameter("position_tolerance", 0.5)}}, "careful");
+  ASSERT_TRUE(system_node_->apply_pending_reconfigure());
+  EXPECT_DOUBLE_EQ(limits().max_linear_vel, 0.1);
+  EXPECT_DOUBLE_EQ(limits().max_angular_vel, 0.3);
+  EXPECT_DOUBLE_EQ(system_node_->get_parameter("position_tolerance").as_double(), 0.5);
+  EXPECT_EQ(reconfigured().size(), 3u);
+}
+
+TEST_F(SystemReconfigureTest, NewerRequestReplacesAPendingOne)
+{
+  make_active();
+  system_node_->request_reconfigure(max_linear_vel_to(0.2), "first");
+  system_node_->request_reconfigure(max_linear_vel_to(0.1), "second");
+  ASSERT_TRUE(system_node_->apply_pending_reconfigure());
+  EXPECT_DOUBLE_EQ(max_linear_vel(), 0.1);
+  EXPECT_FALSE(system_node_->apply_pending_reconfigure()) << "only one reconfiguration";
+}
+
+TEST_F(SystemReconfigureTest, UnknownNodeOrParameterIsRejected)
+{
+  make_active();
+  const double original = max_linear_vel();
+  for (const auto & changes : std::vector<std::vector<easynav::ParameterChange>>{
+    {{"no_such_node", rclcpp::Parameter("robot_limits.max_linear_vel", 0.1)}},
+    {{"controller_node", rclcpp::Parameter("no_such_parameter", 0.1)}},
+    {{"controller_node", rclcpp::Parameter("robot_limits.max_linear_vel", 0.1)},
+      {"controller_node", rclcpp::Parameter("no_such_parameter", 0.1)}}})
+  {
+    system_node_->request_reconfigure(changes, "wrong");
+    EXPECT_FALSE(system_node_->apply_pending_reconfigure());
+    EXPECT_TRUE(active());
+    EXPECT_DOUBLE_EQ(max_linear_vel(), original) << "nothing applied";
+  }
+  EXPECT_TRUE(reconfigured().empty());
+}
+
+TEST_F(SystemReconfigureTest, ValueNotAcceptedRestoresThePreviousOnes)
+{
+  make_active();
+  const double original = max_linear_vel();
+  system_node_->request_reconfigure(
+    {{"controller_node", rclcpp::Parameter("robot_limits.max_linear_vel", 0.1)},
+      {"controller_node", rclcpp::Parameter("robot_limits.max_angular_vel", "fast")}},
+    "wrong type");
+  EXPECT_TRUE(system_node_->apply_pending_reconfigure());
+  EXPECT_TRUE(active());
+  EXPECT_DOUBLE_EQ(max_linear_vel(), original);
+  EXPECT_TRUE(reconfigured().empty());
+  EXPECT_FALSE(system_node_->is_shutdown_requested());
+}
+
+TEST_F(SystemReconfigureTest, ConfigureFailureRestoresThePreviousOnes)
+{
+  make_active();
+  system_node_->request_reconfigure(
+    {{"controller_node",
+      rclcpp::Parameter("dummy_controller.plugin", "no_such_pkg/NoSuchController")}},
+    "bad plugin");
+  EXPECT_TRUE(system_node_->apply_pending_reconfigure());
+  EXPECT_TRUE(active());
+  EXPECT_EQ(
+    node("controller_node")->get_parameter("dummy_controller.plugin").as_string(),
+    "easynav_controller/DummyController");
+  EXPECT_TRUE(reconfigured().empty());
+  EXPECT_FALSE(system_node_->is_shutdown_requested());
+}
+
+TEST_F(SystemReconfigureTest, WaitsUntilActive)
+{
+  system_node_ = std::make_shared<easynav::SystemNode>();
+  ASSERT_TRUE(transition_to(Transition::TRANSITION_CONFIGURE, State::PRIMARY_STATE_INACTIVE));
+  system_node_->request_reconfigure(max_linear_vel_to(0.1), "slow down");
+  EXPECT_FALSE(system_node_->apply_pending_reconfigure());
+  EXPECT_TRUE(system_node_->is_reconfigure_pending());
+
+  ASSERT_TRUE(transition_to(Transition::TRANSITION_ACTIVATE, State::PRIMARY_STATE_ACTIVE));
+  EXPECT_TRUE(system_node_->apply_pending_reconfigure());
+  EXPECT_DOUBLE_EQ(max_linear_vel(), 0.1);
+}
+
+TEST_F(SystemReconfigureTest, NotAfterAShutdownRequest)
+{
+  make_active();
+  const double original = max_linear_vel();
+  system_node_->request_reconfigure(max_linear_vel_to(0.1), "slow down");
+  system_node_->request_shutdown("broken");
+  EXPECT_FALSE(system_node_->apply_pending_reconfigure());
+  EXPECT_DOUBLE_EQ(max_linear_vel(), original);
+}
+
+TEST_F(SystemReconfigureTest, TheRecoverySystemIsReloaded)
+{
+  make_active();
+  auto recovery = std::dynamic_pointer_cast<easynav::RecoveryManagerNode>(node("recovery_node"));
+  const auto before = recovery->get_recovery_manager();
+  system_node_->request_reconfigure(max_linear_vel_to(0.1), "slow down");
+  ASSERT_TRUE(system_node_->apply_pending_reconfigure());
+  ASSERT_NE(recovery->get_recovery_manager(), nullptr);
+  EXPECT_NE(recovery->get_recovery_manager(), before);
+}
+
+TEST_F(SystemReconfigureTest, TheMissionGoesOn)
+{
+  start_mission();
+  system_node_->request_reconfigure(max_linear_vel_to(0.1), "slow down");
+  ASSERT_TRUE(system_node_->apply_pending_reconfigure());
+  cycle_for(200ms);
+  EXPECT_EQ(client_->get_state(), ClientState::ACCEPTED_AND_NAVIGATING);
+
+  system_node_->request_restore_parameters("done");
+  ASSERT_TRUE(system_node_->apply_pending_reconfigure());
+  set_robot_x(*system_node_->get_nav_state(), 5.0);
+  EXPECT_TRUE(cycle_until([&]() {return finished();}));
+}

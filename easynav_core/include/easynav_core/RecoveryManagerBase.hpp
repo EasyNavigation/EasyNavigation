@@ -20,6 +20,7 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 
 #include "geometry_msgs/msg/twist_stamped.hpp"
 
@@ -50,7 +51,8 @@ namespace easynav
  * - command_velocity(): take over the robot's motion (preferred over the controller's command,
  *   smoothed within the robot limits).
  * - override_velocity(): emergency override (highest priority, published as is).
- * - abort_mission(), hold_mission_progress() and request_shutdown(): see SystemActions.
+ * - abort_mission(), hold_mission_progress(), request_shutdown(), request_reconfigure() and
+ *   request_restore_parameters(): see SystemActions.
  * - Anything written to NavState for others to read (e.g. diagnostics).
  */
 class RecoveryManagerBase : public MethodBase
@@ -102,6 +104,14 @@ protected:
 
   /// @brief Asks EasyNav to terminate (see SystemActions::request_shutdown()).
   void request_shutdown(const std::string & reason);
+
+  /// @brief Changes parameters and reconfigures EasyNav (see SystemActions::request_reconfigure()).
+  void request_reconfigure(
+    const std::vector<ParameterChange> & changes,
+    const std::string & reason);
+
+  /// @brief Restores the changed parameters (see SystemActions::request_restore_parameters()).
+  void request_restore_parameters(const std::string & reason);
 
 private:
   std::weak_ptr<SystemActions> system_actions_;
