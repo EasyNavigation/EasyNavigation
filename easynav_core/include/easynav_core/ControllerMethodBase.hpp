@@ -112,10 +112,10 @@ protected:
   /// @brief Enable or disable collision checking.
   bool collision_checker_active_{false};
 
-  /// @brief Robot radius used for safety calculations (m).
+  /// @brief Robot radius used for safety calculations (m), from robot_geometry.
   double robot_radius_{0.35};
 
-  /// @brief Vertical extent of the robot used for filtering (m).
+  /// @brief Vertical extent of the robot used for filtering (m), from robot_geometry.
   double robot_height_{0.5};
 
   /// @brief Minimum Z considered when filtering point clouds (m).

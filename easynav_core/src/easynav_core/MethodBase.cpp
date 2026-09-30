@@ -21,6 +21,7 @@
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 
 #include "easynav_common/Parameters.hpp"
+#include "easynav_common/RobotGeometry.hpp"
 #include "easynav_core/MethodBase.hpp"
 
 namespace easynav
@@ -65,6 +66,16 @@ const std::string &
 MethodBase::get_plugin_name() const
 {
   return plugin_name_;
+}
+
+RobotGeometry
+MethodBase::get_robot_geometry(const LegacyRobotGeometryNames & legacy)
+{
+  auto full = [this](const std::string & name) {
+      return name.empty() ? name : plugin_name_ + "." + name;
+    };
+  return easynav::get_robot_geometry(
+    *get_node(), {full(legacy.radius), full(legacy.inscribed_radius), full(legacy.height)});
 }
 
 bool

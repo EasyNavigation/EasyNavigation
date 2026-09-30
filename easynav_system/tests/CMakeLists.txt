@@ -21,3 +21,6 @@ target_link_libraries(system_shutdown_request_tests ${PROJECT_NAME})
 
 ament_add_gtest(system_actions_tests system_actions_tests.cpp)
 target_link_libraries(system_actions_tests ${PROJECT_NAME})
+
+ament_add_gtest(system_robot_geometry_tests system_robot_geometry_tests.cpp)
+target_link_libraries(system_robot_geometry_tests ${PROJECT_NAME})

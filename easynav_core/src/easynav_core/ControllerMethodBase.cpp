@@ -19,6 +19,7 @@
 #include "visualization_msgs/msg/marker_array.hpp"
 
 #include "easynav_common/Parameters.hpp"
+#include "easynav_common/RobotGeometry.hpp"
 #include "easynav_common/types/NavState.hpp"
 #include "easynav_common/YTSession.hpp"
 
@@ -43,8 +44,6 @@ ControllerMethodBase::initialize(
 
   easynav::declare_parameter_if_absent(*node, "colision_checker.active", collision_checker_active_);
   easynav::declare_parameter_if_absent(*node, "colision_checker.debug_markers", debug_markers_);
-  easynav::declare_parameter_if_absent(*node, "colision_checker.robot_radius", robot_radius_);
-  easynav::declare_parameter_if_absent(*node, "colision_checker.robot_height", robot_height_);
   easynav::declare_parameter_if_absent(*node, "colision_checker.brake_acc", brake_acc_);
   easynav::declare_parameter_if_absent(*node, "colision_checker.safety_margin", safety_margin_);
   easynav::declare_parameter_if_absent(*node, "colision_checker.z_min_filter", z_min_filter_);
@@ -53,8 +52,11 @@ ControllerMethodBase::initialize(
 
   node->get_parameter("colision_checker.active", collision_checker_active_);
   node->get_parameter("colision_checker.debug_markers", debug_markers_);
-  node->get_parameter("colision_checker.robot_radius", robot_radius_);
-  node->get_parameter("colision_checker.robot_height", robot_height_);
+  // The robot's shape: "system_node.robot_geometry" (the old names are deprecated).
+  const auto geometry = easynav::get_robot_geometry(
+    *node, {"colision_checker.robot_radius", "", "colision_checker.robot_height"});
+  robot_radius_ = geometry.radius;
+  robot_height_ = geometry.height;
   node->get_parameter("colision_checker.brake_acc", brake_acc_);
   node->get_parameter("colision_checker.safety_margin", safety_margin_);
   node->get_parameter("colision_checker.z_min_filter", z_min_filter_);

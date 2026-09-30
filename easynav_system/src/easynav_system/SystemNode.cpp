@@ -15,6 +15,11 @@
 /// \file
 /// \brief Implementation of the SystemNode class.
 
+#include <set>
+#include <string>
+#include <utility>
+#include <vector>
+
 #include "lifecycle_msgs/msg/transition.hpp"
 #include "lifecycle_msgs/msg/state.hpp"
 
@@ -26,6 +31,7 @@
 #include "easynav_common/YTSession.hpp"
 #include "easynav_sensors/types/PointPerception.hpp"
 #include "easynav_common/Parameters.hpp"
+#include "easynav_common/RobotGeometry.hpp"
 #include "easynav_common/RTTFBuffer.hpp"
 
 #include "easynav_recovery/RecoveryManagerNode.hpp"
@@ -69,6 +75,11 @@ SystemNode::SystemNode(const rclcpp::NodeOptions & options)
   declare_parameter<std::string>("odom_frame", tf_info.odom_frame);
   declare_parameter<std::string>("map_frame", tf_info.map_frame);
   declare_parameter<std::string>("world_frame", tf_info.world_frame);
+
+  const RobotGeometry geometry;
+  declare_parameter("robot_geometry.radius", geometry.radius);
+  declare_parameter("robot_geometry.inscribed_radius", geometry.inscribed_radius);
+  declare_parameter("robot_geometry.height", geometry.height);
   // get_logger().set_level(rclcpp::Logger::Level::Debug);
 }
 
@@ -115,6 +126,8 @@ SystemNode::on_configure(const rclcpp_lifecycle::State & state)
     tf_info.tf_prefix.c_str(), tf_info.map_frame.c_str(),
     tf_info.odom_frame.c_str(), tf_info.robot_frame.c_str(),
     tf_info.robot_footprint_frame.c_str(), tf_info.world_frame.c_str());
+
+  configure_robot_geometry();
 
   for (auto & system_node : get_system_nodes()) {
     RCLCPP_INFO(get_logger(), "Configuring [%s]", system_node.first.c_str());
@@ -209,6 +222,35 @@ SystemNode::clear_cmd_vel()
   stop.header.stamp = now();
   stop.header.frame_id = RTTFBuffer::getInstance()->get_tf_info().robot_frame;
   nav_state_->set("cmd_vel", stop);
+}
+
+void
+SystemNode::configure_robot_geometry()
+{
+  const auto & overrides = get_node_parameters_interface()->get_parameter_overrides();
+  const RobotGeometry defaults;
+  RobotGeometry geometry;
+  std::set<std::string> configured;
+  for (const auto & [field, member] : std::vector<std::pair<std::string, double RobotGeometry::*>>{
+      {"radius", &RobotGeometry::radius},
+      {"inscribed_radius", &RobotGeometry::inscribed_radius},
+      {"height", &RobotGeometry::height}})
+  {
+    const auto name = "robot_geometry." + field;
+    get_parameter(name, geometry.*member);
+    // Explicitly configured: in the parameter files/overrides, or changed at runtime.
+    if (overrides.count(name) > 0 || geometry.*member != defaults.*member) {
+      configured.insert(field);
+    }
+  }
+  if (configured.count("inscribed_radius") == 0) {
+    geometry.inscribed_radius = geometry.radius;  // A round robot, unless told otherwise
+  }
+
+  RobotGeometryRegistry::getInstance()->set_geometry(geometry, configured);
+  RCLCPP_INFO(
+    get_logger(), "Robot geometry: radius=%.3f, inscribed_radius=%.3f, height=%.3f",
+    geometry.radius, geometry.inscribed_radius, geometry.height);
 }
 
 void

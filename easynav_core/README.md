@@ -73,6 +73,23 @@ Typical derived plugins: `easynav_simple_controller`, `easynav_mppi_controller`,
 - Provide a standard collision-checking utility based on point clouds.
 - Optionally publish visualization markers for the collision zone.
 
+### Robot geometry
+
+The robot's shape is configured once, in `system_node`, and shared with every component (collision
+checking, costmap inflation, planners, recovery...). Plugins read it with
+`MethodBase::get_robot_geometry()`; other code, with `easynav::get_robot_geometry()`
+(`easynav_common/RobotGeometry.hpp`).
+
+| Name | Type | Default | Description |
+|---|---|---:|---|
+| `robot_geometry.radius` | `double` | `0.3` | Circumscribed radius: smallest circle containing the robot (m). |
+| `robot_geometry.inscribed_radius` | `double` | `radius` | Largest circle inside the robot (m). |
+| `robot_geometry.height` | `double` | `0.5` | Top of the robot, above the robot frame (m). |
+
+A component's former geometry parameter (e.g. `colision_checker.robot_radius`) still applies, with a
+deprecation warning, where `robot_geometry` does not configure that field; `robot_geometry` takes
+precedence when both are set.
+
 ### Parameters (common collision checker)
 
 Derived controllers usually expose these parameters (names may vary slightly per plugin):
@@ -81,8 +98,8 @@ Derived controllers usually expose these parameters (names may vary slightly per
 |---|---|---:|---|
 | `<plugin>.debug_markers` | `bool` | `false` | Enable/disable publication of collision debug markers. |
 | `<plugin>.active` | `bool` | `false` | Enable/disable collision checking. |
-| `<plugin>.robot_radius` | `double` | `0.35` | Robot radius used to compute safety distances (m). |
-| `<plugin>.robot_height` | `double` | `0.5` | Vertical extent of the robot for point cloud filtering (m). |
+| `colision_checker.robot_radius` | `double` | — | **Deprecated**: the robot radius is `system_node.robot_geometry.radius`. Still applied, with a warning, if `robot_geometry.radius` is not configured. |
+| `colision_checker.robot_height` | `double` | — | **Deprecated**: the robot height is `system_node.robot_geometry.height`. Still applied, with a warning, if `robot_geometry.height` is not configured. |
 | `<plugin>.z_min_filter` | `double` | `0.0` | Minimum Z to keep points in the collision check (m). |
 | `<plugin>.brake_acc` | `double` | `0.5` | Maximum braking deceleration used to compute stopping distance (m/s²). |
 | `<plugin>.safety_margin` | `double` | `0.1` | Extra margin added to the braking distance (m). |
