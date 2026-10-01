@@ -413,6 +413,19 @@ public:
     return groups_.find(key) != groups_.end();
   }
 
+  /// \brief Adds \p key to the group \p group_key (created if missing), atomically: safe when
+  /// several threads add members to the same group. Nothing happens if it is already a member.
+  void add_to_group(const std::string & group_key, const std::string & key)
+  {
+    std::lock_guard<std::mutex> lock(group_mutex_);
+    auto & members = groups_[group_key];
+    if (std::find(members.begin(), members.end(), key) != members.end()) {
+      return;
+    }
+    members.push_back(key);
+    set<std::vector<std::string>>(group_key, members);
+  }
+
   /// \brief Member keys of \p group_key, as recorded by \ref set_group() (without dereferencing
   /// them). Useful to grow a group incrementally.
   /// \return The member keys, or an empty vector if the group does not exist.
