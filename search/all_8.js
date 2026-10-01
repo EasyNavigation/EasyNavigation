@@ -19,5 +19,8 @@ var searchData=
   ['integrate_5fpending_5fperceptions_16',['integrate_pending_perceptions',['../classeasynav_1_1PointPerception.html#af8124b1de9bcb177570f59cbf6ded6b9',1,'easynav::PointPerception']]],
   ['is_5fconnected_17',['is_connected',['../classeasynav_1_1GoalManagerClient.html#accf4ef6f99c7c6194b487ce7b9f45273',1,'easynav::GoalManagerClient']]],
   ['is_5fpaused_18',['is_paused',['../classeasynav_1_1GoalManager.html#aa3bde2742b0e5c8bb77370b03e3d1489',1,'easynav::GoalManager::is_paused()'],['../classeasynav_1_1GoalManagerClient.html#aa3bde2742b0e5c8bb77370b03e3d1489',1,'easynav::GoalManagerClient::is_paused()']]],
-  ['is_5frobot_5flimit_5fconfigured_19',['is_robot_limit_configured',['../classeasynav_1_1ControllerNode.html#aa519cb557b9bb5dc6fb67add8a28e976',1,'easynav::ControllerNode']]]
+  ['is_5fprogress_5fheld_19',['is_progress_held',['../classeasynav_1_1GoalManager.html#afddd6523025010f5c1bb9dbe58f133ba',1,'easynav::GoalManager']]],
+  ['is_5freconfigure_5fpending_20',['is_reconfigure_pending',['../classeasynav_1_1SystemNode.html#ada609223d2de005e763b8dc8a884264a',1,'easynav::SystemNode']]],
+  ['is_5frobot_5flimit_5fconfigured_21',['is_robot_limit_configured',['../classeasynav_1_1ControllerNode.html#aa519cb557b9bb5dc6fb67add8a28e976',1,'easynav::ControllerNode']]],
+  ['is_5fshutdown_5frequested_22',['is_shutdown_requested',['../classeasynav_1_1SystemNode.html#af1cee97a26965526583e27561933d534',1,'easynav::SystemNode']]]
 ];

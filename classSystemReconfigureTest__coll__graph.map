@@ -1,0 +1,15 @@
+<map id="SystemReconfigureTest" name="SystemReconfigureTest">
+<area shape="rect" id="Node000001" title=" " alt="" coords="509,108,669,134"/>
+<area shape="rect" id="Node000002" href="$classSystemActionsTest.html" title=" " alt="" coords="325,108,460,134"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="476,118,509,118,509,124,476,124"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="71,5,119,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="134,17,213,25,258,35,302,50,346,77,379,105,376,109,343,81,300,55,257,41,212,31,134,22"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="55,55,135,80"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="150,71,301,94,345,105,344,110,300,99,150,76"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="55,108,135,134"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="150,118,324,118,324,124,150,124"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="55,161,135,187"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="150,168,222,160,300,147,353,132,354,137,301,152,222,165,150,173"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="5,212,185,267"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="199,222,250,209,299,189,343,161,376,132,380,136,346,165,302,194,252,214,201,227"/>
+</map>

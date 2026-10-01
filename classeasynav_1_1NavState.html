@@ -134,6 +134,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af83124457fc13e4886d43b6beb715417" id="r_af83124457fc13e4886d43b6beb715417"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
 <tr class="memitem:af83124457fc13e4886d43b6beb715417 template"><td class="memItemLeft">const std::vector&lt; std::shared_ptr&lt; T &gt; &gt;&#160;</td><td class="memItemRight"><a class="el" href="#af83124457fc13e4886d43b6beb715417">get_group</a> (const std::string &amp;group_key) const</td></tr>
 <tr class="memdesc:af83124457fc13e4886d43b6beb715417"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves a vector of values (pointers) from a group by the group key.  <br /></td></tr>
+<tr class="memitem:aaaecd19f1947548394ac6387ff1e51be" id="r_aaaecd19f1947548394ac6387ff1e51be"><td class="memItemLeft">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight"><a class="el" href="#aaaecd19f1947548394ac6387ff1e51be">get_group_keys</a> (const std::string &amp;group_key) const</td></tr>
+<tr class="memdesc:aaaecd19f1947548394ac6387ff1e51be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Member keys of <code class="param">group_key</code>, as recorded by <a class="el" href="#a274adbfa1ed5eb84df0aac05f15d9a76" title="set_group()">set_group()</a> (without dereferencing them).  <br /></td></tr>
 <tr class="memitem:a206268d87a1c403a09f2c566b157becb" id="r_a206268d87a1c403a09f2c566b157becb"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
 <tr class="memitem:a206268d87a1c403a09f2c566b157becb template"><td class="memItemLeft">std::vector&lt; std::shared_ptr&lt; T &gt; &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a206268d87a1c403a09f2c566b157becb">get_no_group</a> () const</td></tr>
 <tr class="memdesc:a206268d87a1c403a09f2c566b157becb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves all stored values of type <code class="param">T</code> that are NOT a member of any group.  <br /></td></tr>
@@ -376,6 +378,26 @@ template&lt;typename T&gt; </div>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="aaaecd19f1947548394ac6387ff1e51be" name="aaaecd19f1947548394ac6387ff1e51be"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaaecd19f1947548394ac6387ff1e51be">&#9670;&#160;</a></span>get_group_keys()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; std::string &gt; get_group_keys </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>group_key</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Member keys of <code class="param">group_key</code>, as recorded by <a class="el" href="#a274adbfa1ed5eb84df0aac05f15d9a76" title="set_group()">set_group()</a> (without dereferencing them). </p>
+<p>Useful to grow a group incrementally. </p><dl class="section return"><dt>Returns</dt><dd>The member keys, or an empty vector if the group does not exist. </dd></dl>
 
 </div>
 </div>

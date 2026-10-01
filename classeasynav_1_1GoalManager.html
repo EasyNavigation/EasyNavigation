@@ -140,6 +140,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a431494d38c4bec253ced0cfbe66960d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <br /></td></tr>
 <tr class="memitem:aa3bde2742b0e5c8bb77370b03e3d1489" id="r_aa3bde2742b0e5c8bb77370b03e3d1489"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#aa3bde2742b0e5c8bb77370b03e3d1489">is_paused</a> () const</td></tr>
 <tr class="memdesc:aa3bde2742b0e5c8bb77370b03e3d1489"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the current navigation (if any) is currently paused.  <br /></td></tr>
+<tr class="memitem:afddd6523025010f5c1bb9dbe58f133ba" id="r_afddd6523025010f5c1bb9dbe58f133ba"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#afddd6523025010f5c1bb9dbe58f133ba">is_progress_held</a> () const</td></tr>
+<tr class="memdesc:afddd6523025010f5c1bb9dbe58f133ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the mission's progress is held (see <a class="el" href="#a188e577ce18819e9d324a7b12db98825" title="Holds or releases the mission&#39;s progress.">set_progress_held()</a>).  <br /></td></tr>
 <tr class="memitem:a9e6a154a2d584c42feb15caa8296eea6" id="r_a9e6a154a2d584c42feb15caa8296eea6"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a9e6a154a2d584c42feb15caa8296eea6">read_parameters</a> (<a class="el" href="classeasynav_1_1NavState.html">NavState</a> &amp;nav_state)</td></tr>
 <tr class="memdesc:a9e6a154a2d584c42feb15caa8296eea6"><td class="mdescLeft">&#160;</td><td class="mdescRight">(Re)reads the parameters (on every configure: the <a class="el" href="classeasynav_1_1GoalManager.html" title="Handles navigation goals, their lifecycle, and command interface.">GoalManager</a> outlives cleanup).  <br /></td></tr>
 <tr class="memitem:a80f7c2db5701e01e05b2cedd201475ca" id="r_a80f7c2db5701e01e05b2cedd201475ca"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a80f7c2db5701e01e05b2cedd201475ca">set_error</a> (const std::string &amp;reason)</td></tr>
@@ -148,6 +150,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:aba0b434a98a49412f596d6436137a62e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mark the current goal as failed.  <br /></td></tr>
 <tr class="memitem:a4401bd0ec06534a826ad07b558390774" id="r_a4401bd0ec06534a826ad07b558390774"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a4401bd0ec06534a826ad07b558390774">set_finished</a> ()</td></tr>
 <tr class="memdesc:a4401bd0ec06534a826ad07b558390774"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mark the current goal as successfully completed.  <br /></td></tr>
+<tr class="memitem:a188e577ce18819e9d324a7b12db98825" id="r_a188e577ce18819e9d324a7b12db98825"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a188e577ce18819e9d324a7b12db98825">set_progress_held</a> (bool held)</td></tr>
+<tr class="memdesc:a188e577ce18819e9d324a7b12db98825"><td class="mdescLeft">&#160;</td><td class="mdescRight">Holds or releases the mission's progress.  <br /></td></tr>
 <tr class="memitem:a2ca06ddb77a58406986fb74980981fc5" id="r_a2ca06ddb77a58406986fb74980981fc5"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a2ca06ddb77a58406986fb74980981fc5">update</a> (<a class="el" href="classeasynav_1_1NavState.html">NavState</a> &amp;nav_state)</td></tr>
 <tr class="memdesc:a2ca06ddb77a58406986fb74980981fc5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update internal logic, including preemption and timeout checks.  <br /></td></tr>
 </table>
@@ -332,6 +336,33 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="afddd6523025010f5c1bb9dbe58f133ba" name="afddd6523025010f5c1bb9dbe58f133ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afddd6523025010f5c1bb9dbe58f133ba">&#9670;&#160;</a></span>is_progress_held()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool is_progress_held </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Whether the mission's progress is held (see <a class="el" href="#a188e577ce18819e9d324a7b12db98825" title="Holds or releases the mission&#39;s progress.">set_progress_held()</a>). </p>
+
+</div>
+</div>
 <a id="a9e6a154a2d584c42feb15caa8296eea6" name="a9e6a154a2d584c42feb15caa8296eea6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9e6a154a2d584c42feb15caa8296eea6">&#9670;&#160;</a></span>read_parameters()</h2>
 
@@ -417,6 +448,26 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Mark the current goal as successfully completed. </p>
+
+</div>
+</div>
+<a id="a188e577ce18819e9d324a7b12db98825" name="a188e577ce18819e9d324a7b12db98825"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a188e577ce18819e9d324a7b12db98825">&#9670;&#160;</a></span>set_progress_held()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void set_progress_held </td>
+          <td>(</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>held</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Holds or releases the mission's progress. </p>
+<p>While held, <a class="el" href="#a2ca06ddb77a58406986fb74980981fc5" title="Update internal logic, including preemption and timeout checks.">update()</a> keeps publishing feedback but takes no goal as reached: the robot pose cannot be trusted (see SystemActions::hold_mission_progress()). </p>
 
 </div>
 </div>

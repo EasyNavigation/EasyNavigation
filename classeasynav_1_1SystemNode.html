@@ -119,9 +119,11 @@ Inheritance diagram for SystemNode:</div>
 <div class="dyncontent">
 <div class="center"><img src="classeasynav_1_1SystemNode__inherit__graph.png" border="0" usemap="#aSystemNode_inherit__map" loading="lazy" alt="Inheritance graph"/></div>
 <map name="aSystemNode_inherit__map" id="aSystemNode_inherit__map">
-<area shape="rect" title="ROS 2 lifecycle node coordinating all Easy Navigation components." alt="" coords="9,79,106,105"/>
+<area shape="rect" title="ROS 2 lifecycle node coordinating all Easy Navigation components." alt="" coords="75,79,171,105"/>
 <area shape="rect" title=" " alt="" coords="5,5,110,31"/>
-<area shape="poly" title=" " alt="" coords="60,46,60,79,55,79,55,46"/>
+<area shape="poly" title=" " alt="" coords="80,40,114,77,110,80,76,44"/>
+<area shape="rect" href="classSystemActions.html" title=" " alt="" coords="134,5,243,31"/>
+<area shape="poly" title=" " alt="" coords="169,44,136,80,132,77,165,40"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
@@ -129,9 +131,11 @@ Collaboration diagram for SystemNode:</div>
 <div class="dyncontent">
 <div class="center"><img src="classeasynav_1_1SystemNode__coll__graph.png" border="0" usemap="#aSystemNode_coll__map" loading="lazy" alt="Collaboration graph"/></div>
 <map name="aSystemNode_coll__map" id="aSystemNode_coll__map">
-<area shape="rect" title="ROS 2 lifecycle node coordinating all Easy Navigation components." alt="" coords="9,79,106,105"/>
+<area shape="rect" title="ROS 2 lifecycle node coordinating all Easy Navigation components." alt="" coords="75,79,171,105"/>
 <area shape="rect" title=" " alt="" coords="5,5,110,31"/>
-<area shape="poly" title=" " alt="" coords="60,46,60,79,55,79,55,46"/>
+<area shape="poly" title=" " alt="" coords="80,40,114,77,110,80,76,44"/>
+<area shape="rect" href="classSystemActions.html" title=" " alt="" coords="134,5,243,31"/>
+<area shape="poly" title=" " alt="" coords="169,44,136,80,132,77,165,40"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -141,12 +145,24 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a710405b9a4fd9e34822ffad98579f38d" id="r_a710405b9a4fd9e34822ffad98579f38d"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a710405b9a4fd9e34822ffad98579f38d">abort_mission</a> (const std::string &amp;reason) override</td></tr>
+<tr class="memdesc:a710405b9a4fd9e34822ffad98579f38d"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classSystemActions.html">SystemActions</a>: aborts the active mission, if any, telling its client why.  <br /></td></tr>
+<tr class="memitem:ab8a487e04df5b9061c7ca69c97e44c4c" id="r_ab8a487e04df5b9061c7ca69c97e44c4c"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#ab8a487e04df5b9061c7ca69c97e44c4c">apply_pending_reconfigure</a> ()</td></tr>
+<tr class="memdesc:ab8a487e04df5b9061c7ca69c97e44c4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Applies the pending reconfiguration request, if any, while Active: cycles through unconfigured, setting the parameters there.  <br /></td></tr>
 <tr class="memitem:a76a94058e57592e7255a930e8e015af7" id="r_a76a94058e57592e7255a930e8e015af7"><td class="memItemLeft">std::shared_ptr&lt; <a class="el" href="classeasynav_1_1NavState.html">NavState</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a76a94058e57592e7255a930e8e015af7">get_nav_state</a> () const</td></tr>
 <tr class="memdesc:a76a94058e57592e7255a930e8e015af7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Access to the shared navigation state (for testing and tools).  <br /></td></tr>
 <tr class="memitem:a8366fef9515c0b0cd47949fbfc018641" id="r_a8366fef9515c0b0cd47949fbfc018641"><td class="memItemLeft">rclcpp::CallbackGroup::SharedPtr&#160;</td><td class="memItemRight"><a class="el" href="#a8366fef9515c0b0cd47949fbfc018641">get_real_time_cbg</a> ()</td></tr>
 <tr class="memdesc:a8366fef9515c0b0cd47949fbfc018641"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the real-time callback group.  <br /></td></tr>
+<tr class="memitem:a73744f46e049d6d6de41e844cf702fb7" id="r_a73744f46e049d6d6de41e844cf702fb7"><td class="memItemLeft">std::string&#160;</td><td class="memItemRight"><a class="el" href="#a73744f46e049d6d6de41e844cf702fb7">get_shutdown_reason</a> () const</td></tr>
+<tr class="memdesc:a73744f46e049d6d6de41e844cf702fb7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Why the shutdown was requested.  <br /></td></tr>
 <tr class="memitem:a514922ffaeaefa826c2d33243b19891f" id="r_a514922ffaeaefa826c2d33243b19891f"><td class="memItemLeft">std::map&lt; std::string, <a class="el" href="structeasynav_1_1SystemNodeInfo.html">SystemNodeInfo</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a514922ffaeaefa826c2d33243b19891f">get_system_nodes</a> ()</td></tr>
 <tr class="memdesc:a514922ffaeaefa826c2d33243b19891f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get all system nodes managed by this coordinator.  <br /></td></tr>
+<tr class="memitem:a1b0b943f74111764b87297bf70275838" id="r_a1b0b943f74111764b87297bf70275838"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a1b0b943f74111764b87297bf70275838">hold_mission_progress</a> (bool hold) override</td></tr>
+<tr class="memdesc:a1b0b943f74111764b87297bf70275838"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classSystemActions.html">SystemActions</a>: while held, <a class="el" href="classeasynav_1_1GoalManager.html" title="Handles navigation goals, their lifecycle, and command interface.">GoalManager</a> takes no goal as reached.  <br /></td></tr>
+<tr class="memitem:ada609223d2de005e763b8dc8a884264a" id="r_ada609223d2de005e763b8dc8a884264a"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#ada609223d2de005e763b8dc8a884264a">is_reconfigure_pending</a> () const</td></tr>
+<tr class="memdesc:ada609223d2de005e763b8dc8a884264a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether a reconfiguration is pending.  <br /></td></tr>
+<tr class="memitem:af1cee97a26965526583e27561933d534" id="r_af1cee97a26965526583e27561933d534"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#af1cee97a26965526583e27561933d534">is_shutdown_requested</a> () const</td></tr>
+<tr class="memdesc:af1cee97a26965526583e27561933d534"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the recovery system asked EasyNav to terminate (<a class="el" href="#afb19ea0f03d73f4a8ea358431f5c60b3" title="SystemActions: records that EasyNav must terminate (see is_shutdown_requested()).">request_shutdown()</a>).  <br /></td></tr>
 <tr class="memitem:a26f6915d7f6c74f8cf2e766e352ef4a1" id="r_a26f6915d7f6c74f8cf2e766e352ef4a1"><td class="memItemLeft"><a class="el" href="#ad09d90f1fe35c9e2f2fd7fc1902312f4">CallbackReturnT</a>&#160;</td><td class="memItemRight"><a class="el" href="#a26f6915d7f6c74f8cf2e766e352ef4a1">on_activate</a> (const rclcpp_lifecycle::State &amp;state)</td></tr>
 <tr class="memdesc:a26f6915d7f6c74f8cf2e766e352ef4a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Activate the node.  <br /></td></tr>
 <tr class="memitem:a51a30cb3859b0fc27bd0aafaa778acb2" id="r_a51a30cb3859b0fc27bd0aafaa778acb2"><td class="memItemLeft"><a class="el" href="#ad09d90f1fe35c9e2f2fd7fc1902312f4">CallbackReturnT</a>&#160;</td><td class="memItemRight"><a class="el" href="#a51a30cb3859b0fc27bd0aafaa778acb2">on_cleanup</a> (const rclcpp_lifecycle::State &amp;state)</td></tr>
@@ -159,6 +175,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a9b0782b915f4798a61ae8b9e56ebd5fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle lifecycle transition error.  <br /></td></tr>
 <tr class="memitem:a38b74771f6ab23805f990786e4d6f806" id="r_a38b74771f6ab23805f990786e4d6f806"><td class="memItemLeft"><a class="el" href="#ad09d90f1fe35c9e2f2fd7fc1902312f4">CallbackReturnT</a>&#160;</td><td class="memItemRight"><a class="el" href="#a38b74771f6ab23805f990786e4d6f806">on_shutdown</a> (const rclcpp_lifecycle::State &amp;state)</td></tr>
 <tr class="memdesc:a38b74771f6ab23805f990786e4d6f806"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shutdown the node.  <br /></td></tr>
+<tr class="memitem:a86a5682966870e68ca882f68df9d40b6" id="r_a86a5682966870e68ca882f68df9d40b6"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a86a5682966870e68ca882f68df9d40b6">request_reconfigure</a> (const std::vector&lt; ParameterChange &gt; &amp;changes, const std::string &amp;reason) override</td></tr>
+<tr class="memdesc:a86a5682966870e68ca882f68df9d40b6"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classSystemActions.html">SystemActions</a>: pending until <a class="el" href="#ab8a487e04df5b9061c7ca69c97e44c4c" title="Applies the pending reconfiguration request, if any, while Active: cycles through unconfigured,...">apply_pending_reconfigure()</a>.  <br /></td></tr>
+<tr class="memitem:a0ecc1562707b2ea74382ada794cfd8d0" id="r_a0ecc1562707b2ea74382ada794cfd8d0"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a0ecc1562707b2ea74382ada794cfd8d0">request_restore_parameters</a> (const std::string &amp;reason) override</td></tr>
+<tr class="memdesc:a0ecc1562707b2ea74382ada794cfd8d0"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classSystemActions.html">SystemActions</a>: pending until <a class="el" href="#ab8a487e04df5b9061c7ca69c97e44c4c" title="Applies the pending reconfiguration request, if any, while Active: cycles through unconfigured,...">apply_pending_reconfigure()</a>.  <br /></td></tr>
+<tr class="memitem:afb19ea0f03d73f4a8ea358431f5c60b3" id="r_afb19ea0f03d73f4a8ea358431f5c60b3"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#afb19ea0f03d73f4a8ea358431f5c60b3">request_shutdown</a> (const std::string &amp;reason) override</td></tr>
+<tr class="memdesc:afb19ea0f03d73f4a8ea358431f5c60b3"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classSystemActions.html">SystemActions</a>: records that EasyNav must terminate (see <a class="el" href="#af1cee97a26965526583e27561933d534" title="Whether the recovery system asked EasyNav to terminate (request_shutdown()).">is_shutdown_requested()</a>).  <br /></td></tr>
 <tr class="memitem:acca79767d43dedc09e182e9125a847f3" id="r_acca79767d43dedc09e182e9125a847f3"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#acca79767d43dedc09e182e9125a847f3">system_cycle</a> ()</td></tr>
 <tr class="memdesc:acca79767d43dedc09e182e9125a847f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Non-real-time system cycle.  <br /></td></tr>
 <tr class="memitem:acd948c2ed9cfe6512e5b610caaa25961" id="r_acd948c2ed9cfe6512e5b610caaa25961"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#acd948c2ed9cfe6512e5b610caaa25961">system_cycle_rt</a> ()</td></tr>
@@ -240,6 +262,53 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a id="a710405b9a4fd9e34822ffad98579f38d" name="a710405b9a4fd9e34822ffad98579f38d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a710405b9a4fd9e34822ffad98579f38d">&#9670;&#160;</a></span>abort_mission()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void abort_mission </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>reason</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel override">override</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><a class="el" href="classSystemActions.html">SystemActions</a>: aborts the active mission, if any, telling its client why. </p>
+
+</div>
+</div>
+<a id="ab8a487e04df5b9061c7ca69c97e44c4c" name="ab8a487e04df5b9061c7ca69c97e44c4c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab8a487e04df5b9061c7ca69c97e44c4c">&#9670;&#160;</a></span>apply_pending_reconfigure()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool apply_pending_reconfigure </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Applies the pending reconfiguration request, if any, while Active: cycles through unconfigured, setting the parameters there. </p>
+<p>Called by whoever drives this node's lifecycle, between cycles (never from a cycle: the recovery system is reloaded). </p><dl class="section return"><dt>Returns</dt><dd>True if EasyNav was reconfigured (with the new values or, if they failed, the previous ones). </dd></dl>
+
+</div>
+</div>
 <a id="a76a94058e57592e7255a930e8e015af7" name="a76a94058e57592e7255a930e8e015af7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a76a94058e57592e7255a930e8e015af7">&#9670;&#160;</a></span>get_nav_state()</h2>
 
@@ -288,6 +357,33 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a73744f46e049d6d6de41e844cf702fb7" name="a73744f46e049d6d6de41e844cf702fb7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a73744f46e049d6d6de41e844cf702fb7">&#9670;&#160;</a></span>get_shutdown_reason()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string get_shutdown_reason </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Why the shutdown was requested. </p>
+
+</div>
+</div>
 <a id="a514922ffaeaefa826c2d33243b19891f" name="a514922ffaeaefa826c2d33243b19891f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a514922ffaeaefa826c2d33243b19891f">&#9670;&#160;</a></span>get_system_nodes()</h2>
 
@@ -305,6 +401,88 @@ Public Member Functions</h2></td></tr>
 
 <p>Get all system nodes managed by this coordinator. </p>
 <dl class="section return"><dt>Returns</dt><dd>Map of node names to node information. </dd></dl>
+
+</div>
+</div>
+<a id="a1b0b943f74111764b87297bf70275838" name="a1b0b943f74111764b87297bf70275838"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1b0b943f74111764b87297bf70275838">&#9670;&#160;</a></span>hold_mission_progress()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void hold_mission_progress </td>
+          <td>(</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>hold</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel override">override</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><a class="el" href="classSystemActions.html">SystemActions</a>: while held, <a class="el" href="classeasynav_1_1GoalManager.html" title="Handles navigation goals, their lifecycle, and command interface.">GoalManager</a> takes no goal as reached. </p>
+
+</div>
+</div>
+<a id="ada609223d2de005e763b8dc8a884264a" name="ada609223d2de005e763b8dc8a884264a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ada609223d2de005e763b8dc8a884264a">&#9670;&#160;</a></span>is_reconfigure_pending()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool is_reconfigure_pending </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Whether a reconfiguration is pending. </p>
+
+</div>
+</div>
+<a id="af1cee97a26965526583e27561933d534" name="af1cee97a26965526583e27561933d534"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af1cee97a26965526583e27561933d534">&#9670;&#160;</a></span>is_shutdown_requested()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool is_shutdown_requested </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Whether the recovery system asked EasyNav to terminate (<a class="el" href="#afb19ea0f03d73f4a8ea358431f5c60b3" title="SystemActions: records that EasyNav must terminate (see is_shutdown_requested()).">request_shutdown()</a>). </p>
+<p>Whoever drives this node's lifecycle should then deactivate it, which ends in Finalized (see <a class="el" href="#afc8a8fa2ed2c7efe041cde46ce4c3c9b" title="Deactivate the node.">on_deactivate()</a>/on_error()). </p>
 
 </div>
 </div>
@@ -461,6 +639,91 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>SUCCESS if shutdown succeeded. </dd></dl>
+
+</div>
+</div>
+<a id="a86a5682966870e68ca882f68df9d40b6" name="a86a5682966870e68ca882f68df9d40b6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a86a5682966870e68ca882f68df9d40b6">&#9670;&#160;</a></span>request_reconfigure()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void request_reconfigure </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; ParameterChange &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>changes</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>reason</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel override">override</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><a class="el" href="classSystemActions.html">SystemActions</a>: pending until <a class="el" href="#ab8a487e04df5b9061c7ca69c97e44c4c" title="Applies the pending reconfiguration request, if any, while Active: cycles through unconfigured,...">apply_pending_reconfigure()</a>. </p>
+
+</div>
+</div>
+<a id="a0ecc1562707b2ea74382ada794cfd8d0" name="a0ecc1562707b2ea74382ada794cfd8d0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0ecc1562707b2ea74382ada794cfd8d0">&#9670;&#160;</a></span>request_restore_parameters()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void request_restore_parameters </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>reason</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel override">override</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><a class="el" href="classSystemActions.html">SystemActions</a>: pending until <a class="el" href="#ab8a487e04df5b9061c7ca69c97e44c4c" title="Applies the pending reconfiguration request, if any, while Active: cycles through unconfigured,...">apply_pending_reconfigure()</a>. </p>
+
+</div>
+</div>
+<a id="afb19ea0f03d73f4a8ea358431f5c60b3" name="afb19ea0f03d73f4a8ea358431f5c60b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afb19ea0f03d73f4a8ea358431f5c60b3">&#9670;&#160;</a></span>request_shutdown()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void request_shutdown </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>reason</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel override">override</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><a class="el" href="classSystemActions.html">SystemActions</a>: records that EasyNav must terminate (see <a class="el" href="#af1cee97a26965526583e27561933d534" title="Whether the recovery system asked EasyNav to terminate (request_shutdown()).">is_shutdown_requested()</a>). </p>
 
 </div>
 </div>

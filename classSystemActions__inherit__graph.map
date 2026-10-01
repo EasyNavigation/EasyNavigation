@@ -1,0 +1,5 @@
+<map id="SystemActions" name="SystemActions">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,115,31"/>
+<area shape="rect" id="Node000002" href="$classeasynav_1_1SystemNode.html" title="ROS 2 lifecycle node coordinating all Easy Navigation components." alt="" coords="12,79,108,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="63,46,63,79,57,79,57,46"/>
+</map>
