@@ -19,8 +19,11 @@
 #define EASYNAV_CORE__METHODBASE_HPP_
 
 #include <memory>
+#include <string>
 
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
+
+#include "easynav_common/types/RobotGeometry.hpp"
 
 namespace easynav
 {
@@ -77,6 +80,14 @@ public:
    */
   [[nodiscard]] const std::string &
   get_plugin_name() const;
+
+  /**
+   * @brief The robot's geometry ("system_node.robot_geometry.*").
+   * @param legacy This plugin's deprecated parameters for each field, relative to its name
+   * (e.g. "robot_radius" for "<plugin_name>.robot_radius"): applied, with a warning, unless
+   * "robot_geometry" configures that field.
+   */
+  [[nodiscard]] RobotGeometry get_robot_geometry(const LegacyRobotGeometryNames & legacy = {});
 
   /**
    * @brief Check whether it is time to run a real-time update.

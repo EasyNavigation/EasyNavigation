@@ -193,6 +193,9 @@ private:
   /// @brief Applies a deprecated "system_node.use_cmd_vel_stamped" to controller_node.
   void forward_deprecated_use_cmd_vel_stamped();
 
+  /// @brief Shares "robot_geometry.*" (RobotGeometryRegistry) before the subnodes configure.
+  void configure_robot_geometry();
+
   /// @brief Serializes the RT cycle with activation/deactivation.
   std::mutex rt_mutex_;
 

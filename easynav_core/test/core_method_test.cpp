@@ -28,6 +28,7 @@
 #include "nav_msgs/msg/odometry.hpp"
 
 #include "easynav_common/types/NavState.hpp"
+#include "easynav_common/RobotGeometry.hpp"
 #include "easynav_common/RTTFBuffer.hpp"
 #include "easynav_sensors/types/PointPerception.hpp"
 #include "easynav_core/MethodBase.hpp"
@@ -645,6 +646,44 @@ TEST_F(CollisionCheckerRemovedTest, TheControllerCommandIsNotAltered)
   ASSERT_TRUE(ctrl.internal_update_rt(nav_state, true));
   EXPECT_DOUBLE_EQ(
     nav_state.get<geometry_msgs::msg::TwistStamped>("cmd_vel").twist.linear.x, 0.5);
+}
+
+// ─── Robot geometry ──────────────────────────────────────────────────────────────────────────
+
+class RobotGeometryCoreTest : public CoreMethodTestCase
+{
+protected:
+  void SetUp() override
+  {
+    CoreMethodTestCase::SetUp();
+    easynav::RobotGeometryRegistry::getInstance()->set_geometry(easynav::RobotGeometry{});
+  }
+
+  void TearDown() override
+  {
+    easynav::RobotGeometryRegistry::getInstance()->set_geometry(easynav::RobotGeometry{});
+    CoreMethodTestCase::TearDown();
+  }
+
+  static rclcpp_lifecycle::LifecycleNode::SharedPtr node(
+    const std::vector<rclcpp::Parameter> & overrides = {})
+  {
+    return std::make_shared<rclcpp_lifecycle::LifecycleNode>(
+      "test_geometry_node", rclcpp::NodeOptions().parameter_overrides(overrides));
+  }
+};
+
+TEST_F(RobotGeometryCoreTest, PluginDeprecatedNamesAreRelativeToThePlugin)
+{
+  TrackingController ctrl;
+  auto n = node({{"ctrl.robot_radius", 0.2}, {"robot_radius", 0.9}, {"ctrl.inscribed", 0.15}});
+  ctrl.initialize(n, "ctrl");
+  const auto geometry = ctrl.get_robot_geometry({"robot_radius", "inscribed", ""});
+  EXPECT_DOUBLE_EQ(geometry.radius, 0.2);
+  EXPECT_DOUBLE_EQ(geometry.inscribed_radius, 0.15);
+  EXPECT_DOUBLE_EQ(geometry.height, easynav::RobotGeometry{}.height);
+  EXPECT_DOUBLE_EQ(ctrl.get_robot_geometry().radius, easynav::RobotGeometry{}.radius)
+    << "no deprecated names";
 }
 
 TEST_F(CoreMethodTestCase, ControllerInternalUpdateRtWithTriggerAlwaysRuns)

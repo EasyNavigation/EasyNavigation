@@ -58,6 +58,23 @@ All parameters are declared under each derived plugin namespace; `MethodBase` ju
 
 `MethodBase` itself does not read or write `NavState` and does not create publishers or subscriptions. All such interfaces are defined in derived base classes (see below) and their plugins.
 
+### Robot geometry
+
+The robot's shape is configured once, in `system_node`, and shared with every component (costmap
+inflation, planners, recovery...). Plugins read it with
+`MethodBase::get_robot_geometry()`; other code, with `easynav::get_robot_geometry()`
+(`easynav_common/RobotGeometry.hpp`).
+
+| Name | Type | Default | Description |
+|---|---|---:|---|
+| `robot_geometry.radius` | `double` | `0.3` | Circumscribed radius: smallest circle containing the robot (m). |
+| `robot_geometry.inscribed_radius` | `double` | `radius` | Largest circle inside the robot (m). |
+| `robot_geometry.height` | `double` | `0.5` | Top of the robot, above the robot frame (m). |
+
+A component's former geometry parameter (e.g. an inflation filter's `inscribed_radius`) still applies, with a
+deprecation warning, where `robot_geometry` does not configure that field; `robot_geometry` takes
+precedence when both are set.
+
 ---
 
 ## `easynav::ControllerMethodBase`
