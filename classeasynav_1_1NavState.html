@@ -123,6 +123,8 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:aacb11a81f2fdc2abb7e65951870f5d8e" id="r_aacb11a81f2fdc2abb7e65951870f5d8e"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#aacb11a81f2fdc2abb7e65951870f5d8e">add_to_group</a> (const std::string &amp;group_key, const std::string &amp;key)</td></tr>
+<tr class="memdesc:aacb11a81f2fdc2abb7e65951870f5d8e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds <code class="param">key</code> to the group <code class="param">group_key</code> (created if missing), atomically: safe when several threads add members to the same group.  <br /></td></tr>
 <tr class="memitem:ae21c3e223fb1aec0439964d01e5e0282" id="r_ae21c3e223fb1aec0439964d01e5e0282"><td class="memItemLeft">std::string&#160;</td><td class="memItemRight"><a class="el" href="#ae21c3e223fb1aec0439964d01e5e0282">debug_string</a> () const</td></tr>
 <tr class="memdesc:ae21c3e223fb1aec0439964d01e5e0282"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a human-readable dump of all stored keys and values.  <br /></td></tr>
 <tr class="memitem:a2ac95fd847d344d55ed64f7b5d7bcf04" id="r_a2ac95fd847d344d55ed64f7b5d7bcf04"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
@@ -250,6 +252,30 @@ Static Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a id="aacb11a81f2fdc2abb7e65951870f5d8e" name="aacb11a81f2fdc2abb7e65951870f5d8e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aacb11a81f2fdc2abb7e65951870f5d8e">&#9670;&#160;</a></span>add_to_group()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void add_to_group </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>group_key</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>key</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Adds <code class="param">key</code> to the group <code class="param">group_key</code> (created if missing), atomically: safe when several threads add members to the same group. </p>
+<p>Nothing happens if it is already a member. </p>
+
+</div>
+</div>
 <a id="ae21c3e223fb1aec0439964d01e5e0282" name="ae21c3e223fb1aec0439964d01e5e0282"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae21c3e223fb1aec0439964d01e5e0282">&#9670;&#160;</a></span>debug_string()</h2>
 
