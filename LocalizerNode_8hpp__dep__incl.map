@@ -4,25 +4,27 @@
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="299,54,183,96,182,91,298,49"/>
 <area shape="rect" id="Node000003" href="$localizer__node__tests_8cpp.html" title=" " alt="" coords="224,102,391,142"/>
 <area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="349,60,322,103,318,100,345,58"/>
-<area shape="rect" id="Node000004" href="$SystemNode_8hpp.html" title="Declaration of the SystemNode class, the central coordinator node for Easy Navigation components." alt="" coords="681,102,907,142"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="472,47,705,98,704,103,471,52"/>
+<area shape="rect" id="Node000004" href="$SystemNode_8hpp.html" title="Declaration of the SystemNode class, the central coordinator node for Easy Navigation components." alt="" coords="776,102,1001,142"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="492,47,780,98,779,103,491,52"/>
 <area shape="rect" id="Node000005" href="$SystemNode_8cpp.html" title="Implementation of the SystemNode class." alt="" coords="5,205,231,246"/>
-<area shape="poly" id="edge13_Node000001_Node000005" title=" " alt="" coords="393,58,405,79,414,104,415,129,405,152,382,162,332,176,204,207,203,202,331,170,380,156,401,148,410,128,408,105,400,82,389,60"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="666,140,466,166,242,200,206,207,205,202,242,195,466,161,666,135"/>
+<area shape="poly" id="edge14_Node000001_Node000005" title=" " alt="" coords="393,58,405,79,414,104,415,129,405,152,382,162,332,176,204,207,203,202,331,170,380,156,401,148,410,128,408,105,400,82,389,60"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="761,137,519,162,242,200,205,207,204,202,242,195,519,157,760,132"/>
 <area shape="rect" id="Node000006" href="$system__main_8cpp.html" title=" " alt="" coords="254,205,395,246"/>
-<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="666,147,541,170,408,200,383,207,382,202,407,195,540,165,665,141"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="761,140,592,164,408,200,382,207,381,202,407,195,591,159,760,135"/>
 <area shape="rect" id="Node000007" href="$system__actions__tests_8cpp.html" title="SystemNode as SystemActions (what a recovery system can ask of EasyNav), and recovery_node as one mor..." alt="" coords="419,205,596,246"/>
-<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="725,150,564,207,562,202,723,145"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="801,149,582,207,580,202,799,144"/>
 <area shape="rect" id="Node000008" href="$system__lifecycle__cycle__tests_8cpp.html" title="Exercises SystemNode&#39;s own lifecycle state machine through repeated full cycles, including active &#45;&gt; ..." alt="" coords="620,198,778,253"/>
-<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="767,155,727,199,723,195,764,152"/>
+<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="840,152,751,199,749,195,838,147"/>
 <area shape="rect" id="Node000009" href="$system__lifecycle__mission__tests_8cpp.html" title="A mission survives reconfiguring EasyNav (active &#45;&gt; inactive &#45;&gt; unconfigured &#45;&gt; inactive &#45;&gt; active,..." alt="" coords="802,198,975,253"/>
-<area shape="poly" id="edge8_Node000004_Node000009" title=" " alt="" coords="824,152,865,195,861,199,821,155"/>
+<area shape="poly" id="edge8_Node000004_Node000009" title=" " alt="" coords="891,158,891,197,886,197,886,158"/>
 <area shape="rect" id="Node000010" href="$system__pause__tests_8cpp.html" title=" " alt="" coords="1000,205,1169,246"/>
-<area shape="poly" id="edge9_Node000004_Node000010" title=" " alt="" coords="866,145,1029,202,1028,207,864,150"/>
-<area shape="rect" id="Node000011" href="$system__shutdown__request__tests_8cpp.html" title="A shutdown requested by a recovery mitigation takes SystemNode (and every EasyNav node) out of Active..." alt="" coords="1193,198,1374,253"/>
-<area shape="poly" id="edge10_Node000004_Node000011" title=" " alt="" coords="922,143,1183,195,1193,198,1192,203,1181,200,921,148"/>
-<area shape="rect" id="Node000012" href="$system__tfinfo__tests_8cpp.html" title=" " alt="" coords="1398,205,1560,246"/>
-<area shape="poly" id="edge11_Node000004_Node000012" title=" " alt="" coords="923,131,1140,155,1264,173,1387,195,1416,202,1415,207,1385,200,1263,178,1140,160,922,136"/>
-<area shape="rect" id="Node000013" href="$system__velocity__smoothing__tests_8cpp.html" title="End to end through SystemNode: with very low accelerations, the published commands are smoothed,..." alt="" coords="1584,198,1769,253"/>
-<area shape="poly" id="edge12_Node000004_Node000013" title=" " alt="" coords="922,127,1220,149,1397,169,1573,195,1584,197,1583,202,1572,200,1397,174,1220,155,922,132"/>
+<area shape="poly" id="edge9_Node000004_Node000010" title=" " alt="" coords="941,147,1048,202,1045,207,938,152"/>
+<area shape="rect" id="Node000011" href="$system__robot__geometry__tests_8cpp.html" title="SystemNode shares &quot;robot_geometry.*&quot; with every component before they configure." alt="" coords="1194,198,1357,253"/>
+<area shape="poly" id="edge10_Node000004_Node000011" title=" " alt="" coords="984,144,1183,195,1194,198,1193,203,1181,200,982,149"/>
+<area shape="rect" id="Node000012" href="$system__shutdown__request__tests_8cpp.html" title="A shutdown requested by a recovery mitigation takes SystemNode (and every EasyNav node) out of Active..." alt="" coords="1381,198,1562,253"/>
+<area shape="poly" id="edge11_Node000004_Node000012" title=" " alt="" coords="1017,137,1185,162,1369,195,1381,198,1380,203,1368,200,1184,167,1016,142"/>
+<area shape="rect" id="Node000013" href="$system__tfinfo__tests_8cpp.html" title=" " alt="" coords="1586,205,1748,246"/>
+<area shape="poly" id="edge12_Node000004_Node000013" title=" " alt="" coords="1017,128,1276,151,1426,170,1575,195,1605,202,1603,207,1573,200,1425,175,1275,156,1017,133"/>
+<area shape="rect" id="Node000014" href="$system__velocity__smoothing__tests_8cpp.html" title="End to end through SystemNode: with very low accelerations, the published commands are smoothed,..." alt="" coords="1772,198,1957,253"/>
+<area shape="poly" id="edge13_Node000004_Node000014" title=" " alt="" coords="1017,125,1169,133,1355,146,1558,166,1761,195,1772,197,1771,202,1760,200,1558,172,1354,151,1168,138,1017,130"/>
 </map>

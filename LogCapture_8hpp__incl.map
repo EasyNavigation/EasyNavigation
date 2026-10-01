@@ -1,0 +1,15 @@
+<map id="easynav_common/include/easynav_common/testing/LogCapture.hpp" name="easynav_common/include/easynav_common/testing/LogCapture.hpp">
+<area shape="rect" id="Node000001" title="LogCapture: records the log messages emitted while it lives (for tests)." alt="" coords="154,5,327,61"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,109,70,135"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="178,64,81,105,79,100,176,59"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="93,109,150,135"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="205,63,152,102,149,97,202,59"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="173,109,230,135"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="231,62,216,96,211,93,226,60"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="254,109,307,135"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="255,60,270,93,266,96,250,62"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="332,109,389,135"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="279,59,332,97,329,102,276,63"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="412,109,524,135"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="313,59,423,101,421,106,311,64"/>
+</map>

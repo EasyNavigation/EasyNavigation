@@ -8,12 +8,14 @@ var searchData=
   ['reconfigured_5',['reconfigured',['../classSystemReconfigureTest.html#a3a5ce0c751b05f2c6a14520e9080ee6a',1,'SystemReconfigureTest']]],
   ['register_5fbasic_5fprinters_6',['register_basic_printers',['../classeasynav_1_1NavState.html#a82a008060cac9685e29238810b65b45d',1,'easynav::NavState']]],
   ['register_5fprinter_7',['register_printer',['../classeasynav_1_1NavState.html#ab23ffa81abd5a1e3953e1d8405902cc2',1,'easynav::NavState']]],
-  ['removeinstance_8',['removeInstance',['../classeasynav_1_1Singleton.html#a932098eab97158326f0fe7a8283b319f',1,'easynav::Singleton']]],
-  ['request_5freconfigure_9',['request_reconfigure',['../classeasynav_1_1SystemNode.html#a86a5682966870e68ca882f68df9d40b6',1,'easynav::SystemNode']]],
-  ['request_5frestore_5fparameters_10',['request_restore_parameters',['../classeasynav_1_1SystemNode.html#a0ecc1562707b2ea74382ada794cfd8d0',1,'easynav::SystemNode']]],
-  ['request_5fshutdown_11',['request_shutdown',['../classeasynav_1_1SystemNode.html#afb19ea0f03d73f4a8ea358431f5c60b3',1,'easynav::SystemNode']]],
-  ['reset_12',['reset',['../classeasynav_1_1VelocityMux.html#ad20897c5c8bd47f5d4005989bead0e55',1,'easynav::VelocityMux::reset()'],['../classeasynav_1_1VelocitySmoother.html#a00e90e77ed49ca0555533ba7f68dc5fc',1,'easynav::VelocitySmoother::reset()'],['../classeasynav_1_1GoalManagerClient.html#ad20897c5c8bd47f5d4005989bead0e55',1,'easynav::GoalManagerClient::reset()'],['../classVelocityMux.html#ad20897c5c8bd47f5d4005989bead0e55',1,'VelocityMux::reset()']]],
-  ['resize_13',['resize',['../classeasynav_1_1PointPerception.html#abec4b6a1f866fa00c123e151c664dab2',1,'easynav::PointPerception']]],
-  ['resume_14',['resume',['../classeasynav_1_1GoalManagerClient.html#a41de8150eff044a237990c271d57ea27',1,'easynav::GoalManagerClient']]],
-  ['rttfbuffer_15',['RTTFBuffer',['../classeasynav_1_1RTTFBuffer.html#afaceb31b09807d360fb2b8e91ec6a929',1,'easynav::RTTFBuffer::RTTFBuffer(const rclcpp::Clock::SharedPtr &amp;clock)'],['../classeasynav_1_1RTTFBuffer.html#aa7ef3a0d2cb5503016dd47f8877364fc',1,'easynav::RTTFBuffer::RTTFBuffer()']]]
+  ['registry_8',['registry',['../classSystemRobotGeometryTest.html#a8578576c1dd3b4405cb8c15e00d47148',1,'SystemRobotGeometryTest']]],
+  ['removeinstance_9',['removeInstance',['../classeasynav_1_1Singleton.html#a932098eab97158326f0fe7a8283b319f',1,'easynav::Singleton']]],
+  ['request_5freconfigure_10',['request_reconfigure',['../classeasynav_1_1SystemNode.html#a86a5682966870e68ca882f68df9d40b6',1,'easynav::SystemNode']]],
+  ['request_5frestore_5fparameters_11',['request_restore_parameters',['../classeasynav_1_1SystemNode.html#a0ecc1562707b2ea74382ada794cfd8d0',1,'easynav::SystemNode']]],
+  ['request_5fshutdown_12',['request_shutdown',['../classeasynav_1_1SystemNode.html#afb19ea0f03d73f4a8ea358431f5c60b3',1,'easynav::SystemNode']]],
+  ['reset_13',['reset',['../classeasynav_1_1VelocityMux.html#ad20897c5c8bd47f5d4005989bead0e55',1,'easynav::VelocityMux::reset()'],['../classeasynav_1_1VelocitySmoother.html#a00e90e77ed49ca0555533ba7f68dc5fc',1,'easynav::VelocitySmoother::reset()'],['../classeasynav_1_1GoalManagerClient.html#ad20897c5c8bd47f5d4005989bead0e55',1,'easynav::GoalManagerClient::reset()'],['../classVelocityMux.html#ad20897c5c8bd47f5d4005989bead0e55',1,'VelocityMux::reset()']]],
+  ['resize_14',['resize',['../classeasynav_1_1PointPerception.html#abec4b6a1f866fa00c123e151c664dab2',1,'easynav::PointPerception']]],
+  ['resume_15',['resume',['../classeasynav_1_1GoalManagerClient.html#a41de8150eff044a237990c271d57ea27',1,'easynav::GoalManagerClient']]],
+  ['robotgeometryregistry_16',['RobotGeometryRegistry',['../classeasynav_1_1RobotGeometryRegistry.html#ace1aacdd9e71de82c2c7121633944554',1,'easynav::RobotGeometryRegistry']]],
+  ['rttfbuffer_17',['RTTFBuffer',['../classeasynav_1_1RTTFBuffer.html#afaceb31b09807d360fb2b8e91ec6a929',1,'easynav::RTTFBuffer::RTTFBuffer(const rclcpp::Clock::SharedPtr &amp;clock)'],['../classeasynav_1_1RTTFBuffer.html#aa7ef3a0d2cb5503016dd47f8877364fc',1,'easynav::RTTFBuffer::RTTFBuffer()']]]
 ];

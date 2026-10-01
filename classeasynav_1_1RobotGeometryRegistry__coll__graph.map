@@ -1,0 +1,5 @@
+<map id="RobotGeometryRegistry" name="RobotGeometryRegistry">
+<area shape="rect" id="Node000001" title="Shares the robot&#39;s geometry across EasyNav&#39;s nodes." alt="" coords="14,94,173,120"/>
+<area shape="rect" id="Node000002" href="$classeasynav_1_1Singleton.html" title=" " alt="" coords="5,5,182,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="96,62,96,93,91,93,91,62"/>
+</map>

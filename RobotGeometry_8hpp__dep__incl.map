@@ -1,0 +1,9 @@
+<map id="easynav_common/include/easynav_common/RobotGeometry.hpp" name="easynav_common/include/easynav_common/RobotGeometry.hpp">
+<area shape="rect" id="Node000001" title="RobotGeometryRegistry, which shares the robot&#39;s geometry, and get_robot_geometry()." alt="" coords="192,5,441,46"/>
+<area shape="rect" id="Node000002" href="$robot__geometry__tests_8cpp.html" title="Tests for get_robot_geometry(): the system&#39;s geometry and deprecated parameters." alt="" coords="5,102,180,142"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="257,55,140,103,138,98,254,50"/>
+<area shape="rect" id="Node000003" href="$SystemNode_8cpp.html" title="Implementation of the SystemNode class." alt="" coords="204,102,429,142"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="319,62,319,101,314,101,314,62"/>
+<area shape="rect" id="Node000004" href="$system__robot__geometry__tests_8cpp.html" title="SystemNode shares &quot;robot_geometry.*&quot; with every component before they configure." alt="" coords="454,94,617,150"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="377,50,473,91,471,96,375,55"/>
+</map>

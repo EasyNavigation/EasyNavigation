@@ -16,11 +16,13 @@ var searchData=
   ['initialize_13',['initialize',['../classeasynav_1_1PerceptionHandler.html#a380e843c8336262e18110e480d8a85e9',1,'easynav::PerceptionHandler::initialize()'],['../classPerceptionHandler.html#a380e843c8336262e18110e480d8a85e9',1,'PerceptionHandler::initialize()']]],
   ['initialized_14',['initialized',['../classPerceptionLockingTestCase.html#aedeffc7d23da25d52b9a50045189fe2b',1,'PerceptionLockingTestCase::initialized'],['../classPerceptionsTestCase.html#aedeffc7d23da25d52b9a50045189fe2b',1,'PerceptionsTestCase::initialized'],['../classSensorsNodeTestCase.html#aedeffc7d23da25d52b9a50045189fe2b',1,'SensorsNodeTestCase::initialized'],['../classGoalManagerTestCase.html#aedeffc7d23da25d52b9a50045189fe2b',1,'GoalManagerTestCase::initialized']]],
   ['initialized_5f_15',['initialized_',['../classSystemLifecycleCycleTest.html#aef7436a220692b5b863db4e9d8b870a3',1,'SystemLifecycleCycleTest::initialized_'],['../classSystemPauseTest.html#aef7436a220692b5b863db4e9d8b870a3',1,'SystemPauseTest::initialized_']]],
-  ['integrate_5fpending_5fperceptions_16',['integrate_pending_perceptions',['../classeasynav_1_1PointPerception.html#af8124b1de9bcb177570f59cbf6ded6b9',1,'easynav::PointPerception']]],
-  ['is_5fconnected_17',['is_connected',['../classeasynav_1_1GoalManagerClient.html#accf4ef6f99c7c6194b487ce7b9f45273',1,'easynav::GoalManagerClient']]],
-  ['is_5fpaused_18',['is_paused',['../classeasynav_1_1GoalManager.html#aa3bde2742b0e5c8bb77370b03e3d1489',1,'easynav::GoalManager::is_paused()'],['../classeasynav_1_1GoalManagerClient.html#aa3bde2742b0e5c8bb77370b03e3d1489',1,'easynav::GoalManagerClient::is_paused()']]],
-  ['is_5fprogress_5fheld_19',['is_progress_held',['../classeasynav_1_1GoalManager.html#afddd6523025010f5c1bb9dbe58f133ba',1,'easynav::GoalManager']]],
-  ['is_5freconfigure_5fpending_20',['is_reconfigure_pending',['../classeasynav_1_1SystemNode.html#ada609223d2de005e763b8dc8a884264a',1,'easynav::SystemNode']]],
-  ['is_5frobot_5flimit_5fconfigured_21',['is_robot_limit_configured',['../classeasynav_1_1ControllerNode.html#aa519cb557b9bb5dc6fb67add8a28e976',1,'easynav::ControllerNode']]],
-  ['is_5fshutdown_5frequested_22',['is_shutdown_requested',['../classeasynav_1_1SystemNode.html#af1cee97a26965526583e27561933d534',1,'easynav::SystemNode']]]
+  ['inscribed_5fradius_16',['inscribed_radius',['../structeasynav_1_1RobotGeometry.html#a26cbd571c6dba5794f10b3f31fc1637d',1,'easynav::RobotGeometry::inscribed_radius'],['../structeasynav_1_1LegacyRobotGeometryNames.html#a83ae1c56ea92b9ba4274abdf06bd71be',1,'easynav::LegacyRobotGeometryNames::inscribed_radius'],['../structRobotGeometry.html#a26cbd571c6dba5794f10b3f31fc1637d',1,'RobotGeometry::inscribed_radius']]],
+  ['integrate_5fpending_5fperceptions_17',['integrate_pending_perceptions',['../classeasynav_1_1PointPerception.html#af8124b1de9bcb177570f59cbf6ded6b9',1,'easynav::PointPerception']]],
+  ['is_5fconfigured_18',['is_configured',['../classeasynav_1_1RobotGeometryRegistry.html#aac00711d6062d68e4ad1da4c710881ab',1,'easynav::RobotGeometryRegistry']]],
+  ['is_5fconnected_19',['is_connected',['../classeasynav_1_1GoalManagerClient.html#accf4ef6f99c7c6194b487ce7b9f45273',1,'easynav::GoalManagerClient']]],
+  ['is_5fpaused_20',['is_paused',['../classeasynav_1_1GoalManager.html#aa3bde2742b0e5c8bb77370b03e3d1489',1,'easynav::GoalManager::is_paused()'],['../classeasynav_1_1GoalManagerClient.html#aa3bde2742b0e5c8bb77370b03e3d1489',1,'easynav::GoalManagerClient::is_paused()']]],
+  ['is_5fprogress_5fheld_21',['is_progress_held',['../classeasynav_1_1GoalManager.html#afddd6523025010f5c1bb9dbe58f133ba',1,'easynav::GoalManager']]],
+  ['is_5freconfigure_5fpending_22',['is_reconfigure_pending',['../classeasynav_1_1SystemNode.html#ada609223d2de005e763b8dc8a884264a',1,'easynav::SystemNode']]],
+  ['is_5frobot_5flimit_5fconfigured_23',['is_robot_limit_configured',['../classeasynav_1_1ControllerNode.html#aa519cb557b9bb5dc6fb67add8a28e976',1,'easynav::ControllerNode']]],
+  ['is_5fshutdown_5frequested_24',['is_shutdown_requested',['../classeasynav_1_1SystemNode.html#af1cee97a26965526583e27561933d534',1,'easynav::SystemNode']]]
 ];
