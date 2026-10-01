@@ -260,8 +260,10 @@ class EasyNavTabbedApp(App):
                                     yield Label('Mitigation', classes='title')
                                     yield Static('', classes='spacer')
                                     yield Switch(value=True, id='sw_mitigation')
+                                # Bounded: an unresolved diagnostic may report for a long time.
                                 self.rl_mitigation = RichLog(
-                                    id='rl_mitigation', markup=True, wrap=True, auto_scroll=True)
+                                    id='rl_mitigation', markup=True, wrap=True, auto_scroll=True,
+                                    max_lines=500)
                                 yield self.rl_mitigation
 
                     # RIGHT column: NavState + Time stats

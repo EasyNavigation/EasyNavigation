@@ -24,6 +24,8 @@ from geometry_msgs.msg import Twist, TwistStamped
 
 from rcl_interfaces.msg import Log
 
+from rich.markup import escape
+
 from std_msgs.msg import String
 
 
@@ -275,9 +277,9 @@ class DiagnosticsProcessor():
             values = ''
             if status.values:
                 values = ' {' + ', '.join(f'{v.key}={v.value}' for v in status.values) + '}'
-            lines.append(
-                f'[{color}]{label}[/{color}] [{status.name}]{hw}: {status.message}{values}'
-            )
+            # Only the severity label is markup: ROS text may contain brackets.
+            text = escape(f'[{status.name}]{hw}: {status.message}{values}')
+            lines.append(f'[{color}]{label}[/{color}] {text}')
         return '\n'.join(lines)
 
     def destroy(self):
@@ -322,7 +324,7 @@ class MitigationProcessor():
     def msg2line(msg: Log) -> str:
         """Render one Log entry as a single colored line for the Mitigation panel."""
         label, color = LOG_LEVEL_MAP.get(msg.level, (str(msg.level), 'white'))
-        return f'[{color}]{label}[/{color}] [{msg.name}]: {msg.msg}'
+        return f'[{color}]{label}[/{color}] ' + escape(f'[{msg.name}]: {msg.msg}')
 
     def destroy(self):
         self.node.destroy_subscription(self.mitigation_sub)

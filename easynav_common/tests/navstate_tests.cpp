@@ -334,6 +334,47 @@ TEST_F(NavStateTest, GetGroupKeysSupportsIncrementalGrowth)
     state.get_group_keys("diagnostics"), std::vector<std::string>({"planner", "controller"}));
 }
 
+TEST_F(NavStateTest, AddToGroupCreatesAndGrowsTheGroup)
+{
+  easynav::NavState state;
+  state.add_to_group("diagnostics", "planner");
+  EXPECT_TRUE(state.has_group("diagnostics"));
+  state.add_to_group("diagnostics", "controller");
+  EXPECT_EQ(
+    state.get_group_keys("diagnostics"), std::vector<std::string>({"planner", "controller"}));
+  EXPECT_EQ(
+    state.get<std::vector<std::string>>("diagnostics"),
+    std::vector<std::string>({"planner", "controller"})) << "same introspection value as set_group";
+}
+
+TEST_F(NavStateTest, AddToGroupIgnoresDuplicates)
+{
+  easynav::NavState state;
+  state.set_group("diagnostics", {"planner"});
+  state.add_to_group("diagnostics", "planner");
+  state.add_to_group("diagnostics", "controller");
+  state.add_to_group("diagnostics", "controller");
+  EXPECT_EQ(
+    state.get_group_keys("diagnostics"), std::vector<std::string>({"planner", "controller"}));
+}
+
+TEST_F(NavStateTest, AddToGroupFromSeveralThreadsLosesNoMember)
+{
+  // E.g. evaluators (non-RT) and safety reflexes (RT) registering their diagnostics.
+  easynav::NavState state;
+  constexpr int kPerThread = 200;
+  auto add = [&state](const std::string & prefix) {
+      for (int i = 0; i < kPerThread; ++i) {
+        state.add_to_group("diagnostics", prefix + std::to_string(i));
+      }
+    };
+  std::thread a(add, "a"), b(add, "b"), c(add, "c");
+  a.join();
+  b.join();
+  c.join();
+  EXPECT_EQ(state.get_group_keys("diagnostics").size(), 3u * kPerThread);
+}
+
 TEST_F(NavStateTest, GetGroupKeysDoesNotRequireMembersToExist)
 {
   easynav::NavState state;
