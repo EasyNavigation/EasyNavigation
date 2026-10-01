@@ -29,6 +29,7 @@
 
 #include "easynav_common/types/NavState.hpp"
 #include "easynav_common/RTTFBuffer.hpp"
+#include "easynav_sensors/types/PointPerception.hpp"
 #include "easynav_core/MethodBase.hpp"
 #include "easynav_core/LocalizerMethodBase.hpp"
 #include "easynav_core/PlannerMethodBase.hpp"
@@ -596,17 +597,54 @@ TEST_F(CoreMethodTestCase, MapsManagerInternalUpdateRunsWhenTimeElapsed)
 // ControllerMethodBase: initialize and internal_update_rt
 // ─────────────────────────────────────────────────────────────────────────────
 
-TEST_F(CoreMethodTestCase, ControllerInitializeDeclaresCollisionParams)
+// The collision checker moved to the recovery system.
+class CollisionCheckerRemovedTest : public CoreMethodTestCase {};
+
+// A controller that always commands forward.
+class ForwardController : public easynav::ControllerMethodBase
+{
+public:
+  void on_initialize() override {}
+  void update_rt(easynav::NavState & nav_state) override
+  {
+    geometry_msgs::msg::TwistStamped cmd;
+    cmd.twist.linear.x = 0.5;
+    nav_state.set("cmd_vel", cmd);
+  }
+};
+
+TEST_F(CollisionCheckerRemovedTest, NoCollisionCheckerParameters)
 {
   auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_ctrl_init_node");
   TrackingController ctrl;
   ctrl.initialize(node, "ctrl_p");
+  for (const auto & name : {"active", "debug_markers", "robot_radius", "robot_height",
+      "brake_acc", "safety_margin", "z_min_filter", "downsample_leaf_size"})
+  {
+    EXPECT_FALSE(node->has_parameter(std::string("colision_checker.") + name)) << name;
+  }
+}
 
-  // All collision checker parameters should have been declared
-  EXPECT_TRUE(node->has_parameter("colision_checker.active"));
-  EXPECT_TRUE(node->has_parameter("colision_checker.robot_radius"));
-  EXPECT_TRUE(node->has_parameter("colision_checker.brake_acc"));
-  EXPECT_TRUE(node->has_parameter("colision_checker.safety_margin"));
+TEST_F(CollisionCheckerRemovedTest, TheControllerCommandIsNotAltered)
+{
+  // Even configured as before and with an obstacle right ahead: braking is the recovery
+  // system's job now.
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>(
+    "test_ctrl_checker_node", rclcpp::NodeOptions().parameter_overrides(
+      {{"colision_checker.active", true}, {"colision_checker.robot_radius", 0.3}}));
+  ForwardController ctrl;
+  ctrl.initialize(node, "ctrl");
+
+  easynav::NavState nav_state;
+  easynav::PointPerception perception;
+  perception.data.push_back(pcl::PointXYZ(0.2, 0.0, 0.2));
+  perception.frame_id = "base_link";
+  perception.stamp = node->now();
+  perception.valid = true;
+  nav_state.set("scan", perception);
+  ASSERT_TRUE(ctrl.internal_update_rt(nav_state, true));
+  EXPECT_DOUBLE_EQ(
+    nav_state.get<geometry_msgs::msg::TwistStamped>("cmd_vel").twist.linear.x, 0.5);
 }
 
 TEST_F(CoreMethodTestCase, ControllerInternalUpdateRtWithTriggerAlwaysRuns)

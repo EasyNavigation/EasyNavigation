@@ -28,6 +28,7 @@
 #include "easynav_common/Parameters.hpp"
 #include "easynav_common/RTTFBuffer.hpp"
 
+#include "easynav_recovery/RecoveryManagerNode.hpp"
 #include "easynav_system/SystemNode.hpp"
 
 namespace easynav
@@ -58,6 +59,7 @@ SystemNode::SystemNode(const rclcpp::NodeOptions & options)
   maps_manager_node_ = MapsManagerNode::make_shared();
   planner_node_ = PlannerNode::make_shared();
   sensors_node_ = SensorsNode::make_shared();
+  recovery_node_ = RecoveryManagerNode::make_shared();
 
 
   TFInfo tf_info;
@@ -91,6 +93,11 @@ SystemNode::on_configure(const rclcpp_lifecycle::State & state)
   (void)state;
 
   forward_deprecated_use_cmd_vel_stamped();
+
+  // What the recovery system may ask of the navigation system: this node (see SystemActions).
+  recovery_node_->set_system_actions(
+    std::static_pointer_cast<SystemActions>(
+      std::static_pointer_cast<SystemNode>(shared_from_this())));
 
   TFInfo tf_info;
   get_parameter("robot_frame", tf_info.robot_frame);
@@ -187,6 +194,11 @@ SystemNode::on_deactivate(const rclcpp_lifecycle::State & state)
     }
   }
 
+  if (is_shutdown_requested()) {
+    // Unrecoverable error while Active: ErrorProcessing (on_error()), not back to Inactive.
+    return CallbackReturnT::ERROR;
+  }
+
   return CallbackReturnT::SUCCESS;
 }
 
@@ -261,7 +273,206 @@ CallbackReturnT
 SystemNode::on_error(const rclcpp_lifecycle::State & state)
 {
   (void)state;
-  return CallbackReturnT::SUCCESS;
+
+  if (!is_shutdown_requested()) {
+    return CallbackReturnT::SUCCESS;
+  }
+
+  // Unrecoverable (see request_shutdown()): shut every EasyNav node down and fail, so this node
+  // ends in Finalized.
+  RCLCPP_FATAL(get_logger(), "Unrecoverable error: finalizing EasyNav");
+  for (auto & system_node : get_system_nodes()) {
+    auto & node = system_node.second.node_ptr;
+    switch (node->get_current_state().id()) {
+      case lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE:
+        node->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_ACTIVE_SHUTDOWN);
+        break;
+      case lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE:
+        node->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_INACTIVE_SHUTDOWN);
+        break;
+      case lifecycle_msgs::msg::State::PRIMARY_STATE_UNCONFIGURED:
+        node->trigger_transition(
+          lifecycle_msgs::msg::Transition::TRANSITION_UNCONFIGURED_SHUTDOWN);
+        break;
+      default:
+        break;
+    }
+  }
+  return CallbackReturnT::FAILURE;
+}
+
+std::string
+SystemNode::get_shutdown_reason() const
+{
+  std::lock_guard<std::mutex> lock(shutdown_reason_mutex_);
+  return shutdown_reason_;
+}
+
+void
+SystemNode::abort_mission(const std::string & reason)
+{
+  if (goal_manager_ && goal_manager_->get_state() == GoalManager::State::ACTIVE) {
+    RCLCPP_ERROR(get_logger(), "Mission aborted by recovery: %s", reason.c_str());
+    goal_manager_->set_error(reason);
+  }
+}
+
+void
+SystemNode::hold_mission_progress(bool hold)
+{
+  if (goal_manager_) {
+    goal_manager_->set_progress_held(hold);
+  }
+}
+
+void
+SystemNode::request_shutdown(const std::string & reason)
+{
+  std::lock_guard<std::mutex> lock(shutdown_reason_mutex_);
+  if (shutdown_requested_) {
+    return;  // Latched: the first reason is kept
+  }
+  shutdown_reason_ = reason;
+  shutdown_requested_ = true;
+  RCLCPP_FATAL(get_logger(), "Shutdown requested by recovery: %s", reason.c_str());
+}
+
+void
+SystemNode::request_reconfigure(
+  const std::vector<ParameterChange> & changes, const std::string & reason)
+{
+  std::lock_guard<std::mutex> lock(reconfigure_mutex_);
+  pending_reconfigure_ = ReconfigureRequest{changes, false, reason};
+}
+
+void
+SystemNode::request_restore_parameters(const std::string & reason)
+{
+  std::lock_guard<std::mutex> lock(reconfigure_mutex_);
+  pending_reconfigure_ = ReconfigureRequest{{}, true, reason};
+}
+
+bool
+SystemNode::is_reconfigure_pending() const
+{
+  std::lock_guard<std::mutex> lock(reconfigure_mutex_);
+  return pending_reconfigure_.has_value();
+}
+
+rclcpp_lifecycle::LifecycleNode::SharedPtr
+SystemNode::find_node(const std::string & name)
+{
+  if (name == get_name()) {
+    return std::static_pointer_cast<rclcpp_lifecycle::LifecycleNode>(shared_from_this());
+  }
+  auto nodes = get_system_nodes();
+  auto it = nodes.find(name);
+  return it == nodes.end() ? nullptr : it->second.node_ptr;
+}
+
+bool
+SystemNode::apply_pending_reconfigure()
+{
+  using lifecycle_msgs::msg::State;
+
+  ReconfigureRequest request;
+  {
+    std::lock_guard<std::mutex> lock(reconfigure_mutex_);
+    if (!pending_reconfigure_ || is_shutdown_requested() ||
+      get_current_state().id() != State::PRIMARY_STATE_ACTIVE)
+    {
+      return false;
+    }
+    request = std::move(*pending_reconfigure_);
+    pending_reconfigure_.reset();
+  }
+
+  std::vector<ParameterChange> changes = request.changes;
+  if (request.restore) {
+    changes.clear();
+    for (const auto & [key, original] : original_parameters_) {
+      changes.push_back(original);
+    }
+  }
+  if (changes.empty()) {
+    return false;
+  }
+
+  // Current values: the originals of first changes, and what to go back to if these fail.
+  std::vector<ParameterChange> previous;
+  for (const auto & change : changes) {
+    auto node = find_node(change.node);
+    if (!node || !node->has_parameter(change.parameter.get_name())) {
+      RCLCPP_ERROR(
+        get_logger(), "Reconfiguration rejected (%s): no parameter [%s] in [%s]",
+        request.reason.c_str(), change.parameter.get_name().c_str(), change.node.c_str());
+      return false;
+    }
+    previous.push_back({change.node, node->get_parameter(change.parameter.get_name())});
+  }
+
+  RCLCPP_WARN(get_logger(), "Reconfiguring EasyNav: %s", request.reason.c_str());
+  if (!restart_with(changes)) {
+    RCLCPP_ERROR(get_logger(), "Reconfiguration failed, restoring the previous values");
+    if (!restart_with(previous)) {
+      request_shutdown("unable to reconfigure (" + request.reason + ") or restore");
+    }
+    return true;
+  }
+
+  if (request.restore) {
+    original_parameters_.clear();
+  } else {
+    for (const auto & value : previous) {
+      original_parameters_.emplace(value.node + "/" + value.parameter.get_name(), value);
+    }
+  }
+
+  std::vector<std::string> changed;
+  for (const auto & [key, original] : original_parameters_) {
+    changed.push_back(key);
+  }
+  nav_state_->set("reconfigured_parameters", changed);
+  return true;
+}
+
+bool
+SystemNode::restart_with(const std::vector<ParameterChange> & changes)
+{
+  using lifecycle_msgs::msg::State;
+  using lifecycle_msgs::msg::Transition;
+
+  if (get_current_state().id() == State::PRIMARY_STATE_ACTIVE) {
+    trigger_transition(Transition::TRANSITION_DEACTIVATE);
+  }
+  if (get_current_state().id() == State::PRIMARY_STATE_INACTIVE) {
+    trigger_transition(Transition::TRANSITION_CLEANUP);
+  }
+  if (get_current_state().id() != State::PRIMARY_STATE_UNCONFIGURED) {
+    return false;
+  }
+  // A failed configure may leave some subnodes configured.
+  for (auto & [name, info] : get_system_nodes()) {
+    if (info.node_ptr->get_current_state().id() == State::PRIMARY_STATE_INACTIVE) {
+      info.node_ptr->trigger_transition(Transition::TRANSITION_CLEANUP);
+    }
+  }
+
+  bool all_set = true;
+  for (const auto & change : changes) {
+    const auto result = find_node(change.node)->set_parameter(change.parameter);
+    if (!result.successful) {
+      RCLCPP_ERROR(
+        get_logger(), "Unable to set [%s/%s]: %s", change.node.c_str(),
+        change.parameter.get_name().c_str(), result.reason.c_str());
+      all_set = false;
+    }
+  }
+
+  return trigger_transition(Transition::TRANSITION_CONFIGURE).id() ==
+         State::PRIMARY_STATE_INACTIVE &&
+         trigger_transition(Transition::TRANSITION_ACTIVATE).id() == State::PRIMARY_STATE_ACTIVE &&
+         all_set;
 }
 
 rclcpp::CallbackGroup::SharedPtr
@@ -287,6 +498,8 @@ SystemNode::system_cycle_rt()
 
   const bool trigger = trigger_perceptions || trigger_localization;
   controller_node_->cycle_rt(nav_state_, trigger);
+  // The recovery system may take over or override the command before it is published.
+  recovery_node_->cycle_rt(nav_state_);
 
   // Selected, smoothed within the robot limits, and published.
   controller_node_->publish_cmd_vel_rt(nav_state_);
@@ -309,6 +522,9 @@ SystemNode::system_cycle()
 
   planner_node_->cycle(nav_state_, planner_ts < goals_ts);
 
+  // Last: the recovery system diagnoses what the cycle above just produced.
+  recovery_node_->cycle(nav_state_);
+
   if (navstate_pub_->get_subscription_count() > 0) {
     std_msgs::msg::String msg;
     msg.data = nav_state_->debug_string();
@@ -326,6 +542,7 @@ SystemNode::get_system_nodes()
   ret[maps_manager_node_->get_name()] = {maps_manager_node_, nullptr};
   ret[planner_node_->get_name()] = {planner_node_, nullptr};
   ret[sensors_node_->get_name()] = {sensors_node_, sensors_node_->get_real_time_cbg()};
+  ret[recovery_node_->get_name()] = {recovery_node_, nullptr};
 
   return ret;
 }

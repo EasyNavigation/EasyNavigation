@@ -18,7 +18,12 @@
 #ifndef EASYNAV_SYSTEM__SYSTEMNODE_HPP_
 #define EASYNAV_SYSTEM__SYSTEMNODE_HPP_
 
+#include <atomic>
+#include <map>
 #include <mutex>
+#include <optional>
+#include <string>
+#include <vector>
 
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp/macros.hpp"
@@ -30,9 +35,11 @@
 
 #include "easynav_common/types/NavState.hpp"
 #include "easynav_controller/ControllerNode.hpp"
+#include "easynav_core/SystemActions.hpp"
 #include "easynav_localizer/LocalizerNode.hpp"
 #include "easynav_maps_manager/MapsManagerNode.hpp"
 #include "easynav_planner/PlannerNode.hpp"
+#include "easynav_recovery/RecoveryManagerNode.hpp"
 #include "easynav_sensors/SensorsNode.hpp"
 #include "easynav_system/GoalManager.hpp"
 
@@ -56,7 +63,7 @@ struct SystemNodeInfo
  * Manages lifecycle transitions, real-time execution, and communication
  * between planner, controller, localizer, map manager, and sensor nodes.
  */
-class SystemNode : public rclcpp_lifecycle::LifecycleNode
+class SystemNode : public rclcpp_lifecycle::LifecycleNode, public SystemActions
 {
 public:
   RCLCPP_SMART_PTR_DEFINITIONS(SystemNode)
@@ -141,6 +148,44 @@ public:
    */
   [[nodiscard]] std::shared_ptr<NavState> get_nav_state() const {return nav_state_;}
 
+  /**
+   * @brief Whether the recovery system asked EasyNav to terminate (request_shutdown()).
+   * Whoever drives this node's lifecycle should then deactivate it, which ends in Finalized
+   * (see on_deactivate()/on_error()).
+   */
+  [[nodiscard]] bool is_shutdown_requested() const {return shutdown_requested_;}
+
+  /// @brief Why the shutdown was requested.
+  [[nodiscard]] std::string get_shutdown_reason() const;
+
+  /// @brief SystemActions: aborts the active mission, if any, telling its client why.
+  void abort_mission(const std::string & reason) override;
+
+  /// @brief SystemActions: while held, GoalManager takes no goal as reached.
+  void hold_mission_progress(bool hold) override;
+
+  /// @brief SystemActions: records that EasyNav must terminate (see is_shutdown_requested()).
+  void request_shutdown(const std::string & reason) override;
+
+  /// @brief SystemActions: pending until apply_pending_reconfigure().
+  void request_reconfigure(
+    const std::vector<ParameterChange> & changes, const std::string & reason) override;
+
+  /// @brief SystemActions: pending until apply_pending_reconfigure().
+  void request_restore_parameters(const std::string & reason) override;
+
+  /**
+   * @brief Applies the pending reconfiguration request, if any, while Active: cycles through
+   * unconfigured, setting the parameters there. Called by whoever drives this node's lifecycle,
+   * between cycles (never from a cycle: the recovery system is reloaded).
+   * @return True if EasyNav was reconfigured (with the new values or, if they failed, the
+   * previous ones).
+   */
+  bool apply_pending_reconfigure();
+
+  /// @brief Whether a reconfiguration is pending.
+  [[nodiscard]] bool is_reconfigure_pending() const;
+
 private:
   /// @brief Leaves a zero "cmd_vel" in NavState (ControllerNode stops the robot).
   void clear_cmd_vel();
@@ -171,6 +216,34 @@ private:
 
   /// @brief Sensors node.
   SensorsNode::SharedPtr sensors_node_;
+
+  /// @brief Hosts the recovery system (a RecoveryManagerBase plugin).
+  RecoveryManagerNode::SharedPtr recovery_node_;
+
+  /// @brief Set by request_shutdown(), see is_shutdown_requested().
+  std::atomic<bool> shutdown_requested_ {false};
+  std::string shutdown_reason_;
+  mutable std::mutex shutdown_reason_mutex_;
+
+  /// @brief A reconfiguration requested by the recovery system (see apply_pending_reconfigure()).
+  struct ReconfigureRequest
+  {
+    std::vector<ParameterChange> changes;
+    bool restore {false};
+    std::string reason;
+  };
+  std::optional<ReconfigureRequest> pending_reconfigure_;
+  mutable std::mutex reconfigure_mutex_;
+
+  /// @brief Value of each changed parameter before its first change, by "node/parameter".
+  std::map<std::string, ParameterChange> original_parameters_;
+
+  /// @brief EasyNav node by name (a subnode or this one), or nullptr.
+  rclcpp_lifecycle::LifecycleNode::SharedPtr find_node(const std::string & name);
+
+  /// @brief Goes to unconfigured, sets \p changes and goes back to active.
+  /// @return True if every change was set and EasyNav is active again.
+  bool restart_with(const std::vector<ParameterChange> & changes);
 
   /// @brief Shared navigation state.
   std::shared_ptr<NavState> nav_state_;

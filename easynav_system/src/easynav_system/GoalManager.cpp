@@ -343,6 +343,21 @@ GoalManager::set_finished()
 }
 
 void
+GoalManager::set_progress_held(bool held)
+{
+  if (progress_held_.exchange(held) == held) {return;}
+
+  if (auto node = get_node()) {
+    if (held) {
+      RCLCPP_WARN(
+        node->get_logger(), "Mission progress held by recovery: no goal will be taken as reached");
+    } else {
+      RCLCPP_INFO(node->get_logger(), "Mission progress released by recovery");
+    }
+  }
+}
+
+void
 GoalManager::set_error(const std::string & reason)
 {
   auto node = get_node();
@@ -480,7 +495,9 @@ GoalManager::update(NavState & nav_state)
   info_.position_distance = feedback.distance_to_goal;
   info_.angle_distance = calculate_angle(robot_pose, first_goal);
 
-  check_goals(robot_pose, goal_tolerance_);
+  if (!progress_held_) {
+    check_goals(robot_pose, goal_tolerance_);
+  }
 
   if (!nav_state.has("goals")) {
     nav_state.set("goals", goals_);

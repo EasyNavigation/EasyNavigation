@@ -24,6 +24,7 @@
   <depend>easynav_interfaces</depend>
   <depend>easynav_maps_manager</depend>
   <depend>easynav_planner</depend>
+  <depend>easynav_recovery</depend>
   <depend>easynav_localizer</depend>
   <depend>easynav_sensors</depend>
   <depend>easynav_support_py</depend>
