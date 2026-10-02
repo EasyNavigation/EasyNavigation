@@ -145,6 +145,30 @@ TEST_F(FaultyControllerTest, NoFaultReachesTheCommandedVelocity)
   EXPECT_FALSE(diagnostic());
 }
 
+TEST_F(FaultyControllerTest, NominalAngularVelocityIsCommandedWithinTheLimits)
+{
+  make_active_node("none", 0, {{"ctrl.angular_vel", -0.8}, {"robot_limits.max_angular_acc", 3.0}});
+  cycles(100);
+  spin_for(100ms);
+  ASSERT_GT(angular_.size(), 3u);
+  EXPECT_GT(angular_.front(), -0.8) << "a ramp, not a jump";
+  EXPECT_DOUBLE_EQ(angular_.back(), -0.8);
+  EXPECT_DOUBLE_EQ(linear_.back(), 0.5);
+}
+
+TEST_F(FaultyControllerTest, FreezingBeforeAnyCommandNeverMovesTheRobot)
+{
+  // Frozen from the start: the only command ever written is an unstamped zero.
+  make_active_node("freeze", 0);
+  cycles(60);
+  spin_for(100ms);
+  for (size_t i = 0; i < linear_.size(); ++i) {
+    EXPECT_DOUBLE_EQ(linear_[i], 0.0) << i;
+    EXPECT_DOUBLE_EQ(angular_[i], 0.0) << i;
+  }
+  EXPECT_FALSE(diagnostic()) << "a zero target does not time out";
+}
+
 TEST_F(FaultyControllerTest, UnknownFaultFailsToConfigure)
 {
   auto node = std::make_shared<easynav::ControllerNode>(options("melt", 0));
@@ -259,6 +283,12 @@ TEST_F(FaultyControllerTest, HangingControllerIsDetectedByTheReceiverDeadline)
   }
   rt.join();
   EXPECT_GT(missed.load(), 0);
+
+  // After each hang the controller commands again: not a stale command, nothing timed out.
+  spin_for(50ms);
+  ASSERT_FALSE(linear_.empty());
+  EXPECT_DOUBLE_EQ(linear_.back(), 0.5);
+  EXPECT_FALSE(diagnostic());
 }
 
 TEST_F(FaultyControllerTest, FaultAfterLetsTheFirstUpdatesThrough)
