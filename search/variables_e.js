@@ -1,9 +1,9 @@
 var searchData=
 [
-  ['radius_0',['radius',['../structeasynav_1_1RobotGeometry.html#a3f67c53b80389c5f53961936edba04c9',1,'easynav::RobotGeometry::radius'],['../structeasynav_1_1LegacyRobotGeometryNames.html#ae000837070c3f223000ee300b37cc0d2',1,'easynav::LegacyRobotGeometryNames::radius'],['../structRobotGeometry.html#a3f67c53b80389c5f53961936edba04c9',1,'RobotGeometry::radius']]],
-  ['realtime_5fcbg_1',['realtime_cbg',['../structeasynav_1_1SystemNodeInfo.html#a5aab17347096798b46e3925e6d931252',1,'easynav::SystemNodeInfo']]],
-  ['realtime_5fcbg_5f_2',['realtime_cbg_',['../classeasynav_1_1PerceptionHandler.html#ab01799de7c3bf477cd4b8de8e08c342c',1,'easynav::PerceptionHandler::realtime_cbg_'],['../classPerceptionHandler.html#ab01799de7c3bf477cd4b8de8e08c342c',1,'PerceptionHandler::realtime_cbg_']]],
-  ['received_5f_3',['received_',['../classControllerNodeVelocityTest.html#a8b2f9cd583d1b1f8ac16ce6d7ad0edd4',1,'ControllerNodeVelocityTest::received_'],['../classSystemVelocitySmoothingTest.html#a4171f0960e90a287ec97f1fc4992cd0f',1,'SystemVelocitySmoothingTest::received_']]],
-  ['robot_5ffootprint_5fframe_4',['robot_footprint_frame',['../structeasynav_1_1TFInfo.html#a8dbd52299e41d67bf96df83528cb1eac',1,'easynav::TFInfo']]],
-  ['robot_5fframe_5',['robot_frame',['../structeasynav_1_1TFInfo.html#a353f8a8b1f5f926d60a93b70c87e173f',1,'easynav::TFInfo']]]
+  ['parent_5fnode_5f_0',['parent_node_',['../classeasynav_1_1PerceptionHandler.html#a9cb6c9609aa533aa43446fdd36ebbcf0',1,'easynav::PerceptionHandler::parent_node_'],['../classPerceptionHandler.html#a9cb6c9609aa533aa43446fdd36ebbcf0',1,'PerceptionHandler::parent_node_']]],
+  ['pending_5favailable_5f_1',['pending_available_',['../classeasynav_1_1PointPerception.html#a7b7456276bd02c223763924057a0806e',1,'easynav::PointPerception']]],
+  ['pending_5fcloud_5f_2',['pending_cloud_',['../classeasynav_1_1PointPerception.html#a194acd17374e493890fb8a4fb47c90ca',1,'easynav::PointPerception']]],
+  ['pending_5fframe_5f_3',['pending_frame_',['../classeasynav_1_1PointPerception.html#a7a8d0ce5bd53721a80da12bfc67199cb',1,'easynav::PointPerception']]],
+  ['pending_5fstamp_5f_4',['pending_stamp_',['../classeasynav_1_1PointPerception.html#aaddce11136b2919c60fd8c50243af6b8',1,'easynav::PointPerception']]],
+  ['position_5',['position',['../structeasynav_1_1GoalManager_1_1GoalTolerance.html#aa1b2c258efdc9e057ee99a45179692fd',1,'easynav::GoalManager::GoalTolerance']]]
 ];

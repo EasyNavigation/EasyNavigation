@@ -126,6 +126,7 @@ Public Types</h2></td></tr>
 , <a class="el" href="classeasynav_1_1VelocityMux.html#ac5102e0b11ce43d0b9ef595c3c3ab0c3a58b3587d17c09b20f4e74b9df56bbda5">TAKEOVER</a>
 , <br />
 &#160;&#160;<a class="el" href="classeasynav_1_1VelocityMux.html#ac5102e0b11ce43d0b9ef595c3c3ab0c3a3a5974efbe92686d30f0261a204e6ee7">OVERRIDE</a>
+, <a class="el" href="classeasynav_1_1VelocityMux.html#ac5102e0b11ce43d0b9ef595c3c3ab0c3a070a0fb40f6c308ab544b227660aadff">TIMEOUT</a>
 <br />
  }</td></tr>
 <tr class="memdesc:ac5102e0b11ce43d0b9ef595c3c3ab0c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Who the selected command comes from.  <a href="#ac5102e0b11ce43d0b9ef595c3c3ab0c3">More...</a><br /></td></tr>
@@ -134,8 +135,12 @@ Public Types</h2></td></tr>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ad20897c5c8bd47f5d4005989bead0e55" id="r_ad20897c5c8bd47f5d4005989bead0e55"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ad20897c5c8bd47f5d4005989bead0e55">reset</a> ()</td></tr>
 <tr class="memdesc:ad20897c5c8bd47f5d4005989bead0e55"><td class="mdescLeft">&#160;</td><td class="mdescRight">Forgets the last target (e.g. on activation).  <br /></td></tr>
-<tr class="memitem:a784e5a26d3ce4e035de26830ecabd64e" id="r_a784e5a26d3ce4e035de26830ecabd64e"><td class="memItemLeft"><a class="el" href="structVelocityMux_1_1Selection.html">Selection</a>&#160;</td><td class="memItemRight"><a class="el" href="#a784e5a26d3ce4e035de26830ecabd64e">select</a> (NavState &amp;nav_state)</td></tr>
-<tr class="memdesc:a784e5a26d3ce4e035de26830ecabd64e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Takes this cycle's proposals from <code class="param">nav_state</code> and selects the command.  <br /></td></tr>
+<tr class="memitem:a0ee4859746fbaa4f42e2e132370944fd" id="r_a0ee4859746fbaa4f42e2e132370944fd"><td class="memItemLeft"><a class="el" href="structVelocityMux_1_1Selection.html">Selection</a>&#160;</td><td class="memItemRight"><a class="el" href="#a0ee4859746fbaa4f42e2e132370944fd">select</a> (NavState &amp;nav_state, const rclcpp::Time &amp;now)</td></tr>
+<tr class="memdesc:a0ee4859746fbaa4f42e2e132370944fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Takes this cycle's proposals from <code class="param">nav_state</code> and selects the command at <code class="param">now</code>.  <br /></td></tr>
+<tr class="memitem:a908a408536767d93796f28649da34aca" id="r_a908a408536767d93796f28649da34aca"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a908a408536767d93796f28649da34aca">set_timeout</a> (double seconds)</td></tr>
+<tr class="memdesc:a908a408536767d93796f28649da34aca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Longest time (s) a non-zero target is kept without new proposals; 0 disables it.  <br /></td></tr>
+<tr class="memitem:acceb4f54a07cf7fd6562b46f33e7a1e5" id="r_acceb4f54a07cf7fd6562b46f33e7a1e5"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#acceb4f54a07cf7fd6562b46f33e7a1e5">timed_out</a> () const</td></tr>
+<tr class="memdesc:acceb4f54a07cf7fd6562b46f33e7a1e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the target was zeroed because no proposal arrived in time.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Decides, every RT cycle, which velocity command is sent to the robot. </p>
@@ -143,7 +148,7 @@ Public Member Functions</h2></td></tr>
 <li>an emergency override (VelocitySource::OVERRIDE, published as is, not smoothed);</li>
 <li>a command that takes over the robot's motion (VelocitySource::TAKEOVER);</li>
 <li>zero, while navigation is paused ("navigation_paused");</li>
-<li>the nominal controller's command (VelocitySource::CONTROLLER). With no new proposal, the last target is kept, so the smoother can keep ramping towards it. </li>
+<li>the nominal controller's command (VelocitySource::CONTROLLER). With no new proposal, the last target is kept, so the smoother can keep ramping towards it, unless no proposal arrives within the timeout: then the target becomes zero (TIMEOUT). Proposals with non-finite values are discarded. </li>
 </ol>
 </div><a name="doc-enum-members" id="doc-enum-members"></a><h2 id="header-doc-enum-members" class="groupheader">Member Enumeration Documentation</h2>
 <a id="ac5102e0b11ce43d0b9ef595c3c3ab0c3" name="ac5102e0b11ce43d0b9ef595c3c3ab0c3"></a>
@@ -173,6 +178,7 @@ Public Member Functions</h2></td></tr>
 <tr><td class="fieldname"><a id="ac5102e0b11ce43d0b9ef595c3c3ab0c3a99b2439e63f73ad515f7ab2447a80673" name="ac5102e0b11ce43d0b9ef595c3c3ab0c3a99b2439e63f73ad515f7ab2447a80673"></a>PAUSED&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="ac5102e0b11ce43d0b9ef595c3c3ab0c3a58b3587d17c09b20f4e74b9df56bbda5" name="ac5102e0b11ce43d0b9ef595c3c3ab0c3a58b3587d17c09b20f4e74b9df56bbda5"></a>TAKEOVER&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="ac5102e0b11ce43d0b9ef595c3c3ab0c3a3a5974efbe92686d30f0261a204e6ee7" name="ac5102e0b11ce43d0b9ef595c3c3ab0c3a3a5974efbe92686d30f0261a204e6ee7"></a>OVERRIDE&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="ac5102e0b11ce43d0b9ef595c3c3ab0c3a070a0fb40f6c308ab544b227660aadff" name="ac5102e0b11ce43d0b9ef595c3c3ab0c3a070a0fb40f6c308ab544b227660aadff"></a>TIMEOUT&#160;</td><td class="fielddoc"></td></tr>
 </table>
 
 </div>
@@ -197,8 +203,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a784e5a26d3ce4e035de26830ecabd64e" name="a784e5a26d3ce4e035de26830ecabd64e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a784e5a26d3ce4e035de26830ecabd64e">&#9670;&#160;</a></span>select()</h2>
+<a id="a0ee4859746fbaa4f42e2e132370944fd" name="a0ee4859746fbaa4f42e2e132370944fd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0ee4859746fbaa4f42e2e132370944fd">&#9670;&#160;</a></span>select()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -206,13 +212,63 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname"><a class="el" href="structVelocityMux_1_1Selection.html">VelocityMux::Selection</a> select </td>
           <td>(</td>
-          <td class="paramtype">NavState &amp;</td>          <td class="paramname"><span class="paramname"><em>nav_state</em></span></td><td>)</td>
+          <td class="paramtype">NavState &amp;</td>          <td class="paramname"><span class="paramname"><em>nav_state</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const rclcpp::Time &amp;</td>          <td class="paramname"><span class="paramname"><em>now</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Takes this cycle's proposals from <code class="param">nav_state</code> and selects the command at <code class="param">now</code>. </p>
+
+</div>
+</div>
+<a id="a908a408536767d93796f28649da34aca" name="a908a408536767d93796f28649da34aca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a908a408536767d93796f28649da34aca">&#9670;&#160;</a></span>set_timeout()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void set_timeout </td>
+          <td>(</td>
+          <td class="paramtype">double</td>          <td class="paramname"><span class="paramname"><em>seconds</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Takes this cycle's proposals from <code class="param">nav_state</code> and selects the command. </p>
+<p>Longest time (s) a non-zero target is kept without new proposals; 0 disables it. </p>
+
+</div>
+</div>
+<a id="acceb4f54a07cf7fd6562b46f33e7a1e5" name="acceb4f54a07cf7fd6562b46f33e7a1e5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acceb4f54a07cf7fd6562b46f33e7a1e5">&#9670;&#160;</a></span>timed_out()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool timed_out </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Whether the target was zeroed because no proposal arrived in time. </p>
 
 </div>
 </div>

@@ -182,7 +182,12 @@ Public Member Functions</h2></td></tr>
 <p>It is also the single point where the velocity command leaves EasyNav:</p><ul>
 <li>it owns the robot limits ("robot_limits.*"), which controller plugins query through ControllerMethodBase::get_robot_limits();</li>
 <li>every RT cycle, <a class="el" href="#a7d1c4c40dae2bdcf07ce464cd58bba03" title="Selects, smooths and publishes this RT cycle&#39;s velocity command.">publish_cmd_vel_rt()</a> selects the command (<a class="el" href="classeasynav_1_1VelocityMux.html" title="Decides, every RT cycle, which velocity command is sent to the robot.">VelocityMux</a>: override &gt; takeover &gt; pause &gt; controller), smooths it within those limits (except an override) and publishes it on "cmd_vel" (or "cmd_vel_stamped", see "use_cmd_vel_stamped");</li>
-<li>on deactivation or shutdown, it brakes within the deceleration limits and ends by publishing an exact zero. </li>
+<li>on deactivation or shutdown, it brakes within the deceleration limits and ends by publishing an exact zero.</li>
+</ul>
+<p>Robustness:</p><ul>
+<li>"cmd_timeout" (s, 0 disables): with no new command for that long, brakes to zero. A controller command is new only if its stamp or value changed.</li>
+<li>"cmd_vel_keepalive_period" (s, 0 disables): republishes at least this often, offering deadline and liveliness QoS of twice this period.</li>
+<li>Non-finite commands are discarded. Problems go to "diagnostics.cmd_vel" in <a class="el" href="classeasynav_1_1NavState.html" title="A generic, type-safe, thread-safe blackboard to hold runtime state.">NavState</a>. </li>
 </ul>
 </div><a name="doc-typedef-members" id="doc-typedef-members"></a><h2 id="header-doc-typedef-members" class="groupheader">Member Typedef Documentation</h2>
 <a id="ad09d90f1fe35c9e2f2fd7fc1902312f4" name="ad09d90f1fe35c9e2f2fd7fc1902312f4"></a>

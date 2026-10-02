@@ -1,0 +1,9 @@
+<map id="easynav_controller/include/easynav_controller/fault_injection/FaultyController.hpp" name="easynav_controller/include/easynav_controller/fault_injection/FaultyController.hpp">
+<area shape="rect" id="Node000001" title="Declaration of the FaultyController class." alt="" coords="58,5,281,61"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,116,59,142"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="131,64,64,110,61,105,128,59"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="82,109,256,150"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="172,62,172,94,167,94,167,62"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="281,109,484,150"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="232,59,325,100,323,105,230,64"/>
+</map>

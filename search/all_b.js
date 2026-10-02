@@ -4,7 +4,7 @@ var searchData=
   ['main_20repositories_1',['📦 Main Repositories',['../index.html#autotoc_md3',1,'']]],
   ['maintainers_2',['👥 Project Maintainers',['../index.html#autotoc_md5',1,'']]],
   ['make_5factive_3',['make_active',['../classSystemReconfigureTest.html#a59fe1d2e7531e92349fed75575d60d98',1,'SystemReconfigureTest']]],
-  ['make_5factive_5fnode_4',['make_active_node',['../classControllerNodeVelocityTest.html#a992fbe705df0890c13fb2bd3a9b4e384',1,'ControllerNodeVelocityTest']]],
+  ['make_5factive_5fnode_4',['make_active_node',['../classControllerNodeVelocityTest.html#ad63a1ed55def63730969e8f993edeba5',1,'ControllerNodeVelocityTest::make_active_node()'],['../classFaultyControllerTest.html#abbfa11b531eff880b68ecc93f85ec569',1,'FaultyControllerTest::make_active_node()']]],
   ['make_5factive_5fsystem_5',['make_active_system',['../classSystemShutdownRequestTest.html#a9fa29d787a73ee781cb51925e0c50788',1,'SystemShutdownRequestTest']]],
   ['make_5fserver_6',['make_server',['../classGoalManagerHeightTest.html#a3d26e1fe65f638c48ad248cf59050e36',1,'GoalManagerHeightTest']]],
   ['map_5fframe_7',['map_frame',['../structeasynav_1_1TFInfo.html#a934dcd62e92c1a8333b6d1745aa77f1b',1,'easynav::TFInfo']]],

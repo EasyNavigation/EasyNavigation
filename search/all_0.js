@@ -6,7 +6,8 @@ var searchData=
   ['active_3',['active',['../classSystemReconfigureTest.html#a0cb3050c8a4f6bdb2c1f727eec8d9701',1,'SystemReconfigureTest']]],
   ['add_4',['add',['../classeasynav_1_1PointPerceptionsOpsView.html#a2357342b9a992e1b819af4994c528180',1,'easynav::PointPerceptionsOpsView']]],
   ['add_5fto_5fgroup_5',['add_to_group',['../classeasynav_1_1NavState.html#aacb11a81f2fdc2abb7e65951870f5d8e',1,'easynav::NavState']]],
-  ['anyprinter_6',['AnyPrinter',['../classeasynav_1_1NavState.html#a52b12e0f13d9ca138e7b5099229ebb86',1,'easynav::NavState']]],
-  ['apply_5fpending_5freconfigure_7',['apply_pending_reconfigure',['../classeasynav_1_1SystemNode.html#ab8a487e04df5b9061c7ca69c97e44c4c',1,'easynav::SystemNode']]],
-  ['as_5fpoints_8',['as_points',['../classeasynav_1_1PointPerceptionsOpsView.html#a805d236592ccedb4d00c893bbf797bcd',1,'easynav::PointPerceptionsOpsView']]]
+  ['angular_5f_6',['angular_',['../classFaultyControllerTest.html#a9b2625ca6782aab662c9748938e1756b',1,'FaultyControllerTest::angular_'],['../classSystemFaultInjectionTest.html#a9b2625ca6782aab662c9748938e1756b',1,'SystemFaultInjectionTest::angular_']]],
+  ['anyprinter_7',['AnyPrinter',['../classeasynav_1_1NavState.html#a52b12e0f13d9ca138e7b5099229ebb86',1,'easynav::NavState']]],
+  ['apply_5fpending_5freconfigure_8',['apply_pending_reconfigure',['../classeasynav_1_1SystemNode.html#ab8a487e04df5b9061c7ca69c97e44c4c',1,'easynav::SystemNode']]],
+  ['as_5fpoints_9',['as_points',['../classeasynav_1_1PointPerceptionsOpsView.html#a805d236592ccedb4d00c893bbf797bcd',1,'easynav::PointPerceptionsOpsView']]]
 ];

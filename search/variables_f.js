@@ -1,12 +1,9 @@
 var searchData=
 [
-  ['sensor_5fname_5f_0',['sensor_name_',['../classeasynav_1_1PerceptionHandler.html#a5d6c5443e56e32a307cc9a9c653d8f46',1,'easynav::PerceptionHandler::sensor_name_'],['../classPerceptionHandler.html#a5d6c5443e56e32a307cc9a9c653d8f46',1,'PerceptionHandler::sensor_name_']]],
-  ['severity_1',['severity',['../structeasynav_1_1testing_1_1LogCapture_1_1Message.html#a118a118c0d99574666955efdf97068b0',1,'easynav::testing::LogCapture::Message::severity'],['../structLogCapture_1_1Message.html#a118a118c0d99574666955efdf97068b0',1,'LogCapture::Message::severity']]],
-  ['singleton_3c_20c_20_3e_3a_3ainstance_5f_2',['instance_',['../namespaceeasynav.html#af63183b88c39f568dffa0d77e441e468',1,'easynav']]],
-  ['singleton_3c_20c_20_3e_3a_3amutex_5f_3',['mutex_',['../namespaceeasynav.html#aea6f80498fbc28235e7a690b577c46fd',1,'easynav']]],
-  ['smooth_4',['smooth',['../structeasynav_1_1VelocityMux_1_1Selection.html#a397e306d46ace91fd421d0802e9db38d',1,'easynav::VelocityMux::Selection::smooth'],['../structVelocityMux_1_1Selection.html#a397e306d46ace91fd421d0802e9db38d',1,'VelocityMux::Selection::smooth']]],
-  ['stamp_5',['stamp',['../classeasynav_1_1PerceptionBase.html#a3ace6024cedb403facddccc6842dce24',1,'easynav::PerceptionBase::stamp'],['../structeasynav_1_1PointPerceptionBufferType.html#a3ace6024cedb403facddccc6842dce24',1,'easynav::PointPerceptionBufferType::stamp']]],
-  ['stamps_5f_6',['stamps_',['../classControllerNodeVelocityTest.html#ad9f4275de9ac5db21966bf46fef42d09',1,'ControllerNodeVelocityTest']]],
-  ['sub_5f_7',['sub_',['../classControllerNodeVelocityTest.html#aaec72741a7b87366d7be4be55cf2c714',1,'ControllerNodeVelocityTest::sub_'],['../classSystemVelocitySmoothingTest.html#aaec72741a7b87366d7be4be55cf2c714',1,'SystemVelocitySmoothingTest::sub_']]],
-  ['system_5fnode_5f_8',['system_node_',['../classGoalManagerInfoTest.html#a7a6a3642aeb2ffb6cb6780564fb9ce2c',1,'GoalManagerInfoTest::system_node_'],['../classGoalManagerHeightTest.html#a7a6a3642aeb2ffb6cb6780564fb9ce2c',1,'GoalManagerHeightTest::system_node_'],['../classSystemActionsTest.html#ac479e1ebfd275eafd8c7718f92306554',1,'SystemActionsTest::system_node_'],['../classSystemVelocitySmoothingTest.html#ac479e1ebfd275eafd8c7718f92306554',1,'SystemVelocitySmoothingTest::system_node_']]]
+  ['radius_0',['radius',['../structeasynav_1_1RobotGeometry.html#a3f67c53b80389c5f53961936edba04c9',1,'easynav::RobotGeometry::radius'],['../structeasynav_1_1LegacyRobotGeometryNames.html#ae000837070c3f223000ee300b37cc0d2',1,'easynav::LegacyRobotGeometryNames::radius'],['../structRobotGeometry.html#a3f67c53b80389c5f53961936edba04c9',1,'RobotGeometry::radius']]],
+  ['realtime_5fcbg_1',['realtime_cbg',['../structeasynav_1_1SystemNodeInfo.html#a5aab17347096798b46e3925e6d931252',1,'easynav::SystemNodeInfo']]],
+  ['realtime_5fcbg_5f_2',['realtime_cbg_',['../classeasynav_1_1PerceptionHandler.html#ab01799de7c3bf477cd4b8de8e08c342c',1,'easynav::PerceptionHandler::realtime_cbg_'],['../classPerceptionHandler.html#ab01799de7c3bf477cd4b8de8e08c342c',1,'PerceptionHandler::realtime_cbg_']]],
+  ['received_5f_3',['received_',['../classControllerNodeVelocityTest.html#a8b2f9cd583d1b1f8ac16ce6d7ad0edd4',1,'ControllerNodeVelocityTest::received_'],['../classSystemVelocitySmoothingTest.html#a4171f0960e90a287ec97f1fc4992cd0f',1,'SystemVelocitySmoothingTest::received_']]],
+  ['robot_5ffootprint_5fframe_4',['robot_footprint_frame',['../structeasynav_1_1TFInfo.html#a8dbd52299e41d67bf96df83528cb1eac',1,'easynav::TFInfo']]],
+  ['robot_5fframe_5',['robot_frame',['../structeasynav_1_1TFInfo.html#a353f8a8b1f5f926d60a93b70c87e173f',1,'easynav::TFInfo']]]
 ];

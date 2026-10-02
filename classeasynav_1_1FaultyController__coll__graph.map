@@ -1,0 +1,5 @@
+<map id="FaultyController" name="FaultyController">
+<area shape="rect" id="Node000001" title="Controller that misbehaves on purpose, to test how EasyNav copes with it." alt="" coords="24,79,136,105"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,155,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="83,46,83,79,77,79,77,46"/>
+</map>

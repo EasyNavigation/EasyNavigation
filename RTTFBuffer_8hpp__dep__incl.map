@@ -1,39 +1,41 @@
 <map id="easynav_common/include/easynav_common/RTTFBuffer.hpp" name="easynav_common/include/easynav_common/RTTFBuffer.hpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="905,5,1130,46"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="1126,5,1352,46"/>
 <area shape="rect" id="Node000002" href="$ControllerNode_8cpp.html" title="Implementation of the ControllerNode class." alt="" coords="5,94,161,150"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="889,32,743,37,563,49,368,68,174,97,161,99,160,94,173,91,368,62,563,43,742,32,889,26"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1110,29,926,31,692,41,433,61,302,77,174,97,161,99,160,94,173,91,301,72,432,56,692,35,926,26,1110,23"/>
 <area shape="rect" id="Node000003" href="$DummyController_8cpp.html" title="Implementation of the DummyController class." alt="" coords="185,94,341,150"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="890,36,640,56,497,73,354,97,341,99,340,94,353,91,496,68,640,50,889,30"/>
-<area shape="rect" id="Node000004" href="$DummyLocalizer_8cpp.html" title="Implementation of the DummyLocalizer class." alt="" coords="365,102,617,142"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="890,51,630,97,593,104,592,98,629,91,889,46"/>
-<area shape="rect" id="Node000005" href="$DummyPlanner_8cpp.html" title="Implementation of the DummyPlanner class." alt="" coords="641,102,880,142"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="951,54,815,103,813,98,949,49"/>
-<area shape="rect" id="Node000006" href="$PointPerception_8hpp.html" title="Defines data structures and utilities for representing and processing point&#45;based sensor perceptions." alt="" coords="1055,94,1223,150"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="1056,53,1105,91,1102,95,1053,58"/>
-<area shape="rect" id="Node000007" href="$SensorsNode_8cpp.html" title="Implementation of the SensorsNode class." alt="" coords="341,205,574,246"/>
-<area shape="poly" id="edge14_Node000001_Node000007" title=" " alt="" coords="980,58,937,96,925,111,917,126,908,139,892,152,851,173,813,185,779,191,745,193,675,192,634,194,587,200,551,207,550,202,587,195,634,189,675,187,745,188,778,186,812,180,849,168,890,147,904,136,913,123,920,108,933,92,977,54"/>
-<area shape="rect" id="Node000008" href="$PointPerception_8cpp.html" title=" " alt="" coords="598,198,760,253"/>
-<area shape="poly" id="edge15_Node000001_Node000008" title=" " alt="" coords="1006,61,978,108,959,132,936,152,761,203,760,198,934,147,955,128,974,105,1001,59"/>
-<area shape="rect" id="Node000009" href="$perceptions__tests_8cpp.html" title=" " alt="" coords="784,205,939,246"/>
-<area shape="poly" id="edge16_Node000001_Node000009" title=" " alt="" coords="1018,62,1009,107,1000,130,988,151,953,184,914,207,911,202,950,180,984,148,996,128,1004,105,1013,61"/>
-<area shape="rect" id="Node000011" href="$pointperceptionsops__tests_8cpp.html" title=" " alt="" coords="1353,198,1509,253"/>
-<area shape="poly" id="edge17_Node000001_Node000011" title=" " alt="" coords="1131,48,1185,67,1236,92,1255,105,1266,119,1278,133,1294,148,1333,173,1373,195,1371,199,1331,178,1291,152,1274,137,1262,122,1251,109,1234,96,1182,71,1129,53"/>
-<area shape="rect" id="Node000013" href="$sensors__node__tests_8cpp.html" title=" " alt="" coords="1533,205,1700,246"/>
-<area shape="poly" id="edge18_Node000001_Node000013" title=" " alt="" coords="1146,43,1216,63,1284,92,1303,106,1315,120,1327,134,1344,147,1391,168,1429,178,1470,184,1521,195,1546,202,1545,207,1520,200,1469,189,1428,183,1389,173,1342,152,1323,138,1311,123,1300,109,1282,96,1214,68,1145,48"/>
-<area shape="rect" id="Node000014" href="$SystemNode_8cpp.html" title="Implementation of the SystemNode class." alt="" coords="1724,205,1949,246"/>
-<area shape="poly" id="edge19_Node000001_Node000014" title=" " alt="" coords="1146,35,1241,55,1289,71,1334,92,1351,106,1362,121,1372,135,1388,147,1433,167,1473,179,1509,184,1544,186,1618,186,1662,188,1711,195,1747,202,1746,207,1711,200,1661,194,1618,191,1544,191,1508,190,1472,184,1431,172,1386,152,1368,139,1357,124,1347,109,1331,96,1287,76,1239,60,1145,40"/>
-<area shape="rect" id="Node000015" href="$system__main_8cpp.html" title=" " alt="" coords="1400,102,1540,142"/>
-<area shape="poly" id="edge20_Node000001_Node000015" title=" " alt="" coords="1146,45,1261,66,1381,91,1407,98,1406,103,1380,97,1260,71,1145,50"/>
-<area shape="rect" id="Node000016" href="$system__tfinfo__tests_8cpp.html" title=" " alt="" coords="1564,102,1727,142"/>
-<area shape="poly" id="edge21_Node000001_Node000016" title=" " alt="" coords="1146,35,1339,56,1446,72,1553,91,1582,98,1581,104,1552,97,1446,77,1338,62,1145,40"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="1040,139,587,200,550,207,549,202,587,195,1040,134"/>
-<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="1041,144,913,169,773,200,760,203,759,198,772,195,912,164,1039,139"/>
-<area shape="poly" id="edge8_Node000006_Node000009" title=" " alt="" coords="1051,158,916,207,915,202,1050,153"/>
-<area shape="rect" id="Node000010" href="$plugin__tests_8cpp.html" title="Tests that verify the pluginlib plugin registration, loading, and correctness of all built&#45;in Percept..." alt="" coords="964,205,1119,246"/>
-<area shape="poly" id="edge9_Node000006_Node000010" title=" " alt="" coords="1104,163,1062,207,1058,203,1100,159"/>
-<area shape="poly" id="edge10_Node000006_Node000011" title=" " alt="" coords="1232,153,1354,195,1352,200,1231,158"/>
-<area shape="rect" id="Node000012" href="$sensors__lifecycle__tests_8cpp.html" title=" " alt="" coords="1144,205,1329,246"/>
-<area shape="poly" id="edge11_Node000006_Node000012" title=" " alt="" coords="1178,159,1220,203,1216,207,1174,163"/>
-<area shape="poly" id="edge12_Node000006_Node000013" title=" " alt="" coords="1239,138,1373,163,1521,195,1548,202,1547,207,1520,200,1372,168,1238,143"/>
-<area shape="poly" id="edge13_Node000006_Node000014" title=" " alt="" coords="1238,133,1711,195,1748,202,1747,207,1711,200,1237,139"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="1110,31,956,36,766,47,559,66,353,97,342,99,341,94,352,91,559,61,766,41,956,30,1110,26"/>
+<area shape="rect" id="Node000004" href="$FaultyController_8cpp.html" title="Implementation of the FaultyController class." alt="" coords="365,94,588,150"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="1111,39,874,61,601,97,589,99,588,93,600,91,873,56,1111,34"/>
+<area shape="rect" id="Node000005" href="$DummyLocalizer_8cpp.html" title="Implementation of the DummyLocalizer class." alt="" coords="612,102,863,142"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="1118,52,877,97,840,104,839,98,876,91,1117,47"/>
+<area shape="rect" id="Node000006" href="$DummyPlanner_8cpp.html" title="Implementation of the DummyPlanner class." alt="" coords="888,102,1126,142"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="1177,55,1057,103,1055,98,1175,50"/>
+<area shape="rect" id="Node000007" href="$PointPerception_8hpp.html" title="Defines data structures and utilities for representing and processing point&#45;based sensor perceptions." alt="" coords="1302,94,1469,150"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="1284,52,1345,91,1342,96,1281,57"/>
+<area shape="rect" id="Node000008" href="$SensorsNode_8cpp.html" title="Implementation of the SensorsNode class." alt="" coords="588,205,821,246"/>
+<area shape="poly" id="edge15_Node000001_Node000008" title=" " alt="" coords="1214,59,1184,96,1165,126,1155,140,1139,152,1097,173,1060,185,1025,191,992,193,921,192,881,194,834,200,798,207,797,202,833,195,880,189,921,187,992,188,1025,186,1059,180,1095,168,1136,147,1151,136,1160,124,1180,92,1210,56"/>
+<area shape="rect" id="Node000009" href="$PointPerception_8cpp.html" title=" " alt="" coords="845,198,1006,253"/>
+<area shape="poly" id="edge16_Node000001_Node000009" title=" " alt="" coords="1234,62,1216,108,1202,132,1183,152,1008,203,1006,198,1180,147,1197,128,1211,106,1229,60"/>
+<area shape="rect" id="Node000010" href="$perceptions__tests_8cpp.html" title=" " alt="" coords="1031,205,1186,246"/>
+<area shape="poly" id="edge17_Node000001_Node000010" title=" " alt="" coords="1248,62,1249,106,1244,129,1235,151,1221,169,1204,184,1166,207,1163,202,1200,180,1217,165,1230,148,1239,128,1243,105,1243,62"/>
+<area shape="rect" id="Node000012" href="$pointperceptionsops__tests_8cpp.html" title=" " alt="" coords="1600,198,1755,253"/>
+<area shape="poly" id="edge18_Node000001_Node000012" title=" " alt="" coords="1367,47,1426,65,1483,92,1501,105,1513,119,1524,133,1541,148,1580,173,1620,195,1618,199,1577,178,1537,152,1520,136,1509,122,1498,109,1480,96,1424,70,1366,52"/>
+<area shape="rect" id="Node000014" href="$sensors__node__tests_8cpp.html" title=" " alt="" coords="1780,205,1946,246"/>
+<area shape="poly" id="edge19_Node000001_Node000014" title=" " alt="" coords="1368,39,1450,59,1492,74,1531,92,1550,105,1562,120,1573,134,1591,147,1637,168,1676,178,1717,184,1768,195,1793,202,1792,207,1766,200,1716,189,1675,183,1636,173,1588,152,1570,138,1558,123,1546,109,1528,96,1490,79,1449,64,1366,44"/>
+<area shape="rect" id="Node000015" href="$SystemNode_8cpp.html" title="Implementation of the SystemNode class." alt="" coords="1970,205,2196,246"/>
+<area shape="poly" id="edge20_Node000001_Node000015" title=" " alt="" coords="1368,32,1420,39,1475,51,1529,69,1580,92,1598,106,1608,121,1618,135,1635,147,1680,167,1719,179,1756,184,1791,186,1865,186,1908,188,1958,195,1994,202,1993,207,1957,200,1908,194,1865,191,1791,191,1755,190,1718,184,1678,172,1632,152,1614,139,1604,124,1594,109,1578,96,1527,74,1473,57,1419,45,1367,37"/>
+<area shape="rect" id="Node000016" href="$system__main_8cpp.html" title=" " alt="" coords="1646,102,1786,142"/>
+<area shape="poly" id="edge21_Node000001_Node000016" title=" " alt="" coords="1368,43,1494,64,1628,91,1654,98,1653,103,1626,97,1493,69,1367,48"/>
+<area shape="rect" id="Node000017" href="$system__tfinfo__tests_8cpp.html" title=" " alt="" coords="1811,102,1974,142"/>
+<area shape="poly" id="edge22_Node000001_Node000017" title=" " alt="" coords="1367,34,1571,55,1686,71,1800,91,1829,98,1828,104,1798,97,1685,77,1570,61,1367,39"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="1287,139,834,200,797,207,796,202,833,195,1286,134"/>
+<area shape="poly" id="edge8_Node000007_Node000009" title=" " alt="" coords="1287,144,1159,169,1020,200,1007,203,1006,198,1018,195,1158,164,1286,139"/>
+<area shape="poly" id="edge9_Node000007_Node000010" title=" " alt="" coords="1298,158,1163,207,1161,202,1296,153"/>
+<area shape="rect" id="Node000011" href="$plugin__tests_8cpp.html" title="Tests that verify the pluginlib plugin registration, loading, and correctness of all built&#45;in Percept..." alt="" coords="1211,205,1366,246"/>
+<area shape="poly" id="edge10_Node000007_Node000011" title=" " alt="" coords="1351,163,1309,207,1305,203,1347,159"/>
+<area shape="poly" id="edge11_Node000007_Node000012" title=" " alt="" coords="1479,153,1601,195,1599,200,1477,158"/>
+<area shape="rect" id="Node000013" href="$sensors__lifecycle__tests_8cpp.html" title=" " alt="" coords="1390,205,1576,246"/>
+<area shape="poly" id="edge12_Node000007_Node000013" title=" " alt="" coords="1424,159,1466,203,1463,207,1420,163"/>
+<area shape="poly" id="edge13_Node000007_Node000014" title=" " alt="" coords="1485,138,1620,163,1768,195,1795,202,1794,207,1766,200,1619,168,1484,143"/>
+<area shape="poly" id="edge14_Node000007_Node000015" title=" " alt="" coords="1485,133,1958,195,1995,202,1994,207,1957,200,1484,139"/>
 </map>
