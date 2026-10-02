@@ -292,7 +292,7 @@ TEST(VelocityMuxTimeoutTest, PauseWhileTimedOutCommandsZero)
   EXPECT_TRUE(mux.timed_out()) << "pausing is not a new command";
 }
 
-TEST(VelocityMuxTimeoutTest, TimeGoingBackwardsDoesNotTimeOut)
+TEST(VelocityMuxTimeoutTest, AfterTheClockJumpsBackTheTimeoutCountsFromTheJump)
 {
   // E.g. a simulation restarted: the clock jumps back.
   easynav::NavState nav_state;
@@ -301,7 +301,42 @@ TEST(VelocityMuxTimeoutTest, TimeGoingBackwardsDoesNotTimeOut)
 
   easynav::velocity_command::propose(nav_state, VelocitySource::CONTROLLER, cmd(0.5));
   mux.select(nav_state, at(100.0));
+
+  // Not stopped by the jump itself...
   EXPECT_EQ(mux.select(nav_state, at(1.0)).choice, VelocityMux::Choice::NONE);
+  EXPECT_EQ(mux.select(nav_state, at(1.5)).choice, VelocityMux::Choice::NONE);
+  // ...but not held until the clock catches up (~99 s) either.
+  const auto sel = mux.select(nav_state, at(1.51));
+  EXPECT_EQ(sel.choice, VelocityMux::Choice::TIMEOUT);
+  EXPECT_DOUBLE_EQ(sel.cmd.twist.linear.x, 0.0);
+}
+
+TEST(VelocityMuxTimeoutTest, RepeatedJumpsBackStillTimeOut)
+{
+  easynav::NavState nav_state;
+  VelocityMux mux;
+  mux.set_timeout(0.5);
+
+  easynav::velocity_command::propose(nav_state, VelocitySource::CONTROLLER, cmd(0.5));
+  mux.select(nav_state, at(100.0));
+  mux.select(nav_state, at(50.0));
+  mux.select(nav_state, at(10.0));
+  EXPECT_EQ(mux.select(nav_state, at(10.4)).choice, VelocityMux::Choice::NONE);
+  EXPECT_EQ(mux.select(nav_state, at(10.6)).choice, VelocityMux::Choice::TIMEOUT);
+}
+
+TEST(VelocityMuxTimeoutTest, ACommandAfterTheJumpRestartsTheTimeout)
+{
+  easynav::NavState nav_state;
+  VelocityMux mux;
+  mux.set_timeout(0.5);
+
+  easynav::velocity_command::propose(nav_state, VelocitySource::CONTROLLER, cmd(0.5));
+  mux.select(nav_state, at(100.0));
+  easynav::velocity_command::propose(nav_state, VelocitySource::CONTROLLER, cmd(0.3));
+  EXPECT_EQ(mux.select(nav_state, at(2.0)).choice, VelocityMux::Choice::CONTROLLER);
+  EXPECT_EQ(mux.select(nav_state, at(2.4)).choice, VelocityMux::Choice::NONE);
+  EXPECT_EQ(mux.select(nav_state, at(2.6)).choice, VelocityMux::Choice::TIMEOUT);
 }
 
 TEST(VelocityMuxTimeoutTest, ResetForgetsTheTimeout)

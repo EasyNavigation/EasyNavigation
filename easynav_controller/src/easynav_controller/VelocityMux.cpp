@@ -63,6 +63,8 @@ VelocityMux::select(NavState & nav_state, const rclcpp::Time & now)
   if (override_cmd || takeover || controller) {
     last_proposal_ = now;
     timed_out_ = false;
+  } else if (last_proposal_ && now < *last_proposal_) {
+    last_proposal_ = now;  // The clock jumped back: count the timeout from now.
   }
 
   const bool discarded = selection.discarded;

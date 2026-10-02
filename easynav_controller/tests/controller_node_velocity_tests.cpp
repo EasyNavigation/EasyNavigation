@@ -753,10 +753,15 @@ TEST_F(ControllerNodeVelocityTest, ReceiverDetectsThatCommandsStopped)
   EXPECT_GT(missed.load(), 0);
 }
 
-TEST_F(ControllerNodeVelocityTest, NegativeTimeoutsFailToConfigure)
+TEST_F(ControllerNodeVelocityTest, NegativeOrNonFiniteTimeoutsFailToConfigure)
 {
+  const double inf = std::numeric_limits<double>::infinity();
   for (const auto & param : {rclcpp::Parameter("cmd_timeout", -0.1),
-      rclcpp::Parameter("cmd_vel_keepalive_period", -1.0)})
+      rclcpp::Parameter("cmd_timeout", std::nan("")),
+      rclcpp::Parameter("cmd_timeout", inf),
+      rclcpp::Parameter("cmd_vel_keepalive_period", -1.0),
+      rclcpp::Parameter("cmd_vel_keepalive_period", std::nan("")),
+      rclcpp::Parameter("cmd_vel_keepalive_period", inf)})
   {
     auto node = std::make_shared<easynav::ControllerNode>(limits_options({param}));
     node->trigger_transition(Transition::TRANSITION_CONFIGURE);
@@ -813,6 +818,11 @@ TEST_F(ControllerNodeVelocityTest, ReconfigurationStartsWithNoTimeoutState)
   node_->trigger_transition(Transition::TRANSITION_ACTIVATE);
   ASSERT_EQ(node_->get_current_state().id(), State::PRIMARY_STATE_ACTIVE);
 
+  // The ERROR reported before the reconfiguration is still in NavState until commands flow.
+  auto diag = cmd_vel_diagnostic(*nav_state_);
+  ASSERT_TRUE(diag);
+  EXPECT_EQ(diag->level, diagnostic_msgs::msg::DiagnosticStatus::ERROR);
+
   received_.clear();
   for (int i = 0; i < 50; ++i) {
     cycle(0.5);
@@ -820,4 +830,7 @@ TEST_F(ControllerNodeVelocityTest, ReconfigurationStartsWithNoTimeoutState)
   spin_for(100ms);
   ASSERT_FALSE(received_.empty());
   EXPECT_DOUBLE_EQ(received_.back(), 0.5);
+  diag = cmd_vel_diagnostic(*nav_state_);
+  ASSERT_TRUE(diag);
+  EXPECT_EQ(diag->level, diagnostic_msgs::msg::DiagnosticStatus::OK) << "no stale ERROR";
 }

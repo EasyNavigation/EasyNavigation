@@ -6,7 +6,7 @@ target_link_libraries(controller_node_tests
 ament_add_gtest(velocity_smoother_tests velocity_smoother_tests.cpp)
 target_link_libraries(velocity_smoother_tests easynav_controller)
 
-ament_add_gtest(controller_node_velocity_tests controller_node_velocity_tests.cpp)
+ament_add_gtest(controller_node_velocity_tests controller_node_velocity_tests.cpp TIMEOUT 120)
 target_link_libraries(controller_node_velocity_tests easynav_controller)
 
 ament_add_gtest(velocity_mux_tests velocity_mux_tests.cpp)

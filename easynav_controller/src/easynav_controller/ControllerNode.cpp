@@ -16,6 +16,7 @@
 /// \brief Implementation of the ControllerNode class.
 
 #include <algorithm>
+#include <cmath>
 #include <sstream>
 #include <string>
 #include <thread>
@@ -139,9 +140,12 @@ ControllerNode::on_configure([[maybe_unused]] const rclcpp_lifecycle::State & st
   // Limits first: plugins query them while initializing.
   read_parameters();
 
-  if (cmd_timeout_ < 0.0 || cmd_vel_keepalive_period_ < 0.0) {
+  // Not just < 0: a NaN would silently disable them.
+  if (!std::isfinite(cmd_timeout_) || cmd_timeout_ < 0.0 ||
+    !std::isfinite(cmd_vel_keepalive_period_) || cmd_vel_keepalive_period_ < 0.0)
+  {
     RCLCPP_ERROR(
-      get_logger(), "cmd_timeout (%f) and cmd_vel_keepalive_period (%f) must be >= 0",
+      get_logger(), "cmd_timeout (%f) and cmd_vel_keepalive_period (%f) must be finite and >= 0",
       cmd_timeout_, cmd_vel_keepalive_period_);
     return CallbackReturnT::FAILURE;
   }
@@ -163,7 +167,7 @@ ControllerNode::on_configure([[maybe_unused]] const rclcpp_lifecycle::State & st
   last_smoother_step_.reset();
   last_publish_.reset();
   last_controller_cmd_.reset();
-  last_cmd_vel_report_.reset();
+  // last_cmd_vel_report_ is kept: NavState outlives a reconfiguration, its ERROR must be cleared.
 
   if (!controller_.configure()) {
     return CallbackReturnT::FAILURE;
@@ -303,8 +307,10 @@ ControllerNode::publish_cmd_vel_rt(std::shared_ptr<NavState> nav_state)
   auto cmd = selection.cmd;
   if (selection.smooth) {
     const bool ramping = !smoother_.reached(selection.cmd.twist);
+    // Also due if the clock jumped back (e.g. a simulation restarted).
+    const double since_publish = last_publish_ ? (now - *last_publish_).seconds() : 0.0;
     const bool keepalive_due = cmd_vel_keepalive_period_ > 0.0 &&
-      (!last_publish_ || (now - *last_publish_).seconds() >= cmd_vel_keepalive_period_);
+      (!last_publish_ || since_publish < 0.0 || since_publish >= cmd_vel_keepalive_period_);
     if (!selection.fresh && !ramping && !keepalive_due) {
       return;  // Nothing new, and the robot is already at the last target.
     }
