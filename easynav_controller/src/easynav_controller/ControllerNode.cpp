@@ -16,11 +16,14 @@
 /// \brief Implementation of the ControllerNode class.
 
 #include <algorithm>
+#include <cmath>
+#include <sstream>
 #include <string>
 #include <thread>
 #include <utility>
 #include <vector>
 
+#include "diagnostic_msgs/msg/diagnostic_status.hpp"
 #include "geometry_msgs/msg/twist_stamped.hpp"
 #include "pluginlib/class_loader.hpp"
 
@@ -46,6 +49,11 @@ constexpr double kMaxSmootherStep = 0.1;
 constexpr double kStopPeriod = 0.02;
 /// @brief Extra time allowed for the braking ramp over the theoretical one (s).
 constexpr double kStopMargin = 0.2;
+
+// Static: no allocation in the RT cycle.
+const std::string kCmdVelDiagnostic {"diagnostics.cmd_vel"};
+const std::string kDiscardedMessage {"Non-finite velocity command discarded"};
+const std::string kReceivingMessage {"Receiving velocity commands"};
 
 /// @brief "robot_limits.*" fields and their RobotLimits member.
 std::vector<std::pair<std::string, double RobotLimits::*>> limit_fields()
@@ -104,6 +112,8 @@ ControllerNode::ControllerNode(
     declare_parameter_if_absent(*this, "robot_limits." + field, defaults.*member);
   }
   declare_parameter_if_absent(*this, "use_cmd_vel_stamped", use_cmd_vel_stamped_);
+  declare_parameter_if_absent(*this, "cmd_timeout", cmd_timeout_);
+  declare_parameter_if_absent(*this, "cmd_vel_keepalive_period", cmd_vel_keepalive_period_);
   read_parameters();
 }
 
@@ -130,18 +140,74 @@ ControllerNode::on_configure([[maybe_unused]] const rclcpp_lifecycle::State & st
   // Limits first: plugins query them while initializing.
   read_parameters();
 
+  // Not just < 0: a NaN would silently disable them.
+  if (!std::isfinite(cmd_timeout_) || cmd_timeout_ < 0.0 ||
+    !std::isfinite(cmd_vel_keepalive_period_) || cmd_vel_keepalive_period_ < 0.0)
+  {
+    RCLCPP_ERROR(
+      get_logger(), "cmd_timeout (%f) and cmd_vel_keepalive_period (%f) must be finite and >= 0",
+      cmd_timeout_, cmd_vel_keepalive_period_);
+    return CallbackReturnT::FAILURE;
+  }
+
   if (use_cmd_vel_stamped_) {
-    vel_pub_stamped_ = create_publisher<geometry_msgs::msg::TwistStamped>("cmd_vel_stamped", 100);
+    vel_pub_stamped_ = create_publisher<geometry_msgs::msg::TwistStamped>(
+      "cmd_vel_stamped", cmd_vel_qos());
   } else {
-    vel_pub_ = create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 100);
+    vel_pub_ = create_publisher<geometry_msgs::msg::Twist>("cmd_vel", cmd_vel_qos());
   }
 
   // The robot was left stopped (see stop_robot()).
   smoother_.reset();
   mux_.reset();
+  mux_.set_timeout(cmd_timeout_);
+  std::ostringstream timeout_message;
+  timeout_message << "No new velocity command in " << cmd_timeout_ << " s: stopping";
+  timeout_message_ = timeout_message.str();
   last_smoother_step_.reset();
+  last_publish_.reset();
+  last_controller_cmd_.reset();
+  // last_cmd_vel_report_ is kept: NavState outlives a reconfiguration, its ERROR must be cleared.
 
-  return controller_.configure() ? CallbackReturnT::SUCCESS : CallbackReturnT::FAILURE;
+  if (!controller_.configure()) {
+    return CallbackReturnT::FAILURE;
+  }
+  if (!check_cmd_timeout()) {
+    controller_.release();
+    return CallbackReturnT::FAILURE;
+  }
+  return CallbackReturnT::SUCCESS;
+}
+
+rclcpp::QoS
+ControllerNode::cmd_vel_qos() const
+{
+  // Only the latest command matters.
+  rclcpp::QoS qos(1);
+  if (cmd_vel_keepalive_period_ > 0.0) {
+    const auto period = rclcpp::Duration::from_seconds(2.0 * cmd_vel_keepalive_period_);
+    qos.deadline(period);
+    qos.liveliness(rclcpp::LivelinessPolicy::Automatic);
+    qos.liveliness_lease_duration(period);
+  }
+  return qos;
+}
+
+bool
+ControllerNode::check_cmd_timeout()
+{
+  const auto alias = get_loaded_controller();
+  if (cmd_timeout_ <= 0.0 || alias.empty() || !has_parameter(alias + ".rt_freq")) {
+    return true;
+  }
+  const double period = 1.0 / get_parameter(alias + ".rt_freq").as_double();
+  if (cmd_timeout_ <= period) {
+    RCLCPP_ERROR(
+      get_logger(), "cmd_timeout (%f s) must be longer than the period of controller [%s] "
+      "(%f s), or every command would time out", cmd_timeout_, alias.c_str(), period);
+    return false;
+  }
+  return true;
 }
 
 CallbackReturnT
@@ -201,11 +267,13 @@ ControllerNode::cycle_rt(std::shared_ptr<NavState> nav_state, bool trigger)
 
   const bool ran = controller_method->internal_update_rt(*nav_state, trigger);
 
-  // Controller plugins write their command to "cmd_vel": propose it for this cycle.
+  // Controller plugins write their command to "cmd_vel": propose it if it is a new one.
   if (ran && nav_state->has("cmd_vel")) {
-    velocity_command::propose(
-      *nav_state, VelocitySource::CONTROLLER,
-      nav_state->get<geometry_msgs::msg::TwistStamped>("cmd_vel"));
+    const auto cmd = nav_state->get_safe<geometry_msgs::msg::TwistStamped>("cmd_vel");
+    if (!last_controller_cmd_ || cmd != *last_controller_cmd_) {
+      velocity_command::propose(*nav_state, VelocitySource::CONTROLLER, cmd);
+      last_controller_cmd_ = cmd;
+    }
   }
   return ran;
 }
@@ -220,9 +288,18 @@ ControllerNode::get_loaded_controller() const
 void
 ControllerNode::publish_cmd_vel_rt(std::shared_ptr<NavState> nav_state)
 {
-  const auto selection = mux_.select(*nav_state);
-
   const auto now = this->now();
+  const auto selection = mux_.select(*nav_state, now);
+
+  using diagnostic_msgs::msg::DiagnosticStatus;
+  if (mux_.timed_out()) {
+    report_cmd_vel(*nav_state, DiagnosticStatus::ERROR, timeout_message_);
+  } else if (selection.discarded) {
+    report_cmd_vel(*nav_state, DiagnosticStatus::ERROR, kDiscardedMessage);
+  } else if (selection.fresh) {
+    report_cmd_vel(*nav_state, DiagnosticStatus::OK, kReceivingMessage);
+  }
+
   const double dt = last_smoother_step_ ?
     std::clamp((now - *last_smoother_step_).seconds(), 0.0, kMaxSmootherStep) : 0.0;
   last_smoother_step_ = now;
@@ -230,7 +307,11 @@ ControllerNode::publish_cmd_vel_rt(std::shared_ptr<NavState> nav_state)
   auto cmd = selection.cmd;
   if (selection.smooth) {
     const bool ramping = !smoother_.reached(selection.cmd.twist);
-    if (!selection.fresh && !ramping) {
+    // Also due if the clock jumped back (e.g. a simulation restarted).
+    const double since_publish = last_publish_ ? (now - *last_publish_).seconds() : 0.0;
+    const bool keepalive_due = cmd_vel_keepalive_period_ > 0.0 &&
+      (!last_publish_ || since_publish < 0.0 || since_publish >= cmd_vel_keepalive_period_);
+    if (!selection.fresh && !ramping && !keepalive_due) {
       return;  // Nothing new, and the robot is already at the last target.
     }
     cmd.twist = smoother_.step(selection.cmd.twist, dt);
@@ -283,6 +364,8 @@ ControllerNode::read_parameters()
     }
   }
   get_parameter("use_cmd_vel_stamped", use_cmd_vel_stamped_);
+  get_parameter("cmd_timeout", cmd_timeout_);
+  get_parameter("cmd_vel_keepalive_period", cmd_vel_keepalive_period_);
 
   {
     std::lock_guard<std::mutex> lock(robot_limits_mutex_);
@@ -300,6 +383,36 @@ ControllerNode::publish(const geometry_msgs::msg::TwistStamped & cmd)
   if (!use_cmd_vel_stamped_ && vel_pub_) {
     vel_pub_->publish(cmd.twist);
   }
+  last_publish_ = rclcpp::Time(cmd.header.stamp, get_clock()->get_clock_type());
+}
+
+void
+ControllerNode::report_cmd_vel(NavState & nav_state, uint8_t level, const std::string & message)
+{
+  // Nothing to report until something goes wrong; then, only changes.
+  if (!last_cmd_vel_report_ && level == diagnostic_msgs::msg::DiagnosticStatus::OK) {
+    return;
+  }
+  if (last_cmd_vel_report_ && last_cmd_vel_report_->first == level &&
+    last_cmd_vel_report_->second == message)
+  {
+    return;
+  }
+  last_cmd_vel_report_ = {level, message};
+
+  if (level == diagnostic_msgs::msg::DiagnosticStatus::OK) {
+    RCLCPP_INFO(get_logger(), "%s", message.c_str());
+  } else {
+    RCLCPP_ERROR(get_logger(), "%s", message.c_str());
+  }
+
+  diagnostic_msgs::msg::DiagnosticStatus status;
+  status.name = "cmd_vel";
+  status.hardware_id = get_name();
+  status.level = level;
+  status.message = message;
+  nav_state.set(kCmdVelDiagnostic, status);
+  nav_state.add_to_group("diagnostics", kCmdVelDiagnostic);
 }
 
 void

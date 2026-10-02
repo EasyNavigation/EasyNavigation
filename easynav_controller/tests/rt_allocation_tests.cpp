@@ -16,6 +16,7 @@
 /// \brief The RT velocity path (proposals, mux, smoother) must not allocate memory once warm.
 
 #include <atomic>
+#include <cmath>
 #include <cstdlib>
 #include <new>
 
@@ -61,7 +62,7 @@ void rt_cycle(
   // Reading the pending commands without consuming them (as a safety check would).
   (void)easynav::velocity_command::peek(nav_state, easynav::VelocitySource::TAKEOVER);
   (void)easynav::velocity_command::peek(nav_state, easynav::VelocitySource::CONTROLLER);
-  const auto selection = mux.select(nav_state);
+  const auto selection = mux.select(nav_state, rclcpp::Time());
   (void)smoother.step(selection.cmd.twist, 0.005);
 }
 
@@ -94,6 +95,39 @@ TEST(RtAllocationTest, VelocityPathDoesNotAllocateOnceWarm)
   counting = false;
 
   EXPECT_EQ(allocations.load(), 0u) << "allocations in 1000 RT cycles of the velocity path";
+}
+
+TEST(RtAllocationTest, TimedOutAndDiscardedCommandsDoNotAllocate)
+{
+  easynav::NavState nav_state;
+  nav_state.set("navigation_paused", false);
+  easynav::VelocityMux mux;
+  mux.set_timeout(0.1);
+
+  geometry_msgs::msg::TwistStamped cmd;
+  cmd.header.frame_id = "base_footprint";
+  cmd.twist.linear.x = 0.4;
+  auto nan_cmd = cmd;
+  nan_cmd.twist.linear.x = std::nan("");
+
+  // Warm-up: slots created, a target held, then timed out once.
+  easynav::velocity_command::propose(nav_state, easynav::VelocitySource::CONTROLLER, cmd);
+  (void)mux.select(nav_state, rclcpp::Time(0, 0));
+  (void)mux.select(nav_state, rclcpp::Time(1, 0));
+  ASSERT_TRUE(mux.timed_out());
+
+  allocations = 0;
+  counting = true;
+  for (int i = 0; i < 1000; ++i) {
+    if (i % 3 == 0) {
+      easynav::velocity_command::propose(nav_state, easynav::VelocitySource::CONTROLLER, nan_cmd);
+    }
+    (void)mux.select(nav_state, rclcpp::Time(2 + i, 0));
+  }
+  counting = false;
+
+  EXPECT_TRUE(mux.timed_out());
+  EXPECT_EQ(allocations.load(), 0u) << "allocations in 1000 timed-out/discarding RT cycles";
 }
 
 TEST(RtAllocationTest, TheCounterSeesAllocations)

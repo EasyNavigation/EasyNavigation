@@ -17,8 +17,11 @@
 /// controller plugins, selection among sources (mux), smoothing, publication, and braking on
 /// deactivation.
 
+#include <algorithm>
+#include <atomic>
 #include <chrono>
 #include <cmath>
+#include <limits>
 #include <memory>
 #include <optional>
 #include <sstream>
@@ -27,6 +30,7 @@
 
 #include "gtest/gtest.h"
 
+#include "diagnostic_msgs/msg/diagnostic_status.hpp"
 #include "geometry_msgs/msg/twist.hpp"
 #include "geometry_msgs/msg/twist_stamped.hpp"
 #include "lifecycle_msgs/msg/state.hpp"
@@ -47,19 +51,21 @@ namespace
 
 class LimitsReadingController : public easynav::ControllerMethodBase {};
 
-rclcpp::NodeOptions limits_options()
+rclcpp::NodeOptions limits_options(std::vector<rclcpp::Parameter> extra = {})
 {
-  return rclcpp::NodeOptions().parameter_overrides({
-      {"robot_limits.max_linear_vel", 1.0},
-      {"robot_limits.min_linear_vel", -0.2},
-      {"robot_limits.max_angular_vel", 1.5},
-      {"robot_limits.max_linear_acc", 2.0},
-      {"robot_limits.max_linear_decel", 4.0},
-      {"robot_limits.max_angular_acc", 3.0},
-      {"robot_limits.max_angular_decel", 6.0},
-      // Stamped, so each published command carries the time it was computed at.
-      {"use_cmd_vel_stamped", true},
-  });
+  std::vector<rclcpp::Parameter> params {
+    {"robot_limits.max_linear_vel", 1.0},
+    {"robot_limits.min_linear_vel", -0.2},
+    {"robot_limits.max_angular_vel", 1.5},
+    {"robot_limits.max_linear_acc", 2.0},
+    {"robot_limits.max_linear_decel", 4.0},
+    {"robot_limits.max_angular_acc", 3.0},
+    {"robot_limits.max_angular_decel", 6.0},
+    // Stamped, so each published command carries the time it was computed at.
+    {"use_cmd_vel_stamped", true},
+  };
+  params.insert(params.end(), extra.begin(), extra.end());
+  return rclcpp::NodeOptions().parameter_overrides(params);
 }
 
 constexpr double kMaxLinearAcc = 2.0;
@@ -85,9 +91,9 @@ protected:
     }
   }
 
-  void make_active_node()
+  void make_active_node(std::vector<rclcpp::Parameter> extra = {})
   {
-    node_ = std::make_shared<easynav::ControllerNode>(limits_options());
+    node_ = std::make_shared<easynav::ControllerNode>(limits_options(extra));
     node_->trigger_transition(Transition::TRANSITION_CONFIGURE);
     node_->trigger_transition(Transition::TRANSITION_ACTIVATE);
     ASSERT_EQ(node_->get_current_state().id(), State::PRIMARY_STATE_ACTIVE);
@@ -296,7 +302,7 @@ TEST_F(ControllerNodeVelocityTest, PauseBrakesInARampAndResumeRampsUp)
 
 TEST_F(ControllerNodeVelocityTest, KeepsRampingWithoutNewCommandsAndThenStopsPublishing)
 {
-  make_active_node();
+  make_active_node({{"cmd_timeout", 0.0}});  // No timeout: the last target is kept.
   cycle(1.0);  // A single command...
   for (int i = 0; i < 100; ++i) {
     cycle(std::nullopt);  // ...then no new ones: the ramp still reaches it.
@@ -569,4 +575,262 @@ TEST_F(ControllerNodeVelocityTest, ProposalsArePrintedInTheNavStateDump)
   node_->publish_cmd_vel_rt(nav_state_);  // The mux takes it.
   EXPECT_NE(line("cmd_vel.proposal.controller").find("taken Twist with (0.5, 0, 0)"),
     std::string::npos) << line("cmd_vel.proposal.controller");
+}
+
+namespace
+{
+
+std::optional<diagnostic_msgs::msg::DiagnosticStatus> cmd_vel_diagnostic(
+  const easynav::NavState & nav_state)
+{
+  if (!nav_state.has("diagnostics.cmd_vel")) {return std::nullopt;}
+  return nav_state.get_safe<diagnostic_msgs::msg::DiagnosticStatus>("diagnostics.cmd_vel");
+}
+
+}  // namespace
+
+TEST_F(ControllerNodeVelocityTest, NoNewCommandsBrakesToZeroAfterTheTimeoutAndResumes)
+{
+  make_active_node({{"cmd_timeout", 0.2}});
+  for (int i = 0; i < 100; ++i) {
+    cycle(1.0);
+  }
+  spin_for(100ms);
+  ASSERT_DOUBLE_EQ(received_.back(), 1.0);
+  EXPECT_FALSE(cmd_vel_diagnostic(*nav_state_)) << "nothing to report while all is fine";
+
+  // The controller goes silent: still 1.0 before the timeout, then a ramp down to zero.
+  received_.clear();
+  stamps_.clear();
+  for (int i = 0; i < 60; ++i) {
+    cycle(std::nullopt);
+  }
+  spin_for(100ms);
+  ASSERT_GT(received_.size(), 3u);
+  EXPECT_DOUBLE_EQ(received_.back(), 0.0);
+  EXPECT_GT(received_.front(), 0.0) << "it must not stop dead in one step";
+  expect_within_acceleration_limits();
+
+  auto diag = cmd_vel_diagnostic(*nav_state_);
+  ASSERT_TRUE(diag);
+  EXPECT_EQ(diag->level, diagnostic_msgs::msg::DiagnosticStatus::ERROR);
+  EXPECT_EQ(diag->hardware_id, "controller_node");
+  const auto group = nav_state_->get_group_keys("diagnostics");
+  EXPECT_NE(std::find(group.begin(), group.end(), "diagnostics.cmd_vel"), group.end());
+
+  // Commands again: it moves and the diagnostic goes back to OK.
+  received_.clear();
+  stamps_.clear();
+  for (int i = 0; i < 100; ++i) {
+    cycle(0.5);
+  }
+  spin_for(100ms);
+  EXPECT_DOUBLE_EQ(received_.back(), 0.5);
+  diag = cmd_vel_diagnostic(*nav_state_);
+  ASSERT_TRUE(diag);
+  EXPECT_EQ(diag->level, diagnostic_msgs::msg::DiagnosticStatus::OK);
+}
+
+TEST_F(ControllerNodeVelocityTest, TheDefaultTimeoutStopsAStaleCommand)
+{
+  make_active_node();  // cmd_timeout: 0.5 s by default.
+  cycle(1.0);
+  for (int i = 0; i < 100; ++i) {  // ~1 s without new commands.
+    cycle(std::nullopt);
+  }
+  spin_for(100ms);
+  ASSERT_FALSE(received_.empty());
+  EXPECT_DOUBLE_EQ(received_.back(), 0.0);
+}
+
+TEST_F(ControllerNodeVelocityTest, NonFiniteCommandsAreNeverPublished)
+{
+  make_active_node({{"cmd_timeout", 0.0}});
+  for (int i = 0; i < 100; ++i) {
+    cycle(0.5);
+  }
+  for (int i = 0; i < 20; ++i) {
+    cycle(std::nan(""));
+  }
+  for (int i = 0; i < 20; ++i) {
+    cycle(std::numeric_limits<double>::infinity());
+  }
+  spin_for(100ms);
+  ASSERT_FALSE(received_.empty());
+  for (const auto v : received_) {
+    EXPECT_TRUE(std::isfinite(v));
+  }
+  EXPECT_DOUBLE_EQ(received_.back(), 0.5) << "the last valid command is kept";
+  auto diag = cmd_vel_diagnostic(*nav_state_);
+  ASSERT_TRUE(diag);
+  EXPECT_EQ(diag->level, diagnostic_msgs::msg::DiagnosticStatus::ERROR);
+
+  cycle(0.4);
+  diag = cmd_vel_diagnostic(*nav_state_);
+  ASSERT_TRUE(diag);
+  EXPECT_EQ(diag->level, diagnostic_msgs::msg::DiagnosticStatus::OK);
+}
+
+TEST_F(ControllerNodeVelocityTest, KeepaliveRepublishesTheHeldCommand)
+{
+  make_active_node({{"cmd_timeout", 0.0}, {"cmd_vel_keepalive_period", 0.05}});
+  for (int i = 0; i < 100; ++i) {
+    cycle(1.0);
+  }
+  spin_for(100ms);
+  ASSERT_DOUBLE_EQ(received_.back(), 1.0);
+
+  // ~0.5 s with nothing new: republished about every 0.05 s.
+  received_.clear();
+  stamps_.clear();
+  for (int i = 0; i < 50; ++i) {
+    cycle(std::nullopt);
+  }
+  spin_for(50ms);
+  EXPECT_GE(received_.size(), 5u);
+  EXPECT_LE(received_.size(), 25u) << "not every cycle, only when due";
+  for (const auto v : received_) {
+    EXPECT_DOUBLE_EQ(v, 1.0);
+  }
+  for (size_t i = 1; i < stamps_.size(); ++i) {
+    EXPECT_GE((stamps_[i] - stamps_[i - 1]).seconds(), 0.05 - 1e-3);
+  }
+}
+
+TEST_F(ControllerNodeVelocityTest, KeepalivePublishesZeroAtRest)
+{
+  make_active_node({{"cmd_vel_keepalive_period", 0.05}});
+  for (int i = 0; i < 30; ++i) {
+    cycle(std::nullopt);
+  }
+  spin_for(50ms);
+  EXPECT_GE(received_.size(), 3u);
+  for (const auto v : received_) {
+    EXPECT_DOUBLE_EQ(v, 0.0);
+  }
+}
+
+TEST_F(ControllerNodeVelocityTest, VelocityQosKeepsOnlyTheLatestCommandAndOffersADeadline)
+{
+  {
+    make_active_node();
+    const auto info = node_->get_publishers_info_by_topic("cmd_vel_stamped");
+    ASSERT_EQ(info.size(), 1u);
+    EXPECT_EQ(info[0].qos_profile().depth(), 1u);
+    // Infinite (the middleware reports it as a huge value): no keepalive, no deadline promise.
+    EXPECT_GT(info[0].qos_profile().deadline().seconds(), 1e6);
+    node_.reset();
+  }
+  {
+    make_active_node({{"cmd_vel_keepalive_period", 0.05}});
+    const auto info = node_->get_publishers_info_by_topic("cmd_vel_stamped");
+    ASSERT_EQ(info.size(), 1u);
+    EXPECT_EQ(info[0].qos_profile().deadline(), rclcpp::Duration(100ms));
+    EXPECT_EQ(info[0].qos_profile().liveliness(), rclcpp::LivelinessPolicy::Automatic);
+    EXPECT_EQ(info[0].qos_profile().liveliness_lease_duration(), rclcpp::Duration(100ms));
+  }
+}
+
+TEST_F(ControllerNodeVelocityTest, ReceiverDetectsThatCommandsStopped)
+{
+  // E.g. the RT cycle hangs: the receiver's deadline is missed.
+  make_active_node({{"cmd_vel_keepalive_period", 0.05}});
+  std::atomic<int> missed {0};
+  rclcpp::SubscriptionOptions options;
+  options.event_callbacks.deadline_callback =
+    [&missed](rclcpp::QOSDeadlineRequestedInfo &) {++missed;};
+  auto watchdog = listener_->create_subscription<geometry_msgs::msg::TwistStamped>(
+    "cmd_vel_stamped", rclcpp::QoS(1).deadline(rclcpp::Duration(150ms)),
+    [](geometry_msgs::msg::TwistStamped::UniquePtr) {}, options);
+  spin_for(100ms);
+
+  for (int i = 0; i < 40; ++i) {
+    cycle(std::nullopt);
+  }
+  EXPECT_EQ(missed.load(), 0) << "commands keep arriving in time";
+
+  spin_for(500ms);  // No RT cycles.
+  EXPECT_GT(missed.load(), 0);
+}
+
+TEST_F(ControllerNodeVelocityTest, NegativeOrNonFiniteTimeoutsFailToConfigure)
+{
+  const double inf = std::numeric_limits<double>::infinity();
+  for (const auto & param : {rclcpp::Parameter("cmd_timeout", -0.1),
+      rclcpp::Parameter("cmd_timeout", std::nan("")),
+      rclcpp::Parameter("cmd_timeout", inf),
+      rclcpp::Parameter("cmd_vel_keepalive_period", -1.0),
+      rclcpp::Parameter("cmd_vel_keepalive_period", std::nan("")),
+      rclcpp::Parameter("cmd_vel_keepalive_period", inf)})
+  {
+    auto node = std::make_shared<easynav::ControllerNode>(limits_options({param}));
+    node->trigger_transition(Transition::TRANSITION_CONFIGURE);
+    EXPECT_EQ(node->get_current_state().id(), State::PRIMARY_STATE_UNCONFIGURED) <<
+      param.get_name();
+
+    // Fixed, it configures.
+    node->set_parameter(rclcpp::Parameter(param.get_name(), 0.0));
+    node->trigger_transition(Transition::TRANSITION_CONFIGURE);
+    EXPECT_EQ(node->get_current_state().id(), State::PRIMARY_STATE_INACTIVE) << param.get_name();
+  }
+}
+
+TEST_F(ControllerNodeVelocityTest, TimeoutMustBeLongerThanTheControllerPeriod)
+{
+  auto make = [](double cmd_timeout) {
+      return std::make_shared<easynav::ControllerNode>(
+        limits_options({
+      {"controller_types", std::vector<std::string>{"ctrl"}},
+      {"ctrl.plugin", std::string("easynav_controller/DummyController")},
+      {"ctrl.rt_freq", 2.0},      // 0.5 s
+      {"cmd_timeout", cmd_timeout}}));
+    };
+
+  // Equal to the period, or shorter: every command would time out.
+  for (const double timeout : {0.5, 0.3}) {
+    auto node = make(timeout);
+    node->trigger_transition(Transition::TRANSITION_CONFIGURE);
+    EXPECT_EQ(node->get_current_state().id(), State::PRIMARY_STATE_UNCONFIGURED) << timeout;
+    EXPECT_EQ(node->get_loaded_controller(), "") << "the plugin is released on failure";
+  }
+
+  for (const double timeout : {0.0, 0.51}) {
+    auto node = make(timeout);
+    node->trigger_transition(Transition::TRANSITION_CONFIGURE);
+    EXPECT_EQ(node->get_current_state().id(), State::PRIMARY_STATE_INACTIVE) << timeout;
+  }
+}
+
+TEST_F(ControllerNodeVelocityTest, ReconfigurationStartsWithNoTimeoutState)
+{
+  make_active_node({{"cmd_timeout", 0.1}});
+  for (int i = 0; i < 50; ++i) {
+    cycle(1.0);
+  }
+  for (int i = 0; i < 30; ++i) {
+    cycle(std::nullopt);
+  }
+  ASSERT_TRUE(cmd_vel_diagnostic(*nav_state_));
+
+  node_->trigger_transition(Transition::TRANSITION_DEACTIVATE);
+  node_->trigger_transition(Transition::TRANSITION_CLEANUP);
+  node_->trigger_transition(Transition::TRANSITION_CONFIGURE);
+  node_->trigger_transition(Transition::TRANSITION_ACTIVATE);
+  ASSERT_EQ(node_->get_current_state().id(), State::PRIMARY_STATE_ACTIVE);
+
+  // The ERROR reported before the reconfiguration is still in NavState until commands flow.
+  auto diag = cmd_vel_diagnostic(*nav_state_);
+  ASSERT_TRUE(diag);
+  EXPECT_EQ(diag->level, diagnostic_msgs::msg::DiagnosticStatus::ERROR);
+
+  received_.clear();
+  for (int i = 0; i < 50; ++i) {
+    cycle(0.5);
+  }
+  spin_for(100ms);
+  ASSERT_FALSE(received_.empty());
+  EXPECT_DOUBLE_EQ(received_.back(), 0.5);
+  diag = cmd_vel_diagnostic(*nav_state_);
+  ASSERT_TRUE(diag);
+  EXPECT_EQ(diag->level, diagnostic_msgs::msg::DiagnosticStatus::OK) << "no stale ERROR";
 }

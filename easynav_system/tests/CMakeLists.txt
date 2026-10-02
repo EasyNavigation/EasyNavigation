@@ -24,3 +24,6 @@ target_link_libraries(system_actions_tests ${PROJECT_NAME})
 
 ament_add_gtest(system_robot_geometry_tests system_robot_geometry_tests.cpp)
 target_link_libraries(system_robot_geometry_tests ${PROJECT_NAME})
+
+ament_add_gtest(system_fault_injection_tests system_fault_injection_tests.cpp TIMEOUT 120)
+target_link_libraries(system_fault_injection_tests ${PROJECT_NAME})
