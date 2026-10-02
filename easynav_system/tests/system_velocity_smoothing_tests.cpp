@@ -97,6 +97,7 @@ protected:
     cmd.twist.angular.z = wz;
     const auto start = std::chrono::steady_clock::now();
     while (std::chrono::steady_clock::now() - start < duration) {
+      cmd.header.stamp = system_node_->now();  // A new command each cycle, as a controller does
       system_node_->get_nav_state()->set("cmd_vel", cmd);
       system_node_->system_cycle_rt();
       exe_->spin_some();

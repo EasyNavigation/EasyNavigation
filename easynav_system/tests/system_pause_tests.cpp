@@ -128,6 +128,7 @@ TEST_F(SystemPauseTest, PublishesZeroVelocityWhenPaused)
     };
 
   // Baseline: unpaused, the nonzero twist must be published unchanged.
+  nonzero_cmd.header.stamp = system_node->now();  // A new command, as a controller does
   nav_state->set("cmd_vel", nonzero_cmd);
   cycle_until_message();
   ASSERT_FALSE(received.empty());
@@ -137,6 +138,7 @@ TEST_F(SystemPauseTest, PublishesZeroVelocityWhenPaused)
   // Paused: same nonzero cmd_vel in NavState, but the publish must be zero.
   received.clear();
   nav_state->set("navigation_paused", true);
+  nonzero_cmd.header.stamp = system_node->now();  // A new command, as a controller does
   nav_state->set("cmd_vel", nonzero_cmd);
   cycle_until_message();
   ASSERT_FALSE(received.empty());
@@ -151,6 +153,7 @@ TEST_F(SystemPauseTest, PublishesZeroVelocityWhenPaused)
   // after unpausing.
   received.clear();
   nav_state->set("navigation_paused", false);
+  nonzero_cmd.header.stamp = system_node->now();  // A new command, as a controller does
   nav_state->set("cmd_vel", nonzero_cmd);
   cycle_until_message();
   ASSERT_FALSE(received.empty());
@@ -236,6 +239,7 @@ TEST_F(SystemPauseTest, PauseEndToEndThroughGoalManagerClient)
 
   // Before pausing: nonzero cmd_vel goes through.
   received.clear();
+  nonzero_cmd.header.stamp = system_node->now();  // A new command, as a controller does
   nav_state->set("cmd_vel", nonzero_cmd);
   cycle_until_message();
   ASSERT_FALSE(received.empty());
@@ -256,6 +260,7 @@ TEST_F(SystemPauseTest, PauseEndToEndThroughGoalManagerClient)
   ASSERT_TRUE(nav_state->get_safe<bool>("navigation_paused"));
 
   received.clear();
+  nonzero_cmd.header.stamp = system_node->now();  // A new command, as a controller does
   nav_state->set("cmd_vel", nonzero_cmd);
   cycle_until_message();
   ASSERT_FALSE(received.empty());
@@ -274,6 +279,7 @@ TEST_F(SystemPauseTest, PauseEndToEndThroughGoalManagerClient)
   ASSERT_FALSE(nav_state->get_safe<bool>("navigation_paused"));
 
   received.clear();
+  nonzero_cmd.header.stamp = system_node->now();  // A new command, as a controller does
   nav_state->set("cmd_vel", nonzero_cmd);
   cycle_until_message();
   ASSERT_FALSE(received.empty());
