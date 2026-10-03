@@ -58,3 +58,7 @@ target_link_libraries(safety_channel_monitor_tests ${PROJECT_NAME})
 ament_add_gtest(rt_monitor_tests rt_monitor_tests.cpp
   ENV ROS_LOG_DIR=${CMAKE_CURRENT_BINARY_DIR}/ros_log)
 target_link_libraries(rt_monitor_tests ${PROJECT_NAME})
+
+ament_add_gtest(system_component_faults_tests system_component_faults_tests.cpp TIMEOUT 120
+  ENV ROS_LOG_DIR=${CMAKE_CURRENT_BINARY_DIR}/ros_log)
+target_link_libraries(system_component_faults_tests ${PROJECT_NAME})

@@ -15,8 +15,12 @@
 /// \file
 /// \brief Implementation of the PlannerNode class.
 
+#include <algorithm>
+#include <cmath>
+
 #include "pluginlib/class_loader.hpp"
 
+#include "diagnostic_msgs/msg/diagnostic_status.hpp"
 #include "lifecycle_msgs/msg/transition.hpp"
 #include "lifecycle_msgs/msg/state.hpp"
 
@@ -101,6 +105,46 @@ PlannerNode::cycle(std::shared_ptr<NavState> nav_state, bool trigger)
   } else {
     planner_method->internal_update(*nav_state);
   }
+  check_path(*nav_state);
+}
+
+void
+PlannerNode::check_path(NavState & nav_state)
+{
+  using diagnostic_msgs::msg::DiagnosticStatus;
+  if (!nav_state.has("path")) {return;}
+
+  auto path = nav_state.get_safe<nav_msgs::msg::Path>("path");
+  const bool finite = std::all_of(
+    path.poses.begin(), path.poses.end(), [](const geometry_msgs::msg::PoseStamped & p) {
+      const auto & q = p.pose;
+      return std::isfinite(q.position.x) && std::isfinite(q.position.y) &&
+             std::isfinite(q.position.z) && std::isfinite(q.orientation.x) &&
+             std::isfinite(q.orientation.y) && std::isfinite(q.orientation.z) &&
+             std::isfinite(q.orientation.w);
+    });
+  if (!finite) {
+    path.poses.clear();  // Nothing to follow: controllers stop.
+    nav_state.set("path", path);
+  }
+
+  // Nothing to report until something goes wrong; then, only changes.
+  if (last_path_finite_ ? *last_path_finite_ == finite : finite) {return;}
+  last_path_finite_ = finite;
+
+  DiagnosticStatus status;
+  status.name = "path";
+  status.hardware_id = "planner";
+  if (finite) {
+    status.level = DiagnosticStatus::OK;
+    status.message = "Path finite";
+  } else {
+    status.level = DiagnosticStatus::ERROR;
+    status.message = "The planner produced a non-finite path: discarded";
+    RCLCPP_ERROR(get_logger(), "%s", status.message.c_str());
+  }
+  nav_state.set("diagnostics.path", status);
+  nav_state.add_to_group("diagnostics", "diagnostics.path");
 }
 
 const rclcpp::Time

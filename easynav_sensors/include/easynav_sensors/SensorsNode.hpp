@@ -27,6 +27,8 @@
 
 #include "sensor_msgs/msg/point_cloud2.hpp"
 
+#include <vector>
+
 #include "easynav_sensors/types/Perceptions.hpp"
 #include "easynav_common/types/NavState.hpp"
 #include "pluginlib/class_loader.hpp"
@@ -41,6 +43,10 @@ namespace easynav
  * Collects, transforms, and publishes fused perception data from multiple sources.
  * Sensor handlers are loaded at runtime as pluginlib plugins, allowing users to add
  * new sensor types without modifying this node.
+ *
+ * Every RT cycle, a perception older than "forget_time" seconds (ROS time) is invalidated, so
+ * nothing uses it until new data arrives. Sensors without data, or with old data, are reported
+ * as "diagnostics.sensors" (WARN), on changes only.
  */
 class SensorsNode : public rclcpp_lifecycle::LifecycleNode
 {
@@ -143,6 +149,21 @@ private:
   /// @brief Drops the handlers and the sensor groups (cleanup, shutdown and error).
   void release_handlers();
 
+  /// @brief Freshness of a sensor's data.
+  enum class DataState : uint8_t {FRESH, NO_DATA, STALE};
+
+  /// @brief Invalidates the perceptions older than "forget_time" and reports any change.
+  void check_data_age(
+    const std::vector<std::shared_ptr<PerceptionHandler>> & handlers, NavState & nav_state);
+
+  /// @brief Writes "diagnostics.sensors" from data_states_.
+  void report_data_age(
+    const std::vector<std::shared_ptr<PerceptionHandler>> & handlers, NavState & nav_state);
+
+  /// @brief Per handler (same order), the state last reported; sized on configure.
+  std::vector<DataState> data_states_;
+  bool data_age_reported_ {false};
+
   /// @brief Callback group for real-time operations.
   rclcpp::CallbackGroup::SharedPtr realtime_cbg_;
 
@@ -152,8 +173,8 @@ private:
   /// @brief Last fused perception message.
   sensor_msgs::msg::PointCloud2 perecption_msg_;
 
-  /// @brief Maximum time (seconds) a perception remains valid.
-  double forget_time_;
+  /// @brief Maximum age (seconds) of a perception to be used.
+  double forget_time_ {1.0};
 
   /// @brief Target frame for perception fusion.
   std::string tf_prefix_;

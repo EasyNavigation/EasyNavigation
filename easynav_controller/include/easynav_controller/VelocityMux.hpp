@@ -32,7 +32,8 @@ namespace easynav
  * @brief Decides, every RT cycle, which velocity command is sent to the robot.
  *
  * Takes the commands proposed this cycle (see velocity_command) and picks, by priority:
- * 0. zero, during a protective stop of the safety channel ("safety_status");
+ * 0. zero, during a protective stop of the safety channel ("safety_status"), or braking to
+ *    zero while motion is inhibited ("inhibit_motion");
  * 1. an emergency override (VelocitySource::OVERRIDE, published as is, not smoothed);
  * 2. a command that takes over the robot's motion (VelocitySource::TAKEOVER);
  * 3. zero, while navigation is paused ("navigation_paused");
@@ -43,7 +44,7 @@ class VelocityMux
 {
 public:
   /// @brief Who the selected command comes from.
-  enum class Choice {NONE, CONTROLLER, PAUSED, TAKEOVER, OVERRIDE, SAFETY_STOP};
+  enum class Choice {NONE, CONTROLLER, PAUSED, TAKEOVER, OVERRIDE, SAFETY_STOP, INHIBITED};
 
   /// @brief This cycle's selection.
   struct Selection

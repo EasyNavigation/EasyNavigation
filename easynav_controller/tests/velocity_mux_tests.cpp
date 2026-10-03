@@ -269,3 +269,41 @@ TEST(VelocityMuxTest, ResetForgetsTheStop)
   mux.reset();
   EXPECT_TRUE(mux.select(nav_state).fresh) << "after a reset, the stop is entered again";
 }
+
+TEST(VelocityMuxTest, InhibitedMotionBrakesOverEverySource)
+{
+  VelocityMux mux;
+  easynav::NavState nav_state;
+  nav_state.set(easynav::kInhibitMotionKey, true);
+  propose_all(nav_state);
+
+  const auto sel = mux.select(nav_state);
+  EXPECT_EQ(sel.choice, VelocityMux::Choice::INHIBITED);
+  EXPECT_EQ(sel.cmd.twist, geometry_msgs::msg::Twist());
+  EXPECT_TRUE(sel.smooth) << "the robot is still moving: it brakes within the limits";
+  EXPECT_TRUE(sel.fresh);
+  for (const auto source :
+    {VelocitySource::CONTROLLER, VelocitySource::TAKEOVER, VelocitySource::OVERRIDE})
+  {
+    EXPECT_FALSE(easynav::velocity_command::peek(nav_state, source).has_value());
+  }
+  EXPECT_FALSE(mux.select(nav_state).fresh) << "nothing new";
+}
+
+TEST(VelocityMuxTest, AProtectiveStopWinsOverInhibitedMotion)
+{
+  VelocityMux mux;
+  easynav::NavState nav_state;
+  nav_state.set(easynav::kInhibitMotionKey, true);
+  set_protective_stop(nav_state, true);
+  EXPECT_EQ(mux.select(nav_state).choice, VelocityMux::Choice::SAFETY_STOP);
+}
+
+TEST(VelocityMuxTest, NotInhibitedNothingChanges)
+{
+  VelocityMux mux;
+  easynav::NavState nav_state;
+  nav_state.set(easynav::kInhibitMotionKey, false);
+  easynav::velocity_command::propose(nav_state, VelocitySource::CONTROLLER, cmd(0.5));
+  EXPECT_EQ(mux.select(nav_state).choice, VelocityMux::Choice::CONTROLLER);
+}

@@ -2,3 +2,8 @@ ament_add_gtest(maps_manager_node_tests maps_manager_node_tests.cpp)
 target_link_libraries(maps_manager_node_tests
   easynav_maps_manager
 )
+
+ament_add_gtest(faulty_maps_manager_tests faulty_maps_manager_tests.cpp)
+target_link_libraries(faulty_maps_manager_tests
+  faulty_maps_manager
+)

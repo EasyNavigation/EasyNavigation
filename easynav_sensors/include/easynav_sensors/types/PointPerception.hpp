@@ -339,6 +339,9 @@ public:
   /// \return True if new data was stored (to trigger processing).
   bool cycle_rt([[maybe_unused]] std::shared_ptr<NavState> nav_state) override;
 
+  /// \brief The perception this handler keeps up to date.
+  std::shared_ptr<PerceptionBase> get_perception() const override {return perception_data_;}
+
 private:
   /// \brief pointer to the perception data
   std::shared_ptr<PointPerception> perception_data_ {nullptr};

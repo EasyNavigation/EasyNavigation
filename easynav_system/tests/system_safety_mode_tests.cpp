@@ -35,6 +35,7 @@
 #include "geometry_msgs/msg/twist.hpp"
 #include "lifecycle_msgs/msg/state.hpp"
 #include "lifecycle_msgs/msg/transition.hpp"
+#include "nav_msgs/msg/odometry.hpp"
 #include "rclcpp/rclcpp.hpp"
 
 #include "easynav_core/SafetyChannel.hpp"
@@ -684,6 +685,62 @@ TEST_F(SystemSafetyModeTest, IsolatedOverrunsDoNotStopEasyNavInSafetyMode)
   ASSERT_TRUE(rt_diagnostic());
   EXPECT_EQ(rt_diagnostic()->level, diagnostic_msgs::msg::DiagnosticStatus::OK) <<
     "late, then on time again";
+}
+
+TEST_F(SystemSafetyModeTest, AnOldRobotPoseBrakesTheRobotInSafetyMode)
+{
+  if (!easynav::check_real_time_priority(easynav::kRealTimePriority).empty()) {
+    GTEST_SKIP() << "the safety mode needs real-time scheduling, not allowed here";
+  }
+  start(safe({
+    "controller_types:=['ctrl']",
+    "ctrl.plugin:=easynav_controller/FaultyController",
+    "ctrl.fault:='none'",
+    "robot_limits.max_linear_acc:=10.0",
+    "robot_limits.max_linear_decel:=2.0",
+    "safety.max_pose_age:=0.5"}));
+  ASSERT_TRUE(configure());
+  ASSERT_TRUE(activate());
+  listen_cmd_vel();
+  connect_safety_channel();
+  status_ = channel_status(false);
+  auto localize = [this]() {
+      nav_msgs::msg::Odometry pose;
+      pose.header.frame_id = "map";
+      pose.header.stamp = system_node_->now();
+      system_node_->get_nav_state()->set("robot_pose", pose);
+    };
+
+  localize();
+  run_rt_at_rate(std::chrono::milliseconds(300));
+  spin_for(std::chrono::milliseconds(50));
+  ASSERT_FALSE(cmd_vels_.empty());
+  ASSERT_DOUBLE_EQ(cmd_vels_.back(), 0.5) << "localized: moving";
+
+  // The localizer stops updating the pose.
+  rclcpp::sleep_for(std::chrono::milliseconds(300));
+  cmd_vels_.clear();
+  run_rt_at_rate(std::chrono::milliseconds(400));
+  spin_for(std::chrono::milliseconds(50));
+  ASSERT_GT(cmd_vels_.size(), 2u);
+  EXPECT_EQ(cmd_vels_.back(), 0.0);
+  const auto first_braking = std::find_if(
+    cmd_vels_.begin(), cmd_vels_.end(), [](double v) {return v < 0.5;});
+  ASSERT_NE(first_braking, cmd_vels_.end());
+  EXPECT_GT(*first_braking, 0.0) << "it brakes within the limits, not dead";
+  EXPECT_FALSE(system_node_->is_shutdown_requested()) << "EasyNav keeps running";
+  auto nav_state = system_node_->get_nav_state();
+  ASSERT_TRUE(nav_state->has("diagnostics.robot_pose"));
+  EXPECT_EQ(
+    nav_state->get_safe<diagnostic_msgs::msg::DiagnosticStatus>("diagnostics.robot_pose").level,
+    diagnostic_msgs::msg::DiagnosticStatus::ERROR);
+
+  localize();  // Back.
+  cmd_vels_.clear();
+  run_rt_at_rate(std::chrono::milliseconds(300));
+  spin_for(std::chrono::milliseconds(50));
+  ASSERT_FALSE(cmd_vels_.empty());
+  EXPECT_DOUBLE_EQ(cmd_vels_.back(), 0.5);
 }
 
 // ─── Safety channel (SafetyStatus) ───────────────────────────────────────────────────────────

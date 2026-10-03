@@ -15,6 +15,7 @@
 /// \file
 /// \brief Implementation of the SensorsNode class.
 
+#include <cmath>
 #include <string>
 #include <vector>
 #include <unordered_map>
@@ -26,7 +27,9 @@
 
 #include "sensor_msgs/msg/point_cloud2.hpp"
 
+#include "diagnostic_msgs/msg/diagnostic_status.hpp"
 #include "easynav_common/Parameters.hpp"
+
 #include "easynav_sensors/SensorsNode.hpp"
 
 #include "easynav_sensors/types/ImagePerception.hpp"
@@ -98,6 +101,11 @@ SensorsNode::on_configure([[maybe_unused]] const rclcpp_lifecycle::State & state
   std::vector<std::string> sensors;
   get_parameter("sensors", sensors);
   get_parameter("forget_time", forget_time_);
+  if (!std::isfinite(forget_time_) || forget_time_ <= 0.0) {
+    RCLCPP_ERROR(
+      get_logger(), "Invalid parameter: forget_time = %f (> 0)", forget_time_);
+    return CallbackReturnT::FAILURE;
+  }
 
   for (const auto & sensor_id : sensors) {
     std::string topic, msg_type, plugin;
@@ -160,6 +168,10 @@ SensorsNode::on_configure([[maybe_unused]] const rclcpp_lifecycle::State & state
       "Configured sensor [%s] with plugin [%s] on topic [%s] in group [%s]",
       sensor_id.c_str(), plugin.c_str(), topic.c_str(), group.c_str());
   }
+
+  // Preallocated: checked every RT cycle.
+  data_states_.assign(handler_list_.size(), DataState::NO_DATA);
+  data_age_reported_ = false;
 
   return CallbackReturnT::SUCCESS;
 }
@@ -242,7 +254,89 @@ SensorsNode::cycle_rt(
     trigger_perceptions = trigger_perceptions || trigger;
   }
 
+  check_data_age(handlers, *nav_state);
+
   return trigger_perceptions;
+}
+
+void
+SensorsNode::check_data_age(
+  const std::vector<std::shared_ptr<PerceptionHandler>> & handlers, NavState & nav_state)
+{
+  if (data_states_.size() != handlers.size()) {
+    return;  // Reconfiguring.
+  }
+  const auto now = this->now();
+  bool changed = !data_age_reported_;
+  for (std::size_t i = 0; i < handlers.size(); ++i) {
+    const auto perception = handlers[i]->get_perception();
+    if (!perception) {
+      continue;  // A handler that does not expose its perception is not checked.
+    }
+    DataState state = DataState::FRESH;
+    if (perception->stamp.nanoseconds() == 0 && !perception->valid) {
+      state = DataState::NO_DATA;
+    } else if (perception->stamp.get_clock_type() == now.get_clock_type() &&
+      (now - perception->stamp).seconds() > forget_time_)
+    {
+      perception->valid = false;  // Nothing uses it until new data arrives.
+      state = DataState::STALE;
+    } else if (!perception->valid) {
+      state = DataState::STALE;
+    }
+    if (state != data_states_[i]) {
+      data_states_[i] = state;
+      changed = true;
+    }
+  }
+  if (changed) {
+    report_data_age(handlers, nav_state);
+  }
+}
+
+void
+SensorsNode::report_data_age(
+  const std::vector<std::shared_ptr<PerceptionHandler>> & handlers, NavState & nav_state)
+{
+  using diagnostic_msgs::msg::DiagnosticStatus;
+  data_age_reported_ = true;
+
+  std::string no_data, stale;
+  for (std::size_t i = 0; i < handlers.size(); ++i) {
+    if (data_states_[i] == DataState::FRESH) {continue;}
+    auto & list = data_states_[i] == DataState::NO_DATA ? no_data : stale;
+    list += (list.empty() ? "" : ", ") + handlers[i]->get_sensor_name();
+  }
+
+  DiagnosticStatus status;
+  status.name = "sensors";
+  status.hardware_id = get_name();
+  if (no_data.empty() && stale.empty()) {
+    status.level = DiagnosticStatus::OK;
+    status.message = "Sensor data up to date";
+  } else {
+    status.level = DiagnosticStatus::WARN;
+    if (!stale.empty()) {
+      status.message = "No data for more than " + std::to_string(forget_time_) + " s from: " +
+        stale;
+    }
+    if (!no_data.empty()) {
+      status.message += (status.message.empty() ? "" : "; ") + std::string("No data yet from: ") +
+        no_data;
+    }
+    RCLCPP_WARN(get_logger(), "%s", status.message.c_str());
+  }
+  diagnostic_msgs::msg::KeyValue stale_kv;
+  stale_kv.key = "stale";
+  stale_kv.value = stale;
+  status.values.push_back(stale_kv);
+  diagnostic_msgs::msg::KeyValue no_data_kv;
+  no_data_kv.key = "no_data";
+  no_data_kv.value = no_data;
+  status.values.push_back(no_data_kv);
+
+  nav_state.set("diagnostics.sensors", status);
+  nav_state.add_to_group("diagnostics", "diagnostics.sensors");
 }
 
 void
