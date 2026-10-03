@@ -24,7 +24,7 @@ jobs:
       - name: build and test
         uses: ros-tooling/action-ros-ci@0.4.8
         with:
-          package-name: easynav_common easynav_controller easynav_core easynav_interfaces easynav_localizer easynav_maps_manager easynav_planner easynav_sensors easynav_system easynav_support_py easynav_tools
+          package-name: easynav_common easynav_controller easynav_core easynav_interfaces easynav_localizer easynav_maps_manager easynav_planner easynav_recovery easynav_sensors easynav_system easynav_support_py easynav_tools
           target-ros2-distro: rolling
           vcs-repo-file-url: ${GITHUB_WORKSPACE}/.github/thirdparty.repos
           colcon-defaults: |

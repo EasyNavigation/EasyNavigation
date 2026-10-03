@@ -65,6 +65,9 @@ namespace easynav::safety
  *   NavState ("safety_status"): during a protective stop EasyNav commands zero and keeps the
  *   mission; a safely limited speed cuts the robot limits down. With no valid status within the
  *   timeout, it is a protective stop.
+ * - "safety.max_pose_age" (s, default 1.0; 0: off): a "robot_pose" older than this (its stamp,
+ *   ROS time), or not finite, is an ERROR ("diagnostics.robot_pose"); in safety mode, motion is
+ *   also inhibited ("inhibit_motion": the robot brakes to zero) until it is usable again.
  *
  * Every configure, it fingerprints the configuration: a SHA-256 of every parameter, logged and
  * shared in NavState ("configuration_hash"), with the parameters saved in the ROS log directory
@@ -127,6 +130,9 @@ private:
   /// @brief Updates "diagnostics.rt_cycle" when the RT monitor's status changes.
   void report_rt_status(NavState & nav_state, RtMonitor::Status status);
 
+  /// @brief Checks the age of "robot_pose" at \p now; reports and, in safety mode, inhibits motion.
+  void check_pose_age(NavState & nav_state, const rclcpp::Time & now);
+
   /// @brief Updates "diagnostics.safety_status" when the safety channel's state changes.
   void report_safety_status(
     NavState & nav_state, const SafetyChannelMonitor::Evaluation & evaluation);
@@ -145,6 +151,10 @@ private:
   easynav_interfaces::msg::Heartbeat heartbeat_;
   rclcpp::Publisher<easynav_interfaces::msg::Heartbeat>::SharedPtr heartbeat_pub_;
   std::string configuration_hash_;
+
+  // Age of the robot pose, checked from the RT cycle.
+  double max_pose_age_ {1.0};
+  std::optional<bool> last_pose_stale_;
 
   // Safety channel: received in the RT callback group, applied from the RT cycle.
   double safety_status_timeout_ {0.0};

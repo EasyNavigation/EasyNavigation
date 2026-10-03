@@ -21,6 +21,7 @@ find_package(PCL REQUIRED COMPONENTS common io)
 find_package(pcl_conversions REQUIRED)
 find_package(cv_bridge REQUIRED)
 find_package(pluginlib REQUIRED)
+find_package(diagnostic_msgs REQUIRED)
 
 set(dependencies
   rclcpp::rclcpp
@@ -61,6 +62,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
   ${vision_msgs_TARGETS}
   ${geometry_msgs_TARGETS}
   ${nav_msgs_TARGETS}
+  ${diagnostic_msgs_TARGETS}
   ${PCL_LIBRARIES}
 )
 
@@ -111,6 +113,7 @@ ament_export_dependencies(
   pcl_conversions
   cv_bridge
   pluginlib
+  diagnostic_msgs
   PCL
 )
 ament_package()

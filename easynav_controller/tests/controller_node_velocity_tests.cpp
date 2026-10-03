@@ -1071,3 +1071,30 @@ TEST_F(ControllerNodeSafetyChannelTest, ReconfiguringStartsWithoutTheSpeedLimit)
   EXPECT_DOUBLE_EQ(node_->get_robot_limits().max_linear_vel, 1.0)
     << "the configured limits, until the RT cycle applies the safety channel again";
 }
+
+TEST_F(ControllerNodeSafetyChannelTest, InhibitedMotionBrakesInARampAndResumes)
+{
+  make_active_node();
+  reach(1.0);
+
+  nav_state_->set(easynav::kInhibitMotionKey, true);
+  for (int i = 0; i < 60; ++i) {
+    cycle(1.0, -0.1, 0.2);  // Nobody may move it: controller, takeover, override.
+  }
+  spin_for(100ms);
+  ASSERT_GT(received_.size(), 3u);
+  EXPECT_GT(received_.front(), 0.0) << "it must not stop dead in one step";
+  EXPECT_DOUBLE_EQ(received_.back(), 0.0);
+  expect_within_acceleration_limits();
+
+  nav_state_->set(easynav::kInhibitMotionKey, false);
+  received_.clear();
+  stamps_.clear();
+  for (int i = 0; i < 100; ++i) {
+    cycle(1.0);
+  }
+  spin_for(100ms);
+  ASSERT_FALSE(received_.empty());
+  EXPECT_DOUBLE_EQ(received_.back(), 1.0);
+  expect_within_acceleration_limits();
+}

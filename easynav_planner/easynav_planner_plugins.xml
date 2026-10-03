@@ -8,4 +8,11 @@
       </description>
     </class>
   </library>
+  <library path="faulty_planner">
+    <class name="easynav_planner/FaultyPlanner" type="easynav::FaultyPlanner" base_class_type="easynav::PlannerMethodBase">
+      <description>
+      Planner that injects faults (throw, hang, empty, frozen or NaN path), to test how EasyNav copes with them.
+      </description>
+    </class>
+  </library>
 </class_libraries>

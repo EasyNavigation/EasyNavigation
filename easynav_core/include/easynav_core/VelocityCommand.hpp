@@ -35,6 +35,10 @@ enum class VelocitySource
   OVERRIDE,    ///< Emergency override of everything else (published as is, not smoothed).
 };
 
+/// @brief NavState key (bool): while true, the command is zero, braking within the limits,
+/// whoever proposes (e.g. in safety mode, with a robot pose too old).
+inline constexpr char kInhibitMotionKey[] = "inhibit_motion";
+
 /// @brief One source's slot in NavState: its last command, and whether it is still pending
 /// (not taken yet).
 struct VelocityProposal

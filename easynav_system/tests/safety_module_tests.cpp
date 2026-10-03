@@ -37,6 +37,7 @@
 
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
+#include "nav_msgs/msg/odometry.hpp"
 #include "std_msgs/msg/string.hpp"
 #include "diagnostic_msgs/msg/diagnostic_status.hpp"
 #include "easynav_interfaces/msg/heartbeat.hpp"
@@ -44,6 +45,7 @@
 
 #include "easynav_controller/ControllerNode.hpp"
 #include "easynav_core/SafetyChannel.hpp"
+#include "easynav_core/VelocityCommand.hpp"
 #include "easynav_system/RealTime.hpp"
 #include "easynav_system/safety/ConfigurationFingerprint.hpp"
 #include "easynav_system/safety/ParameterFreezer.hpp"
@@ -970,4 +972,143 @@ TEST_F(SafetyModuleTest, DisablingTheSafetyStatusOnReconfigureLiftsItsRestrictio
   EXPECT_FALSE(supervisor.is_safety_status_enabled());
   supervisor.on_configured({{"system_node", n}}, nav_state);
   EXPECT_EQ(channel_state(nav_state), easynav::SafetyChannelState());
+}
+
+// ─── Robot pose age ─────────────────────────────────────────────────────────────────────────
+
+namespace
+{
+
+void set_pose(
+  easynav::NavState & nav_state, const rclcpp::Node::SharedPtr & clock_node,
+  std::chrono::milliseconds age)
+{
+  nav_msgs::msg::Odometry pose;
+  pose.header.frame_id = "map";
+  pose.header.stamp = clock_node->now() - rclcpp::Duration(age);
+  nav_state.set("robot_pose", pose);
+}
+
+std::optional<diagnostic_msgs::msg::DiagnosticStatus> pose_diagnostic(
+  const easynav::NavState & nav_state)
+{
+  if (!nav_state.has("diagnostics.robot_pose")) {return std::nullopt;}
+  return nav_state.get_safe<diagnostic_msgs::msg::DiagnosticStatus>("diagnostics.robot_pose");
+}
+
+}  // namespace
+
+TEST_F(SafetyModuleTest, MaxPoseAgeIsChecked)
+{
+  const std::vector<std::pair<double, bool>> cases {
+    {-0.1, false}, {std::nan(""), false}, {std::numeric_limits<double>::infinity(), false},
+    {0.0, true}, {0.5, true}};
+  for (const auto & [age, valid] : cases) {
+    easynav::safety::SafetySupervisor supervisor;
+    auto n = system({{"safety.max_pose_age", age}}, supervisor);
+    EXPECT_EQ(supervisor.check_system(*n), valid) << age;
+  }
+}
+
+TEST_F(SafetyModuleTest, AnOldRobotPoseIsAnErrorOutsideSafetyModeButDoesNotStopTheRobot)
+{
+  easynav::safety::SafetySupervisor supervisor;
+  auto n = system({{"safety.max_pose_age", 0.5}}, supervisor);
+  ASSERT_TRUE(supervisor.check_system(*n));
+  supervisor.on_activate();
+  auto clock_node = std::make_shared<rclcpp::Node>("pose_clock");
+  easynav::NavState nav_state;
+
+  set_pose(nav_state, clock_node, 100ms);
+  ASSERT_TRUE(supervisor.cycle_rt(nav_state, RtClock::now()));
+  EXPECT_FALSE(pose_diagnostic(nav_state)) << "nothing to report until something goes wrong";
+
+  set_pose(nav_state, clock_node, 600ms);
+  ASSERT_TRUE(supervisor.cycle_rt(nav_state, RtClock::now()));
+  ASSERT_TRUE(pose_diagnostic(nav_state));
+  EXPECT_EQ(pose_diagnostic(nav_state)->level, diagnostic_msgs::msg::DiagnosticStatus::ERROR);
+  EXPECT_EQ(pose_diagnostic(nav_state)->hardware_id, "system_node");
+  EXPECT_NE(pose_diagnostic(nav_state)->message.find("robot_pose is"), std::string::npos);
+  EXPECT_FALSE(nav_state.has(easynav::kInhibitMotionKey)) << "only in safety mode";
+
+  set_pose(nav_state, clock_node, 0ms);
+  ASSERT_TRUE(supervisor.cycle_rt(nav_state, RtClock::now()));
+  EXPECT_EQ(pose_diagnostic(nav_state)->level, diagnostic_msgs::msg::DiagnosticStatus::OK);
+}
+
+TEST_F(SafetyModuleTest, TheRobotPoseAgeIsReportedOnlyOnChanges)
+{
+  easynav::safety::SafetySupervisor supervisor;
+  auto n = system({{"safety.max_pose_age", 0.5}}, supervisor);
+  ASSERT_TRUE(supervisor.check_system(*n));
+  supervisor.on_activate();
+  auto clock_node = std::make_shared<rclcpp::Node>("pose_clock");
+  easynav::NavState nav_state;
+
+  set_pose(nav_state, clock_node, 600ms);
+  ASSERT_TRUE(supervisor.cycle_rt(nav_state, RtClock::now()));
+  auto marked = pose_diagnostic(nav_state).value();
+  marked.message = "marker";
+  nav_state.set("diagnostics.robot_pose", marked);
+  ASSERT_TRUE(supervisor.cycle_rt(nav_state, RtClock::now()));
+  EXPECT_EQ(pose_diagnostic(nav_state)->message, "marker");
+
+  supervisor.on_activate();  // Starts over: reported again.
+  ASSERT_TRUE(supervisor.cycle_rt(nav_state, RtClock::now()));
+  EXPECT_NE(pose_diagnostic(nav_state)->message, "marker");
+}
+
+TEST_F(SafetyModuleTest, NoRobotPoseOrNotLocalizedYetOrOffIsNotChecked)
+{
+  auto clock_node = std::make_shared<rclcpp::Node>("pose_clock");
+  {
+    easynav::safety::SafetySupervisor supervisor;
+    auto n = system({{"safety.max_pose_age", 0.5}}, supervisor);
+    ASSERT_TRUE(supervisor.check_system(*n));
+    supervisor.on_activate();
+    easynav::NavState nav_state;
+    ASSERT_TRUE(supervisor.cycle_rt(nav_state, RtClock::now()));  // No robot_pose
+    nav_state.set("robot_pose", nav_msgs::msg::Odometry());  // Stamp 0: not localized yet
+    ASSERT_TRUE(supervisor.cycle_rt(nav_state, RtClock::now()));
+    EXPECT_FALSE(pose_diagnostic(nav_state));
+  }
+  {
+    easynav::safety::SafetySupervisor supervisor;
+    auto n = system({{"safety.max_pose_age", 0.0}}, supervisor);
+    ASSERT_TRUE(supervisor.check_system(*n));
+    supervisor.on_activate();
+    easynav::NavState nav_state;
+    set_pose(nav_state, clock_node, 10000ms);
+    ASSERT_TRUE(supervisor.cycle_rt(nav_state, RtClock::now()));
+    EXPECT_FALSE(pose_diagnostic(nav_state)) << "off";
+  }
+}
+
+TEST_F(SafetyModuleTest, AnOldRobotPoseInhibitsMotionInSafetyMode)
+{
+  if (!easynav::check_real_time_priority(easynav::kRealTimePriority).empty()) {
+    GTEST_SKIP() << "the safety mode needs real-time scheduling, not allowed here";
+  }
+  easynav::safety::SafetySupervisor supervisor;
+  auto n = system(
+    {{"safety.mode", true}, {"safety.plc_limits.max_linear_vel", 1.0},
+      {"safety.plc_limits.max_angular_vel", 1.0}, {"safety.heartbeat.period", 0.1},
+      {"safety.status.timeout", 0.5}, {"safety.max_pose_age", 0.5}}, supervisor);
+  ASSERT_TRUE(supervisor.check_system(*n));
+  supervisor.on_activate();
+  auto clock_node = std::make_shared<rclcpp::Node>("pose_clock");
+  easynav::NavState nav_state;
+
+  set_pose(nav_state, clock_node, 100ms);
+  EXPECT_TRUE(supervisor.cycle_rt(nav_state, RtClock::now()));
+  EXPECT_FALSE(nav_state.get<bool>(easynav::kInhibitMotionKey));
+
+  set_pose(nav_state, clock_node, 600ms);
+  EXPECT_TRUE(supervisor.cycle_rt(nav_state, RtClock::now())) << "EasyNav keeps running";
+  EXPECT_TRUE(nav_state.get<bool>(easynav::kInhibitMotionKey));
+  EXPECT_NE(pose_diagnostic(nav_state)->message.find("motion inhibited"), std::string::npos);
+
+  set_pose(nav_state, clock_node, 0ms);
+  EXPECT_TRUE(supervisor.cycle_rt(nav_state, RtClock::now()));
+  EXPECT_FALSE(nav_state.get<bool>(easynav::kInhibitMotionKey));
 }

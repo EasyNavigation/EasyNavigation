@@ -39,6 +39,8 @@ VelocityMux::select(NavState & nav_state)
     nav_state.get_safe<bool>(kNavigationPaused);
   const bool protective_stop = nav_state.has(kSafetyStatusKey) &&
     nav_state.get_safe<SafetyChannelState>(kSafetyStatusKey).protective_stop;
+  const bool inhibited = nav_state.has(kInhibitMotionKey) &&
+    nav_state.get_safe<bool>(kInhibitMotionKey);
 
   Selection selection;
   if (protective_stop) {
@@ -47,6 +49,12 @@ VelocityMux::select(NavState & nav_state)
     stop.header = controller ? controller->header : last_target_.header;
     const bool fresh = controller.has_value() || last_choice_ != Choice::SAFETY_STOP;
     selection = {stop, Choice::SAFETY_STOP, fresh, true};
+  } else if (inhibited) {
+    // Nobody may command the robot: it brakes within the limits.
+    geometry_msgs::msg::TwistStamped stop;
+    stop.header = controller ? controller->header : last_target_.header;
+    const bool fresh = controller.has_value() || last_choice_ != Choice::INHIBITED;
+    selection = {stop, Choice::INHIBITED, fresh, true};
   } else if (override_cmd) {
     selection = {*override_cmd, Choice::OVERRIDE, true, false};
   } else if (takeover) {

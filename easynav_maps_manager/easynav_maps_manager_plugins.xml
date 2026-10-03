@@ -8,4 +8,11 @@
       </description>
     </class>
   </library>
+  <library path="faulty_maps_manager">
+    <class name="easynav_maps_manager/FaultyMapsManager" type="easynav::FaultyMapsManager" base_class_type="easynav::MapsManagerBase">
+      <description>
+      Maps manager that injects faults (throw, hang), to test how EasyNav copes with them.
+      </description>
+    </class>
+  </library>
 </class_libraries>

@@ -22,7 +22,9 @@
 #include <vector>
 
 #include "diagnostic_msgs/msg/diagnostic_status.hpp"
+#include "nav_msgs/msg/odometry.hpp"
 
+#include "easynav_core/VelocityCommand.hpp"
 #include "easynav_system/RealTime.hpp"
 #include "easynav_system/safety/SafetySupervisor.hpp"
 
@@ -41,6 +43,7 @@ SafetySupervisor::declare_parameters(rclcpp_lifecycle::LifecycleNode & node)
   node.declare_parameter("safety.rt_monitor.max_period_factor", max_period_factor_);
   node.declare_parameter("safety.rt_monitor.max_late_cycles", 10);
   node.declare_parameter("safety.status.timeout", 0.0);
+  node.declare_parameter("safety.max_pose_age", max_pose_age_);
 }
 
 bool
@@ -62,6 +65,7 @@ SafetySupervisor::check_system(
   max_period_factor_ = node.get_parameter("safety.rt_monitor.max_period_factor").as_double();
   const auto max_late_cycles = node.get_parameter("safety.rt_monitor.max_late_cycles").as_int();
   safety_status_timeout_ = node.get_parameter("safety.status.timeout").as_double();
+  max_pose_age_ = node.get_parameter("safety.max_pose_age").as_double();
   hardware_id_ = node.get_name();
   clock_ = node.get_clock();
 
@@ -89,6 +93,9 @@ SafetySupervisor::check_system(
     errors.push_back(
       "safety.status.timeout = " + std::to_string(safety_status_timeout_) +
       (safety_mode_ ? " (> 0, required in safety.mode)" : " (>= 0)"));
+  }
+  if (!std::isfinite(max_pose_age_) || max_pose_age_ < 0.0) {
+    errors.push_back("safety.max_pose_age = " + std::to_string(max_pose_age_) + " (>= 0)");
   }
   if (!std::isfinite(max_period_factor_) || max_period_factor_ <= 1.0) {
     errors.push_back(
@@ -246,6 +253,7 @@ SafetySupervisor::on_activate()
   rt_monitor_.reset();
   last_heartbeat_.reset();
   last_safety_report_.reset();
+  last_pose_stale_.reset();
   failure_.clear();
 }
 
@@ -272,6 +280,8 @@ SafetySupervisor::cycle_rt(NavState & nav_state, RtMonitor::Clock::time_point no
     nav_state.set(kSafetyStatusKey, evaluation.state);
     report_safety_status(nav_state, evaluation);
   }
+
+  check_pose_age(nav_state, clock_->now());
 
   if (safety_mode_ && status == RtMonitor::Status::ERROR && failure_.empty()) {
     failure_ = "[safety.mode] " + std::to_string(rt_monitor_.consecutive_late_cycles()) +
@@ -317,6 +327,63 @@ SafetySupervisor::report_rt_status(NavState & nav_state, RtMonitor::Status statu
   diagnostic.message = message.str();
   nav_state.set("diagnostics.rt_cycle", diagnostic);
   nav_state.add_to_group("diagnostics", "diagnostics.rt_cycle");
+}
+
+void
+SafetySupervisor::check_pose_age(NavState & nav_state, const rclcpp::Time & now)
+{
+  using diagnostic_msgs::msg::DiagnosticStatus;
+  // Built once: checked every RT cycle.
+  static const std::string kRobotPose {"robot_pose"};
+  if (!(max_pose_age_ > 0.0) || !nav_state.has(kRobotPose)) {
+    return;  // Off, or no localizer publishes a pose.
+  }
+
+  // A shared pointer, not a copy: no allocation in the RT cycle.
+  const auto pose = nav_state.get_ptr<nav_msgs::msg::Odometry>(kRobotPose);
+  const rclcpp::Time stamp(pose->header.stamp, now.get_clock_type());
+  if (stamp.nanoseconds() == 0) {
+    return;  // Not localized yet.
+  }
+  const double age = (now - stamp).seconds();
+  const auto & p = pose->pose.pose;
+  const bool finite = std::isfinite(p.position.x) && std::isfinite(p.position.y) &&
+    std::isfinite(p.position.z) && std::isfinite(p.orientation.x) &&
+    std::isfinite(p.orientation.y) && std::isfinite(p.orientation.z) &&
+    std::isfinite(p.orientation.w);
+  const bool stale = age > max_pose_age_ || !finite;  // Not usable, either way.
+
+  if (safety_mode_) {
+    nav_state.set(kInhibitMotionKey, stale);
+  }
+  // Nothing to report until something goes wrong; then, only changes.
+  if (last_pose_stale_ ? *last_pose_stale_ == stale : !stale) {
+    return;
+  }
+  last_pose_stale_ = stale;
+
+  DiagnosticStatus diagnostic;
+  diagnostic.name = "robot_pose";
+  diagnostic.hardware_id = hardware_id_;
+  if (stale) {
+    diagnostic.level = DiagnosticStatus::ERROR;
+    std::ostringstream message;
+    if (finite) {
+      message << "robot_pose is " << age << " s old (safety.max_pose_age: " << max_pose_age_ <<
+        " s)";
+    } else {
+      message << "robot_pose is not finite";
+    }
+    message << (safety_mode_ ? ": motion inhibited" : "");
+    diagnostic.message = message.str();
+    RCLCPP_ERROR(logger_, "%s", diagnostic.message.c_str());
+  } else {
+    diagnostic.level = DiagnosticStatus::OK;
+    diagnostic.message = "robot_pose up to date";
+    RCLCPP_INFO(logger_, "%s", diagnostic.message.c_str());
+  }
+  nav_state.set("diagnostics.robot_pose", diagnostic);
+  nav_state.add_to_group("diagnostics", "diagnostics.robot_pose");
 }
 
 void
