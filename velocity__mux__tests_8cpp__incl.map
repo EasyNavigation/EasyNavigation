@@ -1,16 +1,19 @@
 <map id="easynav_controller/tests/velocity_mux_tests.cpp" name="easynav_controller/tests/velocity_mux_tests.cpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="554,5,688,61"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="490,116,584,142"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="599,63,560,107,556,103,595,60"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="764,5,897,61"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="649,116,742,142"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="793,64,727,110,724,105,790,59"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="511,198,686,238"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="620,62,605,183,600,182,615,61"/>
-<area shape="rect" id="Node000004" href="$VelocityMux_8hpp.html" title="Declaration of the VelocityMux class." alt="" coords="703,109,832,150"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="665,59,726,98,723,103,662,64"/>
-<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="731,153,652,193,649,188,728,148"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="821,63,795,108,777,131,756,152,721,176,682,194,680,189,718,171,753,148,773,128,790,105,816,60"/>
+<area shape="rect" id="Node000004" href="$VelocityMux_8hpp.html" title="Declaration of the VelocityMux class." alt="" coords="818,109,947,150"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="848,60,867,94,862,97,843,63"/>
+<area shape="rect" id="Node000022" title=" " alt="" coords="1153,205,1366,231"/>
+<area shape="poly" id="edge24_Node000001_Node000022" title=" " alt="" coords="895,59,1219,196,1217,201,893,64"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="818,153,678,195,677,190,817,148"/>
 <area shape="rect" id="Node000005" href="$NavState_8hpp.html" title="A blackboard&#45;like structure to hold the current state of the navigation system." alt="" coords="710,198,871,238"/>
-<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="776,150,784,182,779,183,770,151"/>
-<area shape="rect" id="Node000022" title=" " alt="" coords="895,205,1129,231"/>
-<area shape="poly" id="edge22_Node000004_Node000022" title=" " alt="" coords="824,148,964,197,962,202,822,153"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="863,152,824,189,820,185,860,148"/>
+<area shape="poly" id="edge22_Node000004_Node000022" title=" " alt="" coords="948,143,1193,199,1192,204,947,148"/>
+<area shape="rect" id="Node000023" title=" " alt="" coords="895,205,1129,231"/>
+<area shape="poly" id="edge23_Node000004_Node000023" title=" " alt="" coords="913,148,983,194,980,198,910,152"/>
 <area shape="rect" id="Node000006" title=" " alt="" coords="5,286,80,312"/>
 <area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="710,239,698,241,530,258,398,264,265,270,95,289,95,284,264,264,397,258,530,253,697,236,709,234"/>
 <area shape="rect" id="Node000007" title=" " alt="" coords="104,286,157,312"/>

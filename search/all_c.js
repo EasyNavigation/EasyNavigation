@@ -10,10 +10,11 @@ var searchData=
   ['navstate_5ftests_2ecpp_7',['navstate_tests.cpp',['../navstate__tests_8cpp.html',1,'']]],
   ['navstatetest_8',['NavStateTest',['../classNavStateTest.html',1,'']]],
   ['new_5fdata_9',['new_data',['../classeasynav_1_1PerceptionBase.html#a5a4ba60143c31271df0f72bf0e503876',1,'easynav::PerceptionBase']]],
-  ['node_10',['node',['../classRobotGeometryTest.html#a132859002d14ea4afc214329202bfe91',1,'RobotGeometryTest::node()'],['../classSafetyModuleTest.html#a5e069d0434bbfa89876727054b69d669',1,'SafetyModuleTest::node()'],['../classSystemReconfigureTest.html#a7bc9f5a4eff88204063797b70682bff1',1,'SystemReconfigureTest::node()']]],
-  ['node_5f_11',['node_',['../classCommandGuardTest.html#a03f07b03c033ac40026387718371ca62',1,'CommandGuardTest::node_'],['../classControllerNodeVelocityTest.html#adf9ba1d80c87883454de3fa3c6261e27',1,'ControllerNodeVelocityTest::node_'],['../classFaultyControllerTest.html#adf9ba1d80c87883454de3fa3c6261e27',1,'FaultyControllerTest::node_'],['../classPluginTestCase.html#a9f83d0a03ffbc5bfc6fb9b87bff09fba',1,'PluginTestCase::node_']]],
-  ['node_5fptr_12',['node_ptr',['../structeasynav_1_1SystemNodeInfo.html#a676636486b490302c0c8692b459ad78e',1,'easynav::SystemNodeInfo']]],
-  ['nodes_13',['Nodes',['../namespaceeasynav_1_1safety.html#af2d446a1ebc75ba59f9450cc50572751',1,'easynav::safety::Nodes'],['../safety__module__tests_8cpp.html#af2d446a1ebc75ba59f9450cc50572751',1,'Nodes:&#160;ConfigurationFingerprint.hpp']]],
-  ['none_14',['NONE',['../classeasynav_1_1VelocityMux.html#ac5102e0b11ce43d0b9ef595c3c3ab0c3ab50339a10e1de285ac99d4c3990b8693',1,'easynav::VelocityMux']]],
-  ['norm_5fangle_15',['norm_angle',['../namespaceeasynav.html#aaf7b2449dfa550dee63301e3d721ab3a',1,'easynav']]]
+  ['no_5fstatus_10',['NO_STATUS',['../classeasynav_1_1safety_1_1SafetyChannelMonitor.html#aaa9d490566a07760c8633899ed2e7156aada0b90fa084069fe07828b1cc6ab4be',1,'easynav::safety::SafetyChannelMonitor']]],
+  ['node_11',['node',['../classRobotGeometryTest.html#a132859002d14ea4afc214329202bfe91',1,'RobotGeometryTest::node()'],['../classSafetyModuleTest.html#a5e069d0434bbfa89876727054b69d669',1,'SafetyModuleTest::node()'],['../classSystemReconfigureTest.html#a7bc9f5a4eff88204063797b70682bff1',1,'SystemReconfigureTest::node()']]],
+  ['node_5f_12',['node_',['../classCommandGuardTest.html#a03f07b03c033ac40026387718371ca62',1,'CommandGuardTest::node_'],['../classControllerNodeVelocityTest.html#adf9ba1d80c87883454de3fa3c6261e27',1,'ControllerNodeVelocityTest::node_'],['../classFaultyControllerTest.html#adf9ba1d80c87883454de3fa3c6261e27',1,'FaultyControllerTest::node_'],['../classPluginTestCase.html#a9f83d0a03ffbc5bfc6fb9b87bff09fba',1,'PluginTestCase::node_']]],
+  ['node_5fptr_13',['node_ptr',['../structeasynav_1_1SystemNodeInfo.html#a676636486b490302c0c8692b459ad78e',1,'easynav::SystemNodeInfo']]],
+  ['nodes_14',['Nodes',['../namespaceeasynav_1_1safety.html#af2d446a1ebc75ba59f9450cc50572751',1,'easynav::safety::Nodes'],['../safety__module__tests_8cpp.html#af2d446a1ebc75ba59f9450cc50572751',1,'Nodes:&#160;ConfigurationFingerprint.hpp']]],
+  ['none_15',['NONE',['../classeasynav_1_1VelocityMux.html#ac5102e0b11ce43d0b9ef595c3c3ab0c3ab50339a10e1de285ac99d4c3990b8693',1,'easynav::VelocityMux']]],
+  ['norm_5fangle_16',['norm_angle',['../namespaceeasynav.html#aaf7b2449dfa550dee63301e3d721ab3a',1,'easynav']]]
 ];

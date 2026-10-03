@@ -110,23 +110,27 @@ document.addEventListener('DOMContentLoaded', () => {
 <div class="textblock"><code>#include &quot;gtest/gtest.h&quot;</code><br />
 <code>#include &quot;geometry_msgs/msg/twist_stamped.hpp&quot;</code><br />
 <code>#include &quot;<a class="el" href="VelocityMux_8hpp_source.html">easynav_controller/VelocityMux.hpp</a>&quot;</code><br />
+<code>#include &quot;easynav_core/SafetyChannel.hpp&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for velocity_mux_tests.cpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="velocity__mux__tests_8cpp__incl.png" border="0" usemap="#aeasynav__controller_2tests_2velocity__mux__tests_8cpp" loading="lazy" alt=""/></div>
 <map name="aeasynav__controller_2tests_2velocity__mux__tests_8cpp" id="aeasynav__controller_2tests_2velocity__mux__tests_8cpp">
-<area shape="rect" title=" " alt="" coords="554,5,688,61"/>
-<area shape="rect" title=" " alt="" coords="490,116,584,142"/>
-<area shape="poly" title=" " alt="" coords="599,63,560,107,556,103,595,60"/>
+<area shape="rect" title=" " alt="" coords="764,5,897,61"/>
+<area shape="rect" title=" " alt="" coords="649,116,742,142"/>
+<area shape="poly" title=" " alt="" coords="793,64,727,110,724,105,790,59"/>
 <area shape="rect" title=" " alt="" coords="511,198,686,238"/>
-<area shape="poly" title=" " alt="" coords="620,62,605,183,600,182,615,61"/>
-<area shape="rect" href="VelocityMux_8hpp.html" title="Declaration of the VelocityMux class." alt="" coords="703,109,832,150"/>
-<area shape="poly" title=" " alt="" coords="665,59,726,98,723,103,662,64"/>
-<area shape="poly" title=" " alt="" coords="731,153,652,193,649,188,728,148"/>
+<area shape="poly" title=" " alt="" coords="821,63,795,108,777,131,756,152,721,176,682,194,680,189,718,171,753,148,773,128,790,105,816,60"/>
+<area shape="rect" href="VelocityMux_8hpp.html" title="Declaration of the VelocityMux class." alt="" coords="818,109,947,150"/>
+<area shape="poly" title=" " alt="" coords="848,60,867,94,862,97,843,63"/>
+<area shape="rect" title=" " alt="" coords="1153,205,1366,231"/>
+<area shape="poly" title=" " alt="" coords="895,59,1219,196,1217,201,893,64"/>
+<area shape="poly" title=" " alt="" coords="818,153,678,195,677,190,817,148"/>
 <area shape="rect" href="NavState_8hpp.html" title="A blackboard&#45;like structure to hold the current state of the navigation system." alt="" coords="710,198,871,238"/>
-<area shape="poly" title=" " alt="" coords="776,150,784,182,779,183,770,151"/>
+<area shape="poly" title=" " alt="" coords="863,152,824,189,820,185,860,148"/>
+<area shape="poly" title=" " alt="" coords="948,143,1193,199,1192,204,947,148"/>
 <area shape="rect" title=" " alt="" coords="895,205,1129,231"/>
-<area shape="poly" title=" " alt="" coords="824,148,964,197,962,202,822,153"/>
+<area shape="poly" title=" " alt="" coords="913,148,983,194,980,198,910,152"/>
 <area shape="rect" title=" " alt="" coords="5,286,80,312"/>
 <area shape="poly" title=" " alt="" coords="710,239,698,241,530,258,398,264,265,270,95,289,95,284,264,264,397,258,530,253,697,236,709,234"/>
 <area shape="rect" title=" " alt="" coords="104,286,157,312"/>
@@ -166,15 +170,20 @@ Include dependency graph for velocity_mux_tests.cpp:</div>
 Functions</h2></td></tr>
 <tr class="memitem:a8ab768f83fc752ffedea46358ed3bd0d" id="r_a8ab768f83fc752ffedea46358ed3bd0d"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a8ab768f83fc752ffedea46358ed3bd0d">TEST</a> (VelocityCommandTest, EachSourceHasItsOwnSlotAndTheLatestProposalWins)</td></tr>
 <tr class="memitem:aea32c547f82c828f0c16e144d3126f74" id="r_aea32c547f82c828f0c16e144d3126f74"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#aea32c547f82c828f0c16e144d3126f74">TEST</a> (VelocityCommandTest, PeekDoesNotConsumeTakeDoes)</td></tr>
+<tr class="memitem:a96e5405fb9c228b3e2a431c54fda9c2f" id="r_a96e5405fb9c228b3e2a431c54fda9c2f"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a96e5405fb9c228b3e2a431c54fda9c2f">TEST</a> (VelocityMuxTest, AfterAProtectiveStopNothingOldIsResumed)</td></tr>
+<tr class="memitem:ab45957f94cbd1b799c6a980e87d22b1c" id="r_ab45957f94cbd1b799c6a980e87d22b1c"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#ab45957f94cbd1b799c6a980e87d22b1c">TEST</a> (VelocityMuxTest, AProtectiveStopIsFreshOnEntryAndWhileTheControllerProposes)</td></tr>
+<tr class="memitem:a8624425a02020b574dd8a102cd703dd2" id="r_a8624425a02020b574dd8a102cd703dd2"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a8624425a02020b574dd8a102cd703dd2">TEST</a> (VelocityMuxTest, AProtectiveStopWinsOverEverySourceAndConsumesThem)</td></tr>
+<tr class="memitem:acf61ef2b235c09871f53f73d69363c0f" id="r_acf61ef2b235c09871f53f73d69363c0f"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#acf61ef2b235c09871f53f73d69363c0f">TEST</a> (VelocityMuxTest, NoRestrictionWithoutStopOrWithoutStatus)</td></tr>
 <tr class="memitem:afe8d313cdeb61cf4455965d72d53095f" id="r_afe8d313cdeb61cf4455965d72d53095f"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#afe8d313cdeb61cf4455965d72d53095f">TEST</a> (VelocityMuxTest, PauseCommandsZeroOverTheController)</td></tr>
 <tr class="memitem:a29f38edbb2ac04d09b6059cf8ad9fe28" id="r_a29f38edbb2ac04d09b6059cf8ad9fe28"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a29f38edbb2ac04d09b6059cf8ad9fe28">TEST</a> (VelocityMuxTest, PriorityIsOverrideThenTakeoverThenController)</td></tr>
 <tr class="memitem:ab62f3b81f40e1cf91b82797e58c6e558" id="r_ab62f3b81f40e1cf91b82797e58c6e558"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#ab62f3b81f40e1cf91b82797e58c6e558">TEST</a> (VelocityMuxTest, ProposalsAreConsumedAndTheLastTargetIsKept)</td></tr>
+<tr class="memitem:a657bdb0d418bc66efac712e088741873" id="r_a657bdb0d418bc66efac712e088741873"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a657bdb0d418bc66efac712e088741873">TEST</a> (VelocityMuxTest, ResetForgetsTheStop)</td></tr>
 <tr class="memitem:a504c571a4cebbeaa14f78f079a0c518a" id="r_a504c571a4cebbeaa14f78f079a0c518a"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a504c571a4cebbeaa14f78f079a0c518a">TEST</a> (VelocityMuxTest, SequenceOfSources)</td></tr>
 <tr class="memitem:a2f474c6dcc8e8fc2e045e2567cfee297" id="r_a2f474c6dcc8e8fc2e045e2567cfee297"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a2f474c6dcc8e8fc2e045e2567cfee297">TEST</a> (VelocityMuxTest, TakeoverWinsOverPause)</td></tr>
 </table>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
 <a id="a8ab768f83fc752ffedea46358ed3bd0d" name="a8ab768f83fc752ffedea46358ed3bd0d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8ab768f83fc752ffedea46358ed3bd0d">&#9670;&#160;</a></span>TEST() <span class="overload">[1/7]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a8ab768f83fc752ffedea46358ed3bd0d">&#9670;&#160;</a></span>TEST() <span class="overload">[1/12]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -195,7 +204,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="aea32c547f82c828f0c16e144d3126f74" name="aea32c547f82c828f0c16e144d3126f74"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aea32c547f82c828f0c16e144d3126f74">&#9670;&#160;</a></span>TEST() <span class="overload">[2/7]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aea32c547f82c828f0c16e144d3126f74">&#9670;&#160;</a></span>TEST() <span class="overload">[2/12]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -215,8 +224,92 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a96e5405fb9c228b3e2a431c54fda9c2f" name="a96e5405fb9c228b3e2a431c54fda9c2f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a96e5405fb9c228b3e2a431c54fda9c2f">&#9670;&#160;</a></span>TEST() <span class="overload">[3/12]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TEST </td>
+          <td>(</td>
+          <td class="paramtype">VelocityMuxTest</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">AfterAProtectiveStopNothingOldIsResumed</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab45957f94cbd1b799c6a980e87d22b1c" name="ab45957f94cbd1b799c6a980e87d22b1c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab45957f94cbd1b799c6a980e87d22b1c">&#9670;&#160;</a></span>TEST() <span class="overload">[4/12]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TEST </td>
+          <td>(</td>
+          <td class="paramtype">VelocityMuxTest</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">AProtectiveStopIsFreshOnEntryAndWhileTheControllerProposes</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8624425a02020b574dd8a102cd703dd2" name="a8624425a02020b574dd8a102cd703dd2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8624425a02020b574dd8a102cd703dd2">&#9670;&#160;</a></span>TEST() <span class="overload">[5/12]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TEST </td>
+          <td>(</td>
+          <td class="paramtype">VelocityMuxTest</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">AProtectiveStopWinsOverEverySourceAndConsumesThem</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="acf61ef2b235c09871f53f73d69363c0f" name="acf61ef2b235c09871f53f73d69363c0f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acf61ef2b235c09871f53f73d69363c0f">&#9670;&#160;</a></span>TEST() <span class="overload">[6/12]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TEST </td>
+          <td>(</td>
+          <td class="paramtype">VelocityMuxTest</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">NoRestrictionWithoutStopOrWithoutStatus</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="afe8d313cdeb61cf4455965d72d53095f" name="afe8d313cdeb61cf4455965d72d53095f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afe8d313cdeb61cf4455965d72d53095f">&#9670;&#160;</a></span>TEST() <span class="overload">[3/7]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#afe8d313cdeb61cf4455965d72d53095f">&#9670;&#160;</a></span>TEST() <span class="overload">[7/12]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -237,7 +330,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="a29f38edbb2ac04d09b6059cf8ad9fe28" name="a29f38edbb2ac04d09b6059cf8ad9fe28"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a29f38edbb2ac04d09b6059cf8ad9fe28">&#9670;&#160;</a></span>TEST() <span class="overload">[4/7]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a29f38edbb2ac04d09b6059cf8ad9fe28">&#9670;&#160;</a></span>TEST() <span class="overload">[8/12]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -258,7 +351,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="ab62f3b81f40e1cf91b82797e58c6e558" name="ab62f3b81f40e1cf91b82797e58c6e558"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab62f3b81f40e1cf91b82797e58c6e558">&#9670;&#160;</a></span>TEST() <span class="overload">[5/7]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ab62f3b81f40e1cf91b82797e58c6e558">&#9670;&#160;</a></span>TEST() <span class="overload">[9/12]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -278,8 +371,29 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a657bdb0d418bc66efac712e088741873" name="a657bdb0d418bc66efac712e088741873"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a657bdb0d418bc66efac712e088741873">&#9670;&#160;</a></span>TEST() <span class="overload">[10/12]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TEST </td>
+          <td>(</td>
+          <td class="paramtype">VelocityMuxTest</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ResetForgetsTheStop</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a504c571a4cebbeaa14f78f079a0c518a" name="a504c571a4cebbeaa14f78f079a0c518a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a504c571a4cebbeaa14f78f079a0c518a">&#9670;&#160;</a></span>TEST() <span class="overload">[6/7]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a504c571a4cebbeaa14f78f079a0c518a">&#9670;&#160;</a></span>TEST() <span class="overload">[11/12]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -300,7 +414,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="a2f474c6dcc8e8fc2e045e2567cfee297" name="a2f474c6dcc8e8fc2e045e2567cfee297"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2f474c6dcc8e8fc2e045e2567cfee297">&#9670;&#160;</a></span>TEST() <span class="overload">[7/7]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a2f474c6dcc8e8fc2e045e2567cfee297">&#9670;&#160;</a></span>TEST() <span class="overload">[12/12]</span></h2>
 
 <div class="memitem">
 <div class="memproto">

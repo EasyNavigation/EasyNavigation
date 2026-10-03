@@ -1,0 +1,19 @@
+<map id="ControllerNodeSafetyChannelTest" name="ControllerNodeSafetyChannelTest">
+<area shape="rect" id="Node000001" title=" " alt="" coords="533,183,751,208"/>
+<area shape="rect" id="Node000002" href="$classControllerNodeVelocityTest.html" title=" " alt="" coords="305,183,484,208"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="500,193,533,193,533,198,500,198"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="71,5,119,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="134,16,206,25,245,36,282,53,319,83,350,119,389,181,384,184,346,122,316,87,279,58,243,41,205,30,134,21"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="55,55,135,80"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="150,69,215,81,282,104,312,121,340,142,382,180,379,184,337,146,309,126,280,109,213,86,149,75"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="55,117,135,143"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="150,139,333,179,331,185,149,144"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="5,168,185,223"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="200,193,304,193,304,198,200,198"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="24,247,166,288"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="180,245,280,221,340,206,341,212,281,226,181,250"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="36,312,154,338"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="158,305,184,297,233,284,280,267,332,236,374,207,378,211,335,241,282,272,234,289,185,302,159,310"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="20,363,170,388"/>
+<area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="184,358,233,342,279,319,313,292,342,261,383,207,387,210,347,265,317,296,282,323,235,347,186,363"/>
+</map>

@@ -113,6 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <div class="textblock"><code>#include &lt;atomic&gt;</code><br />
 <code>#include &lt;cmath&gt;</code><br />
 <code>#include &lt;cstdlib&gt;</code><br />
+<code>#include &lt;limits&gt;</code><br />
 <code>#include &lt;new&gt;</code><br />
 <code>#include &quot;gtest/gtest.h&quot;</code><br />
 <code>#include &quot;rclcpp/rclcpp.hpp&quot;</code><br />
@@ -121,93 +122,99 @@ document.addEventListener('DOMContentLoaded', () => {
 <code>#include &quot;<a class="el" href="VelocityMux_8hpp_source.html">easynav_controller/VelocityMux.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="VelocitySmoother_8hpp_source.html">easynav_controller/VelocitySmoother.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="CommandGuard_8hpp_source.html">easynav_controller/safety/CommandGuard.hpp</a>&quot;</code><br />
+<code>#include &quot;easynav_core/SafetyChannel.hpp&quot;</code><br />
 <code>#include &quot;easynav_core/VelocityCommand.hpp&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for rt_allocation_tests.cpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="rt__allocation__tests_8cpp__incl.png" border="0" usemap="#aeasynav__controller_2tests_2rt__allocation__tests_8cpp" loading="lazy" alt=""/></div>
 <map name="aeasynav__controller_2tests_2rt__allocation__tests_8cpp" id="aeasynav__controller_2tests_2rt__allocation__tests_8cpp">
-<area shape="rect" title="The RT velocity path (proposals, mux, smoother) must not allocate memory once warm." alt="" coords="484,5,614,61"/>
+<area shape="rect" title="The RT velocity path (proposals, mux, smoother) must not allocate memory once warm." alt="" coords="562,5,691,61"/>
 <area shape="rect" title=" " alt="" coords="5,116,66,142"/>
-<area shape="poly" title=" " alt="" coords="484,42,299,64,188,84,78,112,74,113,72,108,76,106,187,79,298,58,484,36"/>
+<area shape="poly" title=" " alt="" coords="561,40,466,46,344,59,210,80,78,112,74,113,72,108,76,106,209,75,343,54,465,41,561,34"/>
 <area shape="rect" title=" " alt="" coords="90,116,147,142"/>
-<area shape="poly" title=" " alt="" coords="484,45,334,69,247,88,160,112,156,113,155,108,159,106,245,82,333,63,483,39"/>
+<area shape="poly" title=" " alt="" coords="561,42,379,64,269,84,160,112,156,113,155,108,159,106,268,79,378,59,561,37"/>
 <area shape="rect" title=" " alt="" coords="171,116,230,142"/>
-<area shape="poly" title=" " alt="" coords="484,49,371,74,243,112,240,113,238,108,241,106,369,69,483,44"/>
-<area shape="rect" title=" " alt="" coords="254,116,300,142"/>
-<area shape="poly" title=" " alt="" coords="484,54,401,79,312,111,312,112,310,107,311,107,400,74,483,49"/>
-<area shape="rect" title=" " alt="" coords="324,116,417,142"/>
-<area shape="poly" title=" " alt="" coords="498,64,408,111,405,107,496,59"/>
-<area shape="rect" title=" " alt="" coords="441,116,560,142"/>
-<area shape="poly" title=" " alt="" coords="537,63,516,104,511,102,533,60"/>
-<area shape="rect" title=" " alt="" coords="568,198,730,238"/>
-<area shape="poly" title=" " alt="" coords="581,60,601,82,619,108,635,145,645,182,640,183,630,147,615,110,597,85,577,63"/>
-<area shape="rect" title=" " alt="" coords="864,286,1039,327"/>
-<area shape="poly" title=" " alt="" coords="562,61,575,109,578,129,575,150,567,175,558,198,553,220,553,228,558,237,576,251,603,264,677,282,764,294,849,300,849,305,764,299,676,287,601,269,573,256,553,240,548,229,547,219,553,197,562,173,570,149,572,129,570,109,557,62"/>
-<area shape="rect" href="VelocityMux_8hpp.html" title="Declaration of the VelocityMux class." alt="" coords="1523,198,1652,238"/>
-<area shape="poly" title=" " alt="" coords="614,38,847,63,993,83,1140,106,1243,127,1324,146,1508,194,1507,199,1323,151,1242,132,1139,112,992,88,846,68,614,43"/>
-<area shape="rect" title=" " alt="" coords="1521,294,1755,320"/>
-<area shape="poly" title=" " alt="" coords="614,36,865,56,1200,91,1364,113,1505,138,1611,165,1646,180,1667,196,1676,217,1675,240,1668,262,1658,282,1653,279,1663,260,1670,239,1671,218,1663,199,1643,185,1609,170,1504,143,1363,118,1200,96,865,62,614,42"/>
-<area shape="rect" href="VelocitySmoother_8hpp.html" title="Declaration of the VelocitySmoother class." alt="" coords="1752,109,1903,150"/>
-<area shape="poly" title=" " alt="" coords="614,34,1072,55,1387,76,1709,106,1737,110,1736,115,1709,112,1387,82,1071,60,614,39"/>
-<area shape="rect" href="CommandGuard_8hpp.html" title="Declaration of the CommandGuard class." alt="" coords="946,109,1128,150"/>
-<area shape="poly" title=" " alt="" coords="615,44,931,105,930,110,614,50"/>
-<area shape="poly" title=" " alt="" coords="1523,239,1512,241,1386,259,1285,267,1184,274,1054,289,1054,283,1183,269,1285,262,1385,254,1511,236,1522,234"/>
-<area shape="rect" href="NavState_8hpp.html" title="A blackboard&#45;like structure to hold the current state of the navigation system." alt="" coords="1063,286,1224,327"/>
-<area shape="poly" title=" " alt="" coords="1523,238,1512,241,1240,292,1239,287,1511,236,1522,233"/>
-<area shape="poly" title=" " alt="" coords="1601,237,1626,279,1621,282,1597,240"/>
-<area shape="rect" title=" " alt="" coords="1522,375,1597,401"/>
-<area shape="poly" title=" " alt="" coords="1225,321,1244,324,1374,347,1508,372,1507,377,1373,352,1243,330,1224,326"/>
-<area shape="rect" title=" " alt="" coords="412,375,465,401"/>
-<area shape="poly" title=" " alt="" coords="1063,328,1051,330,892,346,766,350,640,356,567,364,481,377,480,372,566,358,640,350,766,344,891,340,1050,324,1062,322"/>
-<area shape="rect" title=" " alt="" coords="1620,375,1731,401"/>
-<area shape="poly" title=" " alt="" coords="1225,321,1244,324,1423,349,1605,372,1605,377,1423,354,1243,330,1224,326"/>
-<area shape="rect" title=" " alt="" coords="1754,375,1858,401"/>
-<area shape="poly" title=" " alt="" coords="1225,321,1244,324,1381,341,1490,349,1600,357,1740,372,1739,377,1599,362,1490,354,1381,346,1243,330,1224,327"/>
-<area shape="rect" title=" " alt="" coords="488,375,556,401"/>
-<area shape="poly" title=" " alt="" coords="1063,328,1051,330,917,345,812,352,706,359,571,377,571,372,706,354,812,346,917,340,1050,324,1062,322"/>
-<area shape="rect" title=" " alt="" coords="579,375,636,401"/>
-<area shape="poly" title=" " alt="" coords="1063,328,1051,330,940,344,852,351,763,359,651,377,650,372,763,354,851,346,939,339,1050,324,1062,322"/>
-<area shape="rect" title=" " alt="" coords="1882,375,1949,401"/>
-<area shape="poly" title=" " alt="" coords="1225,322,1244,324,1417,341,1554,345,1692,351,1773,359,1867,372,1867,378,1772,364,1692,357,1554,351,1417,346,1243,330,1224,327"/>
-<area shape="rect" title=" " alt="" coords="660,375,737,401"/>
-<area shape="poly" title=" " alt="" coords="1063,327,1051,330,903,353,753,377,752,372,902,347,1050,324,1062,322"/>
-<area shape="rect" title=" " alt="" coords="761,375,830,401"/>
-<area shape="poly" title=" " alt="" coords="1063,328,845,377,844,372,1062,323"/>
-<area shape="rect" title=" " alt="" coords="854,375,935,401"/>
-<area shape="poly" title=" " alt="" coords="1082,330,948,372,946,367,1080,325"/>
-<area shape="rect" title=" " alt="" coords="958,375,1030,401"/>
-<area shape="poly" title=" " alt="" coords="1107,330,1032,370,1029,365,1105,325"/>
-<area shape="rect" title=" " alt="" coords="1054,375,1132,401"/>
-<area shape="poly" title=" " alt="" coords="1133,329,1111,363,1107,360,1129,326"/>
-<area shape="rect" title=" " alt="" coords="1156,375,1235,401"/>
-<area shape="poly" title=" " alt="" coords="1159,326,1181,360,1177,363,1154,329"/>
-<area shape="rect" title=" " alt="" coords="1260,375,1326,401"/>
-<area shape="poly" title=" " alt="" coords="1182,325,1258,365,1255,370,1180,330"/>
-<area shape="rect" title=" " alt="" coords="1350,375,1407,401"/>
-<area shape="poly" title=" " alt="" coords="1203,325,1336,370,1334,375,1201,330"/>
-<area shape="rect" title=" " alt="" coords="1431,375,1498,401"/>
-<area shape="poly" title=" " alt="" coords="1225,325,1417,372,1415,377,1224,330"/>
-<area shape="rect" title=" " alt="" coords="1951,205,2149,231"/>
-<area shape="poly" title=" " alt="" coords="1879,148,2006,197,2004,202,1877,153"/>
-<area shape="rect" title=" " alt="" coords="1728,205,1927,231"/>
-<area shape="poly" title=" " alt="" coords="1830,150,1830,190,1825,190,1825,150"/>
-<area shape="poly" title=" " alt="" coords="949,153,745,198,744,193,948,148"/>
-<area shape="poly" title=" " alt="" coords="1020,151,1002,173,986,199,971,236,961,272,956,271,966,234,981,196,998,170,1016,148"/>
-<area shape="poly" title=" " alt="" coords="1129,138,1301,160,1508,194,1507,200,1300,166,1128,143"/>
-<area shape="poly" title=" " alt="" coords="1031,151,1022,193,1023,216,1030,237,1048,259,1073,277,1070,281,1045,263,1025,240,1017,217,1017,192,1026,149"/>
-<area shape="poly" title=" " alt="" coords="1014,152,953,196,877,241,797,273,687,311,480,377,479,371,685,306,795,268,874,236,950,191,1011,148"/>
-<area shape="poly" title=" " alt="" coords="1091,148,1139,169,1189,195,1214,216,1240,236,1326,278,1402,307,1472,324,1540,335,1685,348,1769,357,1867,372,1867,377,1769,362,1684,353,1540,340,1471,329,1401,312,1324,283,1237,241,1211,221,1186,200,1137,174,1089,153"/>
-<area shape="rect" title=" " alt="" coords="1040,205,1100,231"/>
-<area shape="poly" title=" " alt="" coords="1047,149,1063,190,1058,192,1042,151"/>
-<area shape="rect" title=" " alt="" coords="1124,205,1176,231"/>
-<area shape="poly" title=" " alt="" coords="1064,148,1124,194,1121,198,1061,152"/>
-<area shape="rect" title=" " alt="" coords="1250,205,1370,231"/>
-<area shape="poly" title=" " alt="" coords="1100,148,1258,197,1256,203,1098,153"/>
-<area shape="rect" title=" " alt="" coords="1394,205,1499,231"/>
-<area shape="poly" title=" " alt="" coords="1129,143,1250,166,1383,195,1393,198,1392,203,1382,200,1249,171,1128,149"/>
-<area shape="rect" title=" " alt="" coords="754,205,864,231"/>
-<area shape="poly" title=" " alt="" coords="986,153,856,202,854,197,984,148"/>
+<area shape="poly" title=" " alt="" coords="562,45,414,69,328,88,243,112,239,113,237,108,241,106,327,83,413,64,561,40"/>
+<area shape="rect" title=" " alt="" coords="255,116,307,142"/>
+<area shape="poly" title=" " alt="" coords="562,49,448,74,320,112,318,112,316,107,319,106,446,68,560,43"/>
+<area shape="rect" title=" " alt="" coords="332,116,377,142"/>
+<area shape="poly" title=" " alt="" coords="562,54,479,79,390,111,389,112,387,107,388,107,477,74,560,49"/>
+<area shape="rect" title=" " alt="" coords="401,116,494,142"/>
+<area shape="poly" title=" " alt="" coords="576,64,485,111,483,107,573,59"/>
+<area shape="rect" title=" " alt="" coords="518,116,638,142"/>
+<area shape="poly" title=" " alt="" coords="615,63,593,104,589,102,610,60"/>
+<area shape="rect" title=" " alt="" coords="495,198,656,238"/>
+<area shape="poly" title=" " alt="" coords="662,60,680,79,696,102,702,126,697,151,677,175,651,192,648,188,673,171,692,148,697,126,691,104,676,82,658,63"/>
+<area shape="rect" title=" " alt="" coords="826,286,1000,327"/>
+<area shape="poly" title=" " alt="" coords="645,60,655,81,661,105,662,129,652,151,633,169,611,177,589,178,566,176,543,174,522,175,502,183,484,199,476,219,478,227,484,237,505,253,536,266,619,285,717,296,810,301,810,307,716,302,618,291,534,271,502,257,480,240,473,229,471,218,480,196,500,178,521,170,544,169,566,171,589,173,610,172,630,165,648,148,656,128,656,106,650,83,640,62"/>
+<area shape="rect" href="VelocityMux_8hpp.html" title="Declaration of the VelocityMux class." alt="" coords="1451,198,1580,238"/>
+<area shape="poly" title=" " alt="" coords="691,37,907,61,1040,81,1173,106,1322,147,1449,189,1448,194,1321,152,1172,112,1039,86,906,66,691,42"/>
+<area shape="rect" title=" " alt="" coords="1506,294,1720,320"/>
+<area shape="poly" title=" " alt="" coords="691,33,898,42,1031,51,1170,66,1306,87,1429,115,1482,131,1528,150,1566,172,1595,196,1607,215,1614,236,1618,278,1613,278,1609,237,1602,217,1591,199,1563,176,1526,155,1480,136,1427,120,1305,92,1170,71,1030,57,898,47,691,38"/>
+<area shape="rect" title=" " alt="" coords="1744,294,1978,320"/>
+<area shape="poly" title=" " alt="" coords="691,34,867,41,1096,54,1319,76,1411,90,1480,106,1545,134,1591,166,1635,200,1695,236,1756,263,1813,286,1811,291,1754,268,1693,241,1632,204,1588,170,1542,139,1479,112,1410,95,1319,81,1095,60,867,46,691,39"/>
+<area shape="rect" href="VelocitySmoother_8hpp.html" title="Declaration of the VelocitySmoother class." alt="" coords="1729,109,1880,150"/>
+<area shape="poly" title=" " alt="" coords="691,34,1111,57,1397,78,1688,106,1714,110,1713,115,1687,112,1396,83,1110,62,691,40"/>
+<area shape="rect" href="CommandGuard_8hpp.html" title="Declaration of the CommandGuard class." alt="" coords="979,109,1161,150"/>
+<area shape="poly" title=" " alt="" coords="692,46,964,103,963,108,691,51"/>
+<area shape="poly" title=" " alt="" coords="1451,239,1440,241,1213,276,1016,299,1015,293,1212,271,1439,236,1450,234"/>
+<area shape="rect" href="NavState_8hpp.html" title="A blackboard&#45;like structure to hold the current state of the navigation system." alt="" coords="1320,286,1482,327"/>
+<area shape="poly" title=" " alt="" coords="1491,241,1440,279,1437,275,1488,237"/>
+<area shape="poly" title=" " alt="" coords="1539,237,1590,282,1586,286,1536,241"/>
+<area shape="poly" title=" " alt="" coords="1581,233,1798,287,1797,292,1580,238"/>
+<area shape="rect" title=" " alt="" coords="2078,375,2153,401"/>
+<area shape="poly" title=" " alt="" coords="1482,322,1495,324,1652,341,1777,347,1903,353,2063,372,2063,377,1903,359,1777,352,1652,347,1494,330,1481,328"/>
+<area shape="rect" title=" " alt="" coords="749,375,802,401"/>
+<area shape="poly" title=" " alt="" coords="1320,321,1246,330,1127,341,1033,348,938,357,818,377,817,372,938,352,1032,342,1127,336,1246,324,1319,315"/>
+<area shape="rect" title=" " alt="" coords="2176,375,2287,401"/>
+<area shape="poly" title=" " alt="" coords="1482,322,1495,324,1680,344,1826,350,1973,355,2161,372,2161,377,1973,361,1826,355,1679,349,1494,330,1481,328"/>
+<area shape="rect" title=" " alt="" coords="917,375,1020,401"/>
+<area shape="poly" title=" " alt="" coords="1320,325,1297,330,1036,377,1035,372,1296,324,1319,320"/>
+<area shape="rect" title=" " alt="" coords="1044,375,1112,401"/>
+<area shape="poly" title=" " alt="" coords="1321,330,1127,377,1126,372,1319,325"/>
+<area shape="rect" title=" " alt="" coords="1135,375,1192,401"/>
+<area shape="poly" title=" " alt="" coords="1342,330,1207,375,1206,370,1341,325"/>
+<area shape="rect" title=" " alt="" coords="826,375,893,401"/>
+<area shape="poly" title=" " alt="" coords="1320,326,1297,330,1189,344,1104,351,1018,360,908,377,907,372,1017,355,1103,346,1189,338,1296,324,1319,321"/>
+<area shape="rect" title=" " alt="" coords="1216,375,1293,401"/>
+<area shape="poly" title=" " alt="" coords="1365,330,1291,370,1288,365,1363,325"/>
+<area shape="rect" title=" " alt="" coords="1317,375,1386,401"/>
+<area shape="poly" title=" " alt="" coords="1391,329,1369,363,1365,360,1386,326"/>
+<area shape="rect" title=" " alt="" coords="1410,375,1491,401"/>
+<area shape="poly" title=" " alt="" coords="1415,326,1437,360,1432,363,1411,329"/>
+<area shape="rect" title=" " alt="" coords="1514,375,1586,401"/>
+<area shape="poly" title=" " alt="" coords="1439,325,1515,365,1513,370,1437,330"/>
+<area shape="rect" title=" " alt="" coords="1610,375,1688,401"/>
+<area shape="poly" title=" " alt="" coords="1464,325,1597,367,1595,372,1462,330"/>
+<area shape="rect" title=" " alt="" coords="1712,375,1791,401"/>
+<area shape="poly" title=" " alt="" coords="1483,324,1697,372,1696,377,1482,329"/>
+<area shape="rect" title=" " alt="" coords="1816,375,1882,401"/>
+<area shape="poly" title=" " alt="" coords="1482,322,1495,324,1646,347,1801,372,1800,377,1646,352,1494,330,1481,327"/>
+<area shape="rect" title=" " alt="" coords="1906,375,1963,401"/>
+<area shape="poly" title=" " alt="" coords="1482,322,1495,324,1604,339,1692,346,1779,354,1890,372,1890,377,1779,359,1691,351,1604,344,1494,330,1481,328"/>
+<area shape="rect" title=" " alt="" coords="1987,375,2054,401"/>
+<area shape="poly" title=" " alt="" coords="1482,322,1495,324,1627,340,1732,346,1838,354,1972,372,1972,377,1837,359,1732,352,1627,345,1494,330,1481,328"/>
+<area shape="rect" title=" " alt="" coords="1706,205,1904,231"/>
+<area shape="poly" title=" " alt="" coords="1808,150,1808,190,1802,190,1802,150"/>
+<area shape="rect" title=" " alt="" coords="1928,205,2127,231"/>
+<area shape="poly" title=" " alt="" coords="1856,148,1983,197,1981,202,1854,153"/>
+<area shape="poly" title=" " alt="" coords="979,148,672,200,671,195,978,142"/>
+<area shape="poly" title=" " alt="" coords="1008,153,972,172,942,199,931,216,924,234,917,271,912,270,919,232,927,213,937,196,969,168,1006,148"/>
+<area shape="poly" title=" " alt="" coords="1162,143,1436,194,1435,200,1161,148"/>
+<area shape="poly" title=" " alt="" coords="1163,144,1231,164,1298,195,1344,232,1380,273,1376,276,1341,236,1295,200,1229,169,1161,149"/>
+<area shape="poly" title=" " alt="" coords="1143,148,1177,167,1204,196,1212,218,1205,240,1167,287,1128,319,1086,338,1042,349,940,358,882,365,818,377,817,372,881,360,939,353,1041,344,1085,333,1125,314,1164,284,1200,237,1207,218,1200,199,1174,172,1140,153"/>
+<area shape="poly" title=" " alt="" coords="1147,148,1208,170,1233,182,1248,196,1268,231,1275,264,1269,296,1248,329,1223,347,1187,358,1143,366,1095,370,994,373,908,378,908,372,994,367,1094,364,1143,360,1186,353,1221,342,1244,325,1264,294,1270,264,1263,233,1244,199,1230,187,1206,174,1145,153"/>
+<area shape="rect" title=" " alt="" coords="1367,205,1427,231"/>
+<area shape="poly" title=" " alt="" coords="1162,147,1253,168,1348,195,1354,197,1352,202,1347,200,1251,174,1161,152"/>
+<area shape="rect" title=" " alt="" coords="680,205,732,231"/>
+<area shape="poly" title=" " alt="" coords="979,145,866,167,804,182,744,200,742,201,741,196,743,195,803,177,865,161,978,140"/>
+<area shape="rect" title=" " alt="" coords="756,205,875,231"/>
+<area shape="poly" title=" " alt="" coords="1013,153,866,202,865,197,1012,148"/>
+<area shape="rect" title=" " alt="" coords="951,205,1056,231"/>
+<area shape="poly" title=" " alt="" coords="1057,152,1024,194,1020,191,1053,149"/>
+<area shape="rect" title=" " alt="" coords="1081,205,1190,231"/>
+<area shape="poly" title=" " alt="" coords="1087,149,1119,191,1115,194,1083,152"/>
 </map>
 </div>
 </div><table class="memberdecls">
@@ -217,6 +224,7 @@ Functions</h2></td></tr>
 <tr class="memitem:a32b8929b3bb95abc87c40b81880ceea5" id="r_a32b8929b3bb95abc87c40b81880ceea5"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a32b8929b3bb95abc87c40b81880ceea5">operator delete</a> (void *p, std::size_t) noexcept</td></tr>
 <tr class="memitem:acfad8f0764cf06b8abd170d8569a7b3f" id="r_acfad8f0764cf06b8abd170d8569a7b3f"><td class="memItemLeft">void *&#160;</td><td class="memItemRight"><a class="el" href="#acfad8f0764cf06b8abd170d8569a7b3f">operator new</a> (std::size_t size)</td></tr>
 <tr class="memitem:a12e2fda40d41c3d6646dbdf7b4cab896" id="r_a12e2fda40d41c3d6646dbdf7b4cab896"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a12e2fda40d41c3d6646dbdf7b4cab896">TEST</a> (RtAllocationTest, GuardedVelocityOutputDoesNotAllocateOnceWarm)</td></tr>
+<tr class="memitem:a91d2ed46ddf177481df73eb132fb577e" id="r_a91d2ed46ddf177481df73eb132fb577e"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a91d2ed46ddf177481df73eb132fb577e">TEST</a> (RtAllocationTest, SafetyChannelPathDoesNotAllocateOnceWarm)</td></tr>
 <tr class="memitem:ac7cd32499d6ff76af86a976a2bb58197" id="r_ac7cd32499d6ff76af86a976a2bb58197"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#ac7cd32499d6ff76af86a976a2bb58197">TEST</a> (RtAllocationTest, TheCounterSeesAllocations)</td></tr>
 <tr class="memitem:a507fb6fbba7d06daf336ab7e2ab4ca22" id="r_a507fb6fbba7d06daf336ab7e2ab4ca22"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a507fb6fbba7d06daf336ab7e2ab4ca22">TEST</a> (RtAllocationTest, VelocityPathDoesNotAllocateOnceWarm)</td></tr>
 </table>
@@ -295,7 +303,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="a12e2fda40d41c3d6646dbdf7b4cab896" name="a12e2fda40d41c3d6646dbdf7b4cab896"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a12e2fda40d41c3d6646dbdf7b4cab896">&#9670;&#160;</a></span>TEST() <span class="overload">[1/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a12e2fda40d41c3d6646dbdf7b4cab896">&#9670;&#160;</a></span>TEST() <span class="overload">[1/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -315,8 +323,29 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a91d2ed46ddf177481df73eb132fb577e" name="a91d2ed46ddf177481df73eb132fb577e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a91d2ed46ddf177481df73eb132fb577e">&#9670;&#160;</a></span>TEST() <span class="overload">[2/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TEST </td>
+          <td>(</td>
+          <td class="paramtype">RtAllocationTest</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">SafetyChannelPathDoesNotAllocateOnceWarm</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ac7cd32499d6ff76af86a976a2bb58197" name="ac7cd32499d6ff76af86a976a2bb58197"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac7cd32499d6ff76af86a976a2bb58197">&#9670;&#160;</a></span>TEST() <span class="overload">[2/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ac7cd32499d6ff76af86a976a2bb58197">&#9670;&#160;</a></span>TEST() <span class="overload">[3/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -337,7 +366,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="a507fb6fbba7d06daf336ab7e2ab4ca22" name="a507fb6fbba7d06daf336ab7e2ab4ca22"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a507fb6fbba7d06daf336ab7e2ab4ca22">&#9670;&#160;</a></span>TEST() <span class="overload">[3/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a507fb6fbba7d06daf336ab7e2ab4ca22">&#9670;&#160;</a></span>TEST() <span class="overload">[4/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">

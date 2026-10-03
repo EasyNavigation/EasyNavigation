@@ -5,6 +5,7 @@ var searchData=
   ['commandguard_2',['CommandGuard',['../classeasynav_1_1safety_1_1CommandGuard.html',1,'easynav::safety']]],
   ['commandguardtest_3',['CommandGuardTest',['../classCommandGuardTest.html',1,'']]],
   ['controllernode_4',['ControllerNode',['../classeasynav_1_1ControllerNode.html',1,'easynav']]],
-  ['controllernodetestcase_5',['ControllerNodeTestCase',['../classControllerNodeTestCase.html',1,'']]],
-  ['controllernodevelocitytest_6',['ControllerNodeVelocityTest',['../classControllerNodeVelocityTest.html',1,'']]]
+  ['controllernodesafetychanneltest_5',['ControllerNodeSafetyChannelTest',['../classControllerNodeSafetyChannelTest.html',1,'']]],
+  ['controllernodetestcase_6',['ControllerNodeTestCase',['../classControllerNodeTestCase.html',1,'']]],
+  ['controllernodevelocitytest_7',['ControllerNodeVelocityTest',['../classControllerNodeVelocityTest.html',1,'']]]
 ];

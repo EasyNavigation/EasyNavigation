@@ -1,0 +1,19 @@
+<map id="SystemSafetyChannelTest" name="SystemSafetyChannelTest">
+<area shape="rect" id="Node000001" title=" " alt="" coords="544,197,720,223"/>
+<area shape="rect" id="Node000002" href="$classSystemSafetyModeTest.html" title=" " alt="" coords="335,197,495,223"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="510,208,544,208,544,213,510,213"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="76,5,124,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="139,10,177,9,222,11,269,20,312,40,333,56,352,76,381,120,401,163,412,196,407,198,396,165,376,123,347,79,330,60,309,44,267,26,222,16,177,14,139,16"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="60,69,140,95"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="156,81,232,90,273,101,312,116,341,134,367,155,405,195,401,199,364,159,338,138,309,121,271,106,231,96,155,86"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="60,132,140,158"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="155,152,311,184,358,194,357,199,310,189,154,157"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="10,182,190,238"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="205,208,334,208,334,213,205,213"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="41,263,159,288"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="173,262,310,236,368,221,369,226,311,241,174,267"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="5,312,195,353"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="210,314,260,301,310,283,360,252,398,221,401,225,363,257,312,288,262,306,211,319"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="60,377,140,403"/>
+<area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="155,385,231,372,272,359,309,340,342,313,370,280,405,222,409,225,374,283,346,317,312,345,274,364,233,377,156,390"/>
+</map>

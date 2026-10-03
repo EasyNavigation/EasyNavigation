@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['faultycontroller_0',['FaultyController',['../classeasynav_1_1FaultyController.html',1,'easynav']]],
-  ['faultycontrollertest_1',['FaultyControllerTest',['../classFaultyControllerTest.html',1,'']]]
+  ['evaluation_0',['Evaluation',['../structeasynav_1_1safety_1_1SafetyChannelMonitor_1_1Evaluation.html',1,'SafetyChannelMonitor::Evaluation'],['../structSafetyChannelMonitor_1_1Evaluation.html',1,'SafetyChannelMonitor::Evaluation']]]
 ];

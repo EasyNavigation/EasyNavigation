@@ -126,6 +126,7 @@ Public Types</h2></td></tr>
 , <a class="el" href="classeasynav_1_1VelocityMux.html#ac5102e0b11ce43d0b9ef595c3c3ab0c3a58b3587d17c09b20f4e74b9df56bbda5">TAKEOVER</a>
 , <br />
 &#160;&#160;<a class="el" href="classeasynav_1_1VelocityMux.html#ac5102e0b11ce43d0b9ef595c3c3ab0c3a3a5974efbe92686d30f0261a204e6ee7">OVERRIDE</a>
+, <a class="el" href="classeasynav_1_1VelocityMux.html#ac5102e0b11ce43d0b9ef595c3c3ab0c3a0f86e55b804a016411ca0118b535ef56">SAFETY_STOP</a>
 <br />
  }</td></tr>
 <tr class="memdesc:ac5102e0b11ce43d0b9ef595c3c3ab0c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Who the selected command comes from.  <a href="#ac5102e0b11ce43d0b9ef595c3c3ab0c3">More...</a><br /></td></tr>
@@ -140,6 +141,7 @@ Public Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Decides, every RT cycle, which velocity command is sent to the robot. </p>
 <p>Takes the commands proposed this cycle (see velocity_command) and picks, by priority:</p><ol type="1">
+<li>zero, during a protective stop of the safety channel ("safety_status");</li>
 <li>an emergency override (VelocitySource::OVERRIDE, published as is, not smoothed);</li>
 <li>a command that takes over the robot's motion (VelocitySource::TAKEOVER);</li>
 <li>zero, while navigation is paused ("navigation_paused");</li>
@@ -173,6 +175,7 @@ Public Member Functions</h2></td></tr>
 <tr><td class="fieldname"><a id="ac5102e0b11ce43d0b9ef595c3c3ab0c3a99b2439e63f73ad515f7ab2447a80673" name="ac5102e0b11ce43d0b9ef595c3c3ab0c3a99b2439e63f73ad515f7ab2447a80673"></a>PAUSED&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="ac5102e0b11ce43d0b9ef595c3c3ab0c3a58b3587d17c09b20f4e74b9df56bbda5" name="ac5102e0b11ce43d0b9ef595c3c3ab0c3a58b3587d17c09b20f4e74b9df56bbda5"></a>TAKEOVER&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="ac5102e0b11ce43d0b9ef595c3c3ab0c3a3a5974efbe92686d30f0261a204e6ee7" name="ac5102e0b11ce43d0b9ef595c3c3ab0c3a3a5974efbe92686d30f0261a204e6ee7"></a>OVERRIDE&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="ac5102e0b11ce43d0b9ef595c3c3ab0c3a0f86e55b804a016411ca0118b535ef56" name="ac5102e0b11ce43d0b9ef595c3c3ab0c3a0f86e55b804a016411ca0118b535ef56"></a>SAFETY_STOP&#160;</td><td class="fielddoc"></td></tr>
 </table>
 
 </div>

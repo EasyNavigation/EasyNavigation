@@ -1,0 +1,7 @@
+<map id="SafetyChannelMonitor::Evaluation" name="SafetyChannelMonitor::Evaluation">
+<area shape="rect" id="Node000001" title=" " alt="" coords="63,102,212,143"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,142,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="91,43,128,100,123,103,87,46"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="165,5,240,31"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="189,46,152,103,148,100,185,43"/>
+</map>
