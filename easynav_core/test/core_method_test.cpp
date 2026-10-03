@@ -122,6 +122,30 @@ TEST_F(CoreMethodTestCase, OnInitializeCalled)
     "on_initialize() should be called during initialization.";
 }
 
+TEST_F(CoreMethodTestCase, InvalidFrequenciesAreRejected)
+{
+  const double nan = std::numeric_limits<double>::quiet_NaN();
+  const double inf = std::numeric_limits<double>::infinity();
+  for (const std::string name : {"test.rt_freq", "test.freq"}) {
+    for (const double value : {0.0, -1.0, nan, inf, -inf}) {
+      auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>(
+        "test_node", rclcpp::NodeOptions().parameter_overrides({{name, value}}));
+      MockMethod method;
+      EXPECT_THROW(method.initialize(node, "test"), std::runtime_error) << name << " = " << value;
+      EXPECT_FALSE(method.on_initialize_called_) << name << " = " << value;
+    }
+  }
+
+  // Positive and finite, however small or large: valid.
+  for (const double value : {1e-3, 1e6}) {
+    auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>(
+      "test_node", rclcpp::NodeOptions().parameter_overrides({
+      {"test.rt_freq", value}, {"test.freq", value}}));
+    MockMethod method;
+    EXPECT_NO_THROW(method.initialize(node, "test")) << value;
+  }
+}
+
 TEST_F(CoreMethodTestCase, TFInfoPropagatesToDerived)
 {
   auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_tfinfo_node");

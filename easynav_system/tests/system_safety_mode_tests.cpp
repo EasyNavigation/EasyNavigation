@@ -26,6 +26,7 @@
 #include "lifecycle_msgs/msg/transition.hpp"
 #include "rclcpp/rclcpp.hpp"
 
+#include "easynav_system/RealTime.hpp"
 #include "easynav_system/SystemNode.hpp"
 
 using lifecycle_msgs::msg::State;
@@ -162,6 +163,9 @@ TEST_F(SystemSafetyModeTest, RobotLimitsMayNotExceedTheSafetyLimitsWhenGiven)
 
 TEST_F(SystemSafetyModeTest, SafetyModeConfiguresWithEverythingItRequires)
 {
+  if (!easynav::check_real_time_priority(easynav::kRealTimePriority).empty()) {
+    GTEST_SKIP() << "the safety mode needs real-time scheduling, not allowed here";
+  }
   start(safe());
   ASSERT_TRUE(configure());
   EXPECT_TRUE(system_node_->get_safety().is_safety_mode());
@@ -189,6 +193,9 @@ TEST_F(SystemSafetyModeTest, SafetyModeFailsToConfigureWithoutWhatItRequires)
 
 TEST_F(SystemSafetyModeTest, SafetyModeRejectsReconfigurationRequests)
 {
+  if (!easynav::check_real_time_priority(easynav::kRealTimePriority).empty()) {
+    GTEST_SKIP() << "the safety mode needs real-time scheduling, not allowed here";
+  }
   const std::vector<easynav::ParameterChange> slow_down {
     {"controller_node", rclcpp::Parameter("robot_limits.max_linear_vel", 0.1)}};
 
@@ -207,6 +214,9 @@ TEST_F(SystemSafetyModeTest, SafetyModeRejectsReconfigurationRequests)
 
 TEST_F(SystemSafetyModeTest, SafetyModeFreezesTheConfiguration)
 {
+  if (!easynav::check_real_time_priority(easynav::kRealTimePriority).empty()) {
+    GTEST_SKIP() << "the safety mode needs real-time scheduling, not allowed here";
+  }
   start(safe());
 
   // Before configuring, parameters can still be changed.
@@ -227,10 +237,12 @@ TEST_F(SystemSafetyModeTest, SafetyModeFreezesTheConfiguration)
     system_node_->set_parameter(rclcpp::Parameter("safety.plc_limits.max_linear_vel",
     5.0)).successful);
 
-  // ...but setting the same value, or declaring a new parameter, is not.
+  // ...and so is a new parameter; setting the same value is not.
   EXPECT_TRUE(
     controller->set_parameter(rclcpp::Parameter("robot_limits.max_linear_vel", 0.4)).successful);
-  EXPECT_NO_THROW(controller->declare_parameter("a_new_parameter", 1.0));
+  EXPECT_THROW(
+    controller->declare_parameter("a_new_parameter", 1.0),
+    rclcpp::exceptions::InvalidParameterValueException);
 
   // Reconfiguring through the lifecycle keeps working, and keeps it frozen.
   ASSERT_EQ(
@@ -265,8 +277,9 @@ TEST_F(SystemSafetyModeTest, ConfigurationHashIsAStableSha256OfEveryParameter)
   EXPECT_EQ(system_node_->get_nav_state()->get_safe<std::string>("configuration_hash"), hash);
 
   const auto dump = system_node_->get_configuration_dump();
-  EXPECT_NE(dump.find("controller_node/robot_limits.max_linear_vel="), std::string::npos);
-  EXPECT_NE(dump.find("system_node/safety.mode=false"), std::string::npos);
+  EXPECT_NE(dump.find("controller_node/robot_limits.max_linear_vel (double) = "),
+    std::string::npos);
+  EXPECT_NE(dump.find("system_node/safety.mode (bool) = false"), std::string::npos);
 
   // The same configuration in another process run: the same hash.
   start({});

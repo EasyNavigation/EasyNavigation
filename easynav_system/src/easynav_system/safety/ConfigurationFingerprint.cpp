@@ -18,12 +18,15 @@
 #include <openssl/evp.h>
 
 #include <algorithm>
+#include <charconv>
+#include <cstdint>
 #include <filesystem>
 #include <fstream>
 #include <iomanip>
 #include <sstream>
 #include <string>
 #include <system_error>
+#include <vector>
 
 #include "rcl_logging_interface/rcl_logging_interface.h"
 #include "rcutils/allocator.h"
@@ -33,15 +36,106 @@
 namespace easynav::safety
 {
 
+namespace
+{
+
+std::string quote(const std::string & text)
+{
+  std::ostringstream out;
+  out << '"';
+  for (const unsigned char c : text) {
+    switch (c) {
+      case '"': out << "\\\""; break;
+      case '\\': out << "\\\\"; break;
+      case '\n': out << "\\n"; break;
+      case '\r': out << "\\r"; break;
+      case '\t': out << "\\t"; break;
+      default:
+        if (c < 0x20 || c == 0x7f) {
+          out << "\\x" << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(c) <<
+            std::dec;
+        } else {
+          out << c;
+        }
+    }
+  }
+  out << '"';
+  return out.str();
+}
+
+// The shortest text that reads back as the same double: distinct doubles never print the same.
+std::string exact(double value)
+{
+  char buffer[32];
+  const auto result = std::to_chars(buffer, buffer + sizeof(buffer), value);
+  return std::string(buffer, result.ptr);
+}
+
+template<typename T, typename F>
+std::string list(const std::vector<T> & values, F format)
+{
+  std::string out = "[";
+  for (size_t i = 0; i < values.size(); ++i) {
+    out += (i > 0 ? ", " : "") + format(values[i]);
+  }
+  return out + "]";
+}
+
+const char * type_name(rclcpp::ParameterType type)
+{
+  switch (type) {
+    case rclcpp::ParameterType::PARAMETER_BOOL: return "bool";
+    case rclcpp::ParameterType::PARAMETER_INTEGER: return "integer";
+    case rclcpp::ParameterType::PARAMETER_DOUBLE: return "double";
+    case rclcpp::ParameterType::PARAMETER_STRING: return "string";
+    case rclcpp::ParameterType::PARAMETER_BYTE_ARRAY: return "byte_array";
+    case rclcpp::ParameterType::PARAMETER_BOOL_ARRAY: return "bool_array";
+    case rclcpp::ParameterType::PARAMETER_INTEGER_ARRAY: return "integer_array";
+    case rclcpp::ParameterType::PARAMETER_DOUBLE_ARRAY: return "double_array";
+    case rclcpp::ParameterType::PARAMETER_STRING_ARRAY: return "string_array";
+    case rclcpp::ParameterType::PARAMETER_NOT_SET:
+    default: return "not_set";
+  }
+}
+
+std::string value_of(const rclcpp::Parameter & parameter)
+{
+  const auto boolean = [](bool b) {return std::string(b ? "true" : "false");};
+  const auto integer = [](auto i) {return std::to_string(static_cast<int64_t>(i));};
+  switch (parameter.get_type()) {
+    case rclcpp::ParameterType::PARAMETER_BOOL: return boolean(parameter.as_bool());
+    case rclcpp::ParameterType::PARAMETER_INTEGER: return integer(parameter.as_int());
+    case rclcpp::ParameterType::PARAMETER_DOUBLE: return exact(parameter.as_double());
+    case rclcpp::ParameterType::PARAMETER_STRING: return quote(parameter.as_string());
+    case rclcpp::ParameterType::PARAMETER_BYTE_ARRAY:
+      return list(parameter.as_byte_array(), integer);
+    case rclcpp::ParameterType::PARAMETER_BOOL_ARRAY:
+      return list(parameter.as_bool_array(), boolean);
+    case rclcpp::ParameterType::PARAMETER_INTEGER_ARRAY:
+      return list(parameter.as_integer_array(), integer);
+    case rclcpp::ParameterType::PARAMETER_DOUBLE_ARRAY:
+      return list(parameter.as_double_array(), exact);
+    case rclcpp::ParameterType::PARAMETER_STRING_ARRAY:
+      return list(parameter.as_string_array(), quote);
+    case rclcpp::ParameterType::PARAMETER_NOT_SET:
+    default: return "";
+  }
+}
+
+}  // namespace
+
 std::string
 configuration_dump(const Nodes & nodes)
 {
+  // Names cannot hold spaces, parentheses, '=' or newlines, and values are typed, exact and
+  // quoted: two different configurations never give the same text.
   std::ostringstream dump;
   for (const auto & [name, node] : nodes) {
     auto names = node->list_parameters({}, 0).names;  // 0: any depth
     std::sort(names.begin(), names.end());
     for (const auto & parameter : node->get_parameters(names)) {
-      dump << name << "/" << parameter.get_name() << "=" << parameter.value_to_string() << "\n";
+      dump << name << "/" << parameter.get_name() << " (" << type_name(parameter.get_type()) <<
+        ") = " << value_of(parameter) << "\n";
     }
   }
   return dump.str();

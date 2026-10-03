@@ -23,14 +23,25 @@
 namespace easynav
 {
 
+/// @brief SCHED_FIFO priority of EasyNav's real-time cycle.
+constexpr int kRealTimePriority = 80;
+
 /// @brief Gives the calling thread SCHED_FIFO \p priority.
 /// @return "" on success, otherwise why not.
 std::string set_real_time_priority(int priority);
+
+/// @brief Whether a thread of this process can get SCHED_FIFO \p priority, tried on a
+/// temporary thread. @return "" if it can, otherwise why not.
+std::string check_real_time_priority(int priority);
 
 /// @brief Locks the process memory, current and future, so the RT cycle never page-faults.
 /// Requires an unlimited RLIMIT_MEMLOCK: with a finite one, later allocations could fail.
 /// @return "" on success, otherwise why not.
 std::string lock_memory();
+
+/// @brief Whether lock_memory() is allowed (RLIMIT_MEMLOCK unlimited), without locking.
+/// @return "" if it is, otherwise why not.
+std::string check_memory_lock();
 
 }  // namespace easynav
 

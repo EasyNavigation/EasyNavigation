@@ -17,7 +17,6 @@
 
 #include <sched.h>
 #include <sys/resource.h>
-#include <unistd.h>
 
 #include <string>
 #include <thread>
@@ -50,25 +49,50 @@ TEST(RealTimeTest, InvalidPriorityIsReported)
   EXPECT_NE(error.find("SCHED_FIFO priority 1000"), std::string::npos) << error;
 }
 
-TEST(RealTimeTest, PriorityWithinTheAllowedRangeIsSet)
+TEST(RealTimeTest, PrioritySetOrWhyNot)
 {
-  rlimit rtprio {};
-  ASSERT_EQ(getrlimit(RLIMIT_RTPRIO, &rtprio), 0);
-  const bool allowed = geteuid() == 0 || rtprio.rlim_cur >= 1;
-
-  // In its own thread: the test's threads keep their scheduling.
+  // Whether SCHED_FIFO is allowed depends on more than RLIMIT_RTPRIO (e.g. CAP_SYS_NICE): the
+  // result itself tells.
   std::string error;
   int policy = -1;
-  std::thread([&error, &policy]() {
+  std::thread([&error, &policy]() {  // Its own thread: the test's keep their scheduling.
       error = easynav::set_real_time_priority(1);
       policy = sched_getscheduler(0);
     }).join();
 
-  if (allowed) {
-    EXPECT_EQ(error, "");
+  if (error.empty()) {
     EXPECT_EQ(policy, SCHED_FIFO);
   } else {
-    EXPECT_NE(error.find("RLIMIT_RTPRIO"), std::string::npos) << error;
+    EXPECT_NE(error.find("SCHED_FIFO priority 1"), std::string::npos) << error;
     EXPECT_NE(policy, SCHED_FIFO);
+  }
+}
+
+TEST(RealTimeTest, CheckingThePriorityLeavesTheCallerUntouched)
+{
+  const int before = sched_getscheduler(0);
+  const auto error = easynav::check_real_time_priority(easynav::kRealTimePriority);
+  EXPECT_EQ(sched_getscheduler(0), before);
+
+  std::string direct;
+  std::thread([&direct]() {
+      direct = easynav::set_real_time_priority(easynav::kRealTimePriority);
+    }).join();
+  EXPECT_EQ(error.empty(), direct.empty()) << "the same answer as trying it";
+}
+
+TEST(RealTimeTest, CheckingTheMemoryLockDoesNotLock)
+{
+  rlimit original {};
+  ASSERT_EQ(getrlimit(RLIMIT_MEMLOCK, &original), 0);
+  rlimit finite = original;
+  finite.rlim_cur = 64 * 1024;
+  ASSERT_EQ(setrlimit(RLIMIT_MEMLOCK, &finite), 0);
+  const auto error = easynav::check_memory_lock();
+  ASSERT_EQ(setrlimit(RLIMIT_MEMLOCK, &original), 0);
+  EXPECT_NE(error.find("RLIMIT_MEMLOCK"), std::string::npos) << error;
+
+  if (original.rlim_cur == RLIM_INFINITY) {
+    EXPECT_EQ(easynav::check_memory_lock(), "");
   }
 }

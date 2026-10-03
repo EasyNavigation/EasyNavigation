@@ -45,10 +45,11 @@ ParameterFreezer::freeze(const Nodes & nodes)
           const auto & frozen = frozen_[node_name];
           for (const auto & parameter : parameters) {
             const auto it = frozen.find(parameter.get_name());
-            if (it != frozen.end() && it->second != parameter.get_parameter_value()) {
+            const bool is_new = it == frozen.end();
+            if (is_new ? !accept_new_ : it->second != parameter.get_parameter_value()) {
               result.successful = false;
               result.reason = "safety.mode: the configuration is frozen (" + node_name + "/" +
-              parameter.get_name() + ")";
+              parameter.get_name() + (is_new ? ", a new parameter)" : ")");
               break;
             }
           }

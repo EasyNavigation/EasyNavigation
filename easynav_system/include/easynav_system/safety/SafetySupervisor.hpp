@@ -44,10 +44,10 @@ namespace easynav::safety
  *   limited speed). Not applied to the commands (controller_node's "robot_limits" are, in any
  *   mode): "robot_limits" may not exceed them.
  * - "safety.mode" (default false) makes EasyNav stricter: "safety.plc_limits.*", the command
- *   keepalive and timeout, and real-time scheduling are required; the configuration is frozen
- *   once configured, and reconfiguration requests are rejected.
- * - "safety.lock_memory" (default false, any mode): system_main locks the process memory, or
- *   terminates EasyNav if it cannot.
+ *   keepalive and timeout, and real-time scheduling (checked on configure) are required; the
+ *   configuration is frozen once configured, and reconfiguration requests are rejected.
+ * - "safety.lock_memory" (default false, any mode): system_main locks the process memory; if
+ *   RLIMIT_MEMLOCK does not allow it, configuring fails.
  *
  * Every configure, it fingerprints the configuration: a SHA-256 of every parameter, logged and
  * shared in NavState ("configuration_hash"), with the parameters saved in the ROS log directory

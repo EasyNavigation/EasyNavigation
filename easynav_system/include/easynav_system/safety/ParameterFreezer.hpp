@@ -18,6 +18,7 @@
 #ifndef EASYNAV_SYSTEM__SAFETY__PARAMETERFREEZER_HPP_
 #define EASYNAV_SYSTEM__SAFETY__PARAMETERFREEZER_HPP_
 
+#include <atomic>
 #include <map>
 #include <mutex>
 #include <string>
@@ -34,8 +35,8 @@ namespace easynav::safety
  * @class ParameterFreezer
  * @brief Rejects any change to the parameters of a set of nodes.
  *
- * A declaration (a parameter not frozen yet) or setting the same value is accepted, so the nodes
- * can still go through their lifecycle.
+ * Setting the value a parameter already has is accepted. A parameter not frozen yet can only be
+ * declared while accept_new_parameters() is on (e.g. while EasyNav configures).
  */
 class ParameterFreezer
 {
@@ -46,10 +47,14 @@ public:
   /// @brief Whether anything was frozen.
   [[nodiscard]] bool is_frozen() const {return !handles_.empty();}
 
+  /// @brief Whether parameters not frozen yet may be declared (on by default).
+  void accept_new_parameters(bool accept) {accept_new_ = accept;}
+
 private:
   /// @brief Frozen values, by node name.
   std::map<std::string, std::map<std::string, rclcpp::ParameterValue>> frozen_;
   std::mutex mutex_;
+  std::atomic<bool> accept_new_ {true};
   std::vector<rclcpp::node_interfaces::OnSetParametersCallbackHandle::SharedPtr> handles_;
 };
 

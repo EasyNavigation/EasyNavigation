@@ -23,6 +23,7 @@
 #include <cerrno>
 #include <cstring>
 #include <string>
+#include <thread>
 
 #include "easynav_system/RealTime.hpp"
 
@@ -43,7 +44,15 @@ set_real_time_priority(int priority)
 }
 
 std::string
-lock_memory()
+check_real_time_priority(int priority)
+{
+  std::string error;
+  std::thread([&error, priority]() {error = set_real_time_priority(priority);}).join();
+  return error;
+}
+
+std::string
+check_memory_lock()
 {
   rlimit limit {};
   if (getrlimit(RLIMIT_MEMLOCK, &limit) != 0) {
@@ -52,6 +61,15 @@ lock_memory()
   if (limit.rlim_cur != RLIM_INFINITY) {
     return "RLIMIT_MEMLOCK is " + std::to_string(limit.rlim_cur) +
            " bytes, it must be unlimited (e.g. 'ulimit -l unlimited')";
+  }
+  return "";
+}
+
+std::string
+lock_memory()
+{
+  if (const auto error = check_memory_lock(); !error.empty()) {
+    return error;
   }
   if (mlockall(MCL_CURRENT | MCL_FUTURE) != 0) {
     return std::string("mlockall: ") + std::strerror(errno);

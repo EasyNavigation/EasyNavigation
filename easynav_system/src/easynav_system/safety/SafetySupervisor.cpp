@@ -20,6 +20,7 @@
 #include <string>
 #include <vector>
 
+#include "easynav_system/RealTime.hpp"
 #include "easynav_system/safety/SafetySupervisor.hpp"
 
 namespace easynav::safety
@@ -61,9 +62,22 @@ SafetySupervisor::check_system(rclcpp_lifecycle::LifecycleNode & node)
         (safety_mode_ ? " (> 0, required in safety.mode)" : " (>= 0)"));
     }
   }
-  if (safety_mode_ && !node.get_parameter("use_real_time").as_bool()) {
-    errors.push_back("use_real_time = false (required in safety.mode)");
+  // Checked now, before anything is activated, whoever drives SystemNode.
+  if (safety_mode_) {
+    if (!node.get_parameter("use_real_time").as_bool()) {
+      errors.push_back("use_real_time = false (required in safety.mode)");
+    } else if (const auto error = check_real_time_priority(kRealTimePriority); !error.empty()) {
+      errors.push_back("safety.mode requires real-time scheduling: " + error);
+    }
   }
+  if (lock_memory_) {
+    if (const auto error = check_memory_lock(); !error.empty()) {
+      errors.push_back("safety.lock_memory: " + error);
+    }
+  }
+
+  // EasyNav is (re)configuring: its plugins may declare parameters until on_configured().
+  freezer_.accept_new_parameters(true);
 
   for (const auto & error : errors) {
     RCLCPP_ERROR(logger_, "Invalid parameter: %s", error.c_str());
@@ -138,6 +152,7 @@ SafetySupervisor::on_configured(const Nodes & nodes, NavState & nav_state)
 
   if (safety_mode_) {
     freezer_.freeze(nodes);
+    freezer_.accept_new_parameters(false);
     RCLCPP_INFO(logger_, "[safety.mode] Configuration frozen");
   }
 }

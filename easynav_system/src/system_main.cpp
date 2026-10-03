@@ -167,7 +167,7 @@ int main(int argc, char ** argv)
         std::string error;
         if (use_real_time) {
           RCLCPP_INFO(system_node->get_logger(), "Selected Real-Time");
-          error = easynav::set_real_time_priority(80);
+          error = easynav::set_real_time_priority(easynav::kRealTimePriority);
         } else {
           RCLCPP_INFO(system_node->get_logger(), "Selected NO Real-Time");
         }

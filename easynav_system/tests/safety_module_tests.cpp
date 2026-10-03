@@ -16,6 +16,7 @@
 /// \brief The safety module of easynav_system, on its own: configuration fingerprint, parameter
 /// freezer and safety supervisor.
 
+#include <sys/resource.h>
 #include <unistd.h>
 
 #include <chrono>
@@ -36,6 +37,7 @@
 #include "std_msgs/msg/string.hpp"
 
 #include "easynav_controller/ControllerNode.hpp"
+#include "easynav_system/RealTime.hpp"
 #include "easynav_system/safety/ConfigurationFingerprint.hpp"
 #include "easynav_system/safety/ParameterFreezer.hpp"
 #include "easynav_system/safety/SafetySupervisor.hpp"
@@ -138,9 +140,9 @@ TEST_F(SafetyModuleTest, DumpListsEveryParameterSortedByNodeAndName)
   a->declare_parameter("speed", 0.5);
 
   const auto dump = easynav::safety::configuration_dump({{"b_node", b}, {"a_node", a}});
-  const auto pos_a = dump.find("a_node/speed=0.5");
-  const auto pos_alpha = dump.find("b_node/alpha.x=text\n");
-  const auto pos_zeta = dump.find("b_node/zeta=1\n");
+  const auto pos_a = dump.find("a_node/speed (double) = 0.5\n");
+  const auto pos_alpha = dump.find("b_node/alpha.x (string) = \"text\"\n");
+  const auto pos_zeta = dump.find("b_node/zeta (integer) = 1\n");
   ASSERT_NE(pos_a, std::string::npos) << dump;
   ASSERT_NE(pos_alpha, std::string::npos) << dump;
   ASSERT_NE(pos_zeta, std::string::npos) << dump;
@@ -159,6 +161,60 @@ TEST_F(SafetyModuleTest, DumpDoesNotDependOnDeclarationOrder)
   EXPECT_EQ(
     easynav::safety::configuration_dump({{"n", first}}),
     easynav::safety::configuration_dump({{"n", second}}));
+}
+
+TEST_F(SafetyModuleTest, DifferentConfigurationsNeverGiveTheSameDump)
+{
+  // Pairs that an untyped "name=value" text could not tell apart.
+  struct Case
+  {
+    const char * what;
+    std::vector<rclcpp::Parameter> first;
+    std::vector<rclcpp::Parameter> second;
+  };
+  const std::vector<Case> cases {
+    {"type", {{"p", std::string("1")}}, {{"p", 1}}},
+    {"integer and double", {{"p", 1}}, {{"p", 1.0}}},
+    {"close doubles", {{"p", 0.1234567}}, {{"p", 0.1234568}}},
+    {"a newline faking a parameter",
+      {{"a", std::string("x\"\nn/b (string) = \"y")}},
+      {{"a", std::string("x")}, {"b", std::string("y")}}},
+    {"a comma in a string array",
+      {{"p", std::vector<std::string>{"a, b"}}}, {{"p", std::vector<std::string>{"a", "b"}}}},
+    {"quotes in a string array",
+      {{"p", std::vector<std::string>{"a\", \"b"}}},
+      {{"p", std::vector<std::string>{"a", "b"}}}},
+    {"empty string and empty list",
+      {{"p", std::string("")}}, {{"p", std::vector<std::string>{}}}},
+  };
+  for (const auto & c : cases) {
+    auto first = node("n", c.first);
+    for (const auto & p : c.first) {
+      first->declare_parameter(p.get_name(), p.get_parameter_value());
+    }
+    auto second = node("n", c.second);
+    for (const auto & p : c.second) {
+      second->declare_parameter(p.get_name(), p.get_parameter_value());
+    }
+    const auto dump1 = easynav::safety::configuration_dump({{"n", first}});
+    const auto dump2 = easynav::safety::configuration_dump({{"n", second}});
+    EXPECT_NE(dump1, dump2) << c.what;
+    EXPECT_NE(easynav::safety::sha256_hex(dump1), easynav::safety::sha256_hex(dump2)) << c.what;
+  }
+}
+
+TEST_F(SafetyModuleTest, DumpIsReadable)
+{
+  auto n = node("n");
+  n->declare_parameter("d", 0.1);
+  n->declare_parameter("s", std::string("say \"hi\"\n"));
+  n->declare_parameter("l", std::vector<double>{1.5, -2.0});
+  n->declare_parameter("b", true);
+  const auto dump = easynav::safety::configuration_dump({{"n", n}});
+  EXPECT_NE(dump.find("n/d (double) = 0.1\n"), std::string::npos) << dump;
+  EXPECT_NE(dump.find("n/s (string) = \"say \\\"hi\\\"\\n\"\n"), std::string::npos) << dump;
+  EXPECT_NE(dump.find("n/l (double_array) = [1.5, -2]\n"), std::string::npos) << dump;
+  EXPECT_NE(dump.find("n/b (bool) = true\n"), std::string::npos) << dump;
 }
 
 TEST_F(SafetyModuleTest, LoadedPluginsComeFromTheTypesParameters)
@@ -235,13 +291,21 @@ TEST_F(SafetyModuleTest, FrozenParametersCannotChange)
   EXPECT_DOUBLE_EQ(a->get_parameter("speed").as_double(), 0.6);
   EXPECT_FALSE(b->set_parameter(rclcpp::Parameter("name", std::string("other"))).successful);
 
-  // The same value, or a new parameter, is accepted.
+  // The same value is accepted.
   EXPECT_TRUE(a->set_parameter(rclcpp::Parameter("speed", 0.6)).successful);
+
+  // A new parameter, only while new ones are accepted (EasyNav configuring)...
+  freezer.accept_new_parameters(false);
+  EXPECT_THROW(
+    a->declare_parameter("new_one", 1), rclcpp::exceptions::InvalidParameterValueException);
+  EXPECT_FALSE(a->has_parameter("new_one"));
+  freezer.accept_new_parameters(true);
   EXPECT_NO_THROW(a->declare_parameter("new_one", 1));
   EXPECT_TRUE(a->set_parameter(rclcpp::Parameter("new_one", 2)).successful) << "not frozen yet";
 
-  // Refreezing takes what was declared since, without adding callbacks.
+  // ...and refreezing takes it, without adding callbacks.
   freezer.freeze({{"a", a}, {"b", b}});
+  freezer.accept_new_parameters(false);
   EXPECT_FALSE(a->set_parameter(rclcpp::Parameter("new_one", 3)).successful);
   EXPECT_TRUE(a->set_parameter(rclcpp::Parameter("new_one", 2)).successful);
 }
@@ -280,15 +344,60 @@ TEST_F(SafetyModuleTest, SupervisorChecksTheSafetyLimits)
     {{{"safety.mode", true}, {"safety.plc_limits.max_linear_vel", 1.0},
       {"safety.plc_limits.max_angular_vel", 1.0}, {"use_real_time", false}}, false},
   };
+  // The safety mode also needs real-time scheduling, checked on configure.
+  const bool real_time = easynav::check_real_time_priority(easynav::kRealTimePriority).empty();
   for (size_t i = 0; i < cases.size(); ++i) {
     easynav::safety::SafetySupervisor supervisor;
     auto n = system(cases[i].params, supervisor);
-    EXPECT_EQ(supervisor.check_system(*n), cases[i].valid) << "case " << i;
+    const bool mode = n->get_parameter("safety.mode").as_bool();
+    EXPECT_EQ(supervisor.check_system(*n), cases[i].valid && (!mode || real_time)) <<
+      "case " << i;
   }
+}
+
+TEST_F(SafetyModuleTest, SafetyModeFailsToConfigureWithoutRealTimeScheduling)
+{
+  rlimit original {};
+  ASSERT_EQ(getrlimit(RLIMIT_RTPRIO, &original), 0);
+  rlimit none = original;
+  none.rlim_cur = 0;  // Lowering the soft limit is always allowed.
+  ASSERT_EQ(setrlimit(RLIMIT_RTPRIO, &none), 0);
+  const bool privileged = easynav::check_real_time_priority(easynav::kRealTimePriority).empty();
+
+  bool valid = true;
+  if (!privileged) {
+    easynav::safety::SafetySupervisor supervisor;
+    auto n = system(
+      {{"safety.mode", true}, {"safety.plc_limits.max_linear_vel", 1.0},
+        {"safety.plc_limits.max_angular_vel", 1.0}}, supervisor);
+    valid = supervisor.check_system(*n);
+  }
+  ASSERT_EQ(setrlimit(RLIMIT_RTPRIO, &original), 0);
+  if (privileged) {
+    GTEST_SKIP() << "this process may use SCHED_FIFO whatever its RLIMIT_RTPRIO";
+  }
+  EXPECT_FALSE(valid);
+}
+
+TEST_F(SafetyModuleTest, LockMemoryFailsToConfigureWithAFiniteMemlockLimit)
+{
+  rlimit original {};
+  ASSERT_EQ(getrlimit(RLIMIT_MEMLOCK, &original), 0);
+  rlimit finite = original;
+  finite.rlim_cur = 64 * 1024;
+  ASSERT_EQ(setrlimit(RLIMIT_MEMLOCK, &finite), 0);
+
+  easynav::safety::SafetySupervisor supervisor;
+  auto n = system({{"safety.lock_memory", true}}, supervisor);
+  const bool valid = supervisor.check_system(*n);
+  ASSERT_EQ(setrlimit(RLIMIT_MEMLOCK, &original), 0);
+  EXPECT_FALSE(valid) << "in any mode";
 }
 
 TEST_F(SafetyModuleTest, MemoryLockIsRequestedIndependentlyOfTheSafetyMode)
 {
+  const bool real_time = easynav::check_real_time_priority(easynav::kRealTimePriority).empty();
+  const bool memlock = easynav::check_memory_lock().empty();
   struct Case
   {
     bool mode;
@@ -305,7 +414,9 @@ TEST_F(SafetyModuleTest, MemoryLockIsRequestedIndependentlyOfTheSafetyMode)
     }
     easynav::safety::SafetySupervisor supervisor;
     auto n = system(params, supervisor);
-    EXPECT_TRUE(supervisor.check_system(*n)) << "it does not affect the checks";
+    // Only what each one requires is checked.
+    const bool valid = (!c.mode || real_time) && (!c.lock_memory.value_or(false) || memlock);
+    EXPECT_EQ(supervisor.check_system(*n), valid);
     EXPECT_EQ(supervisor.is_safety_mode(), c.mode);
     EXPECT_EQ(supervisor.is_memory_lock_requested(), c.lock_memory.value_or(false)) <<
       "off by default, even in the safety mode";
@@ -335,6 +446,9 @@ TEST_F(SafetyModuleTest, SupervisorChecksTheControllerAgainstTheSafetyLimits)
 
 TEST_F(SafetyModuleTest, SupervisorRequiresTheCommandGuardInSafetyMode)
 {
+  if (!easynav::check_real_time_priority(easynav::kRealTimePriority).empty()) {
+    GTEST_SKIP() << "the safety mode needs real-time scheduling, not allowed here";
+  }
   easynav::safety::SafetySupervisor supervisor;
   auto n = system(
     {{"safety.mode", true}, {"safety.plc_limits.max_linear_vel", 1.0},
@@ -354,7 +468,11 @@ TEST_F(SafetyModuleTest, SupervisorRequiresTheCommandGuardInSafetyMode)
 
 TEST_F(SafetyModuleTest, SupervisorFingerprintsAndFreezesOnlyInSafetyMode)
 {
+  const bool real_time = easynav::check_real_time_priority(easynav::kRealTimePriority).empty();
   for (const bool safety_mode : {false, true}) {
+    if (safety_mode && !real_time) {
+      continue;  // The safety mode needs real-time scheduling, not allowed here.
+    }
     easynav::safety::SafetySupervisor supervisor;
     auto n = system(
       {{"safety.mode", safety_mode}, {"safety.plc_limits.max_linear_vel", 1.0},
@@ -413,4 +531,36 @@ TEST_F(SafetyModuleTest, SupervisorSavesAndPublishesTheConfiguration)
   }
   ASSERT_TRUE(received);
   EXPECT_EQ(*received, "# SHA-256: " + hash + "\n" + dump);
+}
+
+TEST_F(SafetyModuleTest, NewParametersOnlyWhileConfiguringInSafetyMode)
+{
+  if (!easynav::check_real_time_priority(easynav::kRealTimePriority).empty()) {
+    GTEST_SKIP() << "the safety mode needs real-time scheduling, not allowed here";
+  }
+
+  easynav::safety::SafetySupervisor supervisor;
+  auto n = system(
+    {{"safety.mode", true}, {"safety.plc_limits.max_linear_vel", 1.0},
+      {"safety.plc_limits.max_angular_vel", 1.0}}, supervisor);
+  easynav::NavState nav_state;
+  const Nodes nodes {{"system_node", n}};
+
+  // Configuring: a plugin may declare its parameters.
+  ASSERT_TRUE(supervisor.check_system(*n));
+  EXPECT_NO_THROW(n->declare_parameter("plugin.gain", 1.0));
+  supervisor.on_configured(nodes, nav_state);
+
+  // Configured: frozen, new parameters included.
+  EXPECT_THROW(
+    n->declare_parameter("plugin.other", 1.0), rclcpp::exceptions::InvalidParameterValueException);
+  EXPECT_FALSE(n->set_parameter(rclcpp::Parameter("plugin.gain", 2.0)).successful);
+
+  // Configuring again (cleanup and configure): declarations allowed until configured.
+  ASSERT_TRUE(supervisor.check_system(*n));
+  EXPECT_NO_THROW(n->declare_parameter("plugin.other", 1.0));
+  EXPECT_FALSE(n->set_parameter(rclcpp::Parameter("plugin.gain", 2.0)).successful) <<
+    "still frozen while configuring";
+  supervisor.on_configured(nodes, nav_state);
+  EXPECT_FALSE(n->set_parameter(rclcpp::Parameter("plugin.other", 2.0)).successful);
 }

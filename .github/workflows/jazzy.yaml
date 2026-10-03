@@ -13,6 +13,8 @@ jobs:
     runs-on: ubuntu-24.04
     container:
       image: ubuntu:noble
+      # Real-time scheduling and memory locking, so the safety mode tests run instead of skipping.
+      options: --cap-add=SYS_NICE --ulimit rtprio=99 --ulimit memlock=-1
     steps:
       - uses: actions/checkout@v4
         with:
