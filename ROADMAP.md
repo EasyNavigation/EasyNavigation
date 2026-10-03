@@ -95,6 +95,7 @@ Proposed:
 - [ ] **RD055:** NavMap: incremental updates from live sensor data (dynamic obstacles on the mesh) and a NavMap-based collision check for the safety reflexes
 - [ ] **RD057:** Maps Manager plugin for **large maps**, possibly with fractal (multi-resolution) approximations
 - [ ] **RD058:** `RTTFBuffer` that **extrapolates transforms to the future**, so the real-time cycle does not wait for or use stale transforms
+- [ ] **RD059:** Integrate a **Recovery Manager plugin** for the configuration and adaptation of the whole system
 
 ---
 
