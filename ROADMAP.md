@@ -27,57 +27,46 @@ Each item is numbered (`RD###`) for easier reference and tracking. Items not com
 
 ## 📆 May 2026 – October 2026
 
-Carried over from the previous period:
+These are the main development goals for this semester. Items not completed in this period were moved to the next one.
 
-- [ ] **RD004:** Develop the **MPC Controller plugin** for **Ackermann-steered robots** (→ November 2026)
-- [ ] **RD005:** Develop the **MPC Controller plugin** for **omnidirectional robots** (→ November 2026)
-- [ ] **RD007:** Create **Test Case plugins** for **underwater robots** (→ November 2026)
-- [ ] **RD008:** Create **Test Case plugins** for **aerial robots** (→ November 2026)
+Carried over from November 2025 – April 2026:
+
+- [ ] **RD004:** Develop the **MPC Controller plugin** for **Ackermann-steered robots**
+- [ ] **RD005:** Develop the **MPC Controller plugin** for **omnidirectional robots**
+- [ ] **RD007:** Create **Test Case plugins** for **underwater robots**
+- [ ] **RD008:** Create **Test Case plugins** for **aerial robots**
 - [x] **RD015:** Write the EasyNav reference paper (submitted to ICRA)
-- [ ] **RD016:** Write the NavMap reference paper (→ November 2026)
+- [ ] **RD016:** Write the NavMap reference paper
 
-Developed in this period:
+New in this period:
 
-**Releases and infrastructure**
-
-- [x] **RD017:** Release of **EasyNav**, **Yaets**, **easynav_plugins**, and **NavMap** for **ROS 2 Lyrical**, with CI (EasyNav 0.4.x, NavMap 0.5.x, Yaets 1.1.0)
-- [x] **RD018:** **ROS 2 Humble** support: backport branches and CI
-- [x] **RD019:** CI on **Ubuntu 26.04**, and installation with **Pixi** besides APT and source
-- [x] **RD020:** Test coverage above **85%** in EasyNavigation
-
-**Navigation**
-
-- [x] **RD021:** **Regulated Pure Pursuit** controller (port of Nav2's), with the Dynamic Window extension
-- [x] **RD022:** **Multi-Hypothesis AMCL** localizer, for global localization
-- [x] **RD023:** Routes: accept incoming routes and save them
-- [x] **RD024:** **Pause and resume** navigation, from clients and tools
-- [x] **RD025:** **Velocity pipeline** in `ControllerNode`: robot limits shared by every controller, velocity multiplexer and smoother
-- [x] **RD026:** **Robot geometry** configured once and shared by every component
-
-**Robustness and recovery**
-
-- [x] **RD027:** **Recovery system**: `RecoveryManagerNode` with pluggable managers; `DiagnosticRecoveryManager` (safety reflexes, evaluators, mitigations by priority) and `SimpleRecoveryManager`; recovery plugins in `easynav_plugins` (collision reflex, stuck, no path, obstacle too close, ROS graph, AMCL convergence, advance, retreat, relocalize, human assistance, cancel, shutdown)
-- [x] **RD028:** **Run-time reconfiguration** and plugin switching (`PluginSwitcher`), keeping the mission and the localization across it
-- [x] **RD029:** Concurrency robustness: thread-safe `NavState` access (`get_safe`), race fixes in `RTTFBuffer` and perceptions, safe shutdown on signals
-
-**Safety** (see the Safety page in the website)
-
-- [x] **RD030:** Functional-safety feasibility analysis (IEC 61508-3 SIL 2) and integration roadmap
-- [x] **RD031:** Velocity command robustness: command timeout, keepalive, `cmd_vel` QoS with deadline and liveliness, non-finite commands discarded
-- [x] **RD032:** **Safety mode**: configuration checks, SHA-256 configuration fingerprint, frozen configuration, real-time scheduling required, memory locking
-- [x] **RD033:** **Heartbeat** from the real-time cycle and **real-time cycle monitoring**
-- [x] **RD034:** Integration of the safety channel's state (`SafetyStatus`): protective stop and safely limited speed
-- [ ] **RD035:** Maximum **data age** (perceptions and robot pose), fail-safe collision reflex, and **fault-injection** plugins for every component (under review)
-- [x] **RD036:** Yaets: trace producers never wait for the trace file (no priority inversion in the real-time cycle)
-
-**Tools and documentation**
-
-- [x] **RD037:** **Nav2 bridge** (`easynav_nav2_bridge`): a `NavigateToPose` action server on top of EasyNav
-- [x] **RD038:** **Migration Guide** for Nav2 users, and Safety, Recovery and installation pages in the website
-- [x] **RD039:** TUI: diagnostics and mitigation panels
-- [x] **RD040:** NavMap: generation of a simulated world and its NavMap from satellite imagery
-- [x] **RD053:** NavMap: releases 0.5.0 and 0.5.1, Jazzy port, and compatibility with current Rolling (message generation, RViz/Ogre headers)
-- [x] **RD054:** Yaets: release 1.1.0 and CI for Lyrical
+- [x] **RD017:** Perform release of **EasyNav**, **Yaets**, **easynav_plugins**, and **NavMap** for **ROS 2 Lyrical**, with CI
+- [x] **RD018:** Support **ROS 2 Humble** with backport branches and CI
+- [x] **RD019:** Move CI to **Ubuntu 26.04**, and offer installation with **Pixi** besides APT and source
+- [x] **RD020:** Increase test coverage in EasyNavigation above **85%**
+- [x] **RD021:** Develop a **Regulated Pure Pursuit Controller plugin**, with the Dynamic Window extension
+- [x] **RD022:** Develop a **Multi-Hypothesis AMCL (MH-AMCL) Localizer plugin** for global localization
+- [x] **RD023:** Extend **route-based navigation** to receive routes at run time and save them
+- [x] **RD024:** Allow to **pause and resume** navigation from clients and tools
+- [x] **RD025:** Create a single **velocity output** in the Controller node: robot limits shared by every controller, velocity multiplexer and smoother
+- [x] **RD026:** Configure the **robot geometry** once and share it with every component
+- [x] **RD027:** Develop a **recovery system** with pluggable recovery managers, a diagnosis-driven manager (safety reflexes, evaluators and mitigations by priority) and a set of recovery plugins
+- [x] **RD028:** Support **run-time reconfiguration** and plugin switching, keeping the mission and the localization
+- [x] **RD029:** Make EasyNav robust to **concurrency** between its real-time and non-real-time cycles
+- [x] **RD030:** Analyze the feasibility of **functional-safety** certification (IEC 61508-3 SIL 2) and define the integration roadmap
+- [x] **RD031:** Make the **velocity command** robust: command timeout, keepalive, QoS with deadline and liveliness, non-finite commands discarded
+- [x] **RD032:** Add a **safety mode**: configuration checks, configuration fingerprint, frozen configuration, real-time scheduling and memory locking
+- [x] **RD033:** Publish a **heartbeat** from the real-time cycle and **monitor** the real-time cycle
+- [x] **RD034:** Integrate the **safety channel's state**: protective stop and safely limited speed
+- [x] **RD035:** Bound the **age of the data** used (perceptions and robot pose), and add **fault-injection** plugins for every component
+- [x] **RD036:** Remove priority inversions from **Yaets** tracing in the real-time cycle
+- [x] **RD037:** Develop a **Nav2 bridge**, so Nav2 clients can drive EasyNav
+- [x] **RD038:** Write a **Migration Guide** for Nav2 users, and the Safety and Recovery documentation
+- [x] **RD039:** Show diagnostics and recovery mitigations in the **TUI**
+- [x] **RD040:** Generate a simulated world and its **NavMap from satellite imagery**
+- [x] **RD053:** Perform releases 0.5.0 and 0.5.1 of **NavMap**, with the Jazzy port and compatibility with current Rolling
+- [x] **RD054:** Perform release 1.1.0 of **Yaets**, with CI for Lyrical
+- RD004, RD005, RD007, RD008 and RD016 → moved to November 2026 – April 2027.
 
 ---
 
@@ -104,7 +93,8 @@ Proposed:
 - [ ] **RD049:** **Multi-robot convoy**: a controller that follows another robot at a fixed distance, with a howto
 - [ ] **RD050:** Thread-safety review of the localizers (e.g. AMCL prediction and correction)
 - [ ] **RD055:** NavMap: incremental updates from live sensor data (dynamic obstacles on the mesh) and a NavMap-based collision check for the safety reflexes
-- [ ] **RD056:** Yaets: trace analysis tools (per-function timing histograms and worst cases, comparison between runs) to support the timing campaign (RD044)
+- [ ] **RD057:** Maps Manager plugin for **large maps**, possibly with fractal (multi-resolution) approximations
+- [ ] **RD058:** `RTTFBuffer` that **extrapolates transforms to the future**, so the real-time cycle does not wait for or use stale transforms
 
 ---
 
