@@ -19,6 +19,7 @@
 #include <sys/resource.h>
 #include <unistd.h>
 
+#include <algorithm>
 #include <chrono>
 #include <cmath>
 #include <cstdlib>
@@ -35,6 +36,8 @@
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 #include "std_msgs/msg/string.hpp"
+#include "diagnostic_msgs/msg/diagnostic_status.hpp"
+#include "easynav_interfaces/msg/heartbeat.hpp"
 
 #include "easynav_controller/ControllerNode.hpp"
 #include "easynav_system/RealTime.hpp"
@@ -115,6 +118,7 @@ protected:
     auto n = node("system_node", overrides);
     supervisor.declare_parameters(*n);
     n->declare_parameter("use_real_time", true);
+    n->declare_parameter("rt_freq", 200.0);
     return n;
   }
 };
@@ -340,9 +344,10 @@ TEST_F(SafetyModuleTest, SupervisorChecksTheSafetyLimits)
     {{{"safety.mode", true}}, false},  // Required in safety.mode
     {{{"safety.mode", true}, {"safety.plc_limits.max_linear_vel", 1.0}}, false},
     {{{"safety.mode", true}, {"safety.plc_limits.max_linear_vel", 1.0},
-      {"safety.plc_limits.max_angular_vel", 1.0}}, true},
+      {"safety.plc_limits.max_angular_vel", 1.0}, {"safety.heartbeat.period", 0.1}}, true},
     {{{"safety.mode", true}, {"safety.plc_limits.max_linear_vel", 1.0},
-      {"safety.plc_limits.max_angular_vel", 1.0}, {"use_real_time", false}}, false},
+      {"safety.plc_limits.max_angular_vel", 1.0}, {"safety.heartbeat.period", 0.1},
+      {"use_real_time", false}}, false},
   };
   // The safety mode also needs real-time scheduling, checked on configure.
   const bool real_time = easynav::check_real_time_priority(easynav::kRealTimePriority).empty();
@@ -369,7 +374,7 @@ TEST_F(SafetyModuleTest, SafetyModeFailsToConfigureWithoutRealTimeScheduling)
     easynav::safety::SafetySupervisor supervisor;
     auto n = system(
       {{"safety.mode", true}, {"safety.plc_limits.max_linear_vel", 1.0},
-        {"safety.plc_limits.max_angular_vel", 1.0}}, supervisor);
+        {"safety.plc_limits.max_angular_vel", 1.0}, {"safety.heartbeat.period", 0.1}}, supervisor);
     valid = supervisor.check_system(*n);
   }
   ASSERT_EQ(setrlimit(RLIMIT_RTPRIO, &original), 0);
@@ -408,7 +413,7 @@ TEST_F(SafetyModuleTest, MemoryLockIsRequestedIndependentlyOfTheSafetyMode)
   {
     std::vector<rclcpp::Parameter> params {
       {"safety.mode", c.mode}, {"safety.plc_limits.max_linear_vel", 1.0},
-      {"safety.plc_limits.max_angular_vel", 1.0}};
+      {"safety.plc_limits.max_angular_vel", 1.0}, {"safety.heartbeat.period", 0.1}};
     if (c.lock_memory) {
       params.emplace_back("safety.lock_memory", *c.lock_memory);
     }
@@ -427,7 +432,8 @@ TEST_F(SafetyModuleTest, SupervisorChecksTheControllerAgainstTheSafetyLimits)
 {
   easynav::safety::SafetySupervisor supervisor;
   auto n = system(
-    {{"safety.plc_limits.max_linear_vel", 0.5}, {"safety.plc_limits.max_angular_vel", 1.0}},
+    {{"safety.plc_limits.max_linear_vel", 0.5}, {"safety.plc_limits.max_angular_vel", 1.0},
+      {"safety.heartbeat.period", 0.1}},
     supervisor);
   ASSERT_TRUE(supervisor.check_system(*n));
 
@@ -452,7 +458,7 @@ TEST_F(SafetyModuleTest, SupervisorRequiresTheCommandGuardInSafetyMode)
   easynav::safety::SafetySupervisor supervisor;
   auto n = system(
     {{"safety.mode", true}, {"safety.plc_limits.max_linear_vel", 1.0},
-      {"safety.plc_limits.max_angular_vel", 2.0}}, supervisor);
+      {"safety.plc_limits.max_angular_vel", 2.0}, {"safety.heartbeat.period", 0.1}}, supervisor);
   ASSERT_TRUE(supervisor.check_system(*n));
 
   auto controller = [](std::vector<rclcpp::Parameter> params) {
@@ -476,7 +482,7 @@ TEST_F(SafetyModuleTest, SupervisorFingerprintsAndFreezesOnlyInSafetyMode)
     easynav::safety::SafetySupervisor supervisor;
     auto n = system(
       {{"safety.mode", safety_mode}, {"safety.plc_limits.max_linear_vel", 1.0},
-        {"safety.plc_limits.max_angular_vel", 1.0}}, supervisor);
+        {"safety.plc_limits.max_angular_vel", 1.0}, {"safety.heartbeat.period", 0.1}}, supervisor);
     ASSERT_TRUE(supervisor.check_system(*n));
     EXPECT_EQ(supervisor.is_safety_mode(), safety_mode);
     EXPECT_EQ(supervisor.get_configuration_hash(), "") << "before the first configure";
@@ -505,6 +511,7 @@ TEST_F(SafetyModuleTest, SupervisorSavesAndPublishesTheConfiguration)
     "system_node", "/robot7", rclcpp::NodeOptions());
   supervisor.declare_parameters(*n);
   n->declare_parameter("use_real_time", true);
+  n->declare_parameter("rt_freq", 200.0);
   ASSERT_TRUE(supervisor.check_system(*n));
 
   easynav::NavState nav_state;
@@ -542,7 +549,7 @@ TEST_F(SafetyModuleTest, NewParametersOnlyWhileConfiguringInSafetyMode)
   easynav::safety::SafetySupervisor supervisor;
   auto n = system(
     {{"safety.mode", true}, {"safety.plc_limits.max_linear_vel", 1.0},
-      {"safety.plc_limits.max_angular_vel", 1.0}}, supervisor);
+      {"safety.plc_limits.max_angular_vel", 1.0}, {"safety.heartbeat.period", 0.1}}, supervisor);
   easynav::NavState nav_state;
   const Nodes nodes {{"system_node", n}};
 
@@ -563,4 +570,222 @@ TEST_F(SafetyModuleTest, NewParametersOnlyWhileConfiguringInSafetyMode)
     "still frozen while configuring";
   supervisor.on_configured(nodes, nav_state);
   EXPECT_FALSE(n->set_parameter(rclcpp::Parameter("plugin.other", 2.0)).successful);
+}
+
+// ─── RT cycle: monitor and heartbeat ────────────────────────────────────────────────────────
+
+namespace
+{
+
+using RtClock = easynav::safety::RtMonitor::Clock;
+using namespace std::chrono_literals;
+
+std::optional<diagnostic_msgs::msg::DiagnosticStatus> rt_diagnostic(
+  const easynav::NavState & nav_state)
+{
+  if (!nav_state.has("diagnostics.rt_cycle")) {return std::nullopt;}
+  return nav_state.get_safe<diagnostic_msgs::msg::DiagnosticStatus>("diagnostics.rt_cycle");
+}
+
+}  // namespace
+
+TEST_F(SafetyModuleTest, HeartbeatAndRtMonitorParametersAreChecked)
+{
+  struct Case
+  {
+    std::vector<rclcpp::Parameter> params;
+    bool valid;
+  };
+  const std::vector<Case> cases {
+    {{{"safety.heartbeat.period", -0.1}}, false},
+    {{{"safety.heartbeat.period", std::nan("")}}, false},
+    {{{"safety.heartbeat.period", 0.0}}, true},  // Off, outside the safety mode
+    {{{"safety.rt_monitor.max_period_factor", 1.0}}, false},
+    {{{"safety.rt_monitor.max_period_factor", 0.5}}, false},
+    {{{"safety.rt_monitor.max_period_factor", std::nan("")}}, false},
+    {{{"safety.rt_monitor.max_period_factor", 1.01}}, true},
+    {{{"safety.rt_monitor.max_late_cycles", 0}}, false},
+    {{{"safety.rt_monitor.max_late_cycles", 1}}, true},
+  };
+  for (size_t i = 0; i < cases.size(); ++i) {
+    easynav::safety::SafetySupervisor supervisor;
+    auto n = system(cases[i].params, supervisor);
+    EXPECT_EQ(supervisor.check_system(*n), cases[i].valid) << "case " << i;
+  }
+}
+
+TEST_F(SafetyModuleTest, TheHeartbeatIsRequiredInSafetyMode)
+{
+  if (!easynav::check_real_time_priority(easynav::kRealTimePriority).empty()) {
+    GTEST_SKIP() << "the safety mode needs real-time scheduling, not allowed here";
+  }
+
+  easynav::safety::SafetySupervisor supervisor;
+  auto n = system(
+    {{"safety.mode", true}, {"safety.plc_limits.max_linear_vel", 1.0},
+      {"safety.plc_limits.max_angular_vel", 1.0}}, supervisor);
+  EXPECT_FALSE(supervisor.check_system(*n));
+}
+
+TEST_F(SafetyModuleTest, HeartbeatIsPublishedAtItsPeriodFromTheRtCycle)
+{
+  easynav::safety::SafetySupervisor supervisor;
+  auto n = system({{"safety.heartbeat.period", 0.05}}, supervisor);
+  ASSERT_TRUE(supervisor.check_system(*n));
+  easynav::NavState nav_state;
+  supervisor.on_configured({{"system_node", n}}, nav_state);
+  supervisor.on_activate();
+
+  // The publisher promises its period.
+  const auto info = n->get_publishers_info_by_topic("/easynav_heartbeat");
+  ASSERT_EQ(info.size(), 1u);
+  EXPECT_EQ(info[0].qos_profile().deadline(), rclcpp::Duration(100ms));
+  EXPECT_EQ(info[0].qos_profile().liveliness_lease_duration(), rclcpp::Duration(100ms));
+
+  auto listener = std::make_shared<rclcpp::Node>("heartbeat_listener");
+  std::vector<easynav_interfaces::msg::Heartbeat> received;
+  auto sub = listener->create_subscription<easynav_interfaces::msg::Heartbeat>(
+    "/easynav_heartbeat", rclcpp::QoS(100).reliable(),
+    [&received](easynav_interfaces::msg::Heartbeat::UniquePtr msg) {received.push_back(*msg);});
+  rclcpp::executors::SingleThreadedExecutor exe;
+  exe.add_node(listener);
+  const auto start = std::chrono::steady_clock::now();
+  while (sub->get_publisher_count() == 0 && std::chrono::steady_clock::now() - start < 2s) {
+    exe.spin_some();
+    rclcpp::sleep_for(10ms);
+  }
+
+  // 1 s of simulated 200 Hz cycles: a heartbeat every 50 ms, the first one right away.
+  auto t = RtClock::now();
+  for (int i = 0; i < 200; ++i, t += 5ms) {
+    ASSERT_TRUE(supervisor.cycle_rt(nav_state, t));
+    exe.spin_some();
+    rclcpp::sleep_for(1ms);
+  }
+  const auto end = std::chrono::steady_clock::now();
+  while (received.size() < 20 && std::chrono::steady_clock::now() - end < 1s) {
+    exe.spin_some();
+    rclcpp::sleep_for(5ms);
+  }
+  ASSERT_EQ(received.size(), 20u);
+  for (size_t i = 0; i < received.size(); ++i) {
+    EXPECT_EQ(received[i].sequence, i + 1) << "consecutive, no gaps";
+    EXPECT_EQ(received[i].rt_status, easynav_interfaces::msg::Heartbeat::RT_OK);
+    EXPECT_EQ(received[i].late_cycles, 0u);
+    EXPECT_FALSE(received[i].safety_mode);
+    EXPECT_EQ(received[i].configuration_hash, supervisor.get_configuration_hash());
+  }
+}
+
+TEST_F(SafetyModuleTest, NoHeartbeatIfItsPeriodIsZero)
+{
+  easynav::safety::SafetySupervisor supervisor;
+  auto n = system({}, supervisor);
+  ASSERT_TRUE(supervisor.check_system(*n));
+  EXPECT_TRUE(n->get_publishers_info_by_topic("/easynav_heartbeat").empty());
+  easynav::NavState nav_state;
+  supervisor.on_activate();
+  EXPECT_TRUE(supervisor.cycle_rt(nav_state, RtClock::now()));
+}
+
+TEST_F(SafetyModuleTest, RtDiagnosticFollowsTheMonitorOutsideSafetyMode)
+{
+  // 200 Hz, late if more than 10 ms after the previous cycle; 3 in a row are an error.
+  easynav::safety::SafetySupervisor supervisor;
+  auto n = system({{"safety.rt_monitor.max_late_cycles", 3}}, supervisor);
+  ASSERT_TRUE(supervisor.check_system(*n));
+  easynav::NavState nav_state;
+  supervisor.on_activate();
+
+  auto t = RtClock::now();
+  for (int i = 0; i < 10; ++i, t += 5ms) {
+    supervisor.cycle_rt(nav_state, t);
+  }
+  EXPECT_FALSE(rt_diagnostic(nav_state)) << "nothing to report while all is fine";
+
+  using diagnostic_msgs::msg::DiagnosticStatus;
+  EXPECT_TRUE(supervisor.cycle_rt(nav_state, t += 30ms));
+  ASSERT_TRUE(rt_diagnostic(nav_state));
+  EXPECT_EQ(rt_diagnostic(nav_state)->level, DiagnosticStatus::WARN);
+  EXPECT_EQ(rt_diagnostic(nav_state)->hardware_id, "system_node");
+
+  supervisor.cycle_rt(nav_state, t += 30ms);
+  EXPECT_TRUE(supervisor.cycle_rt(nav_state, t += 30ms)) << "only reported outside safety mode";
+  EXPECT_EQ(rt_diagnostic(nav_state)->level, DiagnosticStatus::ERROR);
+  const auto keys = nav_state.get_group_keys("diagnostics");
+  EXPECT_NE(std::find(keys.begin(), keys.end(), "diagnostics.rt_cycle"), keys.end());
+
+  supervisor.cycle_rt(nav_state, t += 5ms);
+  EXPECT_EQ(rt_diagnostic(nav_state)->level, DiagnosticStatus::OK);
+  EXPECT_EQ(supervisor.get_rt_monitor().late_cycles(), 3u);
+}
+
+TEST_F(SafetyModuleTest, TooManyLateRtCyclesStopEasyNavInSafetyMode)
+{
+  if (!easynav::check_real_time_priority(easynav::kRealTimePriority).empty()) {
+    GTEST_SKIP() << "the safety mode needs real-time scheduling, not allowed here";
+  }
+
+  easynav::safety::SafetySupervisor supervisor;
+  auto n = system(
+    {{"safety.mode", true}, {"safety.plc_limits.max_linear_vel", 1.0},
+      {"safety.plc_limits.max_angular_vel", 1.0}, {"safety.heartbeat.period", 0.1},
+      {"safety.rt_monitor.max_late_cycles", 2}}, supervisor);
+  ASSERT_TRUE(supervisor.check_system(*n));
+  easynav::NavState nav_state;
+  supervisor.on_activate();
+
+  auto t = RtClock::now();
+  EXPECT_TRUE(supervisor.cycle_rt(nav_state, t));
+  EXPECT_TRUE(supervisor.cycle_rt(nav_state, t += 30ms)) << "one late cycle is tolerated";
+  EXPECT_FALSE(supervisor.cycle_rt(nav_state, t += 30ms));
+  EXPECT_NE(supervisor.failure().find("late"), std::string::npos) << supervisor.failure();
+  EXPECT_FALSE(supervisor.cycle_rt(nav_state, t += 5ms)) << "an on-time cycle no longer matters";
+
+  // Activated again (e.g. after a restart), it starts over.
+  supervisor.on_activate();
+  EXPECT_TRUE(supervisor.failure().empty());
+  EXPECT_TRUE(supervisor.cycle_rt(nav_state, t += 10s));
+}
+
+TEST_F(SafetyModuleTest, TheHeartbeatCarriesTheRtStatus)
+{
+  easynav::safety::SafetySupervisor supervisor;
+  auto n = system(
+    {{"safety.heartbeat.period", 0.001}, {"safety.rt_monitor.max_late_cycles", 2}}, supervisor);
+  ASSERT_TRUE(supervisor.check_system(*n));
+  easynav::NavState nav_state;
+  supervisor.on_activate();
+
+  auto listener = std::make_shared<rclcpp::Node>("heartbeat_status_listener");
+  std::vector<easynav_interfaces::msg::Heartbeat> received;
+  auto sub = listener->create_subscription<easynav_interfaces::msg::Heartbeat>(
+    "/easynav_heartbeat", rclcpp::QoS(100).reliable(),
+    [&received](easynav_interfaces::msg::Heartbeat::UniquePtr msg) {received.push_back(*msg);});
+  rclcpp::executors::SingleThreadedExecutor exe;
+  exe.add_node(listener);
+  const auto start = std::chrono::steady_clock::now();
+  while (sub->get_publisher_count() == 0 && std::chrono::steady_clock::now() - start < 2s) {
+    exe.spin_some();
+    rclcpp::sleep_for(10ms);
+  }
+
+  auto t = RtClock::now();
+  for (const auto step : {0ms, 30ms, 30ms, 5ms}) {  // OK, LATE, ERROR, OK
+    supervisor.cycle_rt(nav_state, t += step);
+    const auto wait = std::chrono::steady_clock::now();
+    const auto expected = received.size() + 1;
+    while (received.size() < expected && std::chrono::steady_clock::now() - wait < 1s) {
+      exe.spin_some();
+      rclcpp::sleep_for(5ms);
+    }
+  }
+  using easynav_interfaces::msg::Heartbeat;
+  ASSERT_EQ(received.size(), 4u);
+  EXPECT_EQ(received[0].rt_status, Heartbeat::RT_OK);
+  EXPECT_EQ(received[1].rt_status, Heartbeat::RT_LATE);
+  EXPECT_EQ(received[1].late_cycles, 1u);
+  EXPECT_EQ(received[2].rt_status, Heartbeat::RT_ERROR);
+  EXPECT_EQ(received[3].rt_status, Heartbeat::RT_OK);
+  EXPECT_EQ(received[3].late_cycles, 2u);
 }

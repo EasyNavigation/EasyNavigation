@@ -80,9 +80,9 @@ public:
   {
     if (with_listener) {
       // Disable TransformListener internal thread; tests control spinning explicitly if needed.
-      tf_listener_ = std::make_unique<tf2_ros::TransformListener>(*tf_buffer_, node_,
-                                                                                      /*spin_thread=*/
-          false);
+      // The node by reference: newer tf2_ros no longer accepts a shared_ptr here.
+      tf_listener_ = std::make_unique<tf2_ros::TransformListener>(
+        *tf_buffer_, *node_, /*spin_thread=*/ false);
       exec_ = std::make_unique<rclcpp::executors::SingleThreadedExecutor>();
       exec_->add_node(node_->get_node_base_interface());
     }
