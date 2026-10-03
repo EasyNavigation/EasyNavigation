@@ -5,5 +5,7 @@ var searchData=
   ['client_5f_2',['client_',['../classSystemActionsTest.html#a6d0679da9164ff224f936915d3dc63dc',1,'SystemActionsTest']]],
   ['client_5fnode_5f_3',['client_node_',['../classGoalManagerInfoTest.html#a60f75bde2643e691124894fa411a9e41',1,'GoalManagerInfoTest::client_node_'],['../classSystemActionsTest.html#a60f75bde2643e691124894fa411a9e41',1,'SystemActionsTest::client_node_']]],
   ['cmd_4',['cmd',['../structeasynav_1_1VelocityMux_1_1Selection.html#a5fff9ee4b8867433497b481d6f94d8ad',1,'easynav::VelocityMux::Selection::cmd'],['../structVelocityMux_1_1Selection.html#a5fff9ee4b8867433497b481d6f94d8ad',1,'VelocityMux::Selection::cmd']]],
-  ['content_5',['content',['../classDummyPerception.html#acaab7594675ee66e7abbf9eb5f3f37b1',1,'DummyPerception']]]
+  ['cmd_5fvel_5fsub_5f_5',['cmd_vel_sub_',['../classSystemSafetyModeTest.html#ab492e0729ab25293213784d98e4d2e7d',1,'SystemSafetyModeTest']]],
+  ['cmd_5fvels_5f_6',['cmd_vels_',['../classSystemSafetyModeTest.html#a1f882978233c66e91a0019015165dcb2',1,'SystemSafetyModeTest']]],
+  ['content_7',['content',['../classDummyPerception.html#acaab7594675ee66e7abbf9eb5f3f37b1',1,'DummyPerception']]]
 ];

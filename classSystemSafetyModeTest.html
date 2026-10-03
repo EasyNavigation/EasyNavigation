@@ -100,6 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <div class="header">
   <div class="summary">
 <a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="#pro-static-methods">Static Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classSystemSafetyModeTest-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">SystemSafetyModeTest Class Reference</div></div>
@@ -120,27 +121,74 @@ Collaboration diagram for SystemSafetyModeTest:</div>
 <div class="dyncontent">
 <div class="center"><img src="classSystemSafetyModeTest__coll__graph.png" border="0" usemap="#aSystemSafetyModeTest_coll__map" loading="lazy" alt="Collaboration graph"/></div>
 <map name="aSystemSafetyModeTest_coll__map" id="aSystemSafetyModeTest_coll__map">
-<area shape="rect" title=" " alt="" coords="5,102,166,128"/>
-<area shape="rect" title=" " alt="" coords="18,5,65,31"/>
-<area shape="poly" title=" " alt="" coords="56,44,82,100,77,103,51,46"/>
-<area shape="rect" title=" " alt="" coords="90,5,169,31"/>
-<area shape="poly" title=" " alt="" coords="120,46,94,103,89,100,115,44"/>
+<area shape="rect" title=" " alt="" coords="325,139,485,164"/>
+<area shape="rect" title=" " alt="" coords="71,5,119,31"/>
+<area shape="poly" title=" " alt="" coords="134,15,214,23,259,34,302,50,332,70,358,93,396,136,392,140,355,97,329,74,299,55,257,39,213,28,134,21"/>
+<area shape="rect" title=" " alt="" coords="55,55,135,80"/>
+<area shape="poly" title=" " alt="" coords="151,70,223,81,301,100,345,117,382,136,379,141,343,122,300,105,222,86,150,75"/>
+<area shape="rect" title=" " alt="" coords="55,104,135,130"/>
+<area shape="poly" title=" " alt="" coords="150,120,325,140,324,145,150,126"/>
+<area shape="rect" title=" " alt="" coords="5,154,185,210"/>
+<area shape="poly" title=" " alt="" coords="200,178,300,171,347,162,348,168,301,176,200,184"/>
+<area shape="rect" title=" " alt="" coords="36,235,154,260"/>
+<area shape="poly" title=" " alt="" coords="168,237,233,226,300,207,345,185,383,163,386,167,348,190,302,212,234,231,169,242"/>
+<area shape="rect" title=" " alt="" coords="55,285,135,311"/>
+<area shape="poly" title=" " alt="" coords="150,295,224,285,263,275,299,259,330,237,356,211,393,163,397,167,360,215,333,241,302,263,264,280,225,291,151,300"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pro-methods" class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
+<tr class="memitem:a038c75df79b212e50493fb7aea7d5410" id="r_a038c75df79b212e50493fb7aea7d5410"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a038c75df79b212e50493fb7aea7d5410">activate</a> ()</td></tr>
 <tr class="memitem:ad2c752a704905d116b9a21972214668e" id="r_ad2c752a704905d116b9a21972214668e"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#ad2c752a704905d116b9a21972214668e">configure</a> ()</td></tr>
 <tr class="memitem:ab171ce05260d54b445779fc56bcb5483" id="r_ab171ce05260d54b445779fc56bcb5483"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ab171ce05260d54b445779fc56bcb5483">expect_subnodes_in</a> (uint8_t state)</td></tr>
+<tr class="memitem:a8e3b576d2ac35b81b9abef71e747e117" id="r_a8e3b576d2ac35b81b9abef71e747e117"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a8e3b576d2ac35b81b9abef71e747e117">listen_cmd_vel</a> ()</td></tr>
+<tr class="memitem:a3d25be29ab1e7afe83b6c5a797b992ca" id="r_a3d25be29ab1e7afe83b6c5a797b992ca"><td class="memItemLeft">std::optional&lt; diagnostic_msgs::msg::DiagnosticStatus &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a3d25be29ab1e7afe83b6c5a797b992ca">rt_diagnostic</a> ()</td></tr>
+<tr class="memitem:a63cf8f2bdd28325c9445040e0f34cb58" id="r_a63cf8f2bdd28325c9445040e0f34cb58"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a63cf8f2bdd28325c9445040e0f34cb58">run_rt_at_rate</a> (std::chrono::milliseconds duration, bool real_time=false)</td></tr>
+<tr class="memitem:ad4bcb7475a61a90e4c30d18614a6e045" id="r_ad4bcb7475a61a90e4c30d18614a6e045"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ad4bcb7475a61a90e4c30d18614a6e045">run_rt_cycles</a> (int cycles, std::chrono::milliseconds gap)</td></tr>
+<tr class="memitem:a799bb999be2adcbe802e1a630a45d219" id="r_a799bb999be2adcbe802e1a630a45d219"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a799bb999be2adcbe802e1a630a45d219">spin_for</a> (std::chrono::milliseconds duration)</td></tr>
 <tr class="memitem:a84ea4158e2ceb576313637997c63e0d5" id="r_a84ea4158e2ceb576313637997c63e0d5"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a84ea4158e2ceb576313637997c63e0d5">start</a> (const std::vector&lt; std::string &gt; &amp;params)</td></tr>
 <tr class="memitem:a0e341b28b8a1b0b86c25b91db7671a86" id="r_a0e341b28b8a1b0b86c25b91db7671a86"><td class="memItemLeft">rclcpp_lifecycle::LifecycleNode::SharedPtr&#160;</td><td class="memItemRight"><a class="el" href="#a0e341b28b8a1b0b86c25b91db7671a86">subnode</a> (const std::string &amp;name)</td></tr>
 <tr class="memitem:ac4fca95dc3b93372ce7f2078baf8e8b6" id="r_ac4fca95dc3b93372ce7f2078baf8e8b6"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ac4fca95dc3b93372ce7f2078baf8e8b6">TearDown</a> () override</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pro-static-methods" class="groupheader"><a id="pro-static-methods" name="pro-static-methods"></a>
+Static Protected Member Functions</h2></td></tr>
+<tr class="memitem:a0a05fbe503fb516b9770483a85bc6972" id="r_a0a05fbe503fb516b9770483a85bc6972"><td class="memItemLeft">static std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a0a05fbe503fb516b9770483a85bc6972">hanging_controller</a> (double hang_time, double rt_freq=200.0, std::vector&lt; std::string &gt; extra={}, int fault_after=20)</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pro-attribs" class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
+<tr class="memitem:ab492e0729ab25293213784d98e4d2e7d" id="r_ab492e0729ab25293213784d98e4d2e7d"><td class="memItemLeft">rclcpp::Subscription&lt; geometry_msgs::msg::Twist &gt;::SharedPtr&#160;</td><td class="memItemRight"><a class="el" href="#ab492e0729ab25293213784d98e4d2e7d">cmd_vel_sub_</a></td></tr>
+<tr class="memitem:a1f882978233c66e91a0019015165dcb2" id="r_a1f882978233c66e91a0019015165dcb2"><td class="memItemLeft">std::vector&lt; double &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a1f882978233c66e91a0019015165dcb2">cmd_vels_</a></td></tr>
+<tr class="memitem:a9c024f58eb12bbc13544525afe75d148" id="r_a9c024f58eb12bbc13544525afe75d148"><td class="memItemLeft">std::unique_ptr&lt; rclcpp::executors::SingleThreadedExecutor &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a9c024f58eb12bbc13544525afe75d148">exe_</a></td></tr>
+<tr class="memitem:aca406e9a7ce3a65d6092decdb6e9ab91" id="r_aca406e9a7ce3a65d6092decdb6e9ab91"><td class="memItemLeft">rclcpp::Node::SharedPtr&#160;</td><td class="memItemRight"><a class="el" href="#aca406e9a7ce3a65d6092decdb6e9ab91">listener_</a></td></tr>
 <tr class="memitem:ac479e1ebfd275eafd8c7718f92306554" id="r_ac479e1ebfd275eafd8c7718f92306554"><td class="memItemLeft">easynav::SystemNode::SharedPtr&#160;</td><td class="memItemRight"><a class="el" href="#ac479e1ebfd275eafd8c7718f92306554">system_node_</a></td></tr>
 </table>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a id="a038c75df79b212e50493fb7aea7d5410" name="a038c75df79b212e50493fb7aea7d5410"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a038c75df79b212e50493fb7aea7d5410">&#9670;&#160;</a></span>activate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool activate </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ad2c752a704905d116b9a21972214668e" name="ad2c752a704905d116b9a21972214668e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad2c752a704905d116b9a21972214668e">&#9670;&#160;</a></span>configure()</h2>
 
@@ -179,6 +227,178 @@ Protected Attributes</h2></td></tr>
           <td class="memname">void expect_subnodes_in </td>
           <td>(</td>
           <td class="paramtype">uint8_t</td>          <td class="paramname"><span class="paramname"><em>state</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0a05fbe503fb516b9770483a85bc6972" name="a0a05fbe503fb516b9770483a85bc6972"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0a05fbe503fb516b9770483a85bc6972">&#9670;&#160;</a></span>hanging_controller()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; std::string &gt; hanging_controller </td>
+          <td>(</td>
+          <td class="paramtype">double</td>          <td class="paramname"><span class="paramname"><em>hang_time</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double</td>          <td class="paramname"><span class="paramname"><em>rt_freq</em></span><span class="paramdefsep"> = </span><span class="paramdefval">200.0</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; std::string &gt;</td>          <td class="paramname"><span class="paramname"><em>extra</em></span><span class="paramdefsep"> = </span><span class="paramdefval">{}</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>fault_after</em></span><span class="paramdefsep"> = </span><span class="paramdefval">20</span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8e3b576d2ac35b81b9abef71e747e117" name="a8e3b576d2ac35b81b9abef71e747e117"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8e3b576d2ac35b81b9abef71e747e117">&#9670;&#160;</a></span>listen_cmd_vel()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void listen_cmd_vel </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3d25be29ab1e7afe83b6c5a797b992ca" name="a3d25be29ab1e7afe83b6c5a797b992ca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3d25be29ab1e7afe83b6c5a797b992ca">&#9670;&#160;</a></span>rt_diagnostic()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt; diagnostic_msgs::msg::DiagnosticStatus &gt; rt_diagnostic </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a63cf8f2bdd28325c9445040e0f34cb58" name="a63cf8f2bdd28325c9445040e0f34cb58"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a63cf8f2bdd28325c9445040e0f34cb58">&#9670;&#160;</a></span>run_rt_at_rate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void run_rt_at_rate </td>
+          <td>(</td>
+          <td class="paramtype">std::chrono::milliseconds</td>          <td class="paramname"><span class="paramname"><em>duration</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>real_time</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad4bcb7475a61a90e4c30d18614a6e045" name="ad4bcb7475a61a90e4c30d18614a6e045"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad4bcb7475a61a90e4c30d18614a6e045">&#9670;&#160;</a></span>run_rt_cycles()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void run_rt_cycles </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>cycles</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::chrono::milliseconds</td>          <td class="paramname"><span class="paramname"><em>gap</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a799bb999be2adcbe802e1a630a45d219" name="a799bb999be2adcbe802e1a630a45d219"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a799bb999be2adcbe802e1a630a45d219">&#9670;&#160;</a></span>spin_for()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void spin_for </td>
+          <td>(</td>
+          <td class="paramtype">std::chrono::milliseconds</td>          <td class="paramname"><span class="paramname"><em>duration</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -267,6 +487,94 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
+<a id="ab492e0729ab25293213784d98e4d2e7d" name="ab492e0729ab25293213784d98e4d2e7d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab492e0729ab25293213784d98e4d2e7d">&#9670;&#160;</a></span>cmd_vel_sub_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">rclcpp::Subscription&lt;geometry_msgs::msg::Twist&gt;::SharedPtr cmd_vel_sub_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1f882978233c66e91a0019015165dcb2" name="a1f882978233c66e91a0019015165dcb2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1f882978233c66e91a0019015165dcb2">&#9670;&#160;</a></span>cmd_vels_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;double&gt; cmd_vels_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9c024f58eb12bbc13544525afe75d148" name="a9c024f58eb12bbc13544525afe75d148"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9c024f58eb12bbc13544525afe75d148">&#9670;&#160;</a></span>exe_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt;rclcpp::executors::SingleThreadedExecutor&gt; exe_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aca406e9a7ce3a65d6092decdb6e9ab91" name="aca406e9a7ce3a65d6092decdb6e9ab91"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aca406e9a7ce3a65d6092decdb6e9ab91">&#9670;&#160;</a></span>listener_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">rclcpp::Node::SharedPtr listener_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ac479e1ebfd275eafd8c7718f92306554" name="ac479e1ebfd275eafd8c7718f92306554"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac479e1ebfd275eafd8c7718f92306554">&#9670;&#160;</a></span>system_node_</h2>
 

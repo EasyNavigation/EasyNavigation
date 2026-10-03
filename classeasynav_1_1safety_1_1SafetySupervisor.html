@@ -122,14 +122,21 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a98d63d905b53d8866e3ea0ffaac0b82f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks <code class="param">controller</code> against "safety.plc_limits" and what "safety.mode" requires.  <br /></td></tr>
 <tr class="memitem:a21cafe2705a62a3f650fc981aa99b8b7" id="r_a21cafe2705a62a3f650fc981aa99b8b7"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a21cafe2705a62a3f650fc981aa99b8b7">check_system</a> (rclcpp_lifecycle::LifecycleNode &amp;node)</td></tr>
 <tr class="memdesc:a21cafe2705a62a3f650fc981aa99b8b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads <code class="param">node's</code> safety parameters and checks them, before the subnodes configure.  <br /></td></tr>
+<tr class="memitem:a0b9ecec3decac7df01220bbcc598d68d" id="r_a0b9ecec3decac7df01220bbcc598d68d"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a0b9ecec3decac7df01220bbcc598d68d">cycle_rt</a> (<a class="el" href="classeasynav_1_1NavState.html">NavState</a> &amp;nav_state, RtMonitor::Clock::time_point now)</td></tr>
+<tr class="memdesc:a0b9ecec3decac7df01220bbcc598d68d"><td class="mdescLeft">&#160;</td><td class="mdescRight">At the start of each RT cycle, at <code class="param">now:</code> monitors it and publishes the heartbeat when due.  <br /></td></tr>
 <tr class="memitem:af35c7845990a069d8e21f0bb6480aa0a" id="r_af35c7845990a069d8e21f0bb6480aa0a"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#af35c7845990a069d8e21f0bb6480aa0a">declare_parameters</a> (rclcpp_lifecycle::LifecycleNode &amp;node)</td></tr>
 <tr class="memdesc:af35c7845990a069d8e21f0bb6480aa0a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declares the "safety.*" parameters in <code class="param">node</code> (<a class="el" href="classeasynav_1_1SystemNode.html" title="ROS 2 lifecycle node coordinating all Easy Navigation components.">SystemNode</a>).  <br /></td></tr>
+<tr class="memitem:a483e259f89de036e203d1495749c059a" id="r_a483e259f89de036e203d1495749c059a"><td class="memItemLeft">const std::string &amp;&#160;</td><td class="memItemRight"><a class="el" href="#a483e259f89de036e203d1495749c059a">failure</a> () const</td></tr>
+<tr class="memdesc:a483e259f89de036e203d1495749c059a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Why <a class="el" href="#a0b9ecec3decac7df01220bbcc598d68d" title="At the start of each RT cycle, at now: monitors it and publishes the heartbeat when due.">cycle_rt()</a> asked to stop.  <br /></td></tr>
 <tr class="memitem:aaf387bcbe1a5c6f06239c34c80f9a47e" id="r_aaf387bcbe1a5c6f06239c34c80f9a47e"><td class="memItemLeft">std::string&#160;</td><td class="memItemRight"><a class="el" href="#aaf387bcbe1a5c6f06239c34c80f9a47e">get_configuration_hash</a> () const</td></tr>
 <tr class="memdesc:aaf387bcbe1a5c6f06239c34c80f9a47e"><td class="mdescLeft">&#160;</td><td class="mdescRight">SHA-256 (hex) of every EasyNav parameter, as of the last configure.  <br /></td></tr>
+<tr class="memitem:ac5d03e733d3865c3e8b6cf85cd6c53be" id="r_ac5d03e733d3865c3e8b6cf85cd6c53be"><td class="memItemLeft">const <a class="el" href="classRtMonitor.html">RtMonitor</a> &amp;&#160;</td><td class="memItemRight"><a class="el" href="#ac5d03e733d3865c3e8b6cf85cd6c53be">get_rt_monitor</a> () const</td></tr>
 <tr class="memitem:ab679cfd0564009a43ba4379b5e2caee8" id="r_ab679cfd0564009a43ba4379b5e2caee8"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#ab679cfd0564009a43ba4379b5e2caee8">is_memory_lock_requested</a> () const</td></tr>
 <tr class="memdesc:ab679cfd0564009a43ba4379b5e2caee8"><td class="mdescLeft">&#160;</td><td class="mdescRight">"safety.lock_memory", as of the last configure.  <br /></td></tr>
 <tr class="memitem:a3f0ebc0f9f7559163d443d098a21eef2" id="r_a3f0ebc0f9f7559163d443d098a21eef2"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a3f0ebc0f9f7559163d443d098a21eef2">is_safety_mode</a> () const</td></tr>
 <tr class="memdesc:a3f0ebc0f9f7559163d443d098a21eef2"><td class="mdescLeft">&#160;</td><td class="mdescRight">"safety.mode", as of the last configure.  <br /></td></tr>
+<tr class="memitem:a6cf339e088137d9c332132c74f3e3c19" id="r_a6cf339e088137d9c332132c74f3e3c19"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a6cf339e088137d9c332132c74f3e3c19">on_activate</a> ()</td></tr>
+<tr class="memdesc:a6cf339e088137d9c332132c74f3e3c19"><td class="mdescLeft">&#160;</td><td class="mdescRight">On activation: the RT monitor starts over.  <br /></td></tr>
 <tr class="memitem:a261bce7f37996794740fb6959dc2b3ed" id="r_a261bce7f37996794740fb6959dc2b3ed"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a261bce7f37996794740fb6959dc2b3ed">on_configured</a> (const <a class="el" href="namespaceeasynav_1_1safety.html#af2d446a1ebc75ba59f9450cc50572751">Nodes</a> &amp;nodes, <a class="el" href="classeasynav_1_1NavState.html">NavState</a> &amp;nav_state)</td></tr>
 <tr class="memdesc:a261bce7f37996794740fb6959dc2b3ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">After a successful configure: fingerprints and, in safety mode, freezes <code class="param">nodes</code>.  <br /></td></tr>
 </table>
@@ -139,6 +146,8 @@ Public Member Functions</h2></td></tr>
 <li>"safety.plc_limits.*": the limits configured in the safety channel (e.g. the PLC's safely limited speed). Not applied to the commands (controller_node's "robot_limits" are, in any mode): "robot_limits" may not exceed them.</li>
 <li>"safety.mode" (default false) makes EasyNav stricter: "safety.plc_limits.*", the command keepalive and timeout, and real-time scheduling (checked on configure) are required; the configuration is frozen once configured, and reconfiguration requests are rejected.</li>
 <li>"safety.lock_memory" (default false, any mode): system_main locks the process memory; if RLIMIT_MEMLOCK does not allow it, configuring fails.</li>
+<li>"safety.heartbeat.period" (s, default 0: off; required in safety mode): a Heartbeat is published on "easynav_heartbeat" from the RT cycle, so it stops if that cycle does.</li>
+<li>"safety.rt_monitor.*": an RT cycle starting more than "max_period_factor" periods after the previous one is late; "max_late_cycles" in a row are an ERROR ("diagnostics.rt_cycle"), and in safety mode EasyNav stops.</li>
 </ul>
 <p>Every configure, it fingerprints the configuration: a SHA-256 of every parameter, logged and shared in <a class="el" href="classeasynav_1_1NavState.html" title="A generic, type-safe, thread-safe blackboard to hold runtime state.">NavState</a> ("configuration_hash"), with the parameters saved in the ROS log directory ("easynav_configuration_[&lt;ns&gt;_]&lt;hash&gt;.txt") and published, latched, on "easynav_configuration". </p>
 </div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
@@ -199,6 +208,30 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a0b9ecec3decac7df01220bbcc598d68d" name="a0b9ecec3decac7df01220bbcc598d68d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0b9ecec3decac7df01220bbcc598d68d">&#9670;&#160;</a></span>cycle_rt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cycle_rt </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classeasynav_1_1NavState.html">NavState</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>nav_state</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">RtMonitor::Clock::time_point</td>          <td class="paramname"><span class="paramname"><em>now</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>At the start of each RT cycle, at <code class="param">now:</code> monitors it and publishes the heartbeat when due. </p>
+<dl class="section return"><dt>Returns</dt><dd>false if EasyNav must stop (see <a class="el" href="#a483e259f89de036e203d1495749c059a" title="Why cycle_rt() asked to stop.">failure()</a>), until <a class="el" href="#a6cf339e088137d9c332132c74f3e3c19" title="On activation: the RT monitor starts over.">on_activate()</a>. </dd></dl>
+
+</div>
+</div>
 <a id="af35c7845990a069d8e21f0bb6480aa0a" name="af35c7845990a069d8e21f0bb6480aa0a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af35c7845990a069d8e21f0bb6480aa0a">&#9670;&#160;</a></span>declare_parameters()</h2>
 
@@ -215,6 +248,33 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Declares the "safety.*" parameters in <code class="param">node</code> (<a class="el" href="classeasynav_1_1SystemNode.html" title="ROS 2 lifecycle node coordinating all Easy Navigation components.">SystemNode</a>). </p>
+
+</div>
+</div>
+<a id="a483e259f89de036e203d1495749c059a" name="a483e259f89de036e203d1495749c059a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a483e259f89de036e203d1495749c059a">&#9670;&#160;</a></span>failure()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::string &amp; failure </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Why <a class="el" href="#a0b9ecec3decac7df01220bbcc598d68d" title="At the start of each RT cycle, at now: monitors it and publishes the heartbeat when due.">cycle_rt()</a> asked to stop. </p>
 
 </div>
 </div>
@@ -242,6 +302,31 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>SHA-256 (hex) of every EasyNav parameter, as of the last configure. </p>
+
+</div>
+</div>
+<a id="ac5d03e733d3865c3e8b6cf85cd6c53be" name="ac5d03e733d3865c3e8b6cf85cd6c53be"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac5d03e733d3865c3e8b6cf85cd6c53be">&#9670;&#160;</a></span>get_rt_monitor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classRtMonitor.html">RtMonitor</a> &amp; get_rt_monitor </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -296,6 +381,25 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>"safety.mode", as of the last configure. </p>
+
+</div>
+</div>
+<a id="a6cf339e088137d9c332132c74f3e3c19" name="a6cf339e088137d9c332132c74f3e3c19"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6cf339e088137d9c332132c74f3e3c19">&#9670;&#160;</a></span>on_activate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void on_activate </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>On activation: the RT monitor starts over. </p>
 
 </div>
 </div>
