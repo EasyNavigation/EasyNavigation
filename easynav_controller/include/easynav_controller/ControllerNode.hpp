@@ -23,13 +23,13 @@
 #include <optional>
 #include <set>
 #include <string>
-#include <utility>
 
 #include "geometry_msgs/msg/twist.hpp"
 #include "geometry_msgs/msg/twist_stamped.hpp"
 
 #include "easynav_controller/VelocityMux.hpp"
 #include "easynav_controller/VelocitySmoother.hpp"
+#include "easynav_controller/safety/CommandGuard.hpp"
 #include "easynav_core/ControllerMethodBase.hpp"
 #include "easynav_core/RobotLimits.hpp"
 #include "easynav_core/PluginSwitcher.hpp"
@@ -58,12 +58,8 @@ namespace easynav
  * - on deactivation or shutdown, it brakes within the deceleration limits and ends by
  *   publishing an exact zero.
  *
- * Robustness:
- * - "cmd_timeout" (s, 0 disables): with no new command for that long, brakes to zero. A
- *   controller command is new only if its stamp or value changed.
- * - "cmd_vel_keepalive_period" (s, 0 disables): republishes at least this often, offering
- *   deadline and liveliness QoS of twice this period.
- * - Non-finite commands are discarded. Problems go to "diagnostics.cmd_vel" in NavState.
+ * safety::CommandGuard keeps the command from being stale or invalid ("cmd_timeout",
+ * "cmd_vel_keepalive_period", non-finite commands, "diagnostics.cmd_vel").
  */
 class ControllerNode : public rclcpp_lifecycle::LifecycleNode, public RobotLimitsProvider
 {
@@ -193,40 +189,23 @@ private:
   /// @brief Brakes within the deceleration limits and ends by publishing an exact zero.
   void stop_robot();
 
-  /// @brief QoS of the velocity publisher.
-  rclcpp::QoS cmd_vel_qos() const;
-
   /// @brief Checks "cmd_timeout" against the loaded controller's period.
   bool check_cmd_timeout();
-
-  /// @brief Writes "diagnostics.cmd_vel" when its level or message changes.
-  void report_cmd_vel(NavState & nav_state, uint8_t level, const std::string & message);
 
   RobotLimits robot_limits_;
   std::set<std::string> configured_limits_;
   mutable std::mutex robot_limits_mutex_;
 
   bool use_cmd_vel_stamped_ {false};
-  double cmd_timeout_ {0.5};
-  double cmd_vel_keepalive_period_ {0.0};
-  std::string timeout_message_;
   rclcpp::Publisher<geometry_msgs::msg::TwistStamped>::SharedPtr vel_pub_stamped_;
   rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr vel_pub_;
 
   VelocityMux mux_;
   VelocitySmoother smoother_;
+  safety::CommandGuard command_guard_;
 
   /// @brief When the smoother last stepped (node clock), to know how much time it covers.
   std::optional<rclcpp::Time> last_smoother_step_;
-
-  /// @brief When a command was last published (node clock), for the keepalive.
-  std::optional<rclcpp::Time> last_publish_;
-
-  /// @brief Last controller command proposed, to propose only new ones.
-  std::optional<geometry_msgs::msg::TwistStamped> last_controller_cmd_;
-
-  /// @brief Last "diagnostics.cmd_vel" written (level, message).
-  std::optional<std::pair<uint8_t, std::string>> last_cmd_vel_report_;
 
   /**
    * @brief Callback group intended for real-time tasks.

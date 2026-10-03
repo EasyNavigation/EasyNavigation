@@ -108,29 +108,29 @@ RecoveryManagerBase::request_shutdown(const std::string & reason)
   }
 }
 
-void
+bool
 RecoveryManagerBase::request_reconfigure(
   const std::vector<ParameterChange> & changes, const std::string & reason)
 {
   if (auto actions = system_actions_.lock()) {
-    actions->request_reconfigure(changes, reason);
-  } else {
-    RCLCPP_WARN(
-      get_node()->get_logger(), "Recovery manager [%s] cannot reconfigure (%s): no system",
-      get_plugin_name().c_str(), reason.c_str());
+    return actions->request_reconfigure(changes, reason);
   }
+  RCLCPP_WARN(
+    get_node()->get_logger(), "Recovery manager [%s] cannot reconfigure (%s): no system",
+    get_plugin_name().c_str(), reason.c_str());
+  return false;
 }
 
-void
+bool
 RecoveryManagerBase::request_restore_parameters(const std::string & reason)
 {
   if (auto actions = system_actions_.lock()) {
-    actions->request_restore_parameters(reason);
-  } else {
-    RCLCPP_WARN(
-      get_node()->get_logger(), "Recovery manager [%s] cannot restore parameters (%s): no system",
-      get_plugin_name().c_str(), reason.c_str());
+    return actions->request_restore_parameters(reason);
   }
+  RCLCPP_WARN(
+    get_node()->get_logger(), "Recovery manager [%s] cannot restore parameters (%s): no system",
+    get_plugin_name().c_str(), reason.c_str());
+  return false;
 }
 
 }  // namespace easynav

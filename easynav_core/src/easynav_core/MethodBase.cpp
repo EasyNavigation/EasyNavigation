@@ -15,6 +15,7 @@
 /// \file
 /// \brief Implementation of the base class MethodBase used in plugin-based EasyNav method components.
 
+#include <cmath>
 #include <memory>
 #include <stdexcept>
 
@@ -43,11 +44,14 @@ MethodBase::initialize(
   parent_node->get_parameter(plugin_name + ".rt_freq", rt_frequency_);
   parent_node->get_parameter(plugin_name + ".freq", frequency_);
 
-  if (rt_frequency_ <= 0.0f || frequency_ <= 0.0f) {
+  // Not just <= 0: with NaN the plugin would never run, with inf it would run every cycle.
+  if (!std::isfinite(rt_frequency_) || !std::isfinite(frequency_) ||
+    rt_frequency_ <= 0.0f || frequency_ <= 0.0f)
+  {
     throw std::runtime_error(
             "[" + plugin_name + "] Invalid frequency configuration: rt_freq=" +
             std::to_string(rt_frequency_) + ", freq=" + std::to_string(frequency_) +
-            " (both must be > 0.0)");
+            " (both must be finite and > 0.0)");
   }
 
   last_ts_ = parent_node->now();

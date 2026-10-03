@@ -18,6 +18,7 @@
 #ifndef EASYNAV_CORE__ROBOTLIMITS_HPP_
 #define EASYNAV_CORE__ROBOTLIMITS_HPP_
 
+#include <cmath>
 #include <string>
 
 namespace easynav
@@ -42,6 +43,32 @@ struct RobotLimits
   double max_angular_acc {1.0};    ///< Angular acceleration, speeding up (rad/s^2, > 0).
   double max_angular_decel {2.0};  ///< Angular deceleration, slowing down (rad/s^2, > 0).
 };
+
+/// @brief Why \p limits are invalid (non-finite, or out of the range of each field), or "".
+inline std::string invalid_robot_limits(const RobotLimits & limits)
+{
+  const struct
+  {
+    const char * name;
+    double value;
+    bool valid;
+  } fields[] = {
+    {"max_linear_vel", limits.max_linear_vel, limits.max_linear_vel >= 0.0},
+    {"min_linear_vel", limits.min_linear_vel, limits.min_linear_vel <= 0.0},
+    {"max_angular_vel", limits.max_angular_vel, limits.max_angular_vel >= 0.0},
+    {"max_linear_acc", limits.max_linear_acc, limits.max_linear_acc > 0.0},
+    {"max_linear_decel", limits.max_linear_decel, limits.max_linear_decel > 0.0},
+    {"max_angular_acc", limits.max_angular_acc, limits.max_angular_acc > 0.0},
+    {"max_angular_decel", limits.max_angular_decel, limits.max_angular_decel > 0.0},
+  };
+  for (const auto & field : fields) {
+    if (!std::isfinite(field.value) || !field.valid) {
+      return std::string("robot_limits.") + field.name + " = " + std::to_string(field.value) +
+             " (velocities: max >= 0, min <= 0; accelerations > 0)";
+    }
+  }
+  return "";
+}
 
 /**
  * @struct LegacyRobotLimitNames

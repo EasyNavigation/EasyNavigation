@@ -106,12 +106,14 @@ protected:
   void request_shutdown(const std::string & reason);
 
   /// @brief Changes parameters and reconfigures EasyNav (see SystemActions::request_reconfigure()).
-  void request_reconfigure(
+  /// @return false if rejected, or if there is no system.
+  bool request_reconfigure(
     const std::vector<ParameterChange> & changes,
     const std::string & reason);
 
   /// @brief Restores the changed parameters (see SystemActions::request_restore_parameters()).
-  void request_restore_parameters(const std::string & reason);
+  /// @return false if rejected, or if there is no system.
+  bool request_restore_parameters(const std::string & reason);
 
 private:
   std::weak_ptr<SystemActions> system_actions_;

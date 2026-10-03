@@ -42,6 +42,7 @@
 #include "easynav_recovery/RecoveryManagerNode.hpp"
 #include "easynav_sensors/SensorsNode.hpp"
 #include "easynav_system/GoalManager.hpp"
+#include "easynav_system/safety/SafetySupervisor.hpp"
 
 namespace easynav
 {
@@ -62,6 +63,8 @@ struct SystemNodeInfo
  *
  * Manages lifecycle transitions, real-time execution, and communication
  * between planner, controller, localizer, map manager, and sensor nodes.
+ *
+ * Safety ("safety.*" parameters, configuration hash): safety::SafetySupervisor.
  */
 class SystemNode : public rclcpp_lifecycle::LifecycleNode, public SystemActions
 {
@@ -167,12 +170,18 @@ public:
   /// @brief SystemActions: records that EasyNav must terminate (see is_shutdown_requested()).
   void request_shutdown(const std::string & reason) override;
 
-  /// @brief SystemActions: pending until apply_pending_reconfigure().
-  void request_reconfigure(
+  /// @brief SystemActions: pending until apply_pending_reconfigure(); rejected in safety mode.
+  bool request_reconfigure(
     const std::vector<ParameterChange> & changes, const std::string & reason) override;
 
-  /// @brief SystemActions: pending until apply_pending_reconfigure().
-  void request_restore_parameters(const std::string & reason) override;
+  /// @brief SystemActions: pending until apply_pending_reconfigure(); rejected in safety mode.
+  bool request_restore_parameters(const std::string & reason) override;
+
+  /// @brief Safety mode, memory lock and configuration hash, as of the last configure.
+  [[nodiscard]] const safety::SafetySupervisor & get_safety() const {return safety_;}
+
+  /// @brief Every EasyNav parameter, one "node/parameter=value" per line, sorted.
+  [[nodiscard]] std::string get_configuration_dump();
 
   /**
    * @brief Applies the pending reconfiguration request, if any, while Active: cycles through
@@ -195,6 +204,18 @@ private:
 
   /// @brief Shares "robot_geometry.*" (RobotGeometryRegistry) before the subnodes configure.
   void configure_robot_geometry();
+
+  /// @brief Checks this node's parameters (frequencies, geometry).
+  bool check_system_parameters();
+
+  /// @brief Leaves every configured subnode unconfigured again (after a failed configure).
+  void cleanup_subnodes();
+
+  /// @brief This node and its subnodes, by name (get_system_nodes(): only the subnodes).
+  std::map<std::string, rclcpp_lifecycle::LifecycleNode::SharedPtr> get_all_nodes();
+
+  /// @brief Safety checks, configuration hash and frozen configuration.
+  safety::SafetySupervisor safety_;
 
   /// @brief Serializes the RT cycle with activation/deactivation.
   std::mutex rt_mutex_;
