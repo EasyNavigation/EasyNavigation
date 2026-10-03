@@ -40,10 +40,12 @@ SafetySupervisor::declare_parameters(rclcpp_lifecycle::LifecycleNode & node)
   node.declare_parameter("safety.heartbeat.period", 0.0);
   node.declare_parameter("safety.rt_monitor.max_period_factor", max_period_factor_);
   node.declare_parameter("safety.rt_monitor.max_late_cycles", 10);
+  node.declare_parameter("safety.status.timeout", 0.0);
 }
 
 bool
-SafetySupervisor::check_system(rclcpp_lifecycle::LifecycleNode & node)
+SafetySupervisor::check_system(
+  rclcpp_lifecycle::LifecycleNode & node, rclcpp::CallbackGroup::SharedPtr rt_group)
 {
   logger_ = node.get_logger();
   namespace_ = node.get_namespace();
@@ -59,6 +61,7 @@ SafetySupervisor::check_system(rclcpp_lifecycle::LifecycleNode & node)
   heartbeat_period_ = node.get_parameter("safety.heartbeat.period").as_double();
   max_period_factor_ = node.get_parameter("safety.rt_monitor.max_period_factor").as_double();
   const auto max_late_cycles = node.get_parameter("safety.rt_monitor.max_late_cycles").as_int();
+  safety_status_timeout_ = node.get_parameter("safety.status.timeout").as_double();
   hardware_id_ = node.get_name();
   clock_ = node.get_clock();
 
@@ -78,6 +81,13 @@ SafetySupervisor::check_system(rclcpp_lifecycle::LifecycleNode & node)
   {
     errors.push_back(
       "safety.heartbeat.period = " + std::to_string(heartbeat_period_) +
+      (safety_mode_ ? " (> 0, required in safety.mode)" : " (>= 0)"));
+  }
+  if (!std::isfinite(safety_status_timeout_) || safety_status_timeout_ < 0.0 ||
+    (safety_mode_ && safety_status_timeout_ == 0.0))
+  {
+    errors.push_back(
+      "safety.status.timeout = " + std::to_string(safety_status_timeout_) +
       (safety_mode_ ? " (> 0, required in safety.mode)" : " (>= 0)"));
   }
   if (!std::isfinite(max_period_factor_) || max_period_factor_ <= 1.0) {
@@ -104,6 +114,19 @@ SafetySupervisor::check_system(rclcpp_lifecycle::LifecycleNode & node)
       .liveliness_lease_duration(period));
   }
   heartbeat_.safety_mode = safety_mode_;
+
+  // Received in the RT callback group, so a protective stop is applied in the next RT cycle.
+  safety_status_sub_.reset();
+  if (std::isfinite(safety_status_timeout_) && safety_status_timeout_ > 0.0) {
+    safety_channel_.configure(safety_status_timeout_);
+    rclcpp::SubscriptionOptions options;
+    options.callback_group = rt_group;
+    safety_status_sub_ = node.create_subscription<easynav_interfaces::msg::SafetyStatus>(
+      "easynav_safety_status", rclcpp::QoS(1).reliable(),
+      [this](const easynav_interfaces::msg::SafetyStatus & msg) {
+        safety_channel_.received(msg, SafetyChannelMonitor::Clock::now());
+      }, options);
+  }
 
   // Checked now, before anything is activated, whoever drives SystemNode.
   if (safety_mode_) {
@@ -174,6 +197,10 @@ SafetySupervisor::on_configured(const Nodes & nodes, NavState & nav_state)
     configuration_hash_ = hash;
   }
   nav_state.set("configuration_hash", hash);
+  // Without a safety status, no restriction; with it, a stop until the first status arrives.
+  nav_state.set(
+    kSafetyStatusKey, safety_status_sub_ ?
+    safety_channel_.evaluate(SafetyChannelMonitor::Clock::now()).state : SafetyChannelState());
   heartbeat_.configuration_hash = hash;
 
   // Saved and published, to see what differs when two fingerprints do.
@@ -218,6 +245,7 @@ SafetySupervisor::on_activate()
 {
   rt_monitor_.reset();
   last_heartbeat_.reset();
+  last_safety_report_.reset();
   failure_.clear();
 }
 
@@ -237,6 +265,12 @@ SafetySupervisor::cycle_rt(NavState & nav_state, RtMonitor::Clock::time_point no
     heartbeat_.rt_status = static_cast<uint8_t>(status);
     heartbeat_.late_cycles = rt_monitor_.late_cycles();
     heartbeat_pub_->publish(heartbeat_);
+  }
+
+  if (safety_status_sub_) {
+    const auto evaluation = safety_channel_.evaluate(now);
+    nav_state.set(kSafetyStatusKey, evaluation.state);
+    report_safety_status(nav_state, evaluation);
   }
 
   if (safety_mode_ && status == RtMonitor::Status::ERROR && failure_.empty()) {
@@ -283,6 +317,77 @@ SafetySupervisor::report_rt_status(NavState & nav_state, RtMonitor::Status statu
   diagnostic.message = message.str();
   nav_state.set("diagnostics.rt_cycle", diagnostic);
   nav_state.add_to_group("diagnostics", "diagnostics.rt_cycle");
+}
+
+void
+SafetySupervisor::report_safety_status(
+  NavState & nav_state, const SafetyChannelMonitor::Evaluation & evaluation)
+{
+  using diagnostic_msgs::msg::DiagnosticStatus;
+  using Condition = SafetyChannelMonitor::Condition;
+  if (last_safety_report_ && *last_safety_report_ == evaluation) {
+    return;  // Only changes.
+  }
+  last_safety_report_ = evaluation;
+
+  const auto last = safety_channel_.last_status();
+  std::ostringstream message;
+  DiagnosticStatus diagnostic;
+  diagnostic.level = DiagnosticStatus::ERROR;
+  switch (evaluation.condition) {
+    case Condition::NO_STATUS:
+      message << "No safety status received on easynav_safety_status: robot stopped";
+      break;
+    case Condition::STALE:
+      message << "No safety status for more than " << safety_status_timeout_ <<
+        " s: robot stopped";
+      break;
+    case Condition::INVALID:
+      message << "Invalid safety status (" << SafetyChannelMonitor::invalid_reason(*last) <<
+        "): robot stopped";
+      break;
+    case Condition::VALID:
+      if (evaluation.state.protective_stop) {
+        diagnostic.level = DiagnosticStatus::WARN;
+        message << "Protective stop by the safety channel";
+      } else {
+        diagnostic.level = DiagnosticStatus::OK;
+        message << "Safety channel: no stop";
+      }
+      if (std::isfinite(evaluation.state.max_linear_vel)) {
+        message << ", speed limited to " << evaluation.state.max_linear_vel << " m/s, " <<
+          evaluation.state.max_angular_vel << " rad/s";
+      }
+      break;
+  }
+
+  if (last) {
+    diagnostic_msgs::msg::KeyValue field;
+    field.key = "active_field";
+    field.value = last->active_field;
+    diagnostic.values.push_back(field);
+    diagnostic_msgs::msg::KeyValue muting;
+    muting.key = "muting";
+    muting.value = last->muting ? "true" : "false";
+    diagnostic.values.push_back(muting);
+  }
+
+  switch (diagnostic.level) {
+    case DiagnosticStatus::OK:
+      RCLCPP_INFO(logger_, "%s", message.str().c_str());
+      break;
+    case DiagnosticStatus::WARN:
+      RCLCPP_WARN(logger_, "%s", message.str().c_str());
+      break;
+    default:
+      RCLCPP_ERROR(logger_, "%s", message.str().c_str());
+      break;
+  }
+  diagnostic.name = "safety_status";
+  diagnostic.hardware_id = hardware_id_;
+  diagnostic.message = message.str();
+  nav_state.set("diagnostics.safety_status", diagnostic);
+  nav_state.add_to_group("diagnostics", "diagnostics.safety_status");
 }
 
 std::string

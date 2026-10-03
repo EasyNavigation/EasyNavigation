@@ -70,6 +70,7 @@ add_library(${PROJECT_NAME} SHARED
   src/easynav_system/safety/ConfigurationFingerprint.cpp
   src/easynav_system/safety/ParameterFreezer.cpp
   src/easynav_system/safety/RtMonitor.cpp
+  src/easynav_system/safety/SafetyChannelMonitor.cpp
   src/easynav_system/safety/SafetySupervisor.cpp
 )
 target_include_directories(${PROJECT_NAME} PUBLIC

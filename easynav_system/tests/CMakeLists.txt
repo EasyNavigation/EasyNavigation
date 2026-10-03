@@ -51,6 +51,10 @@ ament_add_gtest(safety_module_tests safety_module_tests.cpp
   ENV ROS_LOG_DIR=${CMAKE_CURRENT_BINARY_DIR}/ros_log)
 target_link_libraries(safety_module_tests ${PROJECT_NAME})
 
+ament_add_gtest(safety_channel_monitor_tests safety_channel_monitor_tests.cpp
+  ENV ROS_LOG_DIR=${CMAKE_CURRENT_BINARY_DIR}/ros_log)
+target_link_libraries(safety_channel_monitor_tests ${PROJECT_NAME})
+
 ament_add_gtest(rt_monitor_tests rt_monitor_tests.cpp
   ENV ROS_LOG_DIR=${CMAKE_CURRENT_BINARY_DIR}/ros_log)
 target_link_libraries(rt_monitor_tests ${PROJECT_NAME})

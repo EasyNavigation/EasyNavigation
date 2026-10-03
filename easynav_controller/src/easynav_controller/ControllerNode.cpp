@@ -128,7 +128,9 @@ using CallbackReturnT = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterfac
 CallbackReturnT
 ControllerNode::on_configure([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
-  // Limits first: plugins query them while initializing.
+  // Limits first: plugins query them while initializing. Configured ones, until the RT cycle
+  // applies the safety channel's state.
+  apply_safety_channel(SafetyChannelState());
   read_parameters();
 
   if (!command_guard_.configure(*this)) {
@@ -253,6 +255,12 @@ void
 ControllerNode::publish_cmd_vel_rt(std::shared_ptr<NavState> nav_state)
 {
   const auto now = this->now();
+  if (nav_state->has(kSafetyStatusKey)) {
+    const auto safety_channel = nav_state->get_safe<SafetyChannelState>(kSafetyStatusKey);
+    if (safety_channel != safety_channel_) {
+      apply_safety_channel(safety_channel);
+    }
+  }
   const bool discarded = command_guard_.discard_non_finite(*nav_state);
   const auto selection = command_guard_.supervise(mux_.select(*nav_state), now);
   command_guard_.report(*nav_state, discarded, selection.fresh);
@@ -262,6 +270,9 @@ ControllerNode::publish_cmd_vel_rt(std::shared_ptr<NavState> nav_state)
   last_smoother_step_ = now;
 
   auto cmd = selection.cmd;
+  if (selection.choice == VelocityMux::Choice::SAFETY_STOP) {
+    smoother_.reset();  // The safety channel stops the robot: no ramp from what was commanded.
+  }
   if (selection.smooth) {
     const bool ramping = !smoother_.reached(selection.cmd.twist);
     if (!selection.fresh && !ramping && !command_guard_.keepalive_due(now)) {
@@ -281,7 +292,7 @@ RobotLimits
 ControllerNode::get_robot_limits() const
 {
   std::lock_guard<std::mutex> lock(robot_limits_mutex_);
-  return robot_limits_;
+  return limited_by(robot_limits_, safety_channel_);
 }
 
 bool
@@ -298,7 +309,18 @@ ControllerNode::set_robot_limits(const RobotLimits & limits)
     std::lock_guard<std::mutex> lock(robot_limits_mutex_);
     robot_limits_ = limits;
   }
-  smoother_.set_limits(limits);
+  smoother_.set_limits(get_robot_limits());
+}
+
+void
+ControllerNode::apply_safety_channel(const SafetyChannelState & state)
+{
+  {
+    std::lock_guard<std::mutex> lock(robot_limits_mutex_);
+    safety_channel_ = state;
+  }
+  // A lower limit is reached with the deceleration limits.
+  smoother_.set_limits(get_robot_limits());
 }
 
 void

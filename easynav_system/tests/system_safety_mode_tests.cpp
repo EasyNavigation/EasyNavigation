@@ -15,8 +15,11 @@
 /// \file
 /// \brief Configuration validation, safety mode, frozen configuration and configuration hash.
 
+#include <algorithm>
 #include <atomic>
 #include <chrono>
+#include <iterator>
+#include <limits>
 #include <memory>
 #include <optional>
 #include <thread>
@@ -28,11 +31,13 @@
 
 #include "diagnostic_msgs/msg/diagnostic_status.hpp"
 #include "easynav_interfaces/msg/heartbeat.hpp"
+#include "easynav_interfaces/msg/safety_status.hpp"
 #include "geometry_msgs/msg/twist.hpp"
 #include "lifecycle_msgs/msg/state.hpp"
 #include "lifecycle_msgs/msg/transition.hpp"
 #include "rclcpp/rclcpp.hpp"
 
+#include "easynav_core/SafetyChannel.hpp"
 #include "easynav_system/RealTime.hpp"
 #include "easynav_system/SystemNode.hpp"
 
@@ -51,6 +56,7 @@ std::vector<std::string> safe(std::vector<std::string> extra = {})
     "safety.plc_limits.max_angular_vel:=2.0",
     "cmd_vel_keepalive_period:=0.1",
     "safety.heartbeat.period:=0.1",
+    "safety.status.timeout:=0.5",
   };
   args.insert(args.end(), extra.begin(), extra.end());
   return args;
@@ -64,6 +70,8 @@ protected:
   void TearDown() override
   {
     exe_.reset();
+    status_pub_.reset();
+    status_node_.reset();
     cmd_vel_sub_.reset();
     listener_.reset();
     system_node_.reset();
@@ -126,6 +134,9 @@ protected:
         const auto end = Clock::now() + duration;
         auto next = Clock::now();
         while (Clock::now() < end) {
+          if (status_pub_ && status_) {
+            status_pub_->publish(*status_);  // The safety channel, at the RT rate.
+          }
           system_node_->system_cycle_rt();
           if (exe_ && !real_time) {
             exe_->spin_some();
@@ -181,6 +192,48 @@ protected:
     }
   }
 
+  // Publishes the safety channel's status (status_, every cycle of run_rt_at_rate) to SystemNode,
+  // whose RT callback group receives it.
+  void connect_safety_channel()
+  {
+    if (!exe_) {
+      listen_cmd_vel();
+    }
+    exe_->add_callback_group(
+      system_node_->get_real_time_cbg(), system_node_->get_node_base_interface());
+    status_node_ = rclcpp::Node::make_shared("safety_channel");
+    status_pub_ = status_node_->create_publisher<easynav_interfaces::msg::SafetyStatus>(
+      "easynav_safety_status", rclcpp::QoS(1).reliable());
+    exe_->add_node(status_node_);
+    const auto start = std::chrono::steady_clock::now();
+    while (status_pub_->get_subscription_count() == 0 &&
+      std::chrono::steady_clock::now() - start < std::chrono::seconds(2))
+    {
+      exe_->spin_some();
+      rclcpp::sleep_for(std::chrono::milliseconds(10));
+    }
+  }
+
+  static easynav_interfaces::msg::SafetyStatus channel_status(
+    bool protective_stop, std::optional<double> speed_limit = std::nullopt)
+  {
+    easynav_interfaces::msg::SafetyStatus status;
+    status.protective_stop = protective_stop;
+    status.speed_limited = speed_limit.has_value();
+    status.max_linear_vel = speed_limit.value_or(0.0);
+    status.max_angular_vel = speed_limit.value_or(0.0);
+    status.active_field = "warehouse";
+    return status;
+  }
+
+  std::optional<diagnostic_msgs::msg::DiagnosticStatus> safety_diagnostic()
+  {
+    auto nav_state = system_node_->get_nav_state();
+    if (!nav_state->has("diagnostics.safety_status")) {return std::nullopt;}
+    return nav_state->get_safe<diagnostic_msgs::msg::DiagnosticStatus>(
+      "diagnostics.safety_status");
+  }
+
   void spin_for(std::chrono::milliseconds duration)
   {
     const auto end = std::chrono::steady_clock::now() + duration;
@@ -194,6 +247,9 @@ protected:
   rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_sub_;
   std::unique_ptr<rclcpp::executors::SingleThreadedExecutor> exe_;
   std::vector<double> cmd_vels_;
+  rclcpp::Node::SharedPtr status_node_;
+  rclcpp::Publisher<easynav_interfaces::msg::SafetyStatus>::SharedPtr status_pub_;
+  std::optional<easynav_interfaces::msg::SafetyStatus> status_;
 
   std::optional<diagnostic_msgs::msg::DiagnosticStatus> rt_diagnostic()
   {
@@ -290,7 +346,7 @@ TEST_F(SystemSafetyModeTest, SafetyModeFailsToConfigureWithoutWhatItRequires)
 {
   for (const std::string missing : {
     "safety.plc_limits.max_linear_vel:=0.0", "safety.plc_limits.max_angular_vel:=0.0",
-    "safety.heartbeat.period:=0.0",
+    "safety.heartbeat.period:=0.0", "safety.status.timeout:=0.0",
     "cmd_vel_keepalive_period:=0.0", "cmd_timeout:=0.0", "use_real_time:=false"})
   {
     start(safe({missing}));
@@ -541,6 +597,8 @@ TEST_F(SystemSafetyModeTest, AControllerOverrunningTheRtCycleStopsEasyNavInSafet
   ASSERT_TRUE(configure());
   ASSERT_TRUE(activate());
   listen_cmd_vel();
+  connect_safety_channel();  // In safety mode, the robot only moves with a valid safety status.
+  status_ = channel_status(false);
 
   run_rt_at_rate(std::chrono::milliseconds(80));  // 16 cycles on time
   EXPECT_FALSE(system_node_->is_shutdown_requested());
@@ -626,4 +684,167 @@ TEST_F(SystemSafetyModeTest, IsolatedOverrunsDoNotStopEasyNavInSafetyMode)
   ASSERT_TRUE(rt_diagnostic());
   EXPECT_EQ(rt_diagnostic()->level, diagnostic_msgs::msg::DiagnosticStatus::OK) <<
     "late, then on time again";
+}
+
+// ─── Safety channel (SafetyStatus) ───────────────────────────────────────────────────────────
+
+class SystemSafetyChannelTest : public SystemSafetyModeTest
+{
+protected:
+  // A controller commanding 0.5 m/s, quick ramps, and the safety status enabled.
+  void start_with_safety_status(std::vector<std::string> extra = {})
+  {
+    std::vector<std::string> params {
+      "controller_types:=['ctrl']",
+      "ctrl.plugin:=easynav_controller/FaultyController",
+      "ctrl.fault:='none'",
+      "ctrl.rt_freq:=200.0",
+      "robot_limits.max_linear_acc:=10.0",
+      "robot_limits.max_linear_decel:=10.0",
+      "safety.status.timeout:=0.3",
+    };
+    params.insert(params.end(), extra.begin(), extra.end());
+    start(params);
+    ASSERT_TRUE(configure());
+    ASSERT_TRUE(activate());
+    listen_cmd_vel();
+    connect_safety_channel();
+  }
+
+  // The commands published while running \p duration.
+  std::vector<double> run(std::chrono::milliseconds duration)
+  {
+    cmd_vels_.clear();
+    run_rt_at_rate(duration);
+    spin_for(std::chrono::milliseconds(50));
+    return cmd_vels_;
+  }
+
+  static void expect_all_zero(const std::vector<double> & cmds)
+  {
+    ASSERT_FALSE(cmds.empty());
+    for (const double v : cmds) {
+      EXPECT_EQ(v, 0.0);
+    }
+  }
+
+  uint8_t safety_level() {return safety_diagnostic().value().level;}
+};
+
+TEST_F(SystemSafetyChannelTest, TheRobotOnlyMovesWithAValidSafetyStatus)
+{
+  start_with_safety_status();
+  expect_all_zero(run(std::chrono::milliseconds(200)));
+  EXPECT_EQ(safety_level(), diagnostic_msgs::msg::DiagnosticStatus::ERROR);
+  EXPECT_NE(safety_diagnostic()->message.find("No safety status"), std::string::npos);
+
+  status_ = channel_status(false);
+  const auto cmds = run(std::chrono::milliseconds(300));
+  ASSERT_FALSE(cmds.empty());
+  EXPECT_DOUBLE_EQ(cmds.back(), 0.5);
+  EXPECT_EQ(safety_level(), diagnostic_msgs::msg::DiagnosticStatus::OK);
+  ASSERT_FALSE(safety_diagnostic()->values.empty());
+  EXPECT_EQ(safety_diagnostic()->values[0].value, "warehouse");
+}
+
+TEST_F(SystemSafetyChannelTest, AProtectiveStopStopsTheRobotAndItResumesFromZero)
+{
+  start_with_safety_status();
+  status_ = channel_status(false);
+  ASSERT_DOUBLE_EQ(run(std::chrono::milliseconds(300)).back(), 0.5);
+
+  status_ = channel_status(true);
+  auto cmds = run(std::chrono::milliseconds(200));
+  ASSERT_FALSE(cmds.empty());
+  EXPECT_EQ(cmds.back(), 0.0);
+  // At most the cycle before the status arrived still moved; then, exact zeros.
+  const auto first_zero = std::find(cmds.begin(), cmds.end(), 0.0);
+  EXPECT_LE(std::distance(cmds.begin(), first_zero), 2);
+  for (auto it = first_zero; it != cmds.end(); ++it) {
+    EXPECT_EQ(*it, 0.0);
+  }
+  EXPECT_EQ(safety_level(), diagnostic_msgs::msg::DiagnosticStatus::WARN);
+  EXPECT_TRUE(system_node_->get_nav_state()->get_safe<easynav::SafetyChannelState>(
+      easynav::kSafetyStatusKey).protective_stop);
+  EXPECT_EQ(system_node_->get_current_state().id(), State::PRIMARY_STATE_ACTIVE);
+
+  status_ = channel_status(false);
+  cmds = run(std::chrono::milliseconds(300));
+  ASSERT_GT(cmds.size(), 2u);
+  EXPECT_LT(cmds.front(), 0.5) << "a ramp from zero";
+  EXPECT_DOUBLE_EQ(cmds.back(), 0.5);
+  EXPECT_EQ(safety_level(), diagnostic_msgs::msg::DiagnosticStatus::OK);
+}
+
+TEST_F(SystemSafetyChannelTest, LosingTheSafetyStatusStopsTheRobot)
+{
+  start_with_safety_status();
+  status_ = channel_status(false);
+  ASSERT_DOUBLE_EQ(run(std::chrono::milliseconds(300)).back(), 0.5);
+
+  status_.reset();  // The safety channel goes silent.
+  const auto cmds = run(std::chrono::milliseconds(500));
+  ASSERT_FALSE(cmds.empty());
+  EXPECT_EQ(cmds.back(), 0.0);
+  EXPECT_EQ(safety_level(), diagnostic_msgs::msg::DiagnosticStatus::ERROR);
+  EXPECT_NE(safety_diagnostic()->message.find("No safety status for more than"), std::string::npos)
+    << safety_diagnostic()->message;
+  EXPECT_TRUE(system_node_->get_nav_state()->get_safe<easynav::SafetyChannelState>(
+      easynav::kSafetyStatusKey).status_lost);
+}
+
+TEST_F(SystemSafetyChannelTest, AnInvalidSafetyStatusStopsTheRobot)
+{
+  start_with_safety_status();
+  status_ = channel_status(false, std::numeric_limits<double>::quiet_NaN());
+  expect_all_zero(run(std::chrono::milliseconds(200)));
+  EXPECT_EQ(safety_level(), diagnostic_msgs::msg::DiagnosticStatus::ERROR);
+  EXPECT_NE(safety_diagnostic()->message.find("Invalid safety status"), std::string::npos);
+}
+
+TEST_F(SystemSafetyChannelTest, ASpeedLimitSlowsTheRobotDownAndIsLifted)
+{
+  start_with_safety_status();
+  status_ = channel_status(false);
+  ASSERT_DOUBLE_EQ(run(std::chrono::milliseconds(300)).back(), 0.5);
+
+  status_ = channel_status(false, 0.2);
+  EXPECT_DOUBLE_EQ(run(std::chrono::milliseconds(300)).back(), 0.2);
+  EXPECT_EQ(safety_level(), diagnostic_msgs::msg::DiagnosticStatus::OK);
+  EXPECT_NE(safety_diagnostic()->message.find("speed limited to 0.2"), std::string::npos);
+
+  status_ = channel_status(false);
+  EXPECT_DOUBLE_EQ(run(std::chrono::milliseconds(300)).back(), 0.5);
+}
+
+TEST_F(SystemSafetyChannelTest, WithoutSafetyStatusNothingChanges)
+{
+  start({
+    "controller_types:=['ctrl']",
+    "ctrl.plugin:=easynav_controller/FaultyController",
+    "ctrl.fault:='none'",
+    "robot_limits.max_linear_acc:=10.0",
+    });
+  ASSERT_TRUE(configure());
+  ASSERT_TRUE(activate());
+  listen_cmd_vel();
+  EXPECT_FALSE(system_node_->get_safety().is_safety_status_enabled());
+
+  run_rt_at_rate(std::chrono::milliseconds(300));
+  spin_for(std::chrono::milliseconds(50));
+  ASSERT_FALSE(cmd_vels_.empty());
+  EXPECT_DOUBLE_EQ(cmd_vels_.back(), 0.5);
+  EXPECT_FALSE(safety_diagnostic()) << "nothing to report";
+  EXPECT_FALSE(
+    system_node_->get_nav_state()->get_safe<easynav::SafetyChannelState>(
+      easynav::kSafetyStatusKey).protective_stop);
+}
+
+TEST_F(SystemSafetyChannelTest, InvalidSafetyStatusTimeoutsFailToConfigure)
+{
+  for (const std::string timeout : {"-0.1", ".nan"}) {
+    start({"safety.status.timeout:=" + timeout});
+    EXPECT_FALSE(configure()) << timeout;
+    expect_subnodes_in(State::PRIMARY_STATE_UNCONFIGURED);
+  }
 }

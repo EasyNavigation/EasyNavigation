@@ -16,6 +16,7 @@ set(msg_files
   "msg/NavigationControl.msg"
   "msg/GoalManagerInfo.msg"
   "msg/Heartbeat.msg"
+  "msg/SafetyStatus.msg"
 )
 
 rosidl_generate_interfaces(${PROJECT_NAME}
