@@ -40,6 +40,7 @@
 
 #include "easynav_controller/ControllerNode.hpp"
 #include "easynav_core/ControllerMethodBase.hpp"
+#include "easynav_core/SafetyChannel.hpp"
 #include "easynav_core/VelocityCommand.hpp"
 
 using namespace std::chrono_literals;
@@ -874,4 +875,199 @@ TEST_F(ControllerNodeVelocityTest, ZeroVelocityLimitsAreValid)
     {"robot_limits.max_linear_acc", 1e-6}}));
   node->trigger_transition(Transition::TRANSITION_CONFIGURE);
   EXPECT_EQ(node->get_current_state().id(), State::PRIMARY_STATE_INACTIVE);
+}
+
+namespace
+{
+
+easynav::SafetyChannelState protective_stop(bool lost = false)
+{
+  easynav::SafetyChannelState state;
+  state.protective_stop = true;
+  state.status_lost = lost;
+  return state;
+}
+
+easynav::SafetyChannelState speed_limit(double linear, double angular)
+{
+  easynav::SafetyChannelState state;
+  state.max_linear_vel = linear;
+  state.max_angular_vel = angular;
+  return state;
+}
+
+}  // namespace
+
+class ControllerNodeSafetyChannelTest : public ControllerNodeVelocityTest
+{
+protected:
+  void reach(double vx)
+  {
+    for (int i = 0; i < 100; ++i) {
+      cycle(vx);
+    }
+    spin_for(100ms);
+    ASSERT_DOUBLE_EQ(received_.back(), vx);
+    received_.clear();
+    stamps_.clear();
+  }
+};
+
+TEST_F(ControllerNodeSafetyChannelTest, AProtectiveStopCommandsZeroAtOnceAndResumesFromZero)
+{
+  make_active_node();
+  reach(1.0);
+
+  // The safety channel stops the robot: zero at once, not a ramp from 1.0.
+  nav_state_->set(easynav::kSafetyStatusKey, protective_stop());
+  for (int i = 0; i < 20; ++i) {
+    cycle(1.0);
+  }
+  spin_for(100ms);
+  ASSERT_FALSE(received_.empty());
+  for (const double v : received_) {
+    EXPECT_DOUBLE_EQ(v, 0.0);
+  }
+
+  // Released: from zero, within the acceleration limit.
+  nav_state_->set(easynav::kSafetyStatusKey, easynav::SafetyChannelState());
+  received_.clear();
+  stamps_.clear();
+  for (int i = 0; i < 100; ++i) {
+    cycle(1.0);
+  }
+  spin_for(100ms);
+  ASSERT_GT(received_.size(), 3u);
+  // At most one smoother step (up to 0.1 s at 2 m/s^2) above zero, not back to 1.0.
+  EXPECT_LE(received_.front(), kMaxLinearAcc * 0.1 + kTolerance);
+  EXPECT_DOUBLE_EQ(received_.back(), 1.0);
+  expect_within_acceleration_limits();
+}
+
+TEST_F(ControllerNodeSafetyChannelTest, AProtectiveStopIsPublishedEvenWithoutCommands)
+{
+  make_active_node({{"cmd_timeout", 0.0}});
+  reach(1.0);
+
+  // A stop with no source commanding (e.g. the controller died): the zero still goes out.
+  nav_state_->set(easynav::kSafetyStatusKey, protective_stop());
+  cycle(std::nullopt);
+  spin_for(100ms);
+  ASSERT_EQ(received_.size(), 1u);
+  EXPECT_DOUBLE_EQ(received_.front(), 0.0);
+}
+
+TEST_F(ControllerNodeSafetyChannelTest, NoSourceMovesTheRobotDuringAProtectiveStop)
+{
+  make_active_node();
+  nav_state_->set(easynav::kSafetyStatusKey, protective_stop(true));
+  for (int i = 0; i < 20; ++i) {
+    cycle(1.0, -0.1, 0.2);  // Controller, recovery takeover and override.
+  }
+  spin_for(100ms);
+  ASSERT_FALSE(received_.empty());
+  for (const double v : received_) {
+    EXPECT_DOUBLE_EQ(v, 0.0);
+  }
+}
+
+TEST_F(ControllerNodeSafetyChannelTest, ASpeedLimitCutsTheLimitsAndIsReachedBraking)
+{
+  make_active_node();
+  reach(1.0);
+
+  nav_state_->set(easynav::kSafetyStatusKey, speed_limit(0.4, 0.5));
+  for (int i = 0; i < 60; ++i) {
+    cycle(1.0);
+  }
+  spin_for(100ms);
+  ASSERT_GT(received_.size(), 3u);
+  EXPECT_GT(received_.front(), 0.4) << "it must not drop to the limit in one step";
+  EXPECT_DOUBLE_EQ(received_.back(), 0.4);
+  expect_within_acceleration_limits();
+
+  const auto limits = node_->get_robot_limits();
+  EXPECT_DOUBLE_EQ(limits.max_linear_vel, 0.4);
+  EXPECT_DOUBLE_EQ(limits.min_linear_vel, -0.2) << "already below the limit";
+  EXPECT_DOUBLE_EQ(limits.max_angular_vel, 0.5);
+  EXPECT_DOUBLE_EQ(limits.max_linear_decel, kMaxLinearDecel) << "accelerations are not cut";
+
+  // Lifted: back to the configured limits.
+  nav_state_->set(easynav::kSafetyStatusKey, easynav::SafetyChannelState());
+  received_.clear();
+  stamps_.clear();
+  for (int i = 0; i < 60; ++i) {
+    cycle(1.0);
+  }
+  spin_for(100ms);
+  ASSERT_FALSE(received_.empty());
+  EXPECT_DOUBLE_EQ(received_.back(), 1.0);
+  expect_within_acceleration_limits();
+  EXPECT_DOUBLE_EQ(node_->get_robot_limits().max_linear_vel, 1.0);
+  EXPECT_DOUBLE_EQ(node_->get_robot_limits().max_angular_vel, 1.5);
+}
+
+TEST_F(ControllerNodeSafetyChannelTest, ASpeedLimitAlsoCutsReversing)
+{
+  make_active_node();
+  nav_state_->set(easynav::kSafetyStatusKey, speed_limit(0.1, 0.5));
+  for (int i = 0; i < 60; ++i) {
+    cycle(-1.0);
+  }
+  spin_for(100ms);
+  ASSERT_FALSE(received_.empty());
+  EXPECT_DOUBLE_EQ(received_.back(), -0.1);
+  EXPECT_DOUBLE_EQ(node_->get_robot_limits().min_linear_vel, -0.1);
+}
+
+TEST_F(ControllerNodeSafetyChannelTest, ASpeedLimitOfZeroHoldsTheRobot)
+{
+  make_active_node();
+  reach(1.0);
+  nav_state_->set(easynav::kSafetyStatusKey, speed_limit(0.0, 0.0));
+  for (int i = 0; i < 60; ++i) {
+    cycle(1.0);
+  }
+  spin_for(100ms);
+  ASSERT_FALSE(received_.empty());
+  EXPECT_DOUBLE_EQ(received_.back(), 0.0);
+  expect_within_acceleration_limits();
+}
+
+TEST_F(ControllerNodeSafetyChannelTest, ASpeedLimitAboveTheRobotLimitsChangesNothing)
+{
+  make_active_node();
+  const auto configured = node_->get_robot_limits();
+  nav_state_->set(easynav::kSafetyStatusKey, speed_limit(5.0, 5.0));
+  cycle(1.0);
+  EXPECT_DOUBLE_EQ(node_->get_robot_limits().max_linear_vel, configured.max_linear_vel);
+  EXPECT_DOUBLE_EQ(node_->get_robot_limits().min_linear_vel, configured.min_linear_vel);
+  EXPECT_DOUBLE_EQ(node_->get_robot_limits().max_angular_vel, configured.max_angular_vel);
+}
+
+TEST_F(ControllerNodeSafetyChannelTest, NewRobotLimitsKeepTheSpeedLimit)
+{
+  make_active_node();
+  nav_state_->set(easynav::kSafetyStatusKey, speed_limit(0.4, 0.5));
+  cycle(1.0);
+
+  auto limits = node_->get_robot_limits();
+  limits.max_linear_vel = 2.0;  // E.g. a deprecated per-controller limit.
+  node_->set_robot_limits(limits);
+  EXPECT_DOUBLE_EQ(node_->get_robot_limits().max_linear_vel, 0.4);
+}
+
+TEST_F(ControllerNodeSafetyChannelTest, ReconfiguringStartsWithoutTheSpeedLimit)
+{
+  make_active_node();
+  nav_state_->set(easynav::kSafetyStatusKey, speed_limit(0.4, 0.5));
+  cycle(1.0);
+  ASSERT_DOUBLE_EQ(node_->get_robot_limits().max_linear_vel, 0.4);
+
+  node_->trigger_transition(Transition::TRANSITION_DEACTIVATE);
+  node_->trigger_transition(Transition::TRANSITION_CLEANUP);
+  node_->trigger_transition(Transition::TRANSITION_CONFIGURE);
+  ASSERT_EQ(node_->get_current_state().id(), State::PRIMARY_STATE_INACTIVE);
+  EXPECT_DOUBLE_EQ(node_->get_robot_limits().max_linear_vel, 1.0)
+    << "the configured limits, until the RT cycle applies the safety channel again";
 }

@@ -26,9 +26,11 @@
 #include <filesystem>
 #include <fstream>
 #include <iterator>
+#include <limits>
 #include <memory>
 #include <optional>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "gtest/gtest.h"
@@ -38,8 +40,10 @@
 #include "std_msgs/msg/string.hpp"
 #include "diagnostic_msgs/msg/diagnostic_status.hpp"
 #include "easynav_interfaces/msg/heartbeat.hpp"
+#include "easynav_interfaces/msg/safety_status.hpp"
 
 #include "easynav_controller/ControllerNode.hpp"
+#include "easynav_core/SafetyChannel.hpp"
 #include "easynav_system/RealTime.hpp"
 #include "easynav_system/safety/ConfigurationFingerprint.hpp"
 #include "easynav_system/safety/ParameterFreezer.hpp"
@@ -344,9 +348,11 @@ TEST_F(SafetyModuleTest, SupervisorChecksTheSafetyLimits)
     {{{"safety.mode", true}}, false},  // Required in safety.mode
     {{{"safety.mode", true}, {"safety.plc_limits.max_linear_vel", 1.0}}, false},
     {{{"safety.mode", true}, {"safety.plc_limits.max_linear_vel", 1.0},
-      {"safety.plc_limits.max_angular_vel", 1.0}, {"safety.heartbeat.period", 0.1}}, true},
+      {"safety.plc_limits.max_angular_vel", 1.0}, {"safety.heartbeat.period", 0.1},
+      {"safety.status.timeout", 0.5}}, true},
     {{{"safety.mode", true}, {"safety.plc_limits.max_linear_vel", 1.0},
       {"safety.plc_limits.max_angular_vel", 1.0}, {"safety.heartbeat.period", 0.1},
+      {"safety.status.timeout", 0.5},
       {"use_real_time", false}}, false},
   };
   // The safety mode also needs real-time scheduling, checked on configure.
@@ -374,7 +380,8 @@ TEST_F(SafetyModuleTest, SafetyModeFailsToConfigureWithoutRealTimeScheduling)
     easynav::safety::SafetySupervisor supervisor;
     auto n = system(
       {{"safety.mode", true}, {"safety.plc_limits.max_linear_vel", 1.0},
-        {"safety.plc_limits.max_angular_vel", 1.0}, {"safety.heartbeat.period", 0.1}}, supervisor);
+        {"safety.plc_limits.max_angular_vel", 1.0}, {"safety.heartbeat.period", 0.1},
+        {"safety.status.timeout", 0.5}}, supervisor);
     valid = supervisor.check_system(*n);
   }
   ASSERT_EQ(setrlimit(RLIMIT_RTPRIO, &original), 0);
@@ -413,7 +420,8 @@ TEST_F(SafetyModuleTest, MemoryLockIsRequestedIndependentlyOfTheSafetyMode)
   {
     std::vector<rclcpp::Parameter> params {
       {"safety.mode", c.mode}, {"safety.plc_limits.max_linear_vel", 1.0},
-      {"safety.plc_limits.max_angular_vel", 1.0}, {"safety.heartbeat.period", 0.1}};
+      {"safety.plc_limits.max_angular_vel", 1.0}, {"safety.heartbeat.period", 0.1},
+      {"safety.status.timeout", 0.5}};
     if (c.lock_memory) {
       params.emplace_back("safety.lock_memory", *c.lock_memory);
     }
@@ -433,7 +441,7 @@ TEST_F(SafetyModuleTest, SupervisorChecksTheControllerAgainstTheSafetyLimits)
   easynav::safety::SafetySupervisor supervisor;
   auto n = system(
     {{"safety.plc_limits.max_linear_vel", 0.5}, {"safety.plc_limits.max_angular_vel", 1.0},
-      {"safety.heartbeat.period", 0.1}},
+      {"safety.heartbeat.period", 0.1}, {"safety.status.timeout", 0.5}},
     supervisor);
   ASSERT_TRUE(supervisor.check_system(*n));
 
@@ -458,7 +466,8 @@ TEST_F(SafetyModuleTest, SupervisorRequiresTheCommandGuardInSafetyMode)
   easynav::safety::SafetySupervisor supervisor;
   auto n = system(
     {{"safety.mode", true}, {"safety.plc_limits.max_linear_vel", 1.0},
-      {"safety.plc_limits.max_angular_vel", 2.0}, {"safety.heartbeat.period", 0.1}}, supervisor);
+      {"safety.plc_limits.max_angular_vel", 2.0}, {"safety.heartbeat.period", 0.1},
+      {"safety.status.timeout", 0.5}}, supervisor);
   ASSERT_TRUE(supervisor.check_system(*n));
 
   auto controller = [](std::vector<rclcpp::Parameter> params) {
@@ -482,7 +491,8 @@ TEST_F(SafetyModuleTest, SupervisorFingerprintsAndFreezesOnlyInSafetyMode)
     easynav::safety::SafetySupervisor supervisor;
     auto n = system(
       {{"safety.mode", safety_mode}, {"safety.plc_limits.max_linear_vel", 1.0},
-        {"safety.plc_limits.max_angular_vel", 1.0}, {"safety.heartbeat.period", 0.1}}, supervisor);
+        {"safety.plc_limits.max_angular_vel", 1.0}, {"safety.heartbeat.period", 0.1},
+        {"safety.status.timeout", 0.5}}, supervisor);
     ASSERT_TRUE(supervisor.check_system(*n));
     EXPECT_EQ(supervisor.is_safety_mode(), safety_mode);
     EXPECT_EQ(supervisor.get_configuration_hash(), "") << "before the first configure";
@@ -549,7 +559,8 @@ TEST_F(SafetyModuleTest, NewParametersOnlyWhileConfiguringInSafetyMode)
   easynav::safety::SafetySupervisor supervisor;
   auto n = system(
     {{"safety.mode", true}, {"safety.plc_limits.max_linear_vel", 1.0},
-      {"safety.plc_limits.max_angular_vel", 1.0}, {"safety.heartbeat.period", 0.1}}, supervisor);
+      {"safety.plc_limits.max_angular_vel", 1.0}, {"safety.heartbeat.period", 0.1},
+      {"safety.status.timeout", 0.5}}, supervisor);
   easynav::NavState nav_state;
   const Nodes nodes {{"system_node", n}};
 
@@ -730,6 +741,7 @@ TEST_F(SafetyModuleTest, TooManyLateRtCyclesStopEasyNavInSafetyMode)
   auto n = system(
     {{"safety.mode", true}, {"safety.plc_limits.max_linear_vel", 1.0},
       {"safety.plc_limits.max_angular_vel", 1.0}, {"safety.heartbeat.period", 0.1},
+      {"safety.status.timeout", 0.5},
       {"safety.rt_monitor.max_late_cycles", 2}}, supervisor);
   ASSERT_TRUE(supervisor.check_system(*n));
   easynav::NavState nav_state;
@@ -788,4 +800,174 @@ TEST_F(SafetyModuleTest, TheHeartbeatCarriesTheRtStatus)
   EXPECT_EQ(received[2].rt_status, Heartbeat::RT_ERROR);
   EXPECT_EQ(received[3].rt_status, Heartbeat::RT_OK);
   EXPECT_EQ(received[3].late_cycles, 2u);
+}
+
+// ─── Safety channel ─────────────────────────────────────────────────────────────────────────
+
+namespace
+{
+
+std::optional<diagnostic_msgs::msg::DiagnosticStatus> safety_diagnostic(
+  const easynav::NavState & nav_state)
+{
+  if (!nav_state.has("diagnostics.safety_status")) {return std::nullopt;}
+  return nav_state.get_safe<diagnostic_msgs::msg::DiagnosticStatus>("diagnostics.safety_status");
+}
+
+easynav::SafetyChannelState channel_state(const easynav::NavState & nav_state)
+{
+  return nav_state.get_safe<easynav::SafetyChannelState>(easynav::kSafetyStatusKey);
+}
+
+}  // namespace
+
+TEST_F(SafetyModuleTest, SafetyStatusTimeoutIsChecked)
+{
+  const std::vector<std::pair<double, bool>> cases {
+    {-0.1, false}, {std::nan(""), false}, {std::numeric_limits<double>::infinity(), false},
+    {0.0, true},  // Off, outside the safety mode
+    {0.5, true}};
+  for (const auto & [timeout, valid] : cases) {
+    easynav::safety::SafetySupervisor supervisor;
+    auto n = system({{"safety.status.timeout", timeout}}, supervisor);
+    EXPECT_EQ(supervisor.check_system(*n), valid) << timeout;
+    EXPECT_EQ(supervisor.is_safety_status_enabled(), valid && timeout > 0.0) << timeout;
+  }
+}
+
+TEST_F(SafetyModuleTest, TheSafetyStatusIsRequiredInSafetyMode)
+{
+  if (!easynav::check_real_time_priority(easynav::kRealTimePriority).empty()) {
+    GTEST_SKIP() << "the safety mode needs real-time scheduling, not allowed here";
+  }
+
+  easynav::safety::SafetySupervisor supervisor;
+  auto n = system(
+    {{"safety.mode", true}, {"safety.plc_limits.max_linear_vel", 1.0},
+      {"safety.plc_limits.max_angular_vel", 1.0}, {"safety.heartbeat.period", 0.1}}, supervisor);
+  EXPECT_FALSE(supervisor.check_system(*n));
+}
+
+TEST_F(SafetyModuleTest, WithoutSafetyStatusThereIsNoRestriction)
+{
+  easynav::safety::SafetySupervisor supervisor;
+  auto n = system({}, supervisor);
+  ASSERT_TRUE(supervisor.check_system(*n));
+  EXPECT_TRUE(n->get_subscriptions_info_by_topic("/easynav_safety_status").empty());
+
+  easynav::NavState nav_state;
+  supervisor.on_configured({{"system_node", n}}, nav_state);
+  supervisor.on_activate();
+  ASSERT_TRUE(supervisor.cycle_rt(nav_state, RtClock::now()));
+  EXPECT_EQ(channel_state(nav_state), easynav::SafetyChannelState());
+  EXPECT_FALSE(safety_diagnostic(nav_state)) << "nothing to report";
+}
+
+TEST_F(SafetyModuleTest, TheSafetyChannelStateIsWrittenEveryRtCycleAndReportedOnChanges)
+{
+  easynav::safety::SafetySupervisor supervisor;
+  auto n = system({{"safety.status.timeout", 0.2}}, supervisor);
+  ASSERT_TRUE(supervisor.check_system(*n));
+  easynav::NavState nav_state;
+  supervisor.on_configured({{"system_node", n}}, nav_state);
+  EXPECT_TRUE(channel_state(nav_state).protective_stop) << "a stop until the first status";
+  supervisor.on_activate();
+
+  auto publisher_node = std::make_shared<rclcpp::Node>("safety_channel");
+  auto pub = publisher_node->create_publisher<easynav_interfaces::msg::SafetyStatus>(
+    "/easynav_safety_status", rclcpp::QoS(1).reliable());
+  rclcpp::executors::SingleThreadedExecutor exe;
+  exe.add_node(n->get_node_base_interface());  // No RT group given: the default one.
+  exe.add_node(publisher_node);
+  const auto start = std::chrono::steady_clock::now();
+  while (pub->get_subscription_count() == 0 && std::chrono::steady_clock::now() - start < 2s) {
+    exe.spin_some();
+    rclcpp::sleep_for(10ms);
+  }
+  ASSERT_GT(pub->get_subscription_count(), 0u);
+
+  // No status yet: stopped, an ERROR.
+  ASSERT_TRUE(supervisor.cycle_rt(nav_state, RtClock::now()));
+  EXPECT_TRUE(channel_state(nav_state).status_lost);
+  ASSERT_TRUE(safety_diagnostic(nav_state));
+  EXPECT_EQ(safety_diagnostic(nav_state)->level, diagnostic_msgs::msg::DiagnosticStatus::ERROR);
+  EXPECT_EQ(safety_diagnostic(nav_state)->hardware_id, "system_node");
+
+  // A speed limit, in the field "slow".
+  easynav_interfaces::msg::SafetyStatus msg;
+  msg.speed_limited = true;
+  msg.max_linear_vel = 0.3;
+  msg.max_angular_vel = 0.6;
+  msg.active_field = "slow";
+  auto send = [&](const easynav_interfaces::msg::SafetyStatus & status) {
+      pub->publish(status);
+      const auto sent = std::chrono::steady_clock::now();
+      while (std::chrono::steady_clock::now() - sent < 50ms) {
+        exe.spin_some();
+        rclcpp::sleep_for(5ms);
+      }
+    };
+  send(msg);
+  ASSERT_TRUE(supervisor.cycle_rt(nav_state, RtClock::now()));
+  auto state = channel_state(nav_state);
+  EXPECT_FALSE(state.protective_stop);
+  EXPECT_DOUBLE_EQ(state.max_linear_vel, 0.3);
+  EXPECT_DOUBLE_EQ(state.max_angular_vel, 0.6);
+  auto diagnostic = safety_diagnostic(nav_state).value();
+  EXPECT_EQ(diagnostic.level, diagnostic_msgs::msg::DiagnosticStatus::OK);
+  EXPECT_NE(diagnostic.message.find("speed limited to 0.3"), std::string::npos);
+  ASSERT_EQ(diagnostic.values.size(), 2u);
+  EXPECT_EQ(diagnostic.values[0].key, "active_field");
+  EXPECT_EQ(diagnostic.values[0].value, "slow");
+  EXPECT_EQ(diagnostic.values[1].value, "false");
+
+  // Unchanged: not reported again.
+  diagnostic.message = "marker";
+  nav_state.set("diagnostics.safety_status", diagnostic);
+  ASSERT_TRUE(supervisor.cycle_rt(nav_state, RtClock::now()));
+  EXPECT_EQ(safety_diagnostic(nav_state)->message, "marker");
+
+  // A protective stop: a WARN, and still running (EasyNav does not stop for it).
+  msg.protective_stop = true;
+  msg.muting = true;
+  send(msg);
+  EXPECT_TRUE(supervisor.cycle_rt(nav_state, RtClock::now()));
+  EXPECT_TRUE(channel_state(nav_state).protective_stop);
+  EXPECT_FALSE(channel_state(nav_state).status_lost);
+  diagnostic = safety_diagnostic(nav_state).value();
+  EXPECT_EQ(diagnostic.level, diagnostic_msgs::msg::DiagnosticStatus::WARN);
+  EXPECT_EQ(diagnostic.values[1].value, "true");
+
+  // Silent for longer than the timeout: lost.
+  rclcpp::sleep_for(250ms);
+  EXPECT_TRUE(supervisor.cycle_rt(nav_state, RtClock::now()));
+  EXPECT_TRUE(channel_state(nav_state).status_lost);
+  diagnostic = safety_diagnostic(nav_state).value();
+  EXPECT_EQ(diagnostic.level, diagnostic_msgs::msg::DiagnosticStatus::ERROR);
+  EXPECT_NE(diagnostic.message.find("No safety status for more than"), std::string::npos);
+
+  // Invalid: still stopped, with the reason.
+  msg.protective_stop = false;
+  msg.max_linear_vel = -1.0;
+  send(msg);
+  EXPECT_TRUE(supervisor.cycle_rt(nav_state, RtClock::now()));
+  EXPECT_TRUE(channel_state(nav_state).protective_stop);
+  diagnostic = safety_diagnostic(nav_state).value();
+  EXPECT_NE(diagnostic.message.find("max_linear_vel"), std::string::npos) << diagnostic.message;
+}
+
+TEST_F(SafetyModuleTest, DisablingTheSafetyStatusOnReconfigureLiftsItsRestrictions)
+{
+  easynav::safety::SafetySupervisor supervisor;
+  auto n = system({{"safety.status.timeout", 0.2}}, supervisor);
+  ASSERT_TRUE(supervisor.check_system(*n));
+  easynav::NavState nav_state;
+  supervisor.on_configured({{"system_node", n}}, nav_state);
+  ASSERT_TRUE(channel_state(nav_state).protective_stop);
+
+  n->set_parameter(rclcpp::Parameter("safety.status.timeout", 0.0));
+  ASSERT_TRUE(supervisor.check_system(*n));
+  EXPECT_FALSE(supervisor.is_safety_status_enabled());
+  supervisor.on_configured({{"system_node", n}}, nav_state);
+  EXPECT_EQ(channel_state(nav_state), easynav::SafetyChannelState());
 }

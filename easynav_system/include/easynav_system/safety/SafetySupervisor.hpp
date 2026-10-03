@@ -24,9 +24,11 @@
 #include <string>
 
 #include "easynav_interfaces/msg/heartbeat.hpp"
+#include "rclcpp/callback_group.hpp"
 #include "rclcpp/clock.hpp"
 #include "rclcpp/logger.hpp"
 #include "rclcpp/publisher.hpp"
+#include "rclcpp/subscription.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 #include "std_msgs/msg/string.hpp"
 
@@ -35,6 +37,7 @@
 #include "easynav_system/safety/ConfigurationFingerprint.hpp"
 #include "easynav_system/safety/ParameterFreezer.hpp"
 #include "easynav_system/safety/RtMonitor.hpp"
+#include "easynav_system/safety/SafetyChannelMonitor.hpp"
 
 namespace easynav::safety
 {
@@ -57,6 +60,11 @@ namespace easynav::safety
  * - "safety.rt_monitor.*": an RT cycle starting more than "max_period_factor" periods after the
  *   previous one is late; "max_late_cycles" in a row are an ERROR ("diagnostics.rt_cycle"), and in
  *   safety mode EasyNav stops.
+ * - "safety.status.timeout" (s, default 0: off; required in safety mode): the safety channel's
+ *   state (SafetyStatus) is received on "easynav_safety_status" and applied every RT cycle through
+ *   NavState ("safety_status"): during a protective stop EasyNav commands zero and keeps the
+ *   mission; a safely limited speed cuts the robot limits down. With no valid status within the
+ *   timeout, it is a protective stop.
  *
  * Every configure, it fingerprints the configuration: a SHA-256 of every parameter, logged and
  * shared in NavState ("configuration_hash"), with the parameters saved in the ROS log directory
@@ -69,7 +77,9 @@ public:
   void declare_parameters(rclcpp_lifecycle::LifecycleNode & node);
 
   /// @brief Reads \p node's safety parameters and checks them, before the subnodes configure.
-  bool check_system(rclcpp_lifecycle::LifecycleNode & node);
+  /// The safety status is received in \p rt_group (SystemNode's RT callback group), if given.
+  bool check_system(
+    rclcpp_lifecycle::LifecycleNode & node, rclcpp::CallbackGroup::SharedPtr rt_group = nullptr);
 
   /// @brief Checks \p controller against "safety.plc_limits" and what "safety.mode" requires.
   bool check_controller(ControllerNode & controller) const;
@@ -83,14 +93,17 @@ public:
   /// @brief On activation: the RT monitor starts over.
   void on_activate();
 
-  /// @brief At the start of each RT cycle, at \p now: monitors it and publishes the heartbeat
-  /// when due. @return false if EasyNav must stop (see failure()), until on_activate().
+  /// @brief At the start of each RT cycle, at \p now: monitors it, publishes the heartbeat when
+  /// due, and writes the safety channel's state to NavState. @return false if EasyNav must stop (see failure()), until on_activate().
   bool cycle_rt(NavState & nav_state, RtMonitor::Clock::time_point now);
 
   /// @brief Why cycle_rt() asked to stop.
   [[nodiscard]] const std::string & failure() const {return failure_;}
 
   [[nodiscard]] const RtMonitor & get_rt_monitor() const {return rt_monitor_;}
+
+  /// @brief Whether the safety status is received ("safety.status.timeout" > 0).
+  [[nodiscard]] bool is_safety_status_enabled() const {return safety_status_sub_ != nullptr;}
 
   /// @brief "safety.mode", as of the last configure.
   [[nodiscard]] bool is_safety_mode() const {return safety_mode_;}
@@ -114,6 +127,10 @@ private:
   /// @brief Updates "diagnostics.rt_cycle" when the RT monitor's status changes.
   void report_rt_status(NavState & nav_state, RtMonitor::Status status);
 
+  /// @brief Updates "diagnostics.safety_status" when the safety channel's state changes.
+  void report_safety_status(
+    NavState & nav_state, const SafetyChannelMonitor::Evaluation & evaluation);
+
   ParameterFreezer freezer_;
 
   // Real-time cycle: monitor and heartbeat, used only from the RT cycle once active.
@@ -128,6 +145,12 @@ private:
   easynav_interfaces::msg::Heartbeat heartbeat_;
   rclcpp::Publisher<easynav_interfaces::msg::Heartbeat>::SharedPtr heartbeat_pub_;
   std::string configuration_hash_;
+
+  // Safety channel: received in the RT callback group, applied from the RT cycle.
+  double safety_status_timeout_ {0.0};
+  SafetyChannelMonitor safety_channel_;
+  rclcpp::Subscription<easynav_interfaces::msg::SafetyStatus>::SharedPtr safety_status_sub_;
+  std::optional<SafetyChannelMonitor::Evaluation> last_safety_report_;
   mutable std::mutex configuration_hash_mutex_;
 };
 

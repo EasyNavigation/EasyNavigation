@@ -37,9 +37,17 @@ VelocityMux::select(NavState & nav_state)
   const auto controller = velocity_command::take(nav_state, VelocitySource::CONTROLLER);
   const bool paused = nav_state.has(kNavigationPaused) &&
     nav_state.get_safe<bool>(kNavigationPaused);
+  const bool protective_stop = nav_state.has(kSafetyStatusKey) &&
+    nav_state.get_safe<SafetyChannelState>(kSafetyStatusKey).protective_stop;
 
   Selection selection;
-  if (override_cmd) {
+  if (protective_stop) {
+    // The safety channel is stopping the robot: nobody may command it, recoveries included.
+    geometry_msgs::msg::TwistStamped stop;
+    stop.header = controller ? controller->header : last_target_.header;
+    const bool fresh = controller.has_value() || last_choice_ != Choice::SAFETY_STOP;
+    selection = {stop, Choice::SAFETY_STOP, fresh, true};
+  } else if (override_cmd) {
     selection = {*override_cmd, Choice::OVERRIDE, true, false};
   } else if (takeover) {
     selection = {*takeover, Choice::TAKEOVER, true, true};
@@ -54,6 +62,7 @@ VelocityMux::select(NavState & nav_state)
   }
 
   last_target_ = selection.cmd;
+  last_choice_ = selection.choice;
   return selection;
 }
 

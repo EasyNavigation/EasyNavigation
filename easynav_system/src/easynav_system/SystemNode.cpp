@@ -117,7 +117,7 @@ SystemNode::on_configure(const rclcpp_lifecycle::State & state)
 
   // Both, to report every error.
   const bool system_valid = check_system_parameters();
-  const bool safety_valid = safety_.check_system(*this);
+  const bool safety_valid = safety_.check_system(*this, realtime_cbg_);
   if (!system_valid || !safety_valid) {
     return CallbackReturnT::FAILURE;
   }

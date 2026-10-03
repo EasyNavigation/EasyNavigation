@@ -32,6 +32,7 @@
 #include "easynav_controller/safety/CommandGuard.hpp"
 #include "easynav_core/ControllerMethodBase.hpp"
 #include "easynav_core/RobotLimits.hpp"
+#include "easynav_core/SafetyChannel.hpp"
 #include "easynav_core/PluginSwitcher.hpp"
 #include "rclcpp/macros.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
@@ -60,6 +61,10 @@ namespace easynav
  *
  * safety::CommandGuard keeps the command from being stale or invalid ("cmd_timeout",
  * "cmd_vel_keepalive_period", non-finite commands, "diagnostics.cmd_vel").
+ *
+ * The safety channel's state in NavState ("safety_status", see SafetyChannelState) is applied
+ * every RT cycle: zero during a protective stop, and the robot limits cut down to its safely
+ * limited speed.
  */
 class ControllerNode : public rclcpp_lifecycle::LifecycleNode, public RobotLimitsProvider
 {
@@ -163,14 +168,15 @@ public:
    * @brief Selects, smooths and publishes this RT cycle's velocity command.
    *
    * VelocityMux picks, by priority, among the commands proposed this cycle (see
-   * velocity_command): an override (published as is), a takeover, zero while paused, or the
-   * controller's. Publishes when a new command was proposed, or while the smoother is still
+   * velocity_command): zero during a protective stop, an override (published as is), a takeover,
+   * zero while paused, or the controller's. Publishes when a new command was proposed, or while the smoother is still
    * ramping towards the last one.
    * @param nav_state Shared navigation state.
    */
   void publish_cmd_vel_rt(std::shared_ptr<NavState> nav_state);
 
-  /// @brief Robot limits being enforced.
+  /// @brief Robot limits being enforced: the configured ones, cut down to the safety channel's
+  /// safely limited speed, if any.
   RobotLimits get_robot_limits() const override;
 
   /// @brief Whether "robot_limits.<field>" was configured explicitly.
@@ -192,7 +198,11 @@ private:
   /// @brief Checks "cmd_timeout" against the loaded controller's period.
   bool check_cmd_timeout();
 
-  RobotLimits robot_limits_;
+  /// @brief Applies the safety channel's \p state to the limits enforced.
+  void apply_safety_channel(const SafetyChannelState & state);
+
+  RobotLimits robot_limits_;  ///< As configured.
+  SafetyChannelState safety_channel_;  ///< As last applied.
   std::set<std::string> configured_limits_;
   mutable std::mutex robot_limits_mutex_;
 

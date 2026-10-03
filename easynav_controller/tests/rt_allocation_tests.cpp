@@ -18,6 +18,7 @@
 #include <atomic>
 #include <cmath>
 #include <cstdlib>
+#include <limits>
 #include <new>
 
 #include "gtest/gtest.h"
@@ -30,6 +31,7 @@
 #include "easynav_controller/VelocityMux.hpp"
 #include "easynav_controller/VelocitySmoother.hpp"
 #include "easynav_controller/safety/CommandGuard.hpp"
+#include "easynav_core/SafetyChannel.hpp"
 #include "easynav_core/VelocityCommand.hpp"
 
 namespace
@@ -99,6 +101,44 @@ TEST(RtAllocationTest, VelocityPathDoesNotAllocateOnceWarm)
   counting = false;
 
   EXPECT_EQ(allocations.load(), 0u) << "allocations in 1000 RT cycles of the velocity path";
+}
+
+TEST(RtAllocationTest, SafetyChannelPathDoesNotAllocateOnceWarm)
+{
+  easynav::NavState nav_state;
+  easynav::VelocityMux mux;
+  easynav::VelocitySmoother smoother;
+  const easynav::RobotLimits configured;
+  smoother.set_limits(configured);
+
+  geometry_msgs::msg::TwistStamped controller_cmd;
+  controller_cmd.header.frame_id = "base_footprint";
+  controller_cmd.twist.linear.x = 0.4;
+  auto takeover_cmd = controller_cmd;
+
+  // What SystemNode writes and ControllerNode applies, every RT cycle: stops and speed limits.
+  auto cycle = [&](int i) {
+      easynav::SafetyChannelState state;
+      state.protective_stop = i % 3 == 0;
+      state.max_linear_vel = (i % 2 == 0) ? 0.2 : std::numeric_limits<double>::infinity();
+      nav_state.set(easynav::kSafetyStatusKey, state);
+      const auto applied = nav_state.get_safe<easynav::SafetyChannelState>(
+        easynav::kSafetyStatusKey);
+      smoother.set_limits(easynav::limited_by(configured, applied));
+      rt_cycle(nav_state, mux, smoother, controller_cmd, takeover_cmd, i % 2 == 0);
+    };
+  for (int i = 0; i < 3; ++i) {
+    cycle(i);
+  }
+
+  allocations = 0;
+  counting = true;
+  for (int i = 0; i < 1000; ++i) {
+    cycle(i);
+  }
+  counting = false;
+
+  EXPECT_EQ(allocations.load(), 0u) << "allocations in 1000 RT cycles with the safety channel";
 }
 
 TEST(RtAllocationTest, GuardedVelocityOutputDoesNotAllocateOnceWarm)

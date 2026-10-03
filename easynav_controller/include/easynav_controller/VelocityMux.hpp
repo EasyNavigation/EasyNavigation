@@ -21,6 +21,7 @@
 #include "geometry_msgs/msg/twist_stamped.hpp"
 
 #include "easynav_common/types/NavState.hpp"
+#include "easynav_core/SafetyChannel.hpp"
 #include "easynav_core/VelocityCommand.hpp"
 
 namespace easynav
@@ -31,6 +32,7 @@ namespace easynav
  * @brief Decides, every RT cycle, which velocity command is sent to the robot.
  *
  * Takes the commands proposed this cycle (see velocity_command) and picks, by priority:
+ * 0. zero, during a protective stop of the safety channel ("safety_status");
  * 1. an emergency override (VelocitySource::OVERRIDE, published as is, not smoothed);
  * 2. a command that takes over the robot's motion (VelocitySource::TAKEOVER);
  * 3. zero, while navigation is paused ("navigation_paused");
@@ -41,7 +43,7 @@ class VelocityMux
 {
 public:
   /// @brief Who the selected command comes from.
-  enum class Choice {NONE, CONTROLLER, PAUSED, TAKEOVER, OVERRIDE};
+  enum class Choice {NONE, CONTROLLER, PAUSED, TAKEOVER, OVERRIDE, SAFETY_STOP};
 
   /// @brief This cycle's selection.
   struct Selection
@@ -56,10 +58,15 @@ public:
   Selection select(NavState & nav_state);
 
   /// @brief Forgets the last target (e.g. on activation).
-  void reset() {last_target_ = geometry_msgs::msg::TwistStamped();}
+  void reset()
+  {
+    last_target_ = geometry_msgs::msg::TwistStamped();
+    last_choice_ = Choice::NONE;
+  }
 
 private:
   geometry_msgs::msg::TwistStamped last_target_;
+  Choice last_choice_ {Choice::NONE};
 };
 
 }  // namespace easynav
