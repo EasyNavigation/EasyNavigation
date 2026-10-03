@@ -1,0 +1,15 @@
+<map id="CommandGuardTest" name="CommandGuardTest">
+<area shape="rect" id="Node000001" title=" " alt="" coords="232,102,373,128"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,53,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="68,35,169,75,250,99,249,104,167,81,66,40"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="77,5,157,31"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="149,37,215,76,270,99,268,104,213,80,146,42"/>
+<area shape="rect" id="Node000004" href="$classeasynav_1_1safety_1_1CommandGuard.html" title="Keeps the velocity command sent to the robot from being stale or invalid." alt="" coords="181,5,296,31"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="257,43,296,100,292,103,253,46"/>
+<area shape="rect" id="Node000005" href="$classeasynav_1_1VelocityMux.html" title="Decides, every RT cycle, which velocity command is sent to the robot." alt="" coords="321,5,412,31"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="354,46,333,80,314,104,310,100,328,76,350,43"/>
+<area shape="rect" id="Node000006" href="$classeasynav_1_1NavState.html" title="A generic, type&#45;safe, thread&#45;safe blackboard to hold runtime state." alt="" coords="436,5,512,31"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="449,42,390,80,338,104,335,99,388,76,446,38"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="545,5,590,31"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="550,45,529,64,504,80,472,93,438,103,374,113,373,108,437,97,470,88,501,76,526,60,546,41"/>
+</map>

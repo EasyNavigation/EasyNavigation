@@ -1,0 +1,21 @@
+<map id="easynav_system/include/easynav_system/safety/ParameterFreezer.hpp" name="easynav_system/include/easynav_system/safety/ParameterFreezer.hpp">
+<area shape="rect" id="Node000001" title="Declaration of the ParameterFreezer class." alt="" coords="232,5,396,61"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,116,66,142"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="233,63,86,112,81,113,79,108,84,106,231,57"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="122,205,168,231"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="233,49,204,58,176,71,151,88,131,110,124,129,123,150,134,191,129,192,118,151,118,128,127,108,148,84,174,66,202,53,231,44"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="141,116,197,142"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="274,64,202,110,199,106,271,59"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="530,205,584,231"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="397,39,468,48,542,62,605,81,629,93,646,107,652,120,653,133,642,158,619,180,593,199,590,195,616,176,637,155,648,132,647,121,641,111,626,98,603,86,541,67,467,53,396,44"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="431,116,488,142"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="358,59,430,106,427,110,355,64"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="512,116,631,142"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="390,59,525,108,523,113,388,64"/>
+<area shape="rect" id="Node000008" href="$ConfigurationFingerprint_8hpp.html" title="Fingerprint (dump and SHA&#45;256) of the EasyNav configuration." alt="" coords="222,109,407,150"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="317,62,317,94,312,94,312,62"/>
+<area shape="poly" id="edge8_Node000008_Node000003" title=" " alt="" coords="277,153,183,200,181,195,275,148"/>
+<area shape="poly" id="edge9_Node000008_Node000005" title=" " alt="" coords="370,148,516,199,514,204,368,153"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="234,198,395,238"/>
+<area shape="poly" id="edge10_Node000008_Node000009" title=" " alt="" coords="317,150,317,182,312,182,312,150"/>
+</map>

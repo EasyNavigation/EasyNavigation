@@ -149,10 +149,14 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a710405b9a4fd9e34822ffad98579f38d"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classSystemActions.html">SystemActions</a>: aborts the active mission, if any, telling its client why.  <br /></td></tr>
 <tr class="memitem:ab8a487e04df5b9061c7ca69c97e44c4c" id="r_ab8a487e04df5b9061c7ca69c97e44c4c"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#ab8a487e04df5b9061c7ca69c97e44c4c">apply_pending_reconfigure</a> ()</td></tr>
 <tr class="memdesc:ab8a487e04df5b9061c7ca69c97e44c4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Applies the pending reconfiguration request, if any, while Active: cycles through unconfigured, setting the parameters there.  <br /></td></tr>
+<tr class="memitem:ac884d4953f8aaa5a95d572c0a654a9dd" id="r_ac884d4953f8aaa5a95d572c0a654a9dd"><td class="memItemLeft">std::string&#160;</td><td class="memItemRight"><a class="el" href="#ac884d4953f8aaa5a95d572c0a654a9dd">get_configuration_dump</a> ()</td></tr>
+<tr class="memdesc:ac884d4953f8aaa5a95d572c0a654a9dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Every EasyNav parameter, one "node/parameter=value" per line, sorted.  <br /></td></tr>
 <tr class="memitem:a76a94058e57592e7255a930e8e015af7" id="r_a76a94058e57592e7255a930e8e015af7"><td class="memItemLeft">std::shared_ptr&lt; <a class="el" href="classeasynav_1_1NavState.html">NavState</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a76a94058e57592e7255a930e8e015af7">get_nav_state</a> () const</td></tr>
 <tr class="memdesc:a76a94058e57592e7255a930e8e015af7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Access to the shared navigation state (for testing and tools).  <br /></td></tr>
 <tr class="memitem:a8366fef9515c0b0cd47949fbfc018641" id="r_a8366fef9515c0b0cd47949fbfc018641"><td class="memItemLeft">rclcpp::CallbackGroup::SharedPtr&#160;</td><td class="memItemRight"><a class="el" href="#a8366fef9515c0b0cd47949fbfc018641">get_real_time_cbg</a> ()</td></tr>
 <tr class="memdesc:a8366fef9515c0b0cd47949fbfc018641"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the real-time callback group.  <br /></td></tr>
+<tr class="memitem:a70bd8d3f16f097dda90ebf976ca2c80e" id="r_a70bd8d3f16f097dda90ebf976ca2c80e"><td class="memItemLeft">const <a class="el" href="classeasynav_1_1safety_1_1SafetySupervisor.html">safety::SafetySupervisor</a> &amp;&#160;</td><td class="memItemRight"><a class="el" href="#a70bd8d3f16f097dda90ebf976ca2c80e">get_safety</a> () const</td></tr>
+<tr class="memdesc:a70bd8d3f16f097dda90ebf976ca2c80e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safety mode, memory lock and configuration hash, as of the last configure.  <br /></td></tr>
 <tr class="memitem:a73744f46e049d6d6de41e844cf702fb7" id="r_a73744f46e049d6d6de41e844cf702fb7"><td class="memItemLeft">std::string&#160;</td><td class="memItemRight"><a class="el" href="#a73744f46e049d6d6de41e844cf702fb7">get_shutdown_reason</a> () const</td></tr>
 <tr class="memdesc:a73744f46e049d6d6de41e844cf702fb7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Why the shutdown was requested.  <br /></td></tr>
 <tr class="memitem:a514922ffaeaefa826c2d33243b19891f" id="r_a514922ffaeaefa826c2d33243b19891f"><td class="memItemLeft">std::map&lt; std::string, <a class="el" href="structeasynav_1_1SystemNodeInfo.html">SystemNodeInfo</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a514922ffaeaefa826c2d33243b19891f">get_system_nodes</a> ()</td></tr>
@@ -175,10 +179,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a9b0782b915f4798a61ae8b9e56ebd5fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle lifecycle transition error.  <br /></td></tr>
 <tr class="memitem:a38b74771f6ab23805f990786e4d6f806" id="r_a38b74771f6ab23805f990786e4d6f806"><td class="memItemLeft"><a class="el" href="#ad09d90f1fe35c9e2f2fd7fc1902312f4">CallbackReturnT</a>&#160;</td><td class="memItemRight"><a class="el" href="#a38b74771f6ab23805f990786e4d6f806">on_shutdown</a> (const rclcpp_lifecycle::State &amp;state)</td></tr>
 <tr class="memdesc:a38b74771f6ab23805f990786e4d6f806"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shutdown the node.  <br /></td></tr>
-<tr class="memitem:a86a5682966870e68ca882f68df9d40b6" id="r_a86a5682966870e68ca882f68df9d40b6"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a86a5682966870e68ca882f68df9d40b6">request_reconfigure</a> (const std::vector&lt; ParameterChange &gt; &amp;changes, const std::string &amp;reason) override</td></tr>
-<tr class="memdesc:a86a5682966870e68ca882f68df9d40b6"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classSystemActions.html">SystemActions</a>: pending until <a class="el" href="#ab8a487e04df5b9061c7ca69c97e44c4c" title="Applies the pending reconfiguration request, if any, while Active: cycles through unconfigured,...">apply_pending_reconfigure()</a>.  <br /></td></tr>
-<tr class="memitem:a0ecc1562707b2ea74382ada794cfd8d0" id="r_a0ecc1562707b2ea74382ada794cfd8d0"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a0ecc1562707b2ea74382ada794cfd8d0">request_restore_parameters</a> (const std::string &amp;reason) override</td></tr>
-<tr class="memdesc:a0ecc1562707b2ea74382ada794cfd8d0"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classSystemActions.html">SystemActions</a>: pending until <a class="el" href="#ab8a487e04df5b9061c7ca69c97e44c4c" title="Applies the pending reconfiguration request, if any, while Active: cycles through unconfigured,...">apply_pending_reconfigure()</a>.  <br /></td></tr>
+<tr class="memitem:a86dad7c288969ed516ebbba653cf1eae" id="r_a86dad7c288969ed516ebbba653cf1eae"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a86dad7c288969ed516ebbba653cf1eae">request_reconfigure</a> (const std::vector&lt; ParameterChange &gt; &amp;changes, const std::string &amp;reason) override</td></tr>
+<tr class="memdesc:a86dad7c288969ed516ebbba653cf1eae"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classSystemActions.html">SystemActions</a>: pending until <a class="el" href="#ab8a487e04df5b9061c7ca69c97e44c4c" title="Applies the pending reconfiguration request, if any, while Active: cycles through unconfigured,...">apply_pending_reconfigure()</a>; rejected in safety mode.  <br /></td></tr>
+<tr class="memitem:a9fb6e9e0bdb9f0ad320883907cd011f7" id="r_a9fb6e9e0bdb9f0ad320883907cd011f7"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a9fb6e9e0bdb9f0ad320883907cd011f7">request_restore_parameters</a> (const std::string &amp;reason) override</td></tr>
+<tr class="memdesc:a9fb6e9e0bdb9f0ad320883907cd011f7"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classSystemActions.html">SystemActions</a>: pending until <a class="el" href="#ab8a487e04df5b9061c7ca69c97e44c4c" title="Applies the pending reconfiguration request, if any, while Active: cycles through unconfigured,...">apply_pending_reconfigure()</a>; rejected in safety mode.  <br /></td></tr>
 <tr class="memitem:afb19ea0f03d73f4a8ea358431f5c60b3" id="r_afb19ea0f03d73f4a8ea358431f5c60b3"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#afb19ea0f03d73f4a8ea358431f5c60b3">request_shutdown</a> (const std::string &amp;reason) override</td></tr>
 <tr class="memdesc:afb19ea0f03d73f4a8ea358431f5c60b3"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classSystemActions.html">SystemActions</a>: records that EasyNav must terminate (see <a class="el" href="#af1cee97a26965526583e27561933d534" title="Whether the recovery system asked EasyNav to terminate (request_shutdown()).">is_shutdown_requested()</a>).  <br /></td></tr>
 <tr class="memitem:acca79767d43dedc09e182e9125a847f3" id="r_acca79767d43dedc09e182e9125a847f3"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#acca79767d43dedc09e182e9125a847f3">system_cycle</a> ()</td></tr>
@@ -192,7 +196,8 @@ Public Member Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>ROS 2 lifecycle node coordinating all Easy Navigation components. </p>
-<p>Manages lifecycle transitions, real-time execution, and communication between planner, controller, localizer, map manager, and sensor nodes. </p>
+<p>Manages lifecycle transitions, real-time execution, and communication between planner, controller, localizer, map manager, and sensor nodes.</p>
+<p>Safety ("safety.*" parameters, configuration hash): <a class="el" href="classeasynav_1_1safety_1_1SafetySupervisor.html" title="What SystemNode does for safety, kept out of the navigation logic.">safety::SafetySupervisor</a>. </p>
 </div><a name="doc-typedef-members" id="doc-typedef-members"></a><h2 id="header-doc-typedef-members" class="groupheader">Member Typedef Documentation</h2>
 <a id="ad09d90f1fe35c9e2f2fd7fc1902312f4" name="ad09d90f1fe35c9e2f2fd7fc1902312f4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad09d90f1fe35c9e2f2fd7fc1902312f4">&#9670;&#160;</a></span>CallbackReturnT</h2>
@@ -309,6 +314,33 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="ac884d4953f8aaa5a95d572c0a654a9dd" name="ac884d4953f8aaa5a95d572c0a654a9dd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac884d4953f8aaa5a95d572c0a654a9dd">&#9670;&#160;</a></span>get_configuration_dump()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string get_configuration_dump </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Every EasyNav parameter, one "node/parameter=value" per line, sorted. </p>
+
+</div>
+</div>
 <a id="a76a94058e57592e7255a930e8e015af7" name="a76a94058e57592e7255a930e8e015af7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a76a94058e57592e7255a930e8e015af7">&#9670;&#160;</a></span>get_nav_state()</h2>
 
@@ -354,6 +386,33 @@ Public Member Functions</h2></td></tr>
 
 <p>Get the real-time callback group. </p>
 <dl class="section return"><dt>Returns</dt><dd>Shared pointer to the callback group. </dd></dl>
+
+</div>
+</div>
+<a id="a70bd8d3f16f097dda90ebf976ca2c80e" name="a70bd8d3f16f097dda90ebf976ca2c80e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a70bd8d3f16f097dda90ebf976ca2c80e">&#9670;&#160;</a></span>get_safety()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classeasynav_1_1safety_1_1SafetySupervisor.html">safety::SafetySupervisor</a> &amp; get_safety </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Safety mode, memory lock and configuration hash, as of the last configure. </p>
 
 </div>
 </div>
@@ -642,8 +701,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a86a5682966870e68ca882f68df9d40b6" name="a86a5682966870e68ca882f68df9d40b6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a86a5682966870e68ca882f68df9d40b6">&#9670;&#160;</a></span>request_reconfigure()</h2>
+<a id="a86dad7c288969ed516ebbba653cf1eae" name="a86dad7c288969ed516ebbba653cf1eae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a86dad7c288969ed516ebbba653cf1eae">&#9670;&#160;</a></span>request_reconfigure()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -652,7 +711,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void request_reconfigure </td>
+          <td class="memname">bool request_reconfigure </td>
           <td>(</td>
           <td class="paramtype">const std::vector&lt; ParameterChange &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>changes</em></span>, </td>
         </tr>
@@ -669,12 +728,12 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p><a class="el" href="classSystemActions.html">SystemActions</a>: pending until <a class="el" href="#ab8a487e04df5b9061c7ca69c97e44c4c" title="Applies the pending reconfiguration request, if any, while Active: cycles through unconfigured,...">apply_pending_reconfigure()</a>. </p>
+<p><a class="el" href="classSystemActions.html">SystemActions</a>: pending until <a class="el" href="#ab8a487e04df5b9061c7ca69c97e44c4c" title="Applies the pending reconfiguration request, if any, while Active: cycles through unconfigured,...">apply_pending_reconfigure()</a>; rejected in safety mode. </p>
 
 </div>
 </div>
-<a id="a0ecc1562707b2ea74382ada794cfd8d0" name="a0ecc1562707b2ea74382ada794cfd8d0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0ecc1562707b2ea74382ada794cfd8d0">&#9670;&#160;</a></span>request_restore_parameters()</h2>
+<a id="a9fb6e9e0bdb9f0ad320883907cd011f7" name="a9fb6e9e0bdb9f0ad320883907cd011f7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9fb6e9e0bdb9f0ad320883907cd011f7">&#9670;&#160;</a></span>request_restore_parameters()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -683,7 +742,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void request_restore_parameters </td>
+          <td class="memname">bool request_restore_parameters </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>reason</em></span></td><td>)</td>
           <td></td>
@@ -696,7 +755,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p><a class="el" href="classSystemActions.html">SystemActions</a>: pending until <a class="el" href="#ab8a487e04df5b9061c7ca69c97e44c4c" title="Applies the pending reconfiguration request, if any, while Active: cycles through unconfigured,...">apply_pending_reconfigure()</a>. </p>
+<p><a class="el" href="classSystemActions.html">SystemActions</a>: pending until <a class="el" href="#ab8a487e04df5b9061c7ca69c97e44c4c" title="Applies the pending reconfiguration request, if any, while Active: cycles through unconfigured,...">apply_pending_reconfigure()</a>; rejected in safety mode. </p>
 
 </div>
 </div>

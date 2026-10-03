@@ -110,6 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-namespaces" class="groupheader"><a id="namespaces" name="namespaces"></a>
 Namespaces</h2></td></tr>
+<tr class="memitem:safety" id="r_safety"><td class="memItemLeft">namespace &#160;</td><td class="memItemRight"><a class="el" href="namespaceeasynav_1_1safety.html">safety</a></td></tr>
 <tr class="memitem:testing" id="r_testing"><td class="memItemLeft">namespace &#160;</td><td class="memItemRight"><a class="el" href="namespaceeasynav_1_1testing.html">testing</a></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
@@ -218,6 +219,10 @@ Functions</h2></td></tr>
 <tr class="memdesc:a7bb977b8b2c38af1039172c74d9b5024"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the (absolute) yaw angle difference between two poses.  <br /></td></tr>
 <tr class="memitem:aa7ef56a3832b8bb20cdf38c26c8a2308" id="r_aa7ef56a3832b8bb20cdf38c26c8a2308"><td class="memItemLeft">double&#160;</td><td class="memItemRight"><a class="el" href="#aa7ef56a3832b8bb20cdf38c26c8a2308">calculate_distance_xy</a> (const geometry_msgs::msg::Pose &amp;pose1, const geometry_msgs::msg::Pose &amp;pose2)</td></tr>
 <tr class="memdesc:aa7ef56a3832b8bb20cdf38c26c8a2308"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal utility functions.  <br /></td></tr>
+<tr class="memitem:a0ae00ce25b3aee044563c9beb96e721d" id="r_a0ae00ce25b3aee044563c9beb96e721d"><td class="memItemLeft">std::string&#160;</td><td class="memItemRight"><a class="el" href="#a0ae00ce25b3aee044563c9beb96e721d">check_memory_lock</a> ()</td></tr>
+<tr class="memdesc:a0ae00ce25b3aee044563c9beb96e721d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether <a class="el" href="#a6f6b49bdd4f311d129b5a049c9d40626" title="Locks the process memory, current and future, so the RT cycle never page-faults.">lock_memory()</a> is allowed (RLIMIT_MEMLOCK unlimited), without locking.  <br /></td></tr>
+<tr class="memitem:a88c4e6c4bff6dfd0ddb3cdc7a4bd1e59" id="r_a88c4e6c4bff6dfd0ddb3cdc7a4bd1e59"><td class="memItemLeft">std::string&#160;</td><td class="memItemRight"><a class="el" href="#a88c4e6c4bff6dfd0ddb3cdc7a4bd1e59">check_real_time_priority</a> (int priority)</td></tr>
+<tr class="memdesc:a88c4e6c4bff6dfd0ddb3cdc7a4bd1e59"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether a thread of this process can get SCHED_FIFO <code class="param">priority</code>, tried on a temporary thread.  <br /></td></tr>
 <tr class="memitem:aa1af512138bf2ac8f6d199ba2761a918" id="r_aa1af512138bf2ac8f6d199ba2761a918"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#aa1af512138bf2ac8f6d199ba2761a918">convert</a> (const sensor_msgs::msg::LaserScan &amp;scan, pcl::PointCloud&lt; pcl::PointXYZ &gt; &amp;pc)</td></tr>
 <tr class="memdesc:aa1af512138bf2ac8f6d199ba2761a918"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a <code>LaserScan</code> message into a point cloud.  <br /></td></tr>
 <tr class="memitem:a88549bc2c5266793281e9244cf6f6fe9" id="r_a88549bc2c5266793281e9244cf6f6fe9"><td class="memTemplParams" colspan="2">template&lt;typename T, typename NodeT&gt; </td></tr>
@@ -243,17 +248,23 @@ Functions</h2></td></tr>
 <tr class="memitem:a60356f07b901b23327436276a7c57883" id="r_a60356f07b901b23327436276a7c57883"><td class="memTemplParams" colspan="2">template&lt;typename NodeT&gt; </td></tr>
 <tr class="memitem:a60356f07b901b23327436276a7c57883 template"><td class="memItemLeft"><a class="el" href="structRobotGeometry.html">RobotGeometry</a>&#160;</td><td class="memItemRight"><a class="el" href="#a60356f07b901b23327436276a7c57883">get_robot_geometry</a> (NodeT &amp;node, const <a class="el" href="structeasynav_1_1LegacyRobotGeometryNames.html">LegacyRobotGeometryNames</a> &amp;legacy={})</td></tr>
 <tr class="memdesc:a60356f07b901b23327436276a7c57883"><td class="mdescLeft">&#160;</td><td class="mdescRight">The robot's geometry ("system_node.robot_geometry.*").  <br /></td></tr>
+<tr class="memitem:a6f6b49bdd4f311d129b5a049c9d40626" id="r_a6f6b49bdd4f311d129b5a049c9d40626"><td class="memItemLeft">std::string&#160;</td><td class="memItemRight"><a class="el" href="#a6f6b49bdd4f311d129b5a049c9d40626">lock_memory</a> ()</td></tr>
+<tr class="memdesc:a6f6b49bdd4f311d129b5a049c9d40626"><td class="mdescLeft">&#160;</td><td class="mdescRight">Locks the process memory, current and future, so the RT cycle never page-faults.  <br /></td></tr>
 <tr class="memitem:aaf7b2449dfa550dee63301e3d721ab3a" id="r_aaf7b2449dfa550dee63301e3d721ab3a"><td class="memItemLeft">constexpr double&#160;</td><td class="memItemRight"><a class="el" href="#aaf7b2449dfa550dee63301e3d721ab3a">norm_angle</a> (const double angle)</td></tr>
 <tr class="memdesc:aaf7b2449dfa550dee63301e3d721ab3a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Angle normalization to [-pi, pi) range (in radians).  <br /></td></tr>
 <tr class="memitem:a9050313b1e39e04002d6e63dfe4dd856" id="r_a9050313b1e39e04002d6e63dfe4dd856"><td class="memItemLeft">sensor_msgs::msg::PointCloud2&#160;</td><td class="memItemRight"><a class="el" href="#a9050313b1e39e04002d6e63dfe4dd856">perception_to_rosmsg</a> (const <a class="el" href="classeasynav_1_1PointPerception.html">PointPerception</a> &amp;perception)</td></tr>
 <tr class="memdesc:a9050313b1e39e04002d6e63dfe4dd856"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a <a class="el" href="classeasynav_1_1PointPerception.html" title="PointPerception">PointPerception</a> into a <code>sensor_msgs::msg::PointCloud2</code> message.  <br /></td></tr>
 <tr class="memitem:a4adf6aa9d2208b93442fc96f4e732147" id="r_a4adf6aa9d2208b93442fc96f4e732147"><td class="memItemLeft">sensor_msgs::msg::PointCloud2&#160;</td><td class="memItemRight"><a class="el" href="#a4adf6aa9d2208b93442fc96f4e732147">points_to_rosmsg</a> (const pcl::PointCloud&lt; pcl::PointXYZ &gt; &amp;points)</td></tr>
 <tr class="memdesc:a4adf6aa9d2208b93442fc96f4e732147"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a PCL point cloud into a <code>sensor_msgs::msg::PointCloud2</code> message.  <br /></td></tr>
+<tr class="memitem:a98d0e9f3f19b41f7e99ef76b797cd580" id="r_a98d0e9f3f19b41f7e99ef76b797cd580"><td class="memItemLeft">std::string&#160;</td><td class="memItemRight"><a class="el" href="#a98d0e9f3f19b41f7e99ef76b797cd580">set_real_time_priority</a> (int priority)</td></tr>
+<tr class="memdesc:a98d0e9f3f19b41f7e99ef76b797cd580"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gives the calling thread SCHED_FIFO <code class="param">priority</code>.  <br /></td></tr>
 <tr class="memitem:a1298c4f34dc2e214c8a59e80e0f8b231" id="r_a1298c4f34dc2e214c8a59e80e0f8b231"><td class="memItemLeft">std::string&#160;</td><td class="memItemRight"><a class="el" href="#a1298c4f34dc2e214c8a59e80e0f8b231">stacktrace</a> (std::size_t skip=1, std::size_t max_frames=64)</td></tr>
 <tr class="memdesc:a1298c4f34dc2e214c8a59e80e0f8b231"><td class="mdescLeft">&#160;</td><td class="mdescRight">Captures a C/C++ stack trace as a string.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
+<tr class="memitem:a2a5915b6bd27896679c3bbf8e59753c2" id="r_a2a5915b6bd27896679c3bbf8e59753c2"><td class="memItemLeft">constexpr int&#160;</td><td class="memItemRight"><a class="el" href="#a2a5915b6bd27896679c3bbf8e59753c2">kRealTimePriority</a> = 80</td></tr>
+<tr class="memdesc:a2a5915b6bd27896679c3bbf8e59753c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">SCHED_FIFO priority of EasyNav's real-time cycle.  <br /></td></tr>
 <tr class="memitem:af63183b88c39f568dffa0d77e441e468" id="r_af63183b88c39f568dffa0d77e441e468"><td class="memTemplParams" colspan="2">template&lt;class C&gt; </td></tr>
 <tr class="memitem:af63183b88c39f568dffa0d77e441e468 template"><td class="memItemLeft">std::unique_ptr&lt; C &gt;&#160;</td><td class="memItemRight"><a class="el" href="#af63183b88c39f568dffa0d77e441e468">Singleton&lt; C &gt;::instance_</a> = nullptr</td></tr>
 <tr class="memitem:aea6f80498fbc28235e7a690b577c46fd" id="r_aea6f80498fbc28235e7a690b577c46fd"><td class="memTemplParams" colspan="2">template&lt;class C&gt; </td></tr>
@@ -480,6 +491,46 @@ Variables</h2></td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a0ae00ce25b3aee044563c9beb96e721d" name="a0ae00ce25b3aee044563c9beb96e721d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0ae00ce25b3aee044563c9beb96e721d">&#9670;&#160;</a></span>check_memory_lock()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string check_memory_lock </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Whether <a class="el" href="#a6f6b49bdd4f311d129b5a049c9d40626" title="Locks the process memory, current and future, so the RT cycle never page-faults.">lock_memory()</a> is allowed (RLIMIT_MEMLOCK unlimited), without locking. </p>
+<dl class="section return"><dt>Returns</dt><dd>"" if it is, otherwise why not. </dd></dl>
+
+</div>
+</div>
+<a id="a88c4e6c4bff6dfd0ddb3cdc7a4bd1e59" name="a88c4e6c4bff6dfd0ddb3cdc7a4bd1e59"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a88c4e6c4bff6dfd0ddb3cdc7a4bd1e59">&#9670;&#160;</a></span>check_real_time_priority()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string check_real_time_priority </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>priority</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Whether a thread of this process can get SCHED_FIFO <code class="param">priority</code>, tried on a temporary thread. </p>
+<dl class="section return"><dt>Returns</dt><dd>"" if it can, otherwise why not. </dd></dl>
 
 </div>
 </div>
@@ -794,6 +845,26 @@ template&lt;typename NodeT&gt; </div>
 
 </div>
 </div>
+<a id="a6f6b49bdd4f311d129b5a049c9d40626" name="a6f6b49bdd4f311d129b5a049c9d40626"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6f6b49bdd4f311d129b5a049c9d40626">&#9670;&#160;</a></span>lock_memory()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string lock_memory </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Locks the process memory, current and future, so the RT cycle never page-faults. </p>
+<p>Requires an unlimited RLIMIT_MEMLOCK: with a finite one, later allocations could fail. </p><dl class="section return"><dt>Returns</dt><dd>"" on success, otherwise why not. </dd></dl>
+
+</div>
+</div>
 <a id="aaf7b2449dfa550dee63301e3d721ab3a" name="aaf7b2449dfa550dee63301e3d721ab3a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aaf7b2449dfa550dee63301e3d721ab3a">&#9670;&#160;</a></span>norm_angle()</h2>
 
@@ -873,6 +944,26 @@ template&lt;typename NodeT&gt; </div>
 
 </div>
 </div>
+<a id="a98d0e9f3f19b41f7e99ef76b797cd580" name="a98d0e9f3f19b41f7e99ef76b797cd580"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a98d0e9f3f19b41f7e99ef76b797cd580">&#9670;&#160;</a></span>set_real_time_priority()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string set_real_time_priority </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>priority</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gives the calling thread SCHED_FIFO <code class="param">priority</code>. </p>
+<dl class="section return"><dt>Returns</dt><dd>"" on success, otherwise why not. </dd></dl>
+
+</div>
+</div>
 <a id="a1298c4f34dc2e214c8a59e80e0f8b231" name="a1298c4f34dc2e214c8a59e80e0f8b231"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1298c4f34dc2e214c8a59e80e0f8b231">&#9670;&#160;</a></span>stacktrace()</h2>
 
@@ -905,6 +996,30 @@ template&lt;typename NodeT&gt; </div>
 </div>
 </div>
 <a name="doc-var-members" id="doc-var-members"></a><h2 id="header-doc-var-members" class="groupheader">Variable Documentation</h2>
+<a id="a2a5915b6bd27896679c3bbf8e59753c2" name="a2a5915b6bd27896679c3bbf8e59753c2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2a5915b6bd27896679c3bbf8e59753c2">&#9670;&#160;</a></span>kRealTimePriority</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int kRealTimePriority = 80</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>SCHED_FIFO priority of EasyNav's real-time cycle. </p>
+
+</div>
+</div>
 <a id="af63183b88c39f568dffa0d77e441e468" name="af63183b88c39f568dffa0d77e441e468"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af63183b88c39f568dffa0d77e441e468">&#9670;&#160;</a></span>Singleton&lt; C &gt;::instance_</h2>
 

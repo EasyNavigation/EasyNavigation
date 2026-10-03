@@ -1,25 +1,28 @@
 <map id="easynav_system/src/easynav_system" name="easynav_system/src/easynav_system">
-<area shape="rect" id="node1" href="dir_b47a228beed3b3026fcc1852f2c918f3.html" title="easynav_system" alt="" coords="493,52,611,78"/>
-<area shape="rect" id="node2" href="dir_08f2ac1687261e34ac98cd598106342d.html" title="easynav_maps_manager" alt="" coords="5,126,171,152"/>
-<area shape="poly" id="edge1" href="dir_000019_000008.html" alt="" coords="493,78,183,126,182,120,492,73"/>
-<area shape="rect" id="edge1-headlabel" href="dir_000019_000008.html" title="1" alt="" coords="183,123,190,138"/>
-<area shape="rect" id="node3" href="dir_44416c254a438fcc2b63460fcfa852ae.html" title="easynav_common" alt="" coords="194,126,320,152"/>
-<area shape="poly" id="edge2" href="dir_000019_000000.html" alt="" coords="502,81,323,124,321,119,501,76"/>
-<area shape="rect" id="edge2-headlabel" href="dir_000019_000000.html" title="5" alt="" coords="324,122,331,137"/>
-<area shape="rect" id="node4" href="dir_614ab350d9e5a7622e6a48999ce2a386.html" title="easynav_sensors" alt="" coords="344,126,466,152"/>
-<area shape="poly" id="edge3" href="dir_000019_000014.html" alt="" coords="528,81,445,121,443,116,526,76"/>
-<area shape="rect" id="edge3-headlabel" href="dir_000019_000014.html" title="2" alt="" coords="447,118,454,133"/>
-<area shape="rect" id="node5" href="dir_6678bcded56b368db1624ad28d7d4c22.html" title="easynav_localizer" alt="" coords="490,126,614,152"/>
-<area shape="poly" id="edge4" href="dir_000019_000005.html" alt="" coords="555,78,555,110,549,110,549,78"/>
-<area shape="rect" id="edge4-headlabel" href="dir_000019_000005.html" title="1" alt="" coords="557,100,564,115"/>
-<area shape="rect" id="node6" href="dir_68765c78a54fed165bd3b45561ad67e5.html" title="easynav_planner" alt="" coords="638,126,756,152"/>
-<area shape="poly" id="edge5" href="dir_000019_000011.html" alt="" coords="578,76,660,116,658,121,575,81"/>
-<area shape="rect" id="edge5-headlabel" href="dir_000019_000011.html" title="1" alt="" coords="656,102,663,117"/>
-<area shape="rect" id="node7" href="dir_722f417898ad7cd77795b7cfc5c6030f.html" title="include" alt="" coords="781,126,843,152"/>
-<area shape="poly" id="edge6" href="dir_000019_000028.html" alt="" coords="597,76,767,122,765,127,595,81"/>
-<area shape="rect" id="edge6-headlabel" href="dir_000019_000028.html" title="3" alt="" coords="762,108,769,123"/>
-<area shape="rect" id="node8" href="dir_b4627756288a67ca41555af515f54efd.html" title="easynav_controller" alt="" coords="867,126,997,152"/>
-<area shape="poly" id="edge7" href="dir_000019_000002.html" alt="" coords="612,75,853,120,852,125,611,80"/>
-<area shape="rect" id="edge7-headlabel" href="dir_000019_000002.html" title="1" alt="" coords="848,106,855,121"/>
-<area shape="rect" id="clust1" href="dir_e83bd8308294ba0d8e82c83f30ab5e7a.html" title="src" alt="" coords="483,16,621,89"/>
+<area shape="rect" id="node3" href="dir_08f2ac1687261e34ac98cd598106342d.html" title="easynav_maps_manager" alt="" coords="591,137,756,162"/>
+<area shape="poly" id="edge1" href="dir_000019_000008.html" alt="" coords="606,87,650,124,647,128,603,91"/>
+<area shape="rect" id="edge1-headlabel" href="dir_000019_000008.html" title="1" alt="" coords="648,110,655,125"/>
+<area shape="rect" id="node4" href="dir_44416c254a438fcc2b63460fcfa852ae.html" title="easynav_common" alt="" coords="5,137,132,162"/>
+<area shape="poly" id="edge2" href="dir_000019_000000.html" alt="" coords="532,87,147,139,147,133,532,82"/>
+<area shape="rect" id="edge2-headlabel" href="dir_000019_000000.html" title="5" alt="" coords="148,137,155,152"/>
+<area shape="rect" id="node5" href="dir_614ab350d9e5a7622e6a48999ce2a386.html" title="easynav_sensors" alt="" coords="155,137,278,162"/>
+<area shape="poly" id="edge3" href="dir_000019_000014.html" alt="" coords="533,91,294,136,293,131,532,86"/>
+<area shape="rect" id="edge3-headlabel" href="dir_000019_000014.html" title="2" alt="" coords="294,134,301,149"/>
+<area shape="rect" id="node6" href="dir_6678bcded56b368db1624ad28d7d4c22.html" title="easynav_localizer" alt="" coords="302,137,425,162"/>
+<area shape="poly" id="edge4" href="dir_000019_000005.html" alt="" coords="555,91,417,134,415,129,554,86"/>
+<area shape="rect" id="edge4-headlabel" href="dir_000019_000005.html" title="1" alt="" coords="418,131,425,146"/>
+<area shape="rect" id="node7" href="dir_68765c78a54fed165bd3b45561ad67e5.html" title="easynav_planner" alt="" coords="449,137,568,162"/>
+<area shape="poly" id="edge5" href="dir_000019_000011.html" alt="" coords="580,91,536,128,532,124,576,87"/>
+<area shape="rect" id="edge5-headlabel" href="dir_000019_000011.html" title="1" alt="" coords="538,123,545,138"/>
+<area shape="rect" id="node8" href="dir_722f417898ad7cd77795b7cfc5c6030f.html" title="include" alt="" coords="935,137,997,162"/>
+<area shape="poly" id="edge6" href="dir_000019_000028.html" alt="" coords="612,86,664,107,733,121,789,124,847,126,920,134,919,139,846,131,789,130,732,126,662,113,610,91"/>
+<area shape="rect" id="edge6-headlabel" href="dir_000019_000028.html" title="8" alt="" coords="914,120,921,135"/>
+<area shape="rect" id="node9" href="dir_b4627756288a67ca41555af515f54efd.html" title="easynav_controller" alt="" coords="781,137,910,162"/>
+<area shape="poly" id="edge7" href="dir_000019_000002.html" alt="" coords="614,86,664,107,766,133,765,138,662,113,612,91"/>
+<area shape="rect" id="edge7-headlabel" href="dir_000019_000002.html" title="1" alt="" coords="761,119,768,134"/>
+<area shape="rect" id="node2" href="dir_547d787761c25a54bc469b6fa169092f.html" title="safety" alt="" coords="675,63,731,89"/>
+<area shape="poly" id="edge8" href="dir_000032_000028.html" alt="" coords="732,82,920,133,919,138,731,87"/>
+<area shape="rect" id="edge8-headlabel" href="dir_000032_000028.html" title="4" alt="" coords="916,119,923,134"/>
+<area shape="rect" id="clust2" href="dir_b47a228beed3b3026fcc1852f2c918f3.html" alt="" coords="522,52,742,99"/>
+<area shape="rect" id="clust1" href="dir_e83bd8308294ba0d8e82c83f30ab5e7a.html" title="src" alt="" coords="511,16,752,110"/>
 </map>

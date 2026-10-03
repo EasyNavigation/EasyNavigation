@@ -1,0 +1,15 @@
+<map id="easynav_system/include/easynav_system/RealTime.hpp" name="easynav_system/include/easynav_system/RealTime.hpp">
+<area shape="rect" id="Node000001" title="Real&#45;time setup of the EasyNav process." alt="" coords="472,5,677,46"/>
+<area shape="rect" id="Node000002" href="$RealTime_8cpp.html" title="Implementation of the real&#45;time setup of the EasyNav process." alt="" coords="5,102,211,142"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="457,51,223,97,192,103,191,98,222,91,456,46"/>
+<area shape="rect" id="Node000003" href="$SafetySupervisor_8cpp.html" title="Implementation of the SafetySupervisor class." alt="" coords="235,94,397,150"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="507,54,392,96,390,91,505,49"/>
+<area shape="rect" id="Node000004" href="$system__main_8cpp.html" title=" " alt="" coords="420,102,561,142"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="549,60,510,103,506,99,545,56"/>
+<area shape="rect" id="Node000005" href="$real__time__tests_8cpp.html" title="Real&#45;time setup of the EasyNav process." alt="" coords="584,102,736,142"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="604,55,644,99,640,103,600,59"/>
+<area shape="rect" id="Node000006" href="$safety__module__tests_8cpp.html" title="The safety module of easynav_system, on its own: configuration fingerprint, parameter freezer and saf..." alt="" coords="759,102,929,142"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="646,49,788,98,787,103,644,54"/>
+<area shape="rect" id="Node000007" href="$system__safety__mode__tests_8cpp.html" title="Configuration validation, safety mode, frozen configuration and configuration hash." alt="" coords="953,102,1162,142"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="693,45,942,91,974,98,973,104,941,97,692,50"/>
+</map>

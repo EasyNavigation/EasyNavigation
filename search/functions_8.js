@@ -7,9 +7,13 @@ var searchData=
   ['integrate_5fpending_5fperceptions_4',['integrate_pending_perceptions',['../classeasynav_1_1PointPerception.html#af8124b1de9bcb177570f59cbf6ded6b9',1,'easynav::PointPerception']]],
   ['is_5fconfigured_5',['is_configured',['../classeasynav_1_1RobotGeometryRegistry.html#aac00711d6062d68e4ad1da4c710881ab',1,'easynav::RobotGeometryRegistry']]],
   ['is_5fconnected_6',['is_connected',['../classeasynav_1_1GoalManagerClient.html#accf4ef6f99c7c6194b487ce7b9f45273',1,'easynav::GoalManagerClient']]],
-  ['is_5fpaused_7',['is_paused',['../classeasynav_1_1GoalManager.html#aa3bde2742b0e5c8bb77370b03e3d1489',1,'easynav::GoalManager::is_paused()'],['../classeasynav_1_1GoalManagerClient.html#aa3bde2742b0e5c8bb77370b03e3d1489',1,'easynav::GoalManagerClient::is_paused()']]],
-  ['is_5fprogress_5fheld_8',['is_progress_held',['../classeasynav_1_1GoalManager.html#afddd6523025010f5c1bb9dbe58f133ba',1,'easynav::GoalManager']]],
-  ['is_5freconfigure_5fpending_9',['is_reconfigure_pending',['../classeasynav_1_1SystemNode.html#ada609223d2de005e763b8dc8a884264a',1,'easynav::SystemNode']]],
-  ['is_5frobot_5flimit_5fconfigured_10',['is_robot_limit_configured',['../classeasynav_1_1ControllerNode.html#aa519cb557b9bb5dc6fb67add8a28e976',1,'easynav::ControllerNode']]],
-  ['is_5fshutdown_5frequested_11',['is_shutdown_requested',['../classeasynav_1_1SystemNode.html#af1cee97a26965526583e27561933d534',1,'easynav::SystemNode']]]
+  ['is_5ffrozen_7',['is_frozen',['../classeasynav_1_1safety_1_1ParameterFreezer.html#aa747dcfa47bbe4964775eca19bd83ece',1,'easynav::safety::ParameterFreezer']]],
+  ['is_5fmemory_5flock_5frequested_8',['is_memory_lock_requested',['../classeasynav_1_1safety_1_1SafetySupervisor.html#ab679cfd0564009a43ba4379b5e2caee8',1,'easynav::safety::SafetySupervisor']]],
+  ['is_5fnew_9',['is_new',['../classeasynav_1_1safety_1_1CommandGuard.html#adace7e088895033fc190859869e03213',1,'easynav::safety::CommandGuard']]],
+  ['is_5fpaused_10',['is_paused',['../classeasynav_1_1GoalManager.html#aa3bde2742b0e5c8bb77370b03e3d1489',1,'easynav::GoalManager::is_paused()'],['../classeasynav_1_1GoalManagerClient.html#aa3bde2742b0e5c8bb77370b03e3d1489',1,'easynav::GoalManagerClient::is_paused()']]],
+  ['is_5fprogress_5fheld_11',['is_progress_held',['../classeasynav_1_1GoalManager.html#afddd6523025010f5c1bb9dbe58f133ba',1,'easynav::GoalManager']]],
+  ['is_5freconfigure_5fpending_12',['is_reconfigure_pending',['../classeasynav_1_1SystemNode.html#ada609223d2de005e763b8dc8a884264a',1,'easynav::SystemNode']]],
+  ['is_5frobot_5flimit_5fconfigured_13',['is_robot_limit_configured',['../classeasynav_1_1ControllerNode.html#aa519cb557b9bb5dc6fb67add8a28e976',1,'easynav::ControllerNode']]],
+  ['is_5fsafety_5fmode_14',['is_safety_mode',['../classeasynav_1_1safety_1_1SafetySupervisor.html#a3f0ebc0f9f7559163d443d098a21eef2',1,'easynav::safety::SafetySupervisor']]],
+  ['is_5fshutdown_5frequested_15',['is_shutdown_requested',['../classeasynav_1_1SystemNode.html#af1cee97a26965526583e27561933d534',1,'easynav::SystemNode']]]
 ];

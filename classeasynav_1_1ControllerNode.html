@@ -184,11 +184,7 @@ Public Member Functions</h2></td></tr>
 <li>every RT cycle, <a class="el" href="#a7d1c4c40dae2bdcf07ce464cd58bba03" title="Selects, smooths and publishes this RT cycle&#39;s velocity command.">publish_cmd_vel_rt()</a> selects the command (<a class="el" href="classeasynav_1_1VelocityMux.html" title="Decides, every RT cycle, which velocity command is sent to the robot.">VelocityMux</a>: override &gt; takeover &gt; pause &gt; controller), smooths it within those limits (except an override) and publishes it on "cmd_vel" (or "cmd_vel_stamped", see "use_cmd_vel_stamped");</li>
 <li>on deactivation or shutdown, it brakes within the deceleration limits and ends by publishing an exact zero.</li>
 </ul>
-<p>Robustness:</p><ul>
-<li>"cmd_timeout" (s, 0 disables): with no new command for that long, brakes to zero. A controller command is new only if its stamp or value changed.</li>
-<li>"cmd_vel_keepalive_period" (s, 0 disables): republishes at least this often, offering deadline and liveliness QoS of twice this period.</li>
-<li>Non-finite commands are discarded. Problems go to "diagnostics.cmd_vel" in <a class="el" href="classeasynav_1_1NavState.html" title="A generic, type-safe, thread-safe blackboard to hold runtime state.">NavState</a>. </li>
-</ul>
+<p><a class="el" href="classeasynav_1_1safety_1_1CommandGuard.html" title="Keeps the velocity command sent to the robot from being stale or invalid.">safety::CommandGuard</a> keeps the command from being stale or invalid ("cmd_timeout", "cmd_vel_keepalive_period", non-finite commands, "diagnostics.cmd_vel"). </p>
 </div><a name="doc-typedef-members" id="doc-typedef-members"></a><h2 id="header-doc-typedef-members" class="groupheader">Member Typedef Documentation</h2>
 <a id="ad09d90f1fe35c9e2f2fd7fc1902312f4" name="ad09d90f1fe35c9e2f2fd7fc1902312f4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad09d90f1fe35c9e2f2fd7fc1902312f4">&#9670;&#160;</a></span>CallbackReturnT</h2>

@@ -115,77 +115,99 @@ document.addEventListener('DOMContentLoaded', () => {
 <code>#include &lt;cstdlib&gt;</code><br />
 <code>#include &lt;new&gt;</code><br />
 <code>#include &quot;gtest/gtest.h&quot;</code><br />
+<code>#include &quot;rclcpp/rclcpp.hpp&quot;</code><br />
+<code>#include &quot;rclcpp_lifecycle/lifecycle_node.hpp&quot;</code><br />
 <code>#include &quot;geometry_msgs/msg/twist_stamped.hpp&quot;</code><br />
 <code>#include &quot;<a class="el" href="VelocityMux_8hpp_source.html">easynav_controller/VelocityMux.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="VelocitySmoother_8hpp_source.html">easynav_controller/VelocitySmoother.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="CommandGuard_8hpp_source.html">easynav_controller/safety/CommandGuard.hpp</a>&quot;</code><br />
 <code>#include &quot;easynav_core/VelocityCommand.hpp&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for rt_allocation_tests.cpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="rt__allocation__tests_8cpp__incl.png" border="0" usemap="#aeasynav__controller_2tests_2rt__allocation__tests_8cpp" loading="lazy" alt=""/></div>
 <map name="aeasynav__controller_2tests_2rt__allocation__tests_8cpp" id="aeasynav__controller_2tests_2rt__allocation__tests_8cpp">
-<area shape="rect" title="The RT velocity path (proposals, mux, smoother) must not allocate memory once warm." alt="" coords="411,5,540,61"/>
-<area shape="rect" title=" " alt="" coords="111,116,171,142"/>
-<area shape="poly" title=" " alt="" coords="411,50,304,75,183,112,180,113,178,108,182,106,302,70,410,45"/>
-<area shape="rect" title=" " alt="" coords="195,116,252,142"/>
-<area shape="poly" title=" " alt="" coords="412,58,266,111,264,112,262,108,264,107,410,53"/>
-<area shape="rect" title=" " alt="" coords="277,116,336,142"/>
-<area shape="poly" title=" " alt="" coords="428,64,343,111,340,106,426,59"/>
-<area shape="rect" title=" " alt="" coords="360,116,405,142"/>
-<area shape="poly" title=" " alt="" coords="451,63,407,108,403,104,447,60"/>
-<area shape="rect" title=" " alt="" coords="429,116,522,142"/>
-<area shape="poly" title=" " alt="" coords="478,62,478,101,473,101,473,62"/>
-<area shape="rect" title=" " alt="" coords="279,198,454,238"/>
-<area shape="poly" title=" " alt="" coords="508,60,525,80,539,103,544,127,537,151,523,167,507,181,470,200,467,195,504,176,519,164,532,148,539,127,534,105,521,83,504,63"/>
-<area shape="rect" href="VelocityMux_8hpp.html" title="Declaration of the VelocityMux class." alt="" coords="598,109,727,150"/>
-<area shape="poly" title=" " alt="" coords="531,59,611,99,609,104,529,64"/>
-<area shape="rect" title=" " alt="" coords="847,205,1081,231"/>
-<area shape="poly" title=" " alt="" coords="542,47,636,72,741,107,845,152,930,195,928,200,843,157,739,111,635,77,540,52"/>
-<area shape="rect" href="VelocitySmoother_8hpp.html" title="Declaration of the VelocitySmoother class." alt="" coords="1128,109,1280,150"/>
-<area shape="poly" title=" " alt="" coords="541,40,1113,114,1112,119,541,46"/>
-<area shape="poly" title=" " alt="" coords="598,152,449,196,447,190,596,147"/>
-<area shape="rect" title=" " alt="" coords="5,286,72,312"/>
-<area shape="poly" title=" " alt="" coords="613,153,565,174,517,200,493,221,482,231,466,241,413,260,366,272,323,277,282,278,196,278,145,281,87,289,87,283,145,276,195,273,282,273,322,272,365,266,411,255,464,236,479,227,489,217,514,195,563,169,611,148"/>
-<area shape="rect" title=" " alt="" coords="528,205,637,231"/>
-<area shape="poly" title=" " alt="" coords="646,152,606,196,602,192,642,148"/>
-<area shape="rect" href="NavState_8hpp.html" title="A blackboard&#45;like structure to hold the current state of the navigation system." alt="" coords="662,198,823,238"/>
-<area shape="poly" title=" " alt="" coords="683,148,716,184,712,188,679,152"/>
-<area shape="poly" title=" " alt="" coords="728,147,908,198,906,203,727,152"/>
-<area shape="poly" title=" " alt="" coords="662,239,650,241,493,258,370,263,245,269,87,289,87,284,245,264,369,258,493,252,649,236,661,234"/>
-<area shape="rect" title=" " alt="" coords="96,286,170,312"/>
-<area shape="poly" title=" " alt="" coords="662,239,650,241,521,257,419,264,317,272,186,289,185,283,316,266,419,259,520,251,649,236,661,234"/>
-<area shape="rect" title=" " alt="" coords="194,286,248,312"/>
-<area shape="poly" title=" " alt="" coords="662,239,650,241,542,255,457,262,372,271,264,289,263,283,371,265,457,257,542,250,649,236,661,234"/>
-<area shape="rect" title=" " alt="" coords="271,286,382,312"/>
-<area shape="poly" title=" " alt="" coords="662,239,650,241,397,288,396,283,649,236,661,233"/>
-<area shape="rect" title=" " alt="" coords="406,286,509,312"/>
-<area shape="poly" title=" " alt="" coords="672,242,517,284,515,279,671,236"/>
-<area shape="rect" title=" " alt="" coords="533,286,600,312"/>
-<area shape="poly" title=" " alt="" coords="700,241,608,282,606,277,697,237"/>
-<area shape="rect" title=" " alt="" coords="624,286,680,312"/>
-<area shape="poly" title=" " alt="" coords="722,241,679,278,675,274,718,237"/>
-<area shape="rect" title=" " alt="" coords="704,286,781,312"/>
-<area shape="poly" title=" " alt="" coords="745,239,745,271,740,271,740,239"/>
-<area shape="rect" title=" " alt="" coords="806,286,874,312"/>
-<area shape="poly" title=" " alt="" coords="768,237,815,274,811,278,765,241"/>
-<area shape="rect" title=" " alt="" coords="898,286,979,312"/>
-<area shape="poly" title=" " alt="" coords="792,236,895,278,893,283,790,241"/>
-<area shape="rect" title=" " alt="" coords="1003,286,1074,312"/>
-<area shape="poly" title=" " alt="" coords="817,236,989,282,987,287,816,242"/>
-<area shape="rect" title=" " alt="" coords="1098,286,1176,312"/>
-<area shape="poly" title=" " alt="" coords="824,234,835,236,1083,283,1082,288,834,241,823,239"/>
-<area shape="rect" title=" " alt="" coords="1200,286,1280,312"/>
-<area shape="poly" title=" " alt="" coords="824,234,835,236,932,250,1008,259,1086,268,1185,283,1184,289,1085,273,1008,264,931,256,834,241,823,239"/>
-<area shape="rect" title=" " alt="" coords="1304,286,1370,312"/>
-<area shape="poly" title=" " alt="" coords="824,234,835,236,961,251,1061,258,1161,266,1289,284,1289,289,1161,271,1060,263,960,256,834,241,823,239"/>
-<area shape="rect" title=" " alt="" coords="1394,286,1451,312"/>
-<area shape="poly" title=" " alt="" coords="824,234,835,236,986,252,1106,256,1226,263,1379,283,1378,289,1226,268,1106,262,986,257,834,241,823,239"/>
-<area shape="rect" title=" " alt="" coords="1476,286,1543,312"/>
-<area shape="poly" title=" " alt="" coords="824,234,835,236,929,247,1009,253,1146,258,1285,263,1366,270,1461,283,1460,289,1365,276,1284,268,1146,263,1008,259,928,252,834,241,823,239"/>
-<area shape="rect" title=" " alt="" coords="1105,205,1303,231"/>
-<area shape="poly" title=" " alt="" coords="1206,150,1206,190,1201,190,1201,150"/>
-<area shape="rect" title=" " alt="" coords="1327,205,1526,231"/>
-<area shape="poly" title=" " alt="" coords="1255,148,1382,197,1380,202,1253,153"/>
+<area shape="rect" title="The RT velocity path (proposals, mux, smoother) must not allocate memory once warm." alt="" coords="484,5,614,61"/>
+<area shape="rect" title=" " alt="" coords="5,116,66,142"/>
+<area shape="poly" title=" " alt="" coords="484,42,299,64,188,84,78,112,74,113,72,108,76,106,187,79,298,58,484,36"/>
+<area shape="rect" title=" " alt="" coords="90,116,147,142"/>
+<area shape="poly" title=" " alt="" coords="484,45,334,69,247,88,160,112,156,113,155,108,159,106,245,82,333,63,483,39"/>
+<area shape="rect" title=" " alt="" coords="171,116,230,142"/>
+<area shape="poly" title=" " alt="" coords="484,49,371,74,243,112,240,113,238,108,241,106,369,69,483,44"/>
+<area shape="rect" title=" " alt="" coords="254,116,300,142"/>
+<area shape="poly" title=" " alt="" coords="484,54,401,79,312,111,312,112,310,107,311,107,400,74,483,49"/>
+<area shape="rect" title=" " alt="" coords="324,116,417,142"/>
+<area shape="poly" title=" " alt="" coords="498,64,408,111,405,107,496,59"/>
+<area shape="rect" title=" " alt="" coords="441,116,560,142"/>
+<area shape="poly" title=" " alt="" coords="537,63,516,104,511,102,533,60"/>
+<area shape="rect" title=" " alt="" coords="568,198,730,238"/>
+<area shape="poly" title=" " alt="" coords="581,60,601,82,619,108,635,145,645,182,640,183,630,147,615,110,597,85,577,63"/>
+<area shape="rect" title=" " alt="" coords="864,286,1039,327"/>
+<area shape="poly" title=" " alt="" coords="562,61,575,109,578,129,575,150,567,175,558,198,553,220,553,228,558,237,576,251,603,264,677,282,764,294,849,300,849,305,764,299,676,287,601,269,573,256,553,240,548,229,547,219,553,197,562,173,570,149,572,129,570,109,557,62"/>
+<area shape="rect" href="VelocityMux_8hpp.html" title="Declaration of the VelocityMux class." alt="" coords="1523,198,1652,238"/>
+<area shape="poly" title=" " alt="" coords="614,38,847,63,993,83,1140,106,1243,127,1324,146,1508,194,1507,199,1323,151,1242,132,1139,112,992,88,846,68,614,43"/>
+<area shape="rect" title=" " alt="" coords="1521,294,1755,320"/>
+<area shape="poly" title=" " alt="" coords="614,36,865,56,1200,91,1364,113,1505,138,1611,165,1646,180,1667,196,1676,217,1675,240,1668,262,1658,282,1653,279,1663,260,1670,239,1671,218,1663,199,1643,185,1609,170,1504,143,1363,118,1200,96,865,62,614,42"/>
+<area shape="rect" href="VelocitySmoother_8hpp.html" title="Declaration of the VelocitySmoother class." alt="" coords="1752,109,1903,150"/>
+<area shape="poly" title=" " alt="" coords="614,34,1072,55,1387,76,1709,106,1737,110,1736,115,1709,112,1387,82,1071,60,614,39"/>
+<area shape="rect" href="CommandGuard_8hpp.html" title="Declaration of the CommandGuard class." alt="" coords="946,109,1128,150"/>
+<area shape="poly" title=" " alt="" coords="615,44,931,105,930,110,614,50"/>
+<area shape="poly" title=" " alt="" coords="1523,239,1512,241,1386,259,1285,267,1184,274,1054,289,1054,283,1183,269,1285,262,1385,254,1511,236,1522,234"/>
+<area shape="rect" href="NavState_8hpp.html" title="A blackboard&#45;like structure to hold the current state of the navigation system." alt="" coords="1063,286,1224,327"/>
+<area shape="poly" title=" " alt="" coords="1523,238,1512,241,1240,292,1239,287,1511,236,1522,233"/>
+<area shape="poly" title=" " alt="" coords="1601,237,1626,279,1621,282,1597,240"/>
+<area shape="rect" title=" " alt="" coords="1522,375,1597,401"/>
+<area shape="poly" title=" " alt="" coords="1225,321,1244,324,1374,347,1508,372,1507,377,1373,352,1243,330,1224,326"/>
+<area shape="rect" title=" " alt="" coords="412,375,465,401"/>
+<area shape="poly" title=" " alt="" coords="1063,328,1051,330,892,346,766,350,640,356,567,364,481,377,480,372,566,358,640,350,766,344,891,340,1050,324,1062,322"/>
+<area shape="rect" title=" " alt="" coords="1620,375,1731,401"/>
+<area shape="poly" title=" " alt="" coords="1225,321,1244,324,1423,349,1605,372,1605,377,1423,354,1243,330,1224,326"/>
+<area shape="rect" title=" " alt="" coords="1754,375,1858,401"/>
+<area shape="poly" title=" " alt="" coords="1225,321,1244,324,1381,341,1490,349,1600,357,1740,372,1739,377,1599,362,1490,354,1381,346,1243,330,1224,327"/>
+<area shape="rect" title=" " alt="" coords="488,375,556,401"/>
+<area shape="poly" title=" " alt="" coords="1063,328,1051,330,917,345,812,352,706,359,571,377,571,372,706,354,812,346,917,340,1050,324,1062,322"/>
+<area shape="rect" title=" " alt="" coords="579,375,636,401"/>
+<area shape="poly" title=" " alt="" coords="1063,328,1051,330,940,344,852,351,763,359,651,377,650,372,763,354,851,346,939,339,1050,324,1062,322"/>
+<area shape="rect" title=" " alt="" coords="1882,375,1949,401"/>
+<area shape="poly" title=" " alt="" coords="1225,322,1244,324,1417,341,1554,345,1692,351,1773,359,1867,372,1867,378,1772,364,1692,357,1554,351,1417,346,1243,330,1224,327"/>
+<area shape="rect" title=" " alt="" coords="660,375,737,401"/>
+<area shape="poly" title=" " alt="" coords="1063,327,1051,330,903,353,753,377,752,372,902,347,1050,324,1062,322"/>
+<area shape="rect" title=" " alt="" coords="761,375,830,401"/>
+<area shape="poly" title=" " alt="" coords="1063,328,845,377,844,372,1062,323"/>
+<area shape="rect" title=" " alt="" coords="854,375,935,401"/>
+<area shape="poly" title=" " alt="" coords="1082,330,948,372,946,367,1080,325"/>
+<area shape="rect" title=" " alt="" coords="958,375,1030,401"/>
+<area shape="poly" title=" " alt="" coords="1107,330,1032,370,1029,365,1105,325"/>
+<area shape="rect" title=" " alt="" coords="1054,375,1132,401"/>
+<area shape="poly" title=" " alt="" coords="1133,329,1111,363,1107,360,1129,326"/>
+<area shape="rect" title=" " alt="" coords="1156,375,1235,401"/>
+<area shape="poly" title=" " alt="" coords="1159,326,1181,360,1177,363,1154,329"/>
+<area shape="rect" title=" " alt="" coords="1260,375,1326,401"/>
+<area shape="poly" title=" " alt="" coords="1182,325,1258,365,1255,370,1180,330"/>
+<area shape="rect" title=" " alt="" coords="1350,375,1407,401"/>
+<area shape="poly" title=" " alt="" coords="1203,325,1336,370,1334,375,1201,330"/>
+<area shape="rect" title=" " alt="" coords="1431,375,1498,401"/>
+<area shape="poly" title=" " alt="" coords="1225,325,1417,372,1415,377,1224,330"/>
+<area shape="rect" title=" " alt="" coords="1951,205,2149,231"/>
+<area shape="poly" title=" " alt="" coords="1879,148,2006,197,2004,202,1877,153"/>
+<area shape="rect" title=" " alt="" coords="1728,205,1927,231"/>
+<area shape="poly" title=" " alt="" coords="1830,150,1830,190,1825,190,1825,150"/>
+<area shape="poly" title=" " alt="" coords="949,153,745,198,744,193,948,148"/>
+<area shape="poly" title=" " alt="" coords="1020,151,1002,173,986,199,971,236,961,272,956,271,966,234,981,196,998,170,1016,148"/>
+<area shape="poly" title=" " alt="" coords="1129,138,1301,160,1508,194,1507,200,1300,166,1128,143"/>
+<area shape="poly" title=" " alt="" coords="1031,151,1022,193,1023,216,1030,237,1048,259,1073,277,1070,281,1045,263,1025,240,1017,217,1017,192,1026,149"/>
+<area shape="poly" title=" " alt="" coords="1014,152,953,196,877,241,797,273,687,311,480,377,479,371,685,306,795,268,874,236,950,191,1011,148"/>
+<area shape="poly" title=" " alt="" coords="1091,148,1139,169,1189,195,1214,216,1240,236,1326,278,1402,307,1472,324,1540,335,1685,348,1769,357,1867,372,1867,377,1769,362,1684,353,1540,340,1471,329,1401,312,1324,283,1237,241,1211,221,1186,200,1137,174,1089,153"/>
+<area shape="rect" title=" " alt="" coords="1040,205,1100,231"/>
+<area shape="poly" title=" " alt="" coords="1047,149,1063,190,1058,192,1042,151"/>
+<area shape="rect" title=" " alt="" coords="1124,205,1176,231"/>
+<area shape="poly" title=" " alt="" coords="1064,148,1124,194,1121,198,1061,152"/>
+<area shape="rect" title=" " alt="" coords="1250,205,1370,231"/>
+<area shape="poly" title=" " alt="" coords="1100,148,1258,197,1256,203,1098,153"/>
+<area shape="rect" title=" " alt="" coords="1394,205,1499,231"/>
+<area shape="poly" title=" " alt="" coords="1129,143,1250,166,1383,195,1393,198,1392,203,1382,200,1249,171,1128,149"/>
+<area shape="rect" title=" " alt="" coords="754,205,864,231"/>
+<area shape="poly" title=" " alt="" coords="986,153,856,202,854,197,984,148"/>
 </map>
 </div>
 </div><table class="memberdecls">
@@ -194,8 +216,8 @@ Functions</h2></td></tr>
 <tr class="memitem:a7988d271b794871cc241b736a115251a" id="r_a7988d271b794871cc241b736a115251a"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a7988d271b794871cc241b736a115251a">operator delete</a> (void *p) noexcept</td></tr>
 <tr class="memitem:a32b8929b3bb95abc87c40b81880ceea5" id="r_a32b8929b3bb95abc87c40b81880ceea5"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a32b8929b3bb95abc87c40b81880ceea5">operator delete</a> (void *p, std::size_t) noexcept</td></tr>
 <tr class="memitem:acfad8f0764cf06b8abd170d8569a7b3f" id="r_acfad8f0764cf06b8abd170d8569a7b3f"><td class="memItemLeft">void *&#160;</td><td class="memItemRight"><a class="el" href="#acfad8f0764cf06b8abd170d8569a7b3f">operator new</a> (std::size_t size)</td></tr>
+<tr class="memitem:a12e2fda40d41c3d6646dbdf7b4cab896" id="r_a12e2fda40d41c3d6646dbdf7b4cab896"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a12e2fda40d41c3d6646dbdf7b4cab896">TEST</a> (RtAllocationTest, GuardedVelocityOutputDoesNotAllocateOnceWarm)</td></tr>
 <tr class="memitem:ac7cd32499d6ff76af86a976a2bb58197" id="r_ac7cd32499d6ff76af86a976a2bb58197"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#ac7cd32499d6ff76af86a976a2bb58197">TEST</a> (RtAllocationTest, TheCounterSeesAllocations)</td></tr>
-<tr class="memitem:a4ba897fde92fdeeb126312414c8caf7a" id="r_a4ba897fde92fdeeb126312414c8caf7a"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a4ba897fde92fdeeb126312414c8caf7a">TEST</a> (RtAllocationTest, TimedOutAndDiscardedCommandsDoNotAllocate)</td></tr>
 <tr class="memitem:a507fb6fbba7d06daf336ab7e2ab4ca22" id="r_a507fb6fbba7d06daf336ab7e2ab4ca22"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a507fb6fbba7d06daf336ab7e2ab4ca22">TEST</a> (RtAllocationTest, VelocityPathDoesNotAllocateOnceWarm)</td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
@@ -272,8 +294,29 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a12e2fda40d41c3d6646dbdf7b4cab896" name="a12e2fda40d41c3d6646dbdf7b4cab896"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a12e2fda40d41c3d6646dbdf7b4cab896">&#9670;&#160;</a></span>TEST() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TEST </td>
+          <td>(</td>
+          <td class="paramtype">RtAllocationTest</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">GuardedVelocityOutputDoesNotAllocateOnceWarm</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ac7cd32499d6ff76af86a976a2bb58197" name="ac7cd32499d6ff76af86a976a2bb58197"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac7cd32499d6ff76af86a976a2bb58197">&#9670;&#160;</a></span>TEST() <span class="overload">[1/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ac7cd32499d6ff76af86a976a2bb58197">&#9670;&#160;</a></span>TEST() <span class="overload">[2/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -287,27 +330,6 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">TheCounterSeesAllocations</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a4ba897fde92fdeeb126312414c8caf7a" name="a4ba897fde92fdeeb126312414c8caf7a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4ba897fde92fdeeb126312414c8caf7a">&#9670;&#160;</a></span>TEST() <span class="overload">[2/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">TEST </td>
-          <td>(</td>
-          <td class="paramtype">RtAllocationTest</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">TimedOutAndDiscardedCommandsDoNotAllocate</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">

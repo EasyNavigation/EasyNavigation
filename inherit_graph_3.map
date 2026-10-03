@@ -1,7 +1,3 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" title=" " alt="" coords="5,31,155,56"/>
-<area shape="rect" id="Node000001" href="$classeasynav_1_1DummyController.html" title="A default &quot;dummy&quot; implementation for the Control Method." alt="" coords="203,5,323,31"/>
-<area shape="poly" id="edge3_Node000000_Node000001" title=" " alt="" coords="170,28,202,24,203,29,170,34"/>
-<area shape="rect" id="Node000002" href="$classeasynav_1_1FaultyController.html" title="Controller that misbehaves on purpose, to test how EasyNav copes with it." alt="" coords="207,55,318,80"/>
-<area shape="poly" id="edge4_Node000000_Node000002" title=" " alt="" coords="171,53,207,58,206,63,170,58"/>
+<area shape="rect" id="Node000000" href="$classeasynav_1_1safety_1_1CommandGuard.html" title="Keeps the velocity command sent to the robot from being stale or invalid." alt="" coords="5,5,121,31"/>
 </map>

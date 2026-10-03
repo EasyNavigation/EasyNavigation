@@ -1,0 +1,25 @@
+<map id="easynav_system/src/easynav_system/safety/ParameterFreezer.cpp" name="easynav_system/src/easynav_system/safety/ParameterFreezer.cpp">
+<area shape="rect" id="Node000001" title="Implementation of the ParameterFreezer class." alt="" coords="296,5,457,61"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="559,294,613,320"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="459,48,521,68,588,98,620,117,650,140,677,166,699,196,706,218,699,240,685,258,667,273,629,294,626,290,664,269,681,254,694,237,701,218,694,199,673,170,647,144,617,122,585,102,519,73,457,53"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,205,63,231"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="327,64,71,200,69,195,324,59"/>
+<area shape="rect" id="Node000004" href="$ParameterFreezer_8hpp.html" title="Declaration of the ParameterFreezer class." alt="" coords="298,109,455,150"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="379,62,379,94,374,94,374,62"/>
+<area shape="poly" id="edge7_Node000004_Node000002" title=" " alt="" coords="457,139,513,159,540,175,563,196,575,215,583,237,589,278,584,278,578,238,570,217,559,199,537,180,511,164,455,144"/>
+<area shape="poly" id="edge8_Node000004_Node000003" title=" " alt="" coords="298,148,195,170,83,200,77,202,76,197,81,195,194,165,297,143"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="624,205,684,231"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="450,148,605,195,611,197,609,202,604,200,448,153"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="79,294,125,320"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="298,134,254,140,208,152,165,171,128,199,116,217,108,238,103,279,98,278,103,236,111,215,124,196,162,166,207,146,253,135,297,129"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="348,205,405,231"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="379,150,379,190,374,190,374,150"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="429,205,548,231"/>
+<area shape="poly" id="edge9_Node000004_Node000008" title=" " alt="" coords="404,148,463,194,460,198,400,152"/>
+<area shape="rect" id="Node000009" href="$ConfigurationFingerprint_8hpp.html" title="Fingerprint (dump and SHA&#45;256) of the EasyNav configuration." alt="" coords="139,198,324,238"/>
+<area shape="poly" id="edge10_Node000004_Node000009" title=" " alt="" coords="345,152,278,192,276,187,342,148"/>
+<area shape="poly" id="edge12_Node000009_Node000002" title=" " alt="" coords="313,236,545,293,543,298,312,242"/>
+<area shape="poly" id="edge11_Node000009_Node000006" title=" " alt="" coords="203,241,134,287,131,283,201,237"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="151,286,312,327"/>
+<area shape="poly" id="edge13_Node000009_Node000010" title=" " alt="" coords="234,239,234,271,229,271,229,239"/>
+</map>

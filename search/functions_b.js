@@ -1,6 +1,12 @@
 var searchData=
 [
-  ['navstate_0',['NavState',['../classeasynav_1_1NavState.html#abd38e1587ce9ba1a3306460dbeb3c49f',1,'easynav::NavState']]],
-  ['node_1',['node',['../classRobotGeometryTest.html#a132859002d14ea4afc214329202bfe91',1,'RobotGeometryTest::node()'],['../classSystemReconfigureTest.html#a7bc9f5a4eff88204063797b70682bff1',1,'SystemReconfigureTest::node()']]],
-  ['norm_5fangle_2',['norm_angle',['../namespaceeasynav.html#aaf7b2449dfa550dee63301e3d721ab3a',1,'easynav']]]
+  ['main_0',['main',['../controller__node__tests_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627',1,'main(int argc, char **argv):&#160;controller_node_tests.cpp'],['../localizer__node__tests_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627',1,'main(int argc, char **argv):&#160;localizer_node_tests.cpp'],['../maps__manager__node__tests_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627',1,'main(int argc, char **argv):&#160;maps_manager_node_tests.cpp'],['../planner__node__tests_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627',1,'main(int argc, char **argv):&#160;planner_node_tests.cpp'],['../sensors__lifecycle__tests_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627',1,'main(int argc, char **argv):&#160;sensors_lifecycle_tests.cpp'],['../goalmanager__test__main_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627',1,'main(int argc, char **argv):&#160;goalmanager_test_main.cpp'],['../system__main_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627',1,'main(int argc, char **argv):&#160;system_main.cpp']]],
+  ['make_5factive_1',['make_active',['../classSystemReconfigureTest.html#a59fe1d2e7531e92349fed75575d60d98',1,'SystemReconfigureTest']]],
+  ['make_5factive_5fnode_2',['make_active_node',['../classControllerNodeVelocityTest.html#ad63a1ed55def63730969e8f993edeba5',1,'ControllerNodeVelocityTest::make_active_node()'],['../classFaultyControllerTest.html#abbfa11b531eff880b68ecc93f85ec569',1,'FaultyControllerTest::make_active_node()']]],
+  ['make_5factive_5fsystem_3',['make_active_system',['../classSystemShutdownRequestTest.html#a9fa29d787a73ee781cb51925e0c50788',1,'SystemShutdownRequestTest']]],
+  ['make_5fserver_4',['make_server',['../classGoalManagerHeightTest.html#a3d26e1fe65f638c48ad248cf59050e36',1,'GoalManagerHeightTest']]],
+  ['mapsmanagernode_5',['MapsManagerNode',['../classeasynav_1_1MapsManagerNode.html#a03a1cd33d6a3eaa802fa457a172cc646',1,'easynav::MapsManagerNode']]],
+  ['mark_5finvalid_6',['mark_invalid',['../classeasynav_1_1ImagePerception.html#abfa2f4259419073935d50d6173ac27de',1,'easynav::ImagePerception']]],
+  ['max_5flinear_5fvel_7',['max_linear_vel',['../classSystemReconfigureTest.html#a8003f0f1bbd898d96e7011c71cff2bfa',1,'SystemReconfigureTest']]],
+  ['max_5flinear_5fvel_5fto_8',['max_linear_vel_to',['../classSystemReconfigureTest.html#ac940632d372c03023b3495658eb78e6b',1,'SystemReconfigureTest']]]
 ];

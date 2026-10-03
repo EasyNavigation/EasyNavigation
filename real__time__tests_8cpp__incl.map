@@ -1,0 +1,16 @@
+<map id="easynav_system/tests/real_time_tests.cpp" name="easynav_system/tests/real_time_tests.cpp">
+<area shape="rect" id="Node000001" title="Real&#45;time setup of the EasyNav process." alt="" coords="196,5,348,46"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,94,72,120"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="214,49,87,92,86,87,213,44"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="95,94,200,120"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="243,49,181,88,178,83,240,44"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="381,168,434,193"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="267,47,259,83,261,101,267,118,287,139,312,155,340,165,366,172,365,177,338,170,310,159,284,143,263,121,255,102,254,82,261,46"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="276,94,334,120"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="283,45,297,78,292,81,278,47"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="358,94,452,120"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="306,44,373,83,370,88,304,49"/>
+<area shape="rect" id="Node000007" href="$RealTime_8hpp.html" title="Real&#45;time setup of the EasyNav process." alt="" coords="476,94,678,120"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="349,44,516,87,515,92,347,49"/>
+<area shape="poly" id="edge7_Node000007_Node000004" title=" " alt="" coords="549,123,450,164,448,160,547,118"/>
+</map>
