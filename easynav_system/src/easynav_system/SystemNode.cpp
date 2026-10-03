@@ -15,6 +15,7 @@
 /// \file
 /// \brief Implementation of the SystemNode class.
 
+#include <cmath>
 #include <set>
 #include <string>
 #include <utility>
@@ -80,6 +81,15 @@ SystemNode::SystemNode(const rclcpp::NodeOptions & options)
   declare_parameter("robot_geometry.radius", geometry.radius);
   declare_parameter("robot_geometry.inscribed_radius", geometry.inscribed_radius);
   declare_parameter("robot_geometry.height", geometry.height);
+
+  safety_.declare_parameters(*this);
+
+  // Read by system_main.
+  declare_parameter("use_real_time", true);
+  declare_parameter("rt_freq", 200.0);
+  declare_parameter("freq", 200.0);
+  declare_parameter("spin_time_rt", 0.001);
+  declare_parameter("spin_time_nort", 0.001);
   // get_logger().set_level(rclcpp::Logger::Level::Debug);
 }
 
@@ -104,6 +114,13 @@ SystemNode::on_configure(const rclcpp_lifecycle::State & state)
   (void)state;
 
   forward_deprecated_use_cmd_vel_stamped();
+
+  // Both, to report every error.
+  const bool system_valid = check_system_parameters();
+  const bool safety_valid = safety_.check_system(*this);
+  if (!system_valid || !safety_valid) {
+    return CallbackReturnT::FAILURE;
+  }
 
   // What the recovery system may ask of the navigation system: this node (see SystemActions).
   recovery_node_->set_system_actions(
@@ -138,8 +155,14 @@ SystemNode::on_configure(const rclcpp_lifecycle::State & state)
       lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE)
     {
       RCLCPP_ERROR(get_logger(), "Unable to configure [%s]", system_node.first.c_str());
+      cleanup_subnodes();
       return CallbackReturnT::FAILURE;
     }
+  }
+
+  if (!safety_.check_controller(*controller_node_)) {
+    cleanup_subnodes();
+    return CallbackReturnT::FAILURE;
   }
 
   // Kept across cleanup/configure: a reconfiguration does not lose the mission.
@@ -152,7 +175,66 @@ SystemNode::on_configure(const rclcpp_lifecycle::State & state)
   navstate_pub_ = create_publisher<std_msgs::msg::String>(
     "easynav_navstate", 100);
 
+  safety_.on_configured(get_all_nodes(), *nav_state_);
+
   return CallbackReturnT::SUCCESS;
+}
+
+bool
+SystemNode::check_system_parameters()
+{
+  std::vector<std::string> errors;
+  auto check = [&](const std::string & name, bool valid, const std::string & expected) {
+      const double value = get_parameter(name).as_double();
+      if (!std::isfinite(value) || !valid) {
+        errors.push_back(name + " = " + std::to_string(value) + " (" + expected + ")");
+      }
+    };
+  auto value = [this](const std::string & name) {return get_parameter(name).as_double();};
+
+  check("rt_freq", value("rt_freq") > 0.0, "> 0");
+  check("freq", value("freq") > 0.0, "> 0");
+  check("spin_time_rt", value("spin_time_rt") >= 0.0, ">= 0");
+  check("spin_time_nort", value("spin_time_nort") >= 0.0, ">= 0");
+  check("robot_geometry.radius", value("robot_geometry.radius") >= 0.0, ">= 0");
+  check(
+    "robot_geometry.inscribed_radius", value("robot_geometry.inscribed_radius") >= 0.0, ">= 0");
+  check("robot_geometry.height", value("robot_geometry.height") >= 0.0, ">= 0");
+
+  for (const auto & error : errors) {
+    RCLCPP_ERROR(get_logger(), "Invalid parameter: %s", error.c_str());
+  }
+  return errors.empty();
+}
+
+void
+SystemNode::cleanup_subnodes()
+{
+  for (auto & [name, info] : get_system_nodes()) {
+    if (info.node_ptr->get_current_state().id() ==
+      lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE)
+    {
+      info.node_ptr->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_CLEANUP);
+    }
+  }
+}
+
+std::map<std::string, rclcpp_lifecycle::LifecycleNode::SharedPtr>
+SystemNode::get_all_nodes()
+{
+  std::map<std::string, rclcpp_lifecycle::LifecycleNode::SharedPtr> nodes;
+  nodes[get_name()] = std::static_pointer_cast<rclcpp_lifecycle::LifecycleNode>(
+    shared_from_this());
+  for (const auto & [name, info] : get_system_nodes()) {
+    nodes[name] = info.node_ptr;
+  }
+  return nodes;
+}
+
+std::string
+SystemNode::get_configuration_dump()
+{
+  return safety::configuration_dump(get_all_nodes());
 }
 
 CallbackReturnT
@@ -376,22 +458,30 @@ SystemNode::request_shutdown(const std::string & reason)
   }
   shutdown_reason_ = reason;
   shutdown_requested_ = true;
-  RCLCPP_FATAL(get_logger(), "Shutdown requested by recovery: %s", reason.c_str());
+  RCLCPP_FATAL(get_logger(), "Shutdown requested: %s", reason.c_str());
 }
 
-void
+bool
 SystemNode::request_reconfigure(
   const std::vector<ParameterChange> & changes, const std::string & reason)
 {
+  if (!safety_.allows_reconfiguration(reason)) {
+    return false;
+  }
   std::lock_guard<std::mutex> lock(reconfigure_mutex_);
   pending_reconfigure_ = ReconfigureRequest{changes, false, reason};
+  return true;
 }
 
-void
+bool
 SystemNode::request_restore_parameters(const std::string & reason)
 {
+  if (!safety_.allows_reconfiguration(reason)) {
+    return false;
+  }
   std::lock_guard<std::mutex> lock(reconfigure_mutex_);
   pending_reconfigure_ = ReconfigureRequest{{}, true, reason};
+  return true;
 }
 
 bool

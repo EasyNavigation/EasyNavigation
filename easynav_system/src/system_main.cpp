@@ -21,10 +21,12 @@
 #include <atomic>
 #include <thread>
 #include <chrono>
+#include <future>
 
 #include "lifecycle_msgs/msg/transition.hpp"
 #include "lifecycle_msgs/msg/state.hpp"
 
+#include "easynav_system/RealTime.hpp"
 #include "easynav_system/SystemNode.hpp"
 #include "easynav_common/RTTFBuffer.hpp"
 #include "easynav_common/YTSession.hpp"
@@ -55,11 +57,23 @@ void handle_shutdown_signal(int /*signum*/)
     std::_Exit(1);
   }
 }
+/// @brief Shuts rclcpp down on destruction. Declared before the nodes, it runs after they are
+/// destroyed on any return, so their shutdown transitions still have a valid context.
+struct RclcppShutdownGuard
+{
+  ~RclcppShutdownGuard()
+  {
+    if (rclcpp::ok()) {
+      rclcpp::shutdown();
+    }
+  }
+};
 }  // namespace
 
 int main(int argc, char ** argv)
 {
   rclcpp::init(argc, argv, rclcpp::InitOptions(), rclcpp::SignalHandlerOptions::None);
+  RclcppShutdownGuard rclcpp_shutdown_guard;
   std::signal(SIGINT, handle_shutdown_signal);
   std::signal(SIGTERM, handle_shutdown_signal);
 
@@ -105,37 +119,36 @@ int main(int argc, char ** argv)
       lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE)
     {
       RCLCPP_ERROR(system_node->get_logger(), "Unable to configure EasyNav");
-      rclcpp::shutdown();
       return 1;
     }
+
+    const bool safety_mode = system_node->get_safety().is_safety_mode();
+    if (system_node->get_safety().is_memory_lock_requested()) {
+      // Before activating: the robot never moves if this fails.
+      const auto error = easynav::lock_memory();
+      if (!error.empty()) {
+        RCLCPP_FATAL(
+          system_node->get_logger(), "[safety.lock_memory] Unable to lock memory: %s",
+          error.c_str());
+        return 1;
+      }
+      RCLCPP_INFO(system_node->get_logger(), "[safety.lock_memory] Memory locked");
+    }
+
     system_node->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_ACTIVATE);
     if (system_node->get_current_state().id() !=
       lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE)
     {
       RCLCPP_ERROR(system_node->get_logger(), "Unable to activate EasyNav");
-      rclcpp::shutdown();
       return 1;
     }
 
-    bool use_real_time = true;
-    system_node->declare_parameter("use_real_time", use_real_time);
-    system_node->get_parameter("use_real_time", use_real_time);
-
-    // Get rt and nonrt rates
-    double rt_freq = 200.0;
-    system_node->declare_parameter("rt_freq", rt_freq);
-    system_node->get_parameter("rt_freq", rt_freq);
-    double freq = 200.0;
-    system_node->declare_parameter("freq", freq);
-    system_node->get_parameter("freq", freq);
-
-    // Get spin duration timeout for both threads
-    double spin_time_rt = 0.001;
-    system_node->declare_parameter("spin_time_rt", spin_time_rt);
-    system_node->get_parameter("spin_time_rt", spin_time_rt);
-    double spin_time_nort = 0.001;
-    system_node->declare_parameter("spin_time_nort", spin_time_nort);
-    system_node->get_parameter("spin_time_nort", spin_time_nort);
+    // Declared and validated by SystemNode.
+    const bool use_real_time = system_node->get_parameter("use_real_time").as_bool();
+    const double rt_freq = system_node->get_parameter("rt_freq").as_double();
+    const double freq = system_node->get_parameter("freq").as_double();
+    const double spin_time_rt = system_node->get_parameter("spin_time_rt").as_double();
+    const double spin_time_nort = system_node->get_parameter("spin_time_nort").as_double();
 
     // Convert spin timeouts from seconds to nanoseconds and cast to chrono type
     const auto spin_duration_rt = std::chrono::duration_cast<std::chrono::nanoseconds>(
@@ -147,17 +160,25 @@ int main(int argc, char ** argv)
     );
 
     // RT thread
+    std::promise<std::string> rt_setup;
+    auto rt_setup_result = rt_setup.get_future();
     rt_thread = std::thread(
-      [&, tf_node, tf_buffer, system_node, use_real_time]() {
+      [&, tf_node, tf_buffer, system_node, use_real_time, safety_mode]() {
+        std::string error;
         if (use_real_time) {
           RCLCPP_INFO(system_node->get_logger(), "Selected Real-Time");
-          sched_param sch; sch.sched_priority = 80;
-          if (sched_setscheduler(0, SCHED_FIFO, &sch) == -1) {
-            RCLCPP_WARN(system_node->get_logger(),
-              "Failed to set Real Time. Running with normal priority.");
-          }
+          error = easynav::set_real_time_priority(80);
         } else {
           RCLCPP_INFO(system_node->get_logger(), "Selected NO Real-Time");
+        }
+        rt_setup.set_value(error);
+        if (!error.empty()) {
+          if (safety_mode) {
+            return;  // No RT cycle: main() terminates EasyNav.
+          }
+          RCLCPP_WARN(
+            system_node->get_logger(), "Failed to set Real Time (%s). Running with normal "
+            "priority.", error.c_str());
         }
 
         tf2_ros::TransformListener tf_listener(*tf_buffer, *tf_node, true);
@@ -177,6 +198,11 @@ int main(int argc, char ** argv)
           rate.sleep();
         }
       });
+
+    const auto rt_error = rt_setup_result.get();
+    if (!rt_error.empty() && safety_mode) {
+      system_node->request_shutdown("[safety.mode] no real-time scheduling: " + rt_error);
+    }
 
     // Non-RT loop
     rclcpp::WallRate rate(freq);
@@ -206,10 +232,10 @@ int main(int argc, char ** argv)
       rt_thread.join();
     }
 
-    // A recovery mitigation found an unrecoverable error while Active. As its supervisor,
-    // deactivate EasyNav: SystemNode turns that into the lifecycle's error path
-    // (Deactivating -> ErrorProcessing -> Finalized). Both loops are stopped, so no cycle runs
-    // concurrently with the transition.
+    // An unrecoverable error while Active (found by a recovery mitigation, or no real time in
+    // safety.mode). As its supervisor, deactivate EasyNav: SystemNode turns that into the
+    // lifecycle's error path (Deactivating -> ErrorProcessing -> Finalized). Both loops are
+    // stopped, so no cycle runs concurrently with the transition.
     if (system_node->is_shutdown_requested()) {
       shutdown_reason = system_node->get_shutdown_reason();
       system_node->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_DEACTIVATE);
@@ -229,7 +255,7 @@ int main(int argc, char ** argv)
     // Last thing on the terminal, after every other node's shutdown logs.
     std::fprintf(
       stderr,
-      "\n==================== EasyNav terminated by recovery ====================\n"
+      "\n========================== EasyNav terminated ===========================\n"
       "%s\n"
       "=========================================================================\n",
       shutdown_reason->c_str());

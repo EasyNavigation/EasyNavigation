@@ -22,10 +22,14 @@
 
 #include "gtest/gtest.h"
 
+#include "rclcpp/rclcpp.hpp"
+#include "rclcpp_lifecycle/lifecycle_node.hpp"
+
 #include "geometry_msgs/msg/twist_stamped.hpp"
 
 #include "easynav_controller/VelocityMux.hpp"
 #include "easynav_controller/VelocitySmoother.hpp"
+#include "easynav_controller/safety/CommandGuard.hpp"
 #include "easynav_core/VelocityCommand.hpp"
 
 namespace
@@ -62,7 +66,7 @@ void rt_cycle(
   // Reading the pending commands without consuming them (as a safety check would).
   (void)easynav::velocity_command::peek(nav_state, easynav::VelocitySource::TAKEOVER);
   (void)easynav::velocity_command::peek(nav_state, easynav::VelocitySource::CONTROLLER);
-  const auto selection = mux.select(nav_state, rclcpp::Time());
+  const auto selection = mux.select(nav_state);
   (void)smoother.step(selection.cmd.twist, 0.005);
 }
 
@@ -97,12 +101,19 @@ TEST(RtAllocationTest, VelocityPathDoesNotAllocateOnceWarm)
   EXPECT_EQ(allocations.load(), 0u) << "allocations in 1000 RT cycles of the velocity path";
 }
 
-TEST(RtAllocationTest, TimedOutAndDiscardedCommandsDoNotAllocate)
+TEST(RtAllocationTest, GuardedVelocityOutputDoesNotAllocateOnceWarm)
 {
+  // Timed out, discarding NaN, reporting: CommandGuard around the mux, as in ControllerNode.
+  rclcpp::init(0, nullptr);
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>(
+    "rt_guard_node", rclcpp::NodeOptions().parameter_overrides({{"cmd_timeout", 0.1}}));
+  easynav::safety::CommandGuard guard;
+  guard.declare_parameters(*node);
+  ASSERT_TRUE(guard.configure(*node));
+
   easynav::NavState nav_state;
   nav_state.set("navigation_paused", false);
   easynav::VelocityMux mux;
-  mux.set_timeout(0.1);
 
   geometry_msgs::msg::TwistStamped cmd;
   cmd.header.frame_id = "base_footprint";
@@ -110,11 +121,21 @@ TEST(RtAllocationTest, TimedOutAndDiscardedCommandsDoNotAllocate)
   auto nan_cmd = cmd;
   nan_cmd.twist.linear.x = std::nan("");
 
-  // Warm-up: slots created, a target held, then timed out once.
+  auto cycle = [&](int64_t seconds) {
+      const bool discarded = guard.discard_non_finite(nav_state);
+      const auto selection = guard.supervise(mux.select(nav_state), rclcpp::Time(seconds, 0));
+      guard.report(nav_state, discarded, selection.fresh);
+      (void)guard.keepalive_due(rclcpp::Time(seconds, 0));
+      (void)guard.is_new(cmd);
+    };
+
+  // Warm-up: slots created, a target held, timed out and reported once.
   easynav::velocity_command::propose(nav_state, easynav::VelocitySource::CONTROLLER, cmd);
-  (void)mux.select(nav_state, rclcpp::Time(0, 0));
-  (void)mux.select(nav_state, rclcpp::Time(1, 0));
-  ASSERT_TRUE(mux.timed_out());
+  cycle(0);
+  cycle(1);
+  easynav::velocity_command::propose(nav_state, easynav::VelocitySource::CONTROLLER, nan_cmd);
+  cycle(2);
+  ASSERT_TRUE(guard.timed_out());
 
   allocations = 0;
   counting = true;
@@ -122,12 +143,13 @@ TEST(RtAllocationTest, TimedOutAndDiscardedCommandsDoNotAllocate)
     if (i % 3 == 0) {
       easynav::velocity_command::propose(nav_state, easynav::VelocitySource::CONTROLLER, nan_cmd);
     }
-    (void)mux.select(nav_state, rclcpp::Time(2 + i, 0));
+    cycle(3 + i);
   }
   counting = false;
 
-  EXPECT_TRUE(mux.timed_out());
+  EXPECT_TRUE(guard.timed_out());
   EXPECT_EQ(allocations.load(), 0u) << "allocations in 1000 timed-out/discarding RT cycles";
+  rclcpp::shutdown();
 }
 
 TEST(RtAllocationTest, TheCounterSeesAllocations)

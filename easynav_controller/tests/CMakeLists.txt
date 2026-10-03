@@ -17,3 +17,6 @@ target_link_libraries(rt_allocation_tests easynav_controller)
 
 ament_add_gtest(faulty_controller_tests faulty_controller_tests.cpp TIMEOUT 120)
 target_link_libraries(faulty_controller_tests easynav_controller ${diagnostic_msgs_TARGETS})
+
+ament_add_gtest(command_guard_tests command_guard_tests.cpp)
+target_link_libraries(command_guard_tests easynav_controller ${diagnostic_msgs_TARGETS})

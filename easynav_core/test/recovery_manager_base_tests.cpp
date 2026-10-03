@@ -42,12 +42,18 @@ public:
   void abort_mission(const std::string & reason) override {aborted.push_back(reason);}
   void request_shutdown(const std::string & reason) override {shutdowns.push_back(reason);}
   void hold_mission_progress(bool hold) override {holds.push_back(hold);}
-  void request_reconfigure(
+  bool request_reconfigure(
     const std::vector<easynav::ParameterChange> & changes, const std::string &) override
   {
     reconfigures.push_back(changes);
+    return accept;
   }
-  void request_restore_parameters(const std::string &) override {++restores;}
+  bool request_restore_parameters(const std::string &) override
+  {
+    ++restores;
+    return accept;
+  }
+  bool accept {true};
   std::vector<std::string> aborted;
   std::vector<std::string> shutdowns;
   std::vector<bool> holds;
@@ -204,9 +210,11 @@ TEST_F(RecoveryManagerBaseTest, ForwardsSystemActions)
   manager_->abort_mission("lost");
   manager_->hold_mission_progress(false);
   manager_->request_shutdown("broken");
-  manager_->request_reconfigure(
-    {{"controller_node", rclcpp::Parameter("robot_limits.max_linear_vel", 0.1)}}, "slow down");
-  manager_->request_restore_parameters("done");
+  EXPECT_TRUE(
+    manager_->request_reconfigure(
+      {{"controller_node", rclcpp::Parameter("robot_limits.max_linear_vel", 0.1)}},
+      "slow down"));
+  EXPECT_TRUE(manager_->request_restore_parameters("done"));
 
   EXPECT_EQ(actions->holds, std::vector<bool>({true, false}));
   EXPECT_EQ(actions->aborted, std::vector<std::string>({"lost"}));
@@ -219,13 +227,29 @@ TEST_F(RecoveryManagerBaseTest, ForwardsSystemActions)
   EXPECT_EQ(actions->restores, 1);
 }
 
+TEST_F(RecoveryManagerBaseTest, RejectedReconfigurationsAreReported)
+{
+  auto actions = std::make_shared<RecordingSystemActions>();
+  actions->accept = false;
+  manager_->set_system_actions(actions);
+
+  EXPECT_FALSE(manager_->request_reconfigure({}, "slow down"));
+  EXPECT_FALSE(manager_->request_restore_parameters("done"));
+  EXPECT_EQ(actions->reconfigures.size(), 1u);
+  EXPECT_EQ(actions->restores, 1);
+
+  actions->accept = true;
+  EXPECT_TRUE(manager_->request_reconfigure({}, "slow down"));
+  EXPECT_TRUE(manager_->request_restore_parameters("done"));
+}
+
 TEST_F(RecoveryManagerBaseTest, SystemActionsWithoutSystemAreIgnored)
 {
   EXPECT_NO_THROW(manager_->abort_mission("lost"));
   EXPECT_NO_THROW(manager_->hold_mission_progress(true));
   EXPECT_NO_THROW(manager_->request_shutdown("broken"));
-  EXPECT_NO_THROW(manager_->request_reconfigure({}, "nothing"));
-  EXPECT_NO_THROW(manager_->request_restore_parameters("nothing"));
+  EXPECT_FALSE(manager_->request_reconfigure({}, "nothing"));
+  EXPECT_FALSE(manager_->request_restore_parameters("nothing"));
 
   // The system went away: the weak reference does not keep it alive.
   auto actions = std::make_shared<RecordingSystemActions>();

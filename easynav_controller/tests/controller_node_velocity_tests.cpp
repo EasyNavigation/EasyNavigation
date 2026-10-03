@@ -834,3 +834,44 @@ TEST_F(ControllerNodeVelocityTest, ReconfigurationStartsWithNoTimeoutState)
   ASSERT_TRUE(diag);
   EXPECT_EQ(diag->level, diagnostic_msgs::msg::DiagnosticStatus::OK) << "no stale ERROR";
 }
+
+TEST_F(ControllerNodeVelocityTest, InvalidRobotLimitsFailToConfigure)
+{
+  const double nan = std::nan("");
+  const std::vector<rclcpp::Parameter> invalid {
+    {"robot_limits.max_linear_vel", -0.1},
+    {"robot_limits.max_linear_vel", nan},
+    {"robot_limits.min_linear_vel", 0.1},
+    {"robot_limits.max_angular_vel", -1.0},
+    {"robot_limits.max_angular_vel", std::numeric_limits<double>::infinity()},
+    {"robot_limits.max_linear_acc", 0.0},
+    {"robot_limits.max_linear_decel", -1.0},
+    {"robot_limits.max_angular_acc", 0.0},
+    {"robot_limits.max_angular_decel", nan},
+  };
+  for (const auto & param : invalid) {
+    auto node = std::make_shared<easynav::ControllerNode>(limits_options({param}));
+    node->trigger_transition(Transition::TRANSITION_CONFIGURE);
+    EXPECT_EQ(node->get_current_state().id(), State::PRIMARY_STATE_UNCONFIGURED) <<
+      param.get_name() << " = " << param.value_to_string();
+
+    // Fixed, it configures.
+    node->set_parameter(rclcpp::Parameter(param.get_name(), param.get_name() ==
+      "robot_limits.min_linear_vel" ? -0.1 : 0.5));
+    node->trigger_transition(Transition::TRANSITION_CONFIGURE);
+    EXPECT_EQ(node->get_current_state().id(), State::PRIMARY_STATE_INACTIVE) << param.get_name();
+  }
+}
+
+TEST_F(ControllerNodeVelocityTest, ZeroVelocityLimitsAreValid)
+{
+  // E.g. a robot that cannot reverse, or that only rotates in place.
+  auto node = std::make_shared<easynav::ControllerNode>(
+    limits_options({
+    {"robot_limits.max_linear_vel", 0.0},
+    {"robot_limits.min_linear_vel", 0.0},
+    {"robot_limits.max_angular_vel", 0.0},
+    {"robot_limits.max_linear_acc", 1e-6}}));
+  node->trigger_transition(Transition::TRANSITION_CONFIGURE);
+  EXPECT_EQ(node->get_current_state().id(), State::PRIMARY_STATE_INACTIVE);
+}

@@ -19,6 +19,10 @@ find_package(easynav_sensors)
 find_package(geometry_msgs)
 find_package(tf2_geometry_msgs)
 find_package(tf2)
+find_package(OpenSSL REQUIRED)
+find_package(rcl_logging_interface REQUIRED)
+find_package(rcutils REQUIRED)
+find_package(std_msgs REQUIRED)
 
 set(dependencies
   rclcpp::rclcpp
@@ -50,6 +54,7 @@ set(package_dependencies
   geometry_msgs
   tf2_geometry_msgs
   lifecycle_msgs
+  std_msgs
   tf2
 )
 
@@ -59,6 +64,10 @@ add_library(${PROJECT_NAME} SHARED
   src/easynav_system/SystemNode.cpp
   src/easynav_system/GoalManager.cpp
   src/easynav_system/GoalManagerClient.cpp
+  src/easynav_system/RealTime.cpp
+  src/easynav_system/safety/ConfigurationFingerprint.cpp
+  src/easynav_system/safety/ParameterFreezer.cpp
+  src/easynav_system/safety/SafetySupervisor.cpp
 )
 target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -81,6 +90,12 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
   ${sensor_msgs_TARGETS}
   ${nav_msgs_TARGETS}
   ${lifecycle_msgs_TARGETS}
+  ${std_msgs_TARGETS}
+)
+target_link_libraries(${PROJECT_NAME} PRIVATE
+  OpenSSL::Crypto
+  rcl_logging_interface::rcl_logging_interface
+  rcutils::rcutils
 )
 
 add_executable(system_main src/system_main.cpp)

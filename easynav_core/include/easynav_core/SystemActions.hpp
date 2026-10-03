@@ -86,16 +86,18 @@ public:
    *
    * @param changes Parameters to change.
    * @param reason Human-readable cause, logged.
+   * @return false if rejected (e.g. in safety mode, where the configuration is frozen).
    */
-  virtual void request_reconfigure(
+  virtual bool request_reconfigure(
     const std::vector<ParameterChange> & changes, const std::string & reason) = 0;
 
   /**
    * @brief Asks EasyNav to restore every parameter changed by request_reconfigure() to its value
    * before the first change, and reconfigure to apply them. Nothing to do if none changed.
    * @param reason Human-readable cause, logged.
+   * @return false if rejected (e.g. in safety mode, where the configuration is frozen).
    */
-  virtual void request_restore_parameters(const std::string & reason) = 0;
+  virtual bool request_restore_parameters(const std::string & reason) = 0;
 };
 
 }  // namespace easynav
