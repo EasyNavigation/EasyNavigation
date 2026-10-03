@@ -1,0 +1,23 @@
+<map id="easynav_maps_manager/src/easynav_maps_manager/fault_injection/FaultyMapsManager.cpp" name="easynav_maps_manager/src/easynav_maps_manager/fault_injection/FaultyMapsManager.cpp">
+<area shape="rect" id="Node000001" title="Implementation of the FaultyMapsManager class." alt="" coords="176,5,426,61"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,124,66,150"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="203,64,140,85,78,111,66,118,64,113,76,107,138,80,201,59"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="89,124,128,150"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="234,64,188,86,142,111,135,116,132,112,139,107,185,81,232,59"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="153,124,230,150"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="273,64,217,115,214,111,270,60"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="472,220,525,246"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="293,62,286,86,282,112,284,139,295,163,310,180,329,194,371,214,416,224,456,229,456,234,415,230,369,219,326,199,307,184,291,166,279,140,277,112,281,85,287,60"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="306,124,363,150"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="312,61,328,108,323,110,307,62"/>
+<area shape="rect" id="Node000007" href="$Parameters_8hpp.html" title="Parameter helpers for plugins that may be initialized several times on the same node." alt="" coords="388,124,609,150"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="355,59,462,114,460,119,353,64"/>
+<area shape="rect" id="Node000008" href="$FaultyMapsManager_8hpp.html" title="Declaration of the FaultyMapsManager class." alt="" coords="633,109,809,165"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="422,59,619,106,617,111,420,64"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="833,116,960,157"/>
+<area shape="poly" id="edge11_Node000001_Node000010" title=" " alt="" coords="427,43,614,67,719,84,821,106,831,109,830,114,820,112,718,90,613,72,426,48"/>
+<area shape="poly" id="edge7_Node000007_Node000005" title=" " alt="" coords="501,150,501,205,496,205,496,150"/>
+<area shape="poly" id="edge9_Node000008_Node000005" title=" " alt="" coords="657,168,540,217,538,212,655,163"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="627,213,814,253"/>
+<area shape="poly" id="edge10_Node000008_Node000009" title=" " alt="" coords="724,165,724,197,718,197,718,165"/>
+</map>

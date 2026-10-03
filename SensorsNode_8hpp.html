@@ -117,6 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <code>#include &quot;rclcpp/macros.hpp&quot;</code><br />
 <code>#include &quot;rclcpp_lifecycle/lifecycle_node.hpp&quot;</code><br />
 <code>#include &quot;sensor_msgs/msg/point_cloud2.hpp&quot;</code><br />
+<code>#include &lt;vector&gt;</code><br />
 <code>#include &quot;<a class="el" href="Perceptions_8hpp_source.html">easynav_sensors/types/Perceptions.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="NavState_8hpp_source.html">easynav_common/types/NavState.hpp</a>&quot;</code><br />
 <code>#include &quot;pluginlib/class_loader.hpp&quot;</code><br />
@@ -125,60 +126,61 @@ Include dependency graph for SensorsNode.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="SensorsNode_8hpp__incl.png" border="0" usemap="#aeasynav__sensors_2include_2easynav__sensors_2SensorsNode_8hpp" loading="lazy" alt=""/></div>
 <map name="aeasynav__sensors_2include_2easynav__sensors_2SensorsNode_8hpp" id="aeasynav__sensors_2include_2easynav__sensors_2SensorsNode_8hpp">
-<area shape="rect" title="Declaration of the SensorsNode class, a ROS 2 lifecycle node for sensor fusion tasks in Easy Navigati..." alt="" coords="842,5,1076,46"/>
+<area shape="rect" title="Declaration of the SensorsNode class, a ROS 2 lifecycle node for sensor fusion tasks in Easy Navigati..." alt="" coords="756,5,989,46"/>
 <area shape="rect" title=" " alt="" coords="5,271,62,297"/>
-<area shape="poly" title=" " alt="" coords="842,47,722,69,596,97,458,137,322,185,77,270,75,265,321,180,456,132,594,91,721,63,841,42"/>
+<area shape="poly" title=" " alt="" coords="756,43,625,64,486,97,425,117,378,137,273,185,77,267,75,263,271,180,376,132,423,112,485,91,624,59,755,38"/>
 <area shape="rect" title=" " alt="" coords="86,271,197,297"/>
-<area shape="poly" title=" " alt="" coords="890,49,728,97,424,193,193,268,191,263,422,188,726,91,888,44"/>
-<area shape="rect" title=" " alt="" coords="996,102,1116,127"/>
-<area shape="poly" title=" " alt="" coords="983,45,1033,89,1030,93,979,49"/>
-<area shape="rect" title=" " alt="" coords="1140,102,1268,127"/>
-<area shape="poly" title=" " alt="" coords="1015,44,1156,93,1155,98,1014,49"/>
-<area shape="rect" title=" " alt="" coords="1016,183,1177,223"/>
-<area shape="poly" title=" " alt="" coords="962,46,967,89,975,112,986,133,1008,155,1034,173,1031,178,1005,160,982,136,970,114,962,90,956,47"/>
-<area shape="rect" title=" " alt="" coords="1292,94,1452,135"/>
-<area shape="poly" title=" " alt="" coords="1054,44,1277,91,1276,96,1053,49"/>
-<area shape="rect" href="Perceptions_8hpp.html" title="Defines data structures and utilities for representing and processing sensor perceptions." alt="" coords="764,94,922,135"/>
-<area shape="poly" title=" " alt="" coords="934,49,883,87,880,82,931,44"/>
-<area shape="rect" href="NavState_8hpp.html" title="A blackboard&#45;like structure to hold the current state of the navigation system." alt="" coords="645,183,806,223"/>
-<area shape="poly" title=" " alt="" coords="843,46,795,65,773,79,754,96,743,112,735,130,728,168,723,167,730,128,738,109,750,92,770,75,792,60,841,41"/>
-<area shape="rect" title=" " alt="" coords="1477,102,1646,127"/>
-<area shape="poly" title=" " alt="" coords="1076,38,1259,61,1465,91,1488,95,1487,101,1464,97,1259,66,1076,43"/>
-<area shape="poly" title=" " alt="" coords="901,133,1025,175,1024,180,899,138"/>
-<area shape="rect" title=" " alt="" coords="1491,271,1544,297"/>
-<area shape="poly" title=" " alt="" coords="844,135,848,180,857,203,871,221,892,235,919,246,985,261,1065,268,1152,269,1330,264,1409,264,1476,269,1475,274,1409,270,1330,270,1152,274,1065,273,984,266,917,251,890,240,868,225,852,205,843,181,839,135"/>
-<area shape="rect" title=" " alt="" coords="882,190,991,216"/>
-<area shape="poly" title=" " alt="" coords="866,133,914,178,911,182,862,137"/>
-<area shape="poly" title=" " alt="" coords="818,137,765,176,762,171,815,133"/>
-<area shape="poly" title=" " alt="" coords="644,211,395,230,238,249,77,274,76,269,237,243,394,225,644,206"/>
-<area shape="poly" title=" " alt="" coords="645,216,452,240,213,273,212,268,451,235,644,211"/>
-<area shape="poly" title=" " alt="" coords="807,218,826,221,923,231,1007,237,1150,239,1293,245,1377,253,1476,269,1475,274,1377,259,1293,250,1150,245,1006,242,923,237,825,226,806,223"/>
-<area shape="rect" title=" " alt="" coords="688,271,763,297"/>
-<area shape="poly" title=" " alt="" coords="728,224,728,256,723,256,723,224"/>
-<area shape="rect" title=" " alt="" coords="787,271,890,297"/>
-<area shape="poly" title=" " alt="" coords="755,222,811,260,808,264,752,226"/>
-<area shape="rect" title=" " alt="" coords="914,271,982,297"/>
-<area shape="poly" title=" " alt="" coords="782,221,901,263,899,268,780,226"/>
-<area shape="rect" title=" " alt="" coords="1006,271,1072,297"/>
-<area shape="poly" title=" " alt="" coords="805,221,991,268,990,273,803,226"/>
-<area shape="rect" title=" " alt="" coords="1096,271,1174,297"/>
-<area shape="poly" title=" " alt="" coords="807,217,826,221,1081,268,1080,273,825,226,806,222"/>
-<area shape="rect" title=" " alt="" coords="1198,271,1266,297"/>
-<area shape="poly" title=" " alt="" coords="807,218,826,221,925,235,1003,243,1082,252,1183,268,1182,274,1082,257,1002,248,924,240,825,226,806,223"/>
-<area shape="rect" title=" " alt="" coords="1290,271,1372,297"/>
-<area shape="poly" title=" " alt="" coords="807,218,826,221,951,236,1049,243,1149,252,1276,268,1275,274,1148,257,1049,249,950,241,825,226,806,223"/>
-<area shape="rect" title=" " alt="" coords="1395,271,1466,297"/>
-<area shape="poly" title=" " alt="" coords="807,218,826,221,980,237,1102,242,1225,249,1380,268,1380,274,1224,254,1102,248,980,242,825,226,806,223"/>
-<area shape="rect" title=" " alt="" coords="220,271,298,297"/>
-<area shape="poly" title=" " alt="" coords="645,218,495,242,313,273,313,268,494,236,644,213"/>
-<area shape="rect" title=" " alt="" coords="322,271,401,297"/>
-<area shape="poly" title=" " alt="" coords="645,224,417,273,416,268,644,219"/>
-<area shape="rect" title=" " alt="" coords="426,271,492,297"/>
-<area shape="poly" title=" " alt="" coords="660,226,508,271,506,266,658,221"/>
-<area shape="rect" title=" " alt="" coords="516,271,573,297"/>
-<area shape="poly" title=" " alt="" coords="681,226,587,267,585,262,679,221"/>
-<area shape="rect" title=" " alt="" coords="597,271,664,297"/>
-<area shape="poly" title=" " alt="" coords="704,226,659,263,655,259,700,222"/>
+<area shape="poly" title=" " alt="" coords="779,49,692,70,601,97,479,140,361,188,182,267,180,262,359,183,478,135,599,91,690,65,777,44"/>
+<area shape="rect" title=" " alt="" coords="968,102,1088,127"/>
+<area shape="poly" title=" " alt="" coords="909,44,995,91,992,96,906,49"/>
+<area shape="rect" title=" " alt="" coords="1112,102,1240,127"/>
+<area shape="poly" title=" " alt="" coords="942,44,1120,94,1118,99,941,49"/>
+<area shape="rect" title=" " alt="" coords="989,183,1150,223"/>
+<area shape="poly" title=" " alt="" coords="886,45,916,87,958,133,986,154,1016,173,1014,177,983,159,954,137,912,91,882,48"/>
+<area shape="rect" title=" " alt="" coords="1264,94,1424,135"/>
+<area shape="poly" title=" " alt="" coords="989,44,1249,91,1248,96,988,49"/>
+<area shape="rect" title=" " alt="" coords="221,271,278,297"/>
+<area shape="poly" title=" " alt="" coords="821,49,701,96,400,226,294,268,292,263,398,221,699,92,819,44"/>
+<area shape="rect" href="Perceptions_8hpp.html" title="Defines data structures and utilities for representing and processing sensor perceptions." alt="" coords="736,94,894,135"/>
+<area shape="poly" title=" " alt="" coords="861,48,838,83,834,80,857,45"/>
+<area shape="rect" href="NavState_8hpp.html" title="A blackboard&#45;like structure to hold the current state of the navigation system." alt="" coords="618,183,780,223"/>
+<area shape="poly" title=" " alt="" coords="797,49,758,68,726,96,716,112,709,130,702,168,697,167,704,129,711,110,722,92,755,64,794,44"/>
+<area shape="rect" title=" " alt="" coords="1449,102,1618,127"/>
+<area shape="poly" title=" " alt="" coords="989,36,1198,59,1437,91,1461,95,1460,101,1436,97,1197,64,989,41"/>
+<area shape="poly" title=" " alt="" coords="873,133,998,175,997,180,872,138"/>
+<area shape="rect" title=" " alt="" coords="1492,271,1546,297"/>
+<area shape="poly" title=" " alt="" coords="851,133,927,181,952,203,963,213,979,221,1049,245,1111,257,1167,261,1221,260,1335,256,1401,259,1477,269,1476,274,1400,264,1335,261,1221,266,1167,266,1110,262,1048,250,976,226,960,217,949,207,924,185,848,137"/>
+<area shape="rect" title=" " alt="" coords="804,190,914,216"/>
+<area shape="poly" title=" " alt="" coords="827,134,848,175,844,178,822,136"/>
+<area shape="poly" title=" " alt="" coords="790,137,739,175,736,171,787,133"/>
+<area shape="poly" title=" " alt="" coords="618,211,379,231,230,249,77,274,76,269,230,244,379,226,618,206"/>
+<area shape="poly" title=" " alt="" coords="618,217,213,273,212,268,617,212"/>
+<area shape="poly" title=" " alt="" coords="618,218,471,240,294,274,293,268,470,235,617,212"/>
+<area shape="poly" title=" " alt="" coords="780,219,793,221,895,232,983,238,1134,240,1285,244,1373,253,1477,269,1476,274,1373,258,1285,250,1134,245,983,243,895,238,792,226,779,224"/>
+<area shape="rect" title=" " alt="" coords="394,271,468,297"/>
+<area shape="poly" title=" " alt="" coords="633,226,483,270,482,265,631,221"/>
+<area shape="rect" title=" " alt="" coords="492,271,596,297"/>
+<area shape="poly" title=" " alt="" coords="661,226,583,266,580,262,659,222"/>
+<area shape="rect" title=" " alt="" coords="620,271,687,297"/>
+<area shape="poly" title=" " alt="" coords="690,225,670,259,666,256,685,222"/>
+<area shape="rect" title=" " alt="" coords="711,271,777,297"/>
+<area shape="poly" title=" " alt="" coords="712,222,732,256,727,259,708,225"/>
+<area shape="rect" title=" " alt="" coords="802,271,879,297"/>
+<area shape="poly" title=" " alt="" coords="735,222,807,261,804,266,733,226"/>
+<area shape="rect" title=" " alt="" coords="903,271,972,297"/>
+<area shape="poly" title=" " alt="" coords="759,221,890,264,888,269,758,226"/>
+<area shape="rect" title=" " alt="" coords="996,271,1077,297"/>
+<area shape="poly" title=" " alt="" coords="781,221,981,267,980,272,779,226"/>
+<area shape="rect" title=" " alt="" coords="1100,271,1172,297"/>
+<area shape="poly" title=" " alt="" coords="780,218,793,221,938,243,1086,268,1085,273,937,249,792,226,779,224"/>
+<area shape="rect" title=" " alt="" coords="1196,271,1274,297"/>
+<area shape="poly" title=" " alt="" coords="780,219,793,221,900,236,985,244,1071,252,1181,268,1180,274,1071,258,985,249,899,241,792,226,779,224"/>
+<area shape="rect" title=" " alt="" coords="1298,271,1377,297"/>
+<area shape="poly" title=" " alt="" coords="780,219,793,221,928,237,1036,244,1145,251,1283,269,1282,274,1144,257,1036,249,928,242,792,226,779,224"/>
+<area shape="rect" title=" " alt="" coords="1402,271,1468,297"/>
+<area shape="poly" title=" " alt="" coords="780,219,793,221,957,238,1088,242,1219,248,1387,269,1386,274,1219,254,1088,248,957,243,792,226,779,224"/>
+<area shape="rect" title=" " alt="" coords="302,271,370,297"/>
+<area shape="poly" title=" " alt="" coords="618,223,385,273,384,268,617,218"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -186,42 +188,46 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="SensorsNode_8hpp__dep__incl.png" border="0" usemap="#aeasynav__sensors_2include_2easynav__sensors_2SensorsNode_8hppdep" loading="lazy" alt=""/></div>
 <map name="aeasynav__sensors_2include_2easynav__sensors_2SensorsNode_8hppdep" id="aeasynav__sensors_2include_2easynav__sensors_2SensorsNode_8hppdep">
-<area shape="rect" title="Declaration of the SensorsNode class, a ROS 2 lifecycle node for sensor fusion tasks in Easy Navigati..." alt="" coords="519,5,752,46"/>
+<area shape="rect" title="Declaration of the SensorsNode class, a ROS 2 lifecycle node for sensor fusion tasks in Easy Navigati..." alt="" coords="633,5,867,46"/>
 <area shape="rect" href="SensorsNode_8cpp.html" title="Implementation of the SensorsNode class." alt="" coords="5,94,239,135"/>
-<area shape="poly" title=" " alt="" coords="504,52,240,96,239,91,503,47"/>
+<area shape="poly" title=" " alt="" coords="618,47,252,97,239,98,239,93,251,91,618,42"/>
 <area shape="rect" href="plugin__tests_8cpp.html" title="Tests that verify the pluginlib plugin registration, loading, and correctness of all built&#45;in Percept..." alt="" coords="263,94,418,135"/>
-<area shape="poly" title=" " alt="" coords="554,53,408,96,407,91,553,48"/>
-<area shape="rect" href="sensors__lifecycle__tests_8cpp.html" title=" " alt="" coords="443,94,628,135"/>
-<area shape="poly" title=" " alt="" coords="603,58,560,96,556,92,599,54"/>
-<area shape="rect" href="sensors__node__tests_8cpp.html" title=" " alt="" coords="652,94,818,135"/>
-<area shape="poly" title=" " alt="" coords="671,54,714,92,711,96,668,58"/>
-<area shape="rect" href="SystemNode_8hpp.html" title="Declaration of the SystemNode class, the central coordinator node for Easy Navigation components." alt="" coords="1292,94,1517,135"/>
-<area shape="poly" title=" " alt="" coords="768,39,1292,98,1292,103,767,44"/>
-<area shape="rect" href="SystemNode_8cpp.html" title="Implementation of the SystemNode class." alt="" coords="344,190,569,231"/>
-<area shape="poly" title=" " alt="" coords="752,48,794,63,826,82,837,94,842,107,841,121,832,136,813,151,784,162,713,173,638,179,581,185,548,192,547,187,580,180,638,174,712,168,783,156,810,146,828,133,836,120,837,108,833,97,823,87,792,68,750,53"/>
-<area shape="poly" title=" " alt="" coords="1277,124,960,144,770,162,581,185,542,192,541,187,580,180,770,156,959,139,1277,118"/>
-<area shape="rect" href="system__main_8cpp.html" title=" " alt="" coords="593,190,734,231"/>
-<area shape="poly" title=" " alt="" coords="1277,123,1030,143,887,161,747,185,720,192,718,187,745,180,887,155,1029,138,1276,118"/>
-<area shape="rect" href="system__actions__tests_8cpp.html" title="SystemNode as SystemActions (what a recovery system can ask of EasyNav), and recovery_node as one mor..." alt="" coords="758,190,934,231"/>
-<area shape="poly" title=" " alt="" coords="1277,133,1118,155,947,185,916,192,915,187,945,180,1118,150,1276,128"/>
-<area shape="rect" href="system__fault__injection__tests_8cpp.html" title="The whole RT cycle of SystemNode with a controller that misbehaves (FaultyController)." alt="" coords="958,183,1112,238"/>
-<area shape="poly" title=" " alt="" coords="1303,141,1125,185,1113,189,1112,183,1124,180,1302,136"/>
-<area shape="rect" href="system__lifecycle__cycle__tests_8cpp.html" title="Exercises SystemNode&#39;s own lifecycle state machine through repeated full cycles, including active &#45;&gt; ..." alt="" coords="1136,183,1294,238"/>
-<area shape="poly" title=" " alt="" coords="1353,144,1271,185,1269,180,1350,140"/>
-<area shape="rect" href="system__lifecycle__mission__tests_8cpp.html" title="A mission survives reconfiguring EasyNav (active &#45;&gt; inactive &#45;&gt; unconfigured &#45;&gt; inactive &#45;&gt; active,..." alt="" coords="1318,183,1491,238"/>
-<area shape="poly" title=" " alt="" coords="1407,150,1407,182,1402,182,1402,150"/>
-<area shape="rect" href="system__pause__tests_8cpp.html" title=" " alt="" coords="1516,190,1685,231"/>
-<area shape="poly" title=" " alt="" coords="1460,139,1561,187,1558,192,1458,144"/>
-<area shape="rect" href="system__robot__geometry__tests_8cpp.html" title="SystemNode shares &quot;robot_geometry.*&quot; with every component before they configure." alt="" coords="1710,183,1873,238"/>
-<area shape="poly" title=" " alt="" coords="1511,136,1699,180,1710,183,1709,188,1697,185,1510,141"/>
-<area shape="rect" href="system__safety__mode__tests_8cpp.html" title="Configuration validation, safety mode, frozen configuration and configuration hash." alt="" coords="1896,190,2105,231"/>
-<area shape="poly" title=" " alt="" coords="1533,128,1701,150,1885,180,1920,187,1919,192,1884,185,1700,156,1532,133"/>
-<area shape="rect" href="system__shutdown__request__tests_8cpp.html" title="A shutdown requested by a recovery mitigation takes SystemNode (and every EasyNav node) out of Active..." alt="" coords="2129,183,2310,238"/>
-<area shape="poly" title=" " alt="" coords="1533,119,1803,139,1961,157,2117,180,2129,182,2128,188,2116,185,1960,162,1802,145,1533,124"/>
-<area shape="rect" href="system__tfinfo__tests_8cpp.html" title=" " alt="" coords="2334,190,2496,231"/>
-<area shape="poly" title=" " alt="" coords="1533,114,1692,119,1890,130,2107,149,2322,180,2354,187,2352,192,2322,185,2106,155,1890,135,1692,124,1533,119"/>
-<area shape="rect" href="system__velocity__smoothing__tests_8cpp.html" title="End to end through SystemNode: with very low accelerations, the published commands are smoothed,..." alt="" coords="2520,183,2705,238"/>
-<area shape="poly" title=" " alt="" coords="1533,113,1723,116,1967,127,2238,147,2375,161,2509,180,2520,182,2519,187,2508,185,2374,167,2237,152,1967,132,1723,122,1533,118"/>
+<area shape="poly" title=" " alt="" coords="641,52,431,97,419,99,418,94,429,91,640,47"/>
+<area shape="rect" href="sensors__data__age__tests_8cpp.html" title="SensorsNode: perceptions older than &quot;forget_time&quot; are invalidated and reported." alt="" coords="442,94,634,135"/>
+<area shape="poly" title=" " alt="" coords="689,55,587,96,585,91,687,50"/>
+<area shape="rect" href="sensors__lifecycle__tests_8cpp.html" title=" " alt="" coords="657,94,843,135"/>
+<area shape="poly" title=" " alt="" coords="753,62,753,94,747,94,747,62"/>
+<area shape="rect" href="sensors__node__tests_8cpp.html" title=" " alt="" coords="867,94,1033,135"/>
+<area shape="poly" title=" " alt="" coords="810,50,906,91,903,96,808,55"/>
+<area shape="rect" href="SystemNode_8hpp.html" title="Declaration of the SystemNode class, the central coordinator node for Easy Navigation components." alt="" coords="1607,94,1832,135"/>
+<area shape="poly" title=" " alt="" coords="882,36,1606,100,1606,106,882,41"/>
+<area shape="rect" href="SystemNode_8cpp.html" title="Implementation of the SystemNode class." alt="" coords="552,190,777,231"/>
+<area shape="poly" title=" " alt="" coords="882,32,958,43,1022,62,1045,76,1058,93,1060,113,1047,136,1027,151,998,162,924,174,848,179,789,185,756,192,755,187,788,180,847,174,924,168,996,157,1024,147,1043,133,1054,112,1053,95,1041,80,1020,67,957,48,882,37"/>
+<area shape="poly" title=" " alt="" coords="1591,122,1229,141,1009,159,789,185,749,192,748,187,788,180,1009,154,1229,136,1591,117"/>
+<area shape="rect" href="system__main_8cpp.html" title=" " alt="" coords="801,190,942,231"/>
+<area shape="poly" title=" " alt="" coords="1591,121,1458,127,1298,138,1126,157,955,185,927,192,926,187,953,180,1125,152,1298,133,1458,121,1591,116"/>
+<area shape="rect" href="system__actions__tests_8cpp.html" title="SystemNode as SystemActions (what a recovery system can ask of EasyNav), and recovery_node as one mor..." alt="" coords="966,190,1142,231"/>
+<area shape="poly" title=" " alt="" coords="1591,128,1386,150,1270,166,1156,185,1125,192,1123,187,1155,180,1269,161,1386,145,1591,123"/>
+<area shape="rect" href="system__component__faults__tests_8cpp.html" title="SystemNode with a localizer, planner or maps manager that misbehaves (FaultyLocalizer,..." alt="" coords="1167,183,1344,238"/>
+<area shape="poly" title=" " alt="" coords="1592,139,1356,185,1345,188,1344,183,1355,180,1591,134"/>
+<area shape="rect" href="system__fault__injection__tests_8cpp.html" title="The whole RT cycle of SystemNode with a controller that misbehaves (FaultyController)." alt="" coords="1368,183,1522,238"/>
+<area shape="poly" title=" " alt="" coords="1648,143,1523,185,1522,180,1647,138"/>
+<area shape="rect" href="system__lifecycle__cycle__tests_8cpp.html" title="Exercises SystemNode&#39;s own lifecycle state machine through repeated full cycles, including active &#45;&gt; ..." alt="" coords="1546,183,1704,238"/>
+<area shape="poly" title=" " alt="" coords="1691,148,1654,184,1650,180,1687,144"/>
+<area shape="rect" href="system__lifecycle__mission__tests_8cpp.html" title="A mission survives reconfiguring EasyNav (active &#45;&gt; inactive &#45;&gt; unconfigured &#45;&gt; inactive &#45;&gt; active,..." alt="" coords="1727,183,1901,238"/>
+<area shape="poly" title=" " alt="" coords="1752,144,1788,180,1785,184,1748,148"/>
+<area shape="rect" href="system__pause__tests_8cpp.html" title=" " alt="" coords="1925,190,2095,231"/>
+<area shape="poly" title=" " alt="" coords="1796,137,1950,187,1948,192,1794,142"/>
+<area shape="rect" href="system__robot__geometry__tests_8cpp.html" title="SystemNode shares &quot;robot_geometry.*&quot; with every component before they configure." alt="" coords="2119,183,2282,238"/>
+<area shape="poly" title=" " alt="" coords="1848,132,1974,153,2108,180,2119,183,2118,188,2107,185,1973,158,1847,137"/>
+<area shape="rect" href="system__safety__mode__tests_8cpp.html" title="Configuration validation, safety mode, frozen configuration and configuration hash." alt="" coords="2306,190,2514,231"/>
+<area shape="poly" title=" " alt="" coords="1847,124,2057,146,2294,180,2330,187,2329,192,2294,185,2057,152,1847,129"/>
+<area shape="rect" href="system__shutdown__request__tests_8cpp.html" title="A shutdown requested by a recovery mitigation takes SystemNode (and every EasyNav node) out of Active..." alt="" coords="2538,183,2719,238"/>
+<area shape="poly" title=" " alt="" coords="1848,117,2158,136,2343,154,2526,180,2539,182,2538,188,2526,185,2342,159,2157,141,1847,122"/>
+<area shape="rect" href="system__tfinfo__tests_8cpp.html" title=" " alt="" coords="2744,190,2906,231"/>
+<area shape="poly" title=" " alt="" coords="1848,113,2023,116,2244,127,2488,147,2611,162,2732,180,2763,187,2762,192,2731,185,2611,167,2488,152,2244,132,2023,122,1848,118"/>
+<area shape="rect" href="system__velocity__smoothing__tests_8cpp.html" title="End to end through SystemNode: with very low accelerations, the published commands are smoothed,..." alt="" coords="2929,183,3115,238"/>
+<area shape="poly" title=" " alt="" coords="1847,112,2053,114,2320,124,2619,144,2770,160,2918,180,2930,182,2929,187,2918,185,2770,165,2618,150,2320,129,2053,120,1847,117"/>
 </map>
 </div>
 </div>

@@ -1,0 +1,7 @@
+<map id="easynav_localizer/include/easynav_localizer/fault_injection/FaultyLocalizer.hpp" name="easynav_localizer/include/easynav_localizer/fault_injection/FaultyLocalizer.hpp">
+<area shape="rect" id="Node000001" title="Declaration of the FaultyLocalizer class." alt="" coords="108,5,299,61"/>
+<area shape="rect" id="Node000002" href="$FaultyLocalizer_8cpp.html" title="Implementation of the FaultyLocalizer class." alt="" coords="5,109,197,165"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="167,74,130,110,127,106,163,70"/>
+<area shape="rect" id="Node000003" href="$faulty__localizer__tests_8cpp.html" title="FaultyLocalizer: each fault does what it says." alt="" coords="221,116,392,157"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="244,70,289,114,285,118,240,74"/>
+</map>

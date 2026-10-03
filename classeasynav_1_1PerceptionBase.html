@@ -166,7 +166,7 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a3ace6024cedb403facddccc6842dce24" id="r_a3ace6024cedb403facddccc6842dce24"><td class="memItemLeft">rclcpp::Time&#160;</td><td class="memItemRight"><a class="el" href="#a3ace6024cedb403facddccc6842dce24">stamp</a></td></tr>
 <tr class="memdesc:a3ace6024cedb403facddccc6842dce24"><td class="mdescLeft">&#160;</td><td class="mdescRight">Timestamp of the perception (ROS time).  <br /></td></tr>
 <tr class="memitem:a28e3c179a86f337095088b3ca02a2b2a" id="r_a28e3c179a86f337095088b3ca02a2b2a"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a28e3c179a86f337095088b3ca02a2b2a">valid</a> = false</td></tr>
-<tr class="memdesc:a28e3c179a86f337095088b3ca02a2b2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the perception contains valid data.  <br /></td></tr>
+<tr class="memdesc:a28e3c179a86f337095088b3ca02a2b2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the perception holds usable data: set with new data, cleared by <a class="el" href="classeasynav_1_1SensorsNode.html" title="ROS 2 lifecycle node that manages sensor fusion in Easy Navigation.">SensorsNode</a> once it is older than "forget_time".  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Abstract base class for representing a single sensor perception. </p>
@@ -258,7 +258,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Whether the perception contains valid data. </p>
+<p>Whether the perception holds usable data: set with new data, cleared by <a class="el" href="classeasynav_1_1SensorsNode.html" title="ROS 2 lifecycle node that manages sensor fusion in Easy Navigation.">SensorsNode</a> once it is older than "forget_time". </p>
 
 </div>
 </div>

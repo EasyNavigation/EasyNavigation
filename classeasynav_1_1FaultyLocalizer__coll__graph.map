@@ -1,0 +1,5 @@
+<map id="FaultyLocalizer" name="FaultyLocalizer">
+<area shape="rect" id="Node000001" title="Localizer that misbehaves on purpose, to test how EasyNav copes with it." alt="" coords="24,79,133,105"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,152,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="81,46,81,79,76,79,76,46"/>
+</map>

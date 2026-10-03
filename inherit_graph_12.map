@@ -1,5 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" title=" " alt="" coords="5,5,152,31"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,31,152,56"/>
 <area shape="rect" id="Node000001" href="$classeasynav_1_1DummyLocalizer.html" title="A default &quot;do&#45;nothing&quot; implementation of LocalizerMethodBase." alt="" coords="200,5,317,31"/>
-<area shape="poly" id="edge14_Node000000_Node000001" title=" " alt="" coords="167,16,199,16,199,21,167,21"/>
+<area shape="poly" id="edge14_Node000000_Node000001" title=" " alt="" coords="166,28,199,24,199,29,167,34"/>
+<area shape="rect" id="Node000002" href="$classeasynav_1_1FaultyLocalizer.html" title="Localizer that misbehaves on purpose, to test how EasyNav copes with it." alt="" coords="204,55,312,80"/>
+<area shape="poly" id="edge15_Node000000_Node000002" title=" " alt="" coords="167,53,204,58,204,63,166,58"/>
 </map>

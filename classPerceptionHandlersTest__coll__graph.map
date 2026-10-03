@@ -1,0 +1,15 @@
+<map id="PerceptionHandlersTest" name="PerceptionHandlersTest">
+<area shape="rect" id="Node000001" title=" " alt="" coords="335,135,496,160"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="71,5,119,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="134,15,218,23,266,33,312,50,342,69,368,91,406,132,402,136,364,95,338,73,309,55,264,38,217,28,133,20"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="55,55,135,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="151,70,228,81,311,100,353,115,389,132,387,136,351,120,310,105,227,86,150,75"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="55,108,135,134"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="150,123,335,138,334,143,150,128"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="55,159,135,184"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="150,173,226,175,310,171,370,158,371,163,311,176,226,181,150,178"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="5,209,185,265"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="200,227,255,219,310,204,356,182,394,159,397,163,359,187,312,209,256,224,201,233"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="24,288,166,329"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="180,297,246,282,279,270,309,255,340,233,366,206,403,159,408,162,370,210,343,237,312,259,281,275,247,287,182,302"/>
+</map>

@@ -168,7 +168,8 @@ Public Member Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>ROS 2 lifecycle node that manages path planning in Easy Navigation. </p>
-<p>Handles lifecycle transitions, plugin loading, and invokes the planner to compute paths. </p>
+<p>Handles lifecycle transitions, plugin loading, and invokes the planner to compute paths.</p>
+<p>After each planning cycle, a "path" with a non-finite pose (NaN, inf) is replaced by an empty one, so no controller follows it, and reported as "diagnostics.path" (ERROR), on changes. </p>
 </div><a name="doc-typedef-members" id="doc-typedef-members"></a><h2 id="header-doc-typedef-members" class="groupheader">Member Typedef Documentation</h2>
 <a id="ad09d90f1fe35c9e2f2fd7fc1902312f4" name="ad09d90f1fe35c9e2f2fd7fc1902312f4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad09d90f1fe35c9e2f2fd7fc1902312f4">&#9670;&#160;</a></span>CallbackReturnT</h2>

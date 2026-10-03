@@ -1,28 +1,4 @@
 var searchData=
 [
-  ['_7econtrollernode_0',['~ControllerNode',['../classeasynav_1_1ControllerNode.html#ad51c340f85daa6f2ef4bd8b7bee2c47c',1,'easynav::ControllerNode']]],
-  ['_7econtrollernodetestcase_1',['~ControllerNodeTestCase',['../classControllerNodeTestCase.html#aff4b5a2371313a25220fda6cecb149bf',1,'ControllerNodeTestCase']]],
-  ['_7edummycontroller_2',['~DummyController',['../classeasynav_1_1DummyController.html#a826dfe8d04169cb82d9f072809c1b5a8',1,'easynav::DummyController']]],
-  ['_7edummylocalizer_3',['~DummyLocalizer',['../classeasynav_1_1DummyLocalizer.html#aef89e5a5bfb7d4e13c0a91b843471c2a',1,'easynav::DummyLocalizer']]],
-  ['_7edummymapsmanager_4',['~DummyMapsManager',['../classeasynav_1_1DummyMapsManager.html#afb92f43dcb73f37d273fc0abb9b74ed0',1,'easynav::DummyMapsManager']]],
-  ['_7edummyplanner_5',['~DummyPlanner',['../classeasynav_1_1DummyPlanner.html#ae5b7a07c0a2137e5faef603bf7f707ef',1,'easynav::DummyPlanner']]],
-  ['_7egoalmanagertestcase_6',['~GoalManagerTestCase',['../classGoalManagerTestCase.html#a7d6d977f4ba54a5d5e4562ecadeef118',1,'GoalManagerTestCase']]],
-  ['_7elocalizernode_7',['~LocalizerNode',['../classeasynav_1_1LocalizerNode.html#a685d21ce7d798c9bdc7697134fc02283',1,'easynav::LocalizerNode']]],
-  ['_7elocalizernodetestcase_8',['~LocalizerNodeTestCase',['../classLocalizerNodeTestCase.html#a1db22abfcfbe5d3a4ede8b3a01f36ea9',1,'LocalizerNodeTestCase']]],
-  ['_7elogcapture_9',['~LogCapture',['../classeasynav_1_1testing_1_1LogCapture.html#a0ac80b27d9e68cd494570c3cc37bf185',1,'easynav::testing::LogCapture::~LogCapture()'],['../classLogCapture.html#a0ac80b27d9e68cd494570c3cc37bf185',1,'LogCapture::~LogCapture()']]],
-  ['_7emapsmanagernode_10',['~MapsManagerNode',['../classeasynav_1_1MapsManagerNode.html#a8c3c562111b3eaedff90cc9f902f9b05',1,'easynav::MapsManagerNode']]],
-  ['_7emapsmanagernodetestcase_11',['~MapsManagerNodeTestCase',['../classMapsManagerNodeTestCase.html#a2b2b37d20a8dcf55e812a200c1d0242c',1,'MapsManagerNodeTestCase']]],
-  ['_7enavstate_12',['~NavState',['../classeasynav_1_1NavState.html#abdc1d18307758986bc40729691de0921',1,'easynav::NavState']]],
-  ['_7eperceptionbase_13',['~PerceptionBase',['../classeasynav_1_1PerceptionBase.html#a05127c1d4439d2afa8dcf4230e2a177c',1,'easynav::PerceptionBase']]],
-  ['_7eperceptionhandler_14',['~PerceptionHandler',['../classeasynav_1_1PerceptionHandler.html#abbe35c22e1c98340681de734002399d9',1,'easynav::PerceptionHandler::~PerceptionHandler()'],['../classPerceptionHandler.html#abbe35c22e1c98340681de734002399d9',1,'PerceptionHandler::~PerceptionHandler()']]],
-  ['_7eperceptionlockingtestcase_15',['~PerceptionLockingTestCase',['../classPerceptionLockingTestCase.html#abc71727eebd542a0e167c0230388b781',1,'PerceptionLockingTestCase']]],
-  ['_7eperceptionstestcase_16',['~PerceptionsTestCase',['../classPerceptionsTestCase.html#a5d25c16a1b3f4f77bd597d54ce6ac4fb',1,'PerceptionsTestCase']]],
-  ['_7eplannernode_17',['~PlannerNode',['../classeasynav_1_1PlannerNode.html#a10ae20b189dd786b467a8441316e13d7',1,'easynav::PlannerNode']]],
-  ['_7eplannernodetestcase_18',['~PlannerNodeTestCase',['../classPlannerNodeTestCase.html#ab7e6eb5bdf9f82639f9cabeb61d4ba5e',1,'PlannerNodeTestCase']]],
-  ['_7eplugintestcase_19',['~PluginTestCase',['../classPluginTestCase.html#a5079af18a071fbd7eed4028806365870',1,'PluginTestCase']]],
-  ['_7esensorsnode_20',['~SensorsNode',['../classeasynav_1_1SensorsNode.html#a84e306309c2bba62ee5dc10a2573a960',1,'easynav::SensorsNode']]],
-  ['_7esensorsnodetestcase_21',['~SensorsNodeTestCase',['../classSensorsNodeTestCase.html#a4543bb6319a1fd94f16b5108529e6115',1,'SensorsNodeTestCase']]],
-  ['_7esingleton_22',['~Singleton',['../classeasynav_1_1Singleton.html#ad5e506b7074ad31f76ccf25c46644623',1,'easynav::Singleton']]],
-  ['_7esystemnode_23',['~SystemNode',['../classeasynav_1_1SystemNode.html#a3bd1259a93656594885b4c59ac3cec93',1,'easynav::SystemNode']]],
-  ['_7eytsession_24',['~YTSession',['../classeasynav_1_1YTSession.html#afccea8a77e02010809479a7dd16218ef',1,'easynav::YTSession']]]
+  ['wait_5ffor_5fsubscriber_0',['wait_for_subscriber',['../classSensorsDataAgeTest.html#a3c6e4107825e88d416c1ebd2a2606ee8',1,'SensorsDataAgeTest']]]
 ];

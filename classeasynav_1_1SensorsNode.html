@@ -190,7 +190,8 @@ Protected Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>ROS 2 lifecycle node that manages sensor fusion in Easy Navigation. </p>
-<p>Collects, transforms, and publishes fused perception data from multiple sources. Sensor handlers are loaded at runtime as pluginlib plugins, allowing users to add new sensor types without modifying this node. </p>
+<p>Collects, transforms, and publishes fused perception data from multiple sources. Sensor handlers are loaded at runtime as pluginlib plugins, allowing users to add new sensor types without modifying this node.</p>
+<p>Every RT cycle, a perception older than "forget_time" seconds (ROS time) is invalidated, so nothing uses it until new data arrives. Sensors without data, or with old data, are reported as "diagnostics.sensors" (WARN), on changes only. </p>
 </div><a name="doc-typedef-members" id="doc-typedef-members"></a><h2 id="header-doc-typedef-members" class="groupheader">Member Typedef Documentation</h2>
 <a id="ad09d90f1fe35c9e2f2fd7fc1902312f4" name="ad09d90f1fe35c9e2f2fd7fc1902312f4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad09d90f1fe35c9e2f2fd7fc1902312f4">&#9670;&#160;</a></span>CallbackReturnT</h2>

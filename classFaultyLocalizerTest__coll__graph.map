@@ -1,0 +1,9 @@
+<map id="FaultyLocalizerTest" name="FaultyLocalizerTest">
+<area shape="rect" id="Node000001" title=" " alt="" coords="50,102,184,128"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,53,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="52,41,108,100,104,103,49,44"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="77,5,157,31"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="120,46,120,101,114,101,114,46"/>
+<area shape="rect" id="Node000004" href="$classeasynav_1_1NavState.html" title="A generic, type&#45;safe, thread&#45;safe blackboard to hold runtime state." alt="" coords="180,5,256,31"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="201,45,167,80,137,104,133,99,163,76,197,41"/>
+</map>

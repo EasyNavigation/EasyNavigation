@@ -1,34 +1,38 @@
 <map id="easynav_planner/include/easynav_planner/PlannerNode.hpp" name="easynav_planner/include/easynav_planner/PlannerNode.hpp">
-<area shape="rect" id="Node000001" title="Declaration of the PlannerNode class, a ROS 2 lifecycle node for computing navigation paths in Easy N..." alt="" coords="344,5,569,46"/>
-<area shape="rect" id="Node000002" href="$PlannerNode_8cpp.html" title="Implementation of the PlannerNode class." alt="" coords="68,94,293,135"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="380,54,244,96,243,91,379,48"/>
-<area shape="rect" id="Node000003" href="$planner__node__tests_8cpp.html" title=" " alt="" coords="317,94,479,135"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="437,60,413,95,409,92,433,57"/>
-<area shape="rect" id="Node000004" href="$SystemNode_8hpp.html" title="Declaration of the SystemNode class, the central coordinator node for Easy Navigation components." alt="" coords="953,94,1179,135"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="585,42,953,94,953,100,585,48"/>
-<area shape="rect" id="Node000005" href="$SystemNode_8cpp.html" title="Implementation of the SystemNode class." alt="" coords="5,190,231,231"/>
-<area shape="poly" id="edge16_Node000001_Node000005" title=" " alt="" coords="484,58,494,77,501,97,502,118,493,136,474,151,446,162,374,173,299,179,242,185,209,192,208,187,242,180,299,174,374,168,444,156,471,146,489,133,497,117,496,98,489,79,479,60"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="938,124,621,144,431,162,242,185,203,192,202,187,242,180,431,156,621,139,938,118"/>
-<area shape="rect" id="Node000006" href="$system__main_8cpp.html" title=" " alt="" coords="254,190,395,231"/>
-<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="938,123,691,143,549,161,408,185,381,192,380,187,407,180,548,155,691,138,938,118"/>
-<area shape="rect" id="Node000007" href="$system__actions__tests_8cpp.html" title="SystemNode as SystemActions (what a recovery system can ask of EasyNav), and recovery_node as one mor..." alt="" coords="419,190,596,231"/>
-<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="938,133,780,155,608,185,578,192,576,187,607,180,779,150,937,128"/>
-<area shape="rect" id="Node000008" href="$system__fault__injection__tests_8cpp.html" title="The whole RT cycle of SystemNode with a controller that misbehaves (FaultyController)." alt="" coords="620,183,774,238"/>
-<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="965,141,787,185,775,189,773,183,785,180,963,136"/>
-<area shape="rect" id="Node000009" href="$system__lifecycle__cycle__tests_8cpp.html" title="Exercises SystemNode&#39;s own lifecycle state machine through repeated full cycles, including active &#45;&gt; ..." alt="" coords="798,183,956,238"/>
-<area shape="poly" id="edge8_Node000004_Node000009" title=" " alt="" coords="1014,144,933,185,930,180,1012,140"/>
-<area shape="rect" id="Node000010" href="$system__lifecycle__mission__tests_8cpp.html" title="A mission survives reconfiguring EasyNav (active &#45;&gt; inactive &#45;&gt; unconfigured &#45;&gt; inactive &#45;&gt; active,..." alt="" coords="979,183,1153,238"/>
-<area shape="poly" id="edge9_Node000004_Node000010" title=" " alt="" coords="1069,150,1069,182,1063,182,1063,150"/>
-<area shape="rect" id="Node000011" href="$system__pause__tests_8cpp.html" title=" " alt="" coords="1177,190,1347,231"/>
-<area shape="poly" id="edge10_Node000004_Node000011" title=" " alt="" coords="1122,139,1222,187,1220,192,1119,144"/>
-<area shape="rect" id="Node000012" href="$system__robot__geometry__tests_8cpp.html" title="SystemNode shares &quot;robot_geometry.*&quot; with every component before they configure." alt="" coords="1371,183,1534,238"/>
-<area shape="poly" id="edge11_Node000004_Node000012" title=" " alt="" coords="1173,136,1360,180,1371,183,1370,188,1359,185,1171,141"/>
-<area shape="rect" id="Node000013" href="$system__safety__mode__tests_8cpp.html" title="Configuration validation, safety mode, frozen configuration and configuration hash." alt="" coords="1558,190,1766,231"/>
-<area shape="poly" id="edge12_Node000004_Node000013" title=" " alt="" coords="1195,128,1362,150,1546,180,1581,187,1580,192,1546,185,1362,156,1194,133"/>
-<area shape="rect" id="Node000014" href="$system__shutdown__request__tests_8cpp.html" title="A shutdown requested by a recovery mitigation takes SystemNode (and every EasyNav node) out of Active..." alt="" coords="1790,183,1971,238"/>
-<area shape="poly" id="edge13_Node000004_Node000014" title=" " alt="" coords="1194,119,1464,139,1622,157,1778,180,1791,182,1790,188,1778,185,1621,162,1464,145,1194,124"/>
-<area shape="rect" id="Node000015" href="$system__tfinfo__tests_8cpp.html" title=" " alt="" coords="1996,190,2158,231"/>
-<area shape="poly" id="edge14_Node000004_Node000015" title=" " alt="" coords="1194,114,1354,119,1551,130,1768,149,1984,180,2015,187,2014,192,1983,185,1767,155,1551,135,1354,124,1194,119"/>
-<area shape="rect" id="Node000016" href="$system__velocity__smoothing__tests_8cpp.html" title="End to end through SystemNode: with very low accelerations, the published commands are smoothed,..." alt="" coords="2181,183,2367,238"/>
-<area shape="poly" id="edge15_Node000004_Node000016" title=" " alt="" coords="1194,113,1385,116,1629,127,1899,147,2036,161,2170,180,2182,182,2181,187,2170,185,2036,167,1899,152,1628,132,1385,122,1194,118"/>
+<area shape="rect" id="Node000001" title="Declaration of the PlannerNode class, a ROS 2 lifecycle node for computing navigation paths in Easy N..." alt="" coords="428,5,653,46"/>
+<area shape="rect" id="Node000002" href="$PlannerNode_8cpp.html" title="Implementation of the PlannerNode class." alt="" coords="5,94,231,135"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="430,52,215,96,214,91,429,47"/>
+<area shape="rect" id="Node000003" href="$planner__node__tests_8cpp.html" title=" " alt="" coords="254,94,416,135"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="481,55,383,96,381,91,479,50"/>
+<area shape="rect" id="Node000004" href="$planner__path__check__tests_8cpp.html" title="PlannerNode discards non&#45;finite paths and reports them." alt="" coords="440,94,641,135"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="543,62,543,94,538,94,538,62"/>
+<area shape="rect" id="Node000005" href="$SystemNode_8hpp.html" title="Declaration of the SystemNode class, the central coordinator node for Easy Navigation components." alt="" coords="1121,94,1347,135"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="669,40,1121,96,1120,102,669,46"/>
+<area shape="rect" id="Node000006" href="$SystemNode_8cpp.html" title="Implementation of the SystemNode class." alt="" coords="67,190,292,231"/>
+<area shape="poly" id="edge18_Node000001_Node000006" title=" " alt="" coords="602,51,631,68,654,89,665,112,663,124,656,136,628,156,589,168,541,175,488,178,384,180,304,185,268,192,267,187,303,180,383,175,488,173,540,170,588,163,626,151,652,133,658,123,659,113,650,92,627,73,599,55"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="1106,122,744,141,524,159,304,185,264,192,263,187,303,180,523,154,744,136,1106,117"/>
+<area shape="rect" id="Node000007" href="$system__main_8cpp.html" title=" " alt="" coords="316,190,456,231"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="1106,121,973,127,813,138,640,157,469,185,442,192,440,187,468,180,640,152,813,133,973,121,1106,116"/>
+<area shape="rect" id="Node000008" href="$system__actions__tests_8cpp.html" title="SystemNode as SystemActions (what a recovery system can ask of EasyNav), and recovery_node as one mor..." alt="" coords="480,190,657,231"/>
+<area shape="poly" id="edge7_Node000005_Node000008" title=" " alt="" coords="1106,128,901,150,785,166,671,185,639,192,638,187,669,180,784,161,900,145,1106,123"/>
+<area shape="rect" id="Node000009" href="$system__component__faults__tests_8cpp.html" title="SystemNode with a localizer, planner or maps manager that misbehaves (FaultyLocalizer,..." alt="" coords="681,183,859,238"/>
+<area shape="poly" id="edge8_Node000005_Node000009" title=" " alt="" coords="1106,139,871,185,860,188,859,183,869,180,1105,134"/>
+<area shape="rect" id="Node000010" href="$system__fault__injection__tests_8cpp.html" title="The whole RT cycle of SystemNode with a controller that misbehaves (FaultyController)." alt="" coords="882,183,1036,238"/>
+<area shape="poly" id="edge9_Node000005_Node000010" title=" " alt="" coords="1163,143,1038,185,1036,180,1161,138"/>
+<area shape="rect" id="Node000011" href="$system__lifecycle__cycle__tests_8cpp.html" title="Exercises SystemNode&#39;s own lifecycle state machine through repeated full cycles, including active &#45;&gt; ..." alt="" coords="1060,183,1218,238"/>
+<area shape="poly" id="edge10_Node000005_Node000011" title=" " alt="" coords="1206,148,1169,184,1165,180,1202,144"/>
+<area shape="rect" id="Node000012" href="$system__lifecycle__mission__tests_8cpp.html" title="A mission survives reconfiguring EasyNav (active &#45;&gt; inactive &#45;&gt; unconfigured &#45;&gt; inactive &#45;&gt; active,..." alt="" coords="1242,183,1415,238"/>
+<area shape="poly" id="edge11_Node000005_Node000012" title=" " alt="" coords="1266,144,1303,180,1299,184,1262,148"/>
+<area shape="rect" id="Node000013" href="$system__pause__tests_8cpp.html" title=" " alt="" coords="1440,190,1609,231"/>
+<area shape="poly" id="edge12_Node000005_Node000013" title=" " alt="" coords="1310,137,1465,187,1463,192,1309,142"/>
+<area shape="rect" id="Node000014" href="$system__robot__geometry__tests_8cpp.html" title="SystemNode shares &quot;robot_geometry.*&quot; with every component before they configure." alt="" coords="1634,183,1797,238"/>
+<area shape="poly" id="edge13_Node000005_Node000014" title=" " alt="" coords="1362,132,1489,153,1623,180,1634,183,1632,188,1621,185,1488,158,1362,137"/>
+<area shape="rect" id="Node000015" href="$system__safety__mode__tests_8cpp.html" title="Configuration validation, safety mode, frozen configuration and configuration hash." alt="" coords="1820,190,2029,231"/>
+<area shape="poly" id="edge14_Node000005_Node000015" title=" " alt="" coords="1362,124,1572,146,1809,180,1844,187,1843,192,1808,185,1571,152,1362,129"/>
+<area shape="rect" id="Node000016" href="$system__shutdown__request__tests_8cpp.html" title="A shutdown requested by a recovery mitigation takes SystemNode (and every EasyNav node) out of Active..." alt="" coords="2053,183,2234,238"/>
+<area shape="poly" id="edge15_Node000005_Node000016" title=" " alt="" coords="1362,117,1672,136,1857,154,2041,180,2053,182,2052,188,2040,185,1857,159,1672,141,1362,122"/>
+<area shape="rect" id="Node000017" href="$system__tfinfo__tests_8cpp.html" title=" " alt="" coords="2258,190,2420,231"/>
+<area shape="poly" id="edge16_Node000005_Node000017" title=" " alt="" coords="1363,113,1538,116,1759,127,2003,147,2126,162,2246,180,2278,187,2276,192,2246,185,2125,167,2002,152,1759,132,1538,122,1362,118"/>
+<area shape="rect" id="Node000018" href="$system__velocity__smoothing__tests_8cpp.html" title="End to end through SystemNode: with very low accelerations, the published commands are smoothed,..." alt="" coords="2444,183,2629,238"/>
+<area shape="poly" id="edge17_Node000005_Node000018" title=" " alt="" coords="1362,112,1568,114,1835,124,2133,144,2285,160,2433,180,2444,182,2443,187,2432,185,2284,165,2133,150,1835,129,1568,120,1362,117"/>
 </map>

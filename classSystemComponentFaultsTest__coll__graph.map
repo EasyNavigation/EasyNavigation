@@ -1,0 +1,13 @@
+<map id="SystemComponentFaultsTest" name="SystemComponentFaultsTest">
+<area shape="rect" id="Node000001" title=" " alt="" coords="325,123,518,148"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="71,5,119,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="134,16,213,23,258,32,302,46,334,63,363,83,408,120,405,124,360,87,331,67,300,51,257,37,212,28,134,21"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="55,69,135,95"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="151,86,301,109,357,119,356,125,300,114,150,92"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="55,120,135,146"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="150,131,209,132,324,133,324,138,209,137,150,136"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="5,170,185,226"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="200,179,300,161,366,146,367,152,301,166,201,185"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="36,251,154,276"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="168,247,233,230,300,207,356,177,401,147,404,151,359,181,302,212,235,235,170,252"/>
+</map>

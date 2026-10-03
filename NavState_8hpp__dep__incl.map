@@ -1,177 +1,201 @@
 <map id="easynav_common/include/easynav_common/types/NavState.hpp" name="easynav_common/include/easynav_common/types/NavState.hpp">
-<area shape="rect" id="Node000001" title="A blackboard&#45;like structure to hold the current state of the navigation system." alt="" coords="1942,5,2113,61"/>
+<area shape="rect" id="Node000001" title="A blackboard&#45;like structure to hold the current state of the navigation system." alt="" coords="2542,5,2713,61"/>
 <area shape="rect" id="Node000002" href="$navstate__tests_8cpp.html" title=" " alt="" coords="5,116,165,157"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1927,38,1562,44,1058,57,553,79,343,94,184,112,150,119,149,113,183,106,342,88,553,74,1058,52,1561,39,1927,33"/>
-<area shape="rect" id="Node000003" href="$VelocityMux_8hpp.html" title="Declaration of the VelocityMux class." alt="" coords="589,109,768,165"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="1927,44,983,112,768,130,768,125,982,106,1926,39"/>
-<area shape="rect" id="Node000006" href="$controller__node__tests_8cpp.html" title=" " alt="" coords="1208,420,1354,476"/>
-<area shape="poly" id="edge38_Node000001_Node000006" title=" " alt="" coords="1927,40,1757,48,1556,61,1366,82,1289,96,1231,112,1165,138,1135,153,1110,170,1091,190,1080,212,1078,237,1086,267,1115,315,1153,356,1195,391,1234,417,1231,422,1192,395,1150,360,1111,318,1081,269,1072,238,1075,210,1087,187,1107,166,1133,149,1163,133,1229,106,1288,90,1365,77,1556,56,1757,42,1926,35"/>
-<area shape="rect" id="Node000009" href="$SystemNode_8hpp.html" title="Declaration of the SystemNode class, the central coordinator node for Easy Navigation components." alt="" coords="1775,531,2000,572"/>
-<area shape="poly" id="edge109_Node000001_Node000009" title=" " alt="" coords="2066,71,2098,114,2126,165,2134,193,2137,220,2132,246,2119,270,2098,289,2076,298,2052,300,2029,298,2005,295,1981,296,1958,302,1936,318,1917,342,1904,369,1894,399,1888,429,1885,486,1888,530,1882,531,1880,486,1883,428,1889,397,1899,367,1913,339,1932,314,1956,298,1980,291,2005,290,2029,292,2052,294,2075,293,2095,285,2115,267,2127,244,2131,219,2129,194,2121,168,2094,117,2061,74"/>
-<area shape="rect" id="Node000016" href="$system__pause__tests_8cpp.html" title=" " alt="" coords="539,635,708,676"/>
-<area shape="poly" id="edge113_Node000001_Node000016" title=" " alt="" coords="1926,37,1616,40,1202,51,990,60,793,73,624,90,496,112,444,121,392,126,297,136,260,146,230,165,220,178,212,195,207,215,205,239,205,449,207,475,214,499,225,520,239,539,278,572,325,598,379,618,434,632,539,647,538,652,433,637,377,623,323,603,275,577,236,543,221,523,209,501,202,476,200,449,200,239,201,214,207,193,215,176,227,161,257,142,296,130,391,121,443,116,495,106,623,85,792,68,990,55,1202,45,1616,35,1926,32"/>
-<area shape="rect" id="Node000022" href="$SafetySupervisor_8hpp.html" title="Declaration of the SafetySupervisor class." alt="" coords="919,420,1083,476"/>
-<area shape="poly" id="edge110_Node000001_Node000022" title=" " alt="" coords="1926,39,1713,46,1458,60,1337,69,1233,81,1154,95,1127,103,1111,111,1077,143,1052,181,1033,224,1019,268,1005,354,1003,420,997,420,1000,354,1014,267,1028,222,1047,179,1073,140,1107,107,1125,98,1153,90,1232,76,1336,64,1457,54,1713,41,1926,34"/>
-<area shape="rect" id="Node000025" href="$CommandGuard_8hpp.html" title="Declaration of the CommandGuard class." alt="" coords="344,213,527,268"/>
-<area shape="poly" id="edge37_Node000001_Node000025" title=" " alt="" coords="1927,38,1603,44,1182,57,977,67,797,79,658,94,610,102,578,111,541,132,507,159,457,214,453,211,504,155,538,128,576,107,609,97,657,88,796,74,977,61,1182,52,1603,39,1927,33"/>
-<area shape="rect" id="Node000031" href="$LocalizerNode_8hpp.html" title="Declaration of the LocalizerNode class, a ROS 2 lifecycle node for localization tasks in Easy Navigat..." alt="" coords="1242,116,1480,157"/>
-<area shape="poly" id="edge39_Node000001_Node000031" title=" " alt="" coords="1927,52,1532,112,1481,119,1480,114,1531,106,1926,47"/>
-<area shape="rect" id="Node000033" href="$localizer__node__tests_8cpp.html" title=" " alt="" coords="1399,220,1566,261"/>
-<area shape="poly" id="edge44_Node000001_Node000033" title=" " alt="" coords="1927,38,1855,45,1774,57,1691,79,1613,111,1576,136,1544,165,1498,221,1494,218,1540,162,1573,131,1610,107,1689,74,1773,52,1854,39,1926,33"/>
-<area shape="rect" id="Node000034" href="$maps__manager__node__tests_8cpp.html" title=" " alt="" coords="1872,109,2055,165"/>
-<area shape="poly" id="edge45_Node000001_Node000034" title=" " alt="" coords="2005,76,1983,110,1979,107,2000,73"/>
-<area shape="rect" id="Node000035" href="$PlannerNode_8hpp.html" title="Declaration of the PlannerNode class, a ROS 2 lifecycle node for computing navigation paths in Easy N..." alt="" coords="1623,116,1848,157"/>
-<area shape="poly" id="edge46_Node000001_Node000035" title=" " alt="" coords="1936,69,1793,118,1791,113,1934,64"/>
-<area shape="rect" id="Node000037" href="$planner__node__tests_8cpp.html" title=" " alt="" coords="1942,220,2105,261"/>
-<area shape="poly" id="edge51_Node000001_Node000037" title=" " alt="" coords="2056,74,2069,108,2074,137,2069,165,2057,196,2041,221,2036,218,2052,193,2064,164,2068,137,2064,110,2051,76"/>
-<area shape="rect" id="Node000038" href="$SensorsNode_8hpp.html" title="Declaration of the SensorsNode class, a ROS 2 lifecycle node for sensor fusion tasks in Easy Navigati..." alt="" coords="2282,220,2515,261"/>
-<area shape="poly" id="edge52_Node000001_Node000038" title=" " alt="" coords="2129,53,2197,75,2264,107,2301,133,2335,163,2385,218,2381,222,2331,167,2298,137,2261,111,2195,80,2127,58"/>
-<area shape="rect" id="Node000040" href="$plugin__tests_8cpp.html" title="Tests that verify the pluginlib plugin registration, loading, and correctness of all built&#45;in Percept..." alt="" coords="2351,324,2507,364"/>
-<area shape="poly" id="edge100_Node000001_Node000040" title=" " alt="" coords="2128,64,2163,83,2194,107,2211,128,2222,148,2234,188,2245,227,2255,246,2272,266,2316,299,2364,321,2362,326,2313,303,2269,270,2251,249,2240,229,2229,189,2217,150,2207,131,2190,111,2160,87,2126,69"/>
-<area shape="rect" id="Node000041" href="$sensors__lifecycle__tests_8cpp.html" title=" " alt="" coords="2716,324,2902,364"/>
-<area shape="poly" id="edge101_Node000001_Node000041" title=" " alt="" coords="2129,53,2221,76,2317,106,2378,131,2425,154,2529,210,2579,239,2630,266,2759,321,2756,326,2628,271,2577,243,2526,215,2422,159,2376,136,2315,112,2219,81,2127,58"/>
-<area shape="rect" id="Node000042" href="$sensors__node__tests_8cpp.html" title=" " alt="" coords="1975,324,2142,364"/>
-<area shape="poly" id="edge102_Node000001_Node000042" title=" " alt="" coords="2122,67,2145,85,2163,108,2183,150,2189,188,2182,226,2163,270,2152,287,2137,302,2104,325,2101,321,2133,298,2148,284,2159,267,2177,225,2184,188,2178,152,2159,110,2141,89,2119,71"/>
-<area shape="rect" id="Node000043" href="$Perceptions_8hpp.html" title="Defines data structures and utilities for representing and processing sensor perceptions." alt="" coords="2931,109,3098,165"/>
-<area shape="poly" id="edge59_Node000001_Node000043" title=" " alt="" coords="2129,42,2930,124,2930,130,2128,47"/>
-<area shape="rect" id="Node000059" href="$GoalManager_8hpp.html" title="Declaration of the GoalManager class." alt="" coords="4478,116,4705,157"/>
-<area shape="poly" id="edge103_Node000001_Node000059" title=" " alt="" coords="2129,36,4478,128,4477,134,2129,41"/>
-<area shape="rect" id="Node000061" href="$goalmanager__test__main_8cpp.html" title=" " alt="" coords="4671,220,4859,261"/>
-<area shape="poly" id="edge111_Node000001_Node000061" title=" " alt="" coords="2129,31,2720,32,3562,40,3977,49,4335,62,4595,81,4676,93,4718,107,4741,132,4756,162,4764,193,4767,219,4762,220,4758,194,4751,164,4737,134,4716,111,4675,98,4594,86,4334,67,3977,54,3562,45,2720,37,2129,37"/>
-<area shape="rect" id="Node000062" href="$goalmanager__tests_8cpp.html" title=" " alt="" coords="4883,220,5042,261"/>
-<area shape="poly" id="edge112_Node000001_Node000062" title=" " alt="" coords="2129,31,2699,32,3520,40,3934,49,4302,62,4588,81,4688,93,4755,106,4811,129,4864,159,4942,218,4939,222,4861,164,4809,134,4754,112,4688,98,4587,86,4302,67,3934,54,3520,45,2699,37,2129,37"/>
-<area shape="rect" id="Node000004" href="$ControllerNode_8hpp.html" title="Declaration of the ControllerNode class, a ROS 2 lifecycle node for speed computation in Easy Navigat..." alt="" coords="785,316,964,372"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="784,139,823,148,862,161,898,182,927,211,934,224,937,238,932,266,918,294,901,317,897,314,914,291,927,265,931,238,929,226,923,214,895,186,860,166,822,153,783,145"/>
-<area shape="poly" id="edge28_Node000003_Node000025" title=" " alt="" coords="601,173,502,214,500,210,598,169"/>
-<area shape="rect" id="Node000027" href="$command__guard__tests_8cpp.html" title="safety::CommandGuard around the VelocityMux: timeout, non&#45;finite commands, new controller commands,..." alt="" coords="240,316,394,372"/>
-<area shape="poly" id="edge34_Node000003_Node000027" title=" " alt="" coords="574,150,503,160,432,173,372,192,350,203,335,214,321,237,314,264,313,291,315,315,309,316,308,291,309,263,316,235,331,211,347,198,371,187,431,168,502,154,573,145"/>
-<area shape="rect" id="Node000028" href="$rt__allocation__tests_8cpp.html" title="The RT velocity path (proposals, mux, smoother) must not allocate memory once warm." alt="" coords="624,316,754,372"/>
-<area shape="poly" id="edge35_Node000003_Node000028" title=" " alt="" coords="621,177,604,194,591,214,584,241,591,267,611,293,636,314,633,318,607,297,587,270,578,241,587,212,600,191,617,173"/>
-<area shape="rect" id="Node000029" href="$VelocityMux_8cpp.html" title="Implementation of the VelocityMux class." alt="" coords="601,213,756,268"/>
-<area shape="poly" id="edge33_Node000003_Node000029" title=" " alt="" coords="681,180,681,212,676,212,676,180"/>
-<area shape="rect" id="Node000030" href="$velocity__mux__tests_8cpp.html" title=" " alt="" coords="780,213,913,268"/>
-<area shape="poly" id="edge36_Node000003_Node000030" title=" " alt="" coords="738,171,803,210,800,214,735,175"/>
-<area shape="rect" id="Node000005" href="$ControllerNode_8cpp.html" title="Implementation of the ControllerNode class." alt="" coords="295,420,451,476"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="771,374,767,375,683,389,618,398,553,407,470,423,451,427,450,422,468,417,552,402,617,393,683,384,766,369,770,369"/>
-<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="980,366,1190,417,1208,422,1207,428,1188,423,978,372"/>
-<area shape="rect" id="Node000007" href="$controller__node__velocity__tests_8cpp.html" title="ControllerNode as the single exit of the velocity command: robot limits for the controller plugins,..." alt="" coords="525,420,672,476"/>
-<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="787,380,673,422,671,417,785,375"/>
-<area shape="rect" id="Node000008" href="$faulty__controller__tests_8cpp.html" title="How ControllerNode copes with a controller plugin that misbehaves (FaultyController)." alt="" coords="696,420,845,476"/>
-<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="837,385,800,421,796,417,834,381"/>
-<area shape="poly" id="edge8_Node000004_Node000009" title=" " alt="" coords="979,368,1038,389,1096,418,1113,433,1124,448,1135,461,1153,473,1203,490,1270,505,1437,526,1617,539,1775,545,1774,550,1617,544,1436,531,1269,510,1201,496,1150,478,1132,465,1120,451,1110,436,1093,422,1036,394,977,373"/>
-<area shape="rect" id="Node000010" href="$SystemNode_8cpp.html" title="Implementation of the SystemNode class." alt="" coords="1055,635,1280,676"/>
-<area shape="poly" id="edge25_Node000004_Node000010" title=" " alt="" coords="771,374,767,375,667,388,570,399,532,408,509,423,503,432,502,443,506,457,515,474,529,490,548,505,601,533,667,558,744,580,907,615,1055,638,1054,643,906,620,742,585,666,563,598,538,545,510,525,494,511,477,501,459,497,444,498,430,505,419,530,403,569,393,667,382,766,369,770,369"/>
-<area shape="rect" id="Node000015" href="$system__lifecycle__mission__tests_8cpp.html" title="A mission survives reconfiguring EasyNav (active &#45;&gt; inactive &#45;&gt; unconfigured &#45;&gt; inactive &#45;&gt; active,..." alt="" coords="3050,627,3224,683"/>
-<area shape="poly" id="edge27_Node000004_Node000015" title=" " alt="" coords="979,358,1062,381,1104,397,1144,418,1161,432,1171,448,1180,462,1197,473,1231,486,1271,496,1368,511,1479,518,1598,520,1832,518,1933,518,2013,521,2303,541,2528,556,2753,579,3039,625,3051,627,3049,632,3038,630,2752,584,2528,561,2302,546,2013,526,1933,523,1832,523,1598,526,1479,523,1367,516,1270,502,1229,491,1194,478,1176,465,1166,451,1157,436,1141,422,1102,402,1060,386,978,364"/>
-<area shape="poly" id="edge21_Node000004_Node000022" title=" " alt="" coords="922,380,969,417,965,421,919,384"/>
-<area shape="rect" id="Node000024" href="$safety__module__tests_8cpp.html" title="The safety module of easynav_system, on its own: configuration fingerprint, parameter freezer and saf..." alt="" coords="798,531,967,572"/>
-<area shape="poly" id="edge26_Node000004_Node000024" title=" " alt="" coords="879,387,884,531,879,531,873,387"/>
-<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="1781,578,1756,582,1626,598,1524,606,1423,613,1293,630,1255,637,1254,632,1293,625,1422,608,1524,600,1626,593,1755,577,1780,573"/>
-<area shape="rect" id="Node000011" href="$system__main_8cpp.html" title=" " alt="" coords="2507,635,2647,676"/>
-<area shape="poly" id="edge10_Node000009_Node000011" title=" " alt="" coords="1994,572,2020,577,2154,591,2259,596,2363,603,2496,625,2523,632,2522,637,2495,630,2363,608,2258,601,2153,597,2019,582,1994,578"/>
-<area shape="rect" id="Node000012" href="$system__actions__tests_8cpp.html" title="SystemNode as SystemActions (what a recovery system can ask of EasyNav), and recovery_node as one mor..." alt="" coords="2672,635,2848,676"/>
-<area shape="poly" id="edge11_Node000009_Node000012" title=" " alt="" coords="1993,573,2020,577,2117,588,2199,594,2340,597,2481,603,2563,611,2660,625,2693,632,2692,637,2659,630,2563,616,2481,608,2340,603,2199,599,2117,593,2019,582,1993,578"/>
-<area shape="rect" id="Node000013" href="$system__fault__injection__tests_8cpp.html" title="The whole RT cycle of SystemNode with a controller that misbehaves (FaultyController)." alt="" coords="2872,627,3026,683"/>
-<area shape="poly" id="edge12_Node000009_Node000013" title=" " alt="" coords="1992,572,2020,577,2147,590,2256,595,2441,594,2530,594,2625,597,2733,606,2860,625,2872,627,2871,632,2859,630,2733,611,2625,602,2530,599,2441,600,2256,601,2147,595,2019,582,1991,578"/>
-<area shape="rect" id="Node000014" href="$system__lifecycle__cycle__tests_8cpp.html" title="Exercises SystemNode&#39;s own lifecycle state machine through repeated full cycles, including active &#45;&gt; ..." alt="" coords="1304,627,1463,683"/>
-<area shape="poly" id="edge13_Node000009_Node000014" title=" " alt="" coords="1777,578,1756,582,1616,604,1476,630,1464,633,1463,628,1475,625,1615,599,1755,577,1776,573"/>
-<area shape="poly" id="edge14_Node000009_Node000015" title=" " alt="" coords="1991,572,2020,577,2174,592,2306,598,2530,595,2638,593,2754,595,2885,605,3039,625,3051,627,3050,632,3038,630,2884,610,2753,601,2638,599,2530,601,2306,603,2174,597,2019,582,1990,578"/>
-<area shape="poly" id="edge15_Node000009_Node000016" title=" " alt="" coords="1760,566,709,650,709,644,1759,560"/>
-<area shape="rect" id="Node000017" href="$system__robot__geometry__tests_8cpp.html" title="SystemNode shares &quot;robot_geometry.*&quot; with every component before they configure." alt="" coords="1487,627,1651,683"/>
-<area shape="poly" id="edge16_Node000009_Node000017" title=" " alt="" coords="1812,580,1652,630,1650,625,1811,574"/>
-<area shape="rect" id="Node000018" href="$system__safety__mode__tests_8cpp.html" title="Configuration validation, safety mode, frozen configuration and configuration hash." alt="" coords="1674,635,1882,676"/>
-<area shape="poly" id="edge17_Node000009_Node000018" title=" " alt="" coords="1857,585,1801,636,1798,632,1854,581"/>
-<area shape="rect" id="Node000019" href="$system__shutdown__request__tests_8cpp.html" title="A shutdown requested by a recovery mitigation takes SystemNode (and every EasyNav node) out of Active..." alt="" coords="1907,627,2087,683"/>
-<area shape="poly" id="edge18_Node000009_Node000019" title=" " alt="" coords="1922,580,1970,625,1966,629,1918,584"/>
-<area shape="rect" id="Node000020" href="$system__tfinfo__tests_8cpp.html" title=" " alt="" coords="2112,635,2274,676"/>
-<area shape="poly" id="edge19_Node000009_Node000020" title=" " alt="" coords="1962,575,2135,632,2133,637,1960,580"/>
-<area shape="rect" id="Node000021" href="$system__velocity__smoothing__tests_8cpp.html" title="End to end through SystemNode: with very low accelerations, the published commands are smoothed,..." alt="" coords="2298,627,2483,683"/>
-<area shape="poly" id="edge20_Node000009_Node000021" title=" " alt="" coords="1999,573,2020,577,2154,600,2287,625,2298,627,2297,632,2286,630,2153,605,2019,582,1998,578"/>
-<area shape="poly" id="edge22_Node000022_Node000009" title=" " alt="" coords="1098,472,1101,473,1285,501,1470,521,1775,543,1775,548,1469,526,1285,506,1101,478,1097,478"/>
-<area shape="rect" id="Node000023" href="$SafetySupervisor_8cpp.html" title="Implementation of the SafetySupervisor class." alt="" coords="991,524,1152,579"/>
-<area shape="poly" id="edge23_Node000022_Node000023" title=" " alt="" coords="1031,487,1055,521,1050,525,1026,490"/>
-<area shape="poly" id="edge24_Node000022_Node000024" title=" " alt="" coords="960,488,907,533,903,529,956,484"/>
-<area shape="poly" id="edge29_Node000025_Node000004" title=" " alt="" coords="543,263,767,314,785,318,784,323,766,319,542,268"/>
-<area shape="rect" id="Node000026" href="$CommandGuard_8cpp.html" title="Implementation of the CommandGuard class." alt="" coords="418,316,600,372"/>
-<area shape="poly" id="edge30_Node000025_Node000026" title=" " alt="" coords="466,279,491,314,487,317,462,283"/>
-<area shape="poly" id="edge31_Node000025_Node000027" title=" " alt="" coords="394,281,351,318,347,314,390,277"/>
-<area shape="poly" id="edge32_Node000025_Node000028" title=" " alt="" coords="518,272,625,314,623,319,516,277"/>
-<area shape="poly" id="edge42_Node000031_Node000009" title=" " alt="" coords="1363,173,1369,220,1376,245,1389,267,1433,319,1484,365,1541,405,1600,440,1660,469,1717,494,1816,528,1814,533,1715,499,1657,474,1598,445,1538,410,1481,369,1429,323,1384,270,1371,247,1363,221,1357,173"/>
-<area shape="poly" id="edge43_Node000031_Node000010" title=" " alt="" coords="1248,164,1175,187,1147,200,1130,214,1111,249,1111,259,1115,267,1138,278,1175,287,1222,299,1274,321,1299,338,1324,359,1347,386,1369,419,1379,453,1375,487,1359,519,1334,549,1304,576,1271,600,1209,637,1206,632,1268,595,1300,572,1330,545,1354,516,1370,485,1374,454,1364,421,1343,389,1320,363,1296,342,1271,326,1221,304,1174,292,1136,283,1111,271,1106,261,1106,247,1126,211,1144,195,1173,182,1246,159"/>
-<area shape="rect" id="Node000032" href="$LocalizerNode_8cpp.html" title="Implementation of the LocalizerNode class." alt="" coords="1140,213,1323,268"/>
-<area shape="poly" id="edge40_Node000031_Node000032" title=" " alt="" coords="1326,169,1268,214,1265,210,1323,165"/>
-<area shape="poly" id="edge41_Node000031_Node000033" title=" " alt="" coords="1397,165,1461,218,1457,222,1394,169"/>
-<area shape="poly" id="edge49_Node000035_Node000009" title=" " alt="" coords="1823,162,1856,182,1882,211,1888,226,1888,239,1882,269,1872,317,1866,396,1872,475,1884,530,1879,531,1866,476,1860,396,1866,316,1877,268,1883,239,1883,227,1877,214,1852,186,1820,166"/>
-<area shape="poly" id="edge50_Node000035_Node000010" title=" " alt="" coords="1692,168,1632,215,1602,248,1567,293,1491,401,1414,507,1377,550,1344,581,1291,614,1236,637,1233,632,1288,609,1341,577,1373,547,1409,504,1487,398,1563,290,1598,245,1629,211,1689,164"/>
-<area shape="rect" id="Node000036" href="$PlannerNode_8cpp.html" title="Implementation of the PlannerNode class." alt="" coords="1642,220,1867,261"/>
-<area shape="poly" id="edge47_Node000035_Node000036" title=" " alt="" coords="1745,172,1753,219,1748,220,1739,173"/>
-<area shape="poly" id="edge48_Node000035_Node000037" title=" " alt="" coords="1807,160,1969,217,1967,222,1805,165"/>
-<area shape="poly" id="edge57_Node000038_Node000009" title=" " alt="" coords="2266,260,2079,288,2005,304,1965,318,1950,349,1930,410,1895,531,1890,530,1925,408,1945,347,1962,314,2003,298,2078,283,2266,255"/>
-<area shape="poly" id="edge58_Node000038_Node000010" title=" " alt="" coords="2267,258,2079,284,1995,301,1935,319,1878,349,1833,381,1797,415,1765,450,1733,485,1696,519,1651,552,1593,582,1550,598,1512,608,1446,617,1378,620,1293,630,1258,637,1257,632,1293,625,1378,614,1445,611,1511,603,1548,593,1591,577,1648,547,1693,515,1729,481,1761,446,1793,411,1830,377,1875,344,1933,314,1994,296,2078,279,2266,253"/>
-<area shape="rect" id="Node000039" href="$SensorsNode_8cpp.html" title="Implementation of the SensorsNode class." alt="" coords="2926,324,3159,364"/>
-<area shape="poly" id="edge53_Node000038_Node000039" title=" " alt="" coords="2531,256,2713,281,2915,314,2951,321,2950,326,2914,319,2712,287,2530,261"/>
-<area shape="poly" id="edge54_Node000038_Node000040" title=" " alt="" coords="2411,275,2426,323,2421,324,2406,276"/>
-<area shape="poly" id="edge55_Node000038_Node000041" title=" " alt="" coords="2495,262,2706,314,2733,321,2732,326,2704,319,2494,267"/>
-<area shape="poly" id="edge56_Node000038_Node000042" title=" " alt="" coords="2319,268,2125,326,2123,321,2317,263"/>
-<area shape="poly" id="edge60_Node000043_Node000038" title=" " alt="" coords="2916,157,2516,223,2515,217,2915,152"/>
-<area shape="poly" id="edge99_Node000043_Node000040" title=" " alt="" coords="2916,149,2778,172,2703,190,2630,215,2595,234,2548,263,2458,325,2455,321,2545,259,2592,229,2628,210,2701,185,2777,166,2915,144"/>
-<area shape="rect" id="Node000044" href="$DetectionsPerception_8hpp.html" title="Defines data structures and utilities for representing and processing image perceptions." alt="" coords="3025,213,3198,268"/>
-<area shape="poly" id="edge61_Node000043_Node000044" title=" " alt="" coords="3053,174,3087,210,3084,214,3049,178"/>
-<area shape="rect" id="Node000047" href="$GNSSPerception_8hpp.html" title="Defines data structures and utilities for representing and processing GNSS perceptions." alt="" coords="2833,213,3001,268"/>
-<area shape="poly" id="edge67_Node000043_Node000047" title=" " alt="" coords="2980,178,2945,214,2941,210,2976,174"/>
-<area shape="rect" id="Node000049" href="$IMUPerception_8hpp.html" title="Defines data structures and utilities for representing and processing IMU perceptions." alt="" coords="2641,213,2809,268"/>
-<area shape="poly" id="edge73_Node000043_Node000049" title=" " alt="" coords="2923,173,2804,215,2802,210,2921,168"/>
-<area shape="rect" id="Node000051" href="$ImagePerception_8hpp.html" title="Defines data structures and utilities for representing and processing image perceptions." alt="" coords="3415,213,3582,268"/>
-<area shape="poly" id="edge80_Node000043_Node000051" title=" " alt="" coords="3114,152,3251,178,3403,210,3415,213,3414,218,3402,215,3250,183,3113,158"/>
-<area shape="rect" id="Node000053" href="$perceptions__tests_8cpp.html" title=" " alt="" coords="4014,324,4169,364"/>
-<area shape="poly" id="edge98_Node000043_Node000053" title=" " alt="" coords="3114,145,3335,170,3465,188,3595,210,3711,234,3800,256,4003,314,4028,321,4026,326,4002,319,3799,262,3710,239,3594,215,3464,193,3334,175,3113,150"/>
-<area shape="rect" id="Node000054" href="$OdometryPerception_8hpp.html" title="Defines data structures and utilities for representing and processing odometry perceptions." alt="" coords="4003,213,4170,268"/>
-<area shape="poly" id="edge87_Node000043_Node000054" title=" " alt="" coords="3114,145,4002,229,4002,234,3113,150"/>
-<area shape="rect" id="Node000056" href="$PointPerception_8hpp.html" title="Defines data structures and utilities for representing and processing point&#45;based sensor perceptions." alt="" coords="3223,213,3390,268"/>
-<area shape="poly" id="edge89_Node000043_Node000056" title=" " alt="" coords="3108,168,3229,210,3227,215,3106,173"/>
-<area shape="poly" id="edge62_Node000044_Node000039" title=" " alt="" coords="3087,283,3058,325,3053,322,3082,280"/>
-<area shape="poly" id="edge65_Node000044_Node000040" title=" " alt="" coords="3011,271,2872,289,2763,294,2655,300,2520,319,2491,326,2489,321,2519,314,2655,294,2763,289,2872,284,3010,266"/>
-<area shape="poly" id="edge66_Node000044_Node000041" title=" " alt="" coords="3017,276,2869,326,2867,321,3016,271"/>
-<area shape="rect" id="Node000045" href="$DetectionsPerception_8cpp.html" title=" " alt="" coords="3401,316,3574,372"/>
-<area shape="poly" id="edge63_Node000044_Node000045" title=" " alt="" coords="3214,267,3402,317,3400,322,3213,272"/>
-<area shape="rect" id="Node000046" href="$perception__locking__tests_8cpp.html" title=" " alt="" coords="3183,324,3376,364"/>
-<area shape="poly" id="edge64_Node000044_Node000046" title=" " alt="" coords="3171,274,3249,321,3246,326,3168,279"/>
-<area shape="poly" id="edge68_Node000047_Node000039" title=" " alt="" coords="2964,276,3020,321,3017,325,2960,280"/>
-<area shape="poly" id="edge71_Node000047_Node000040" title=" " alt="" coords="2818,271,2734,286,2667,295,2602,303,2520,319,2493,326,2491,321,2519,314,2601,298,2667,290,2733,281,2818,266"/>
-<area shape="poly" id="edge72_Node000047_Node000041" title=" " alt="" coords="2879,281,2832,325,2828,321,2875,277"/>
-<area shape="poly" id="edge70_Node000047_Node000046" title=" " alt="" coords="3016,267,3210,321,3209,326,3015,272"/>
-<area shape="rect" id="Node000048" href="$GNSSPerception_8cpp.html" title=" " alt="" coords="2531,316,2692,372"/>
-<area shape="poly" id="edge69_Node000047_Node000048" title=" " alt="" coords="2822,276,2693,319,2692,314,2820,271"/>
-<area shape="poly" id="edge74_Node000049_Node000039" title=" " alt="" coords="2824,271,2982,321,2980,326,2823,276"/>
-<area shape="poly" id="edge77_Node000049_Node000040" title=" " alt="" coords="2632,276,2487,326,2486,321,2630,271"/>
-<area shape="poly" id="edge78_Node000049_Node000041" title=" " alt="" coords="2759,279,2795,322,2791,325,2755,282"/>
-<area shape="poly" id="edge79_Node000049_Node000042" title=" " alt="" coords="2626,258,2528,271,2341,291,2259,301,2155,319,2125,326,2124,321,2154,314,2258,295,2340,285,2527,266,2626,253"/>
-<area shape="poly" id="edge76_Node000049_Node000046" title=" " alt="" coords="2824,266,2922,282,3000,291,3076,298,3172,314,3205,321,3204,326,3171,319,3075,304,2999,296,2922,288,2823,271"/>
-<area shape="rect" id="Node000050" href="$IMUPerception_8cpp.html" title=" " alt="" coords="2166,316,2327,372"/>
-<area shape="poly" id="edge75_Node000049_Node000050" title=" " alt="" coords="2627,261,2490,287,2340,319,2328,322,2327,317,2339,314,2489,281,2626,256"/>
-<area shape="poly" id="edge81_Node000051_Node000039" title=" " alt="" coords="3400,271,3138,326,3137,321,3399,266"/>
-<area shape="poly" id="edge85_Node000051_Node000040" title=" " alt="" coords="3400,271,3266,288,3152,295,3051,296,2957,293,2864,291,2764,293,2652,301,2520,319,2490,326,2488,321,2519,314,2651,295,2764,287,2864,286,2958,288,3052,291,3152,290,3266,283,3399,266"/>
-<area shape="poly" id="edge86_Node000051_Node000041" title=" " alt="" coords="3400,271,3263,290,3155,296,3049,302,2915,319,2881,326,2880,321,2914,314,3048,296,3155,290,3262,284,3399,266"/>
-<area shape="poly" id="edge83_Node000051_Node000046" title=" " alt="" coords="3427,278,3323,326,3321,321,3425,273"/>
-<area shape="rect" id="Node000052" href="$ImagePerception_8cpp.html" title=" " alt="" coords="4194,316,4355,372"/>
-<area shape="poly" id="edge82_Node000051_Node000052" title=" " alt="" coords="3598,245,3863,267,4022,287,4181,314,4194,316,4193,322,4181,319,4022,293,3862,273,3597,250"/>
-<area shape="poly" id="edge84_Node000051_Node000053" title=" " alt="" coords="3597,253,3836,287,4003,314,4031,321,4029,326,4002,319,3836,293,3597,258"/>
-<area shape="rect" id="Node000055" href="$OdometryPerception_8cpp.html" title=" " alt="" coords="4379,316,4546,372"/>
-<area shape="poly" id="edge88_Node000054_Node000055" title=" " alt="" coords="4186,265,4368,314,4379,317,4378,322,4367,319,4184,270"/>
-<area shape="poly" id="edge97_Node000056_Node000010" title=" " alt="" coords="3405,266,3462,272,3509,273,3530,275,3550,282,3570,295,3588,315,3598,330,3601,345,3598,359,3588,374,3560,400,3526,424,3488,445,3446,462,3350,490,3241,509,3120,520,2992,524,2718,520,2439,507,2174,497,2053,496,1943,500,1846,509,1764,526,1734,539,1712,553,1689,568,1658,582,1604,597,1557,606,1477,614,1396,618,1293,630,1257,637,1256,632,1293,625,1396,612,1477,609,1557,601,1603,592,1656,577,1687,564,1709,549,1731,534,1763,521,1845,504,1943,494,2053,491,2175,492,2439,502,2718,515,2992,519,3120,514,3240,503,3349,485,3444,457,3486,440,3523,419,3556,396,3584,370,3593,357,3596,345,3593,332,3584,318,3566,299,3548,287,3529,281,3509,278,3462,277,3405,271"/>
-<area shape="poly" id="edge90_Node000056_Node000039" title=" " alt="" coords="3223,277,3095,326,3093,321,3221,272"/>
-<area shape="poly" id="edge93_Node000056_Node000040" title=" " alt="" coords="3208,271,3103,285,3014,292,2862,294,2710,296,2623,304,2520,319,2490,326,2489,321,2519,314,2622,298,2710,291,2862,288,3014,287,3103,280,3207,266"/>
-<area shape="poly" id="edge95_Node000056_Node000041" title=" " alt="" coords="3208,271,3125,287,3060,296,2995,304,2915,319,2884,326,2883,321,2914,314,2995,299,3059,290,3124,282,3207,266"/>
-<area shape="poly" id="edge96_Node000056_Node000042" title=" " alt="" coords="3208,271,3048,291,2912,299,2791,298,2679,295,2567,291,2447,291,2313,299,2155,319,2122,326,2121,321,2154,314,2312,294,2447,285,2567,285,2679,289,2791,293,2912,293,3048,285,3207,266"/>
-<area shape="poly" id="edge92_Node000056_Node000053" title=" " alt="" coords="3406,266,3496,279,3574,285,3706,288,3837,292,3914,300,4003,314,4033,321,4031,326,4002,319,3913,305,3837,298,3706,294,3573,291,3496,284,3405,271"/>
-<area shape="rect" id="Node000057" href="$PointPerception_8cpp.html" title=" " alt="" coords="3828,316,3990,372"/>
-<area shape="poly" id="edge91_Node000056_Node000057" title=" " alt="" coords="3406,266,3521,283,3612,289,3703,296,3816,314,3828,316,3827,322,3815,319,3702,301,3612,295,3521,288,3405,271"/>
-<area shape="rect" id="Node000058" href="$pointperceptionsops__tests_8cpp.html" title=" " alt="" coords="3649,316,3804,372"/>
-<area shape="poly" id="edge94_Node000056_Node000058" title=" " alt="" coords="3406,266,3520,290,3631,314,3649,318,3648,323,3630,319,3519,295,3405,272"/>
-<area shape="poly" id="edge104_Node000059_Node000009" title=" " alt="" coords="4601,173,4606,219,4605,273,4600,301,4591,328,4578,352,4560,374,4537,390,4505,406,4414,433,4294,457,4147,477,3979,495,3794,509,3390,531,2973,544,2578,551,2001,554,2001,548,2578,546,2973,539,3390,525,3793,504,3978,489,4146,472,4293,451,4413,428,4503,401,4534,386,4557,370,4574,350,4586,326,4595,300,4599,273,4601,219,4596,173"/>
-<area shape="poly" id="edge108_Node000059_Node000015" title=" " alt="" coords="4606,171,4618,212,4633,277,4637,343,4637,449,4634,463,4624,477,4588,501,4532,523,4460,542,4372,560,4273,576,4049,602,3811,623,3579,638,3224,654,3224,649,3579,632,3810,618,4049,597,4272,571,4371,555,4458,537,4531,518,4586,496,4620,473,4629,461,4632,449,4632,343,4627,278,4613,213,4601,173"/>
-<area shape="rect" id="Node000060" href="$GoalManager_8cpp.html" title="Implementation of the GoalManager class." alt="" coords="4319,220,4547,261"/>
-<area shape="poly" id="edge105_Node000059_Node000060" title=" " alt="" coords="4550,168,4465,222,4462,218,4547,164"/>
-<area shape="poly" id="edge106_Node000059_Node000061" title=" " alt="" coords="4639,163,4733,217,4730,222,4637,167"/>
-<area shape="poly" id="edge107_Node000059_Node000062" title=" " alt="" coords="4682,159,4871,210,4896,217,4894,222,4870,215,4680,164"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="2527,37,2056,38,1376,47,1019,56,684,69,395,88,177,112,145,119,144,113,177,106,395,82,683,64,1019,51,1376,41,2056,33,2527,32"/>
+<area shape="rect" id="Node000003" href="$VelocityMux_8hpp.html" title="Declaration of the VelocityMux class." alt="" coords="4228,109,4406,165"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="2729,32,2983,35,3341,46,3755,68,3968,85,4176,106,4228,114,4227,119,4175,112,3967,90,3755,73,3341,51,2983,40,2729,37"/>
+<area shape="rect" id="Node000006" href="$controller__node__tests_8cpp.html" title=" " alt="" coords="1110,420,1257,476"/>
+<area shape="poly" id="edge39_Node000001_Node000006" title=" " alt="" coords="2526,39,2120,46,1569,59,1054,81,867,95,758,112,696,127,646,142,625,152,606,167,587,187,569,214,553,249,550,281,558,308,576,333,602,354,637,373,677,389,723,402,824,422,929,435,1110,444,1110,449,928,440,823,428,722,407,676,394,634,378,599,359,572,336,553,311,545,281,548,248,564,211,583,184,602,163,622,148,644,137,694,122,756,106,867,90,1054,76,1569,54,2120,40,2526,33"/>
+<area shape="rect" id="Node000009" href="$SystemNode_8hpp.html" title="Declaration of the SystemNode class, the central coordinator node for Easy Navigation components." alt="" coords="3360,531,3586,572"/>
+<area shape="poly" id="edge126_Node000001_Node000009" title=" " alt="" coords="2526,39,2264,47,1936,61,1640,83,1535,96,1474,111,1441,132,1421,155,1403,182,1378,214,1358,245,1348,259,1332,271,1285,290,1233,302,1178,308,1120,309,1004,302,896,290,805,282,770,282,745,287,729,297,725,312,732,337,754,370,789,410,825,437,862,452,902,460,991,464,1042,466,1099,473,1306,497,1581,515,1901,528,2242,538,2896,547,3360,548,3360,553,2896,552,2241,543,1900,534,1581,520,1306,502,1098,478,1042,472,991,469,901,465,861,457,823,441,786,414,750,374,727,339,720,312,725,293,743,282,770,277,805,277,896,285,1005,297,1121,304,1178,303,1232,297,1283,285,1329,266,1344,255,1354,242,1373,211,1398,179,1416,151,1438,128,1472,107,1534,91,1640,77,1936,56,2263,42,2526,34"/>
+<area shape="rect" id="Node000017" href="$system__pause__tests_8cpp.html" title=" " alt="" coords="4532,635,4702,676"/>
+<area shape="poly" id="edge130_Node000001_Node000017" title=" " alt="" coords="2729,32,3122,33,3650,42,3911,51,4140,64,4317,83,4379,94,4420,107,4437,120,4446,135,4455,150,4470,162,4514,179,4555,184,4593,181,4631,175,4668,170,4704,171,4741,183,4779,211,4801,241,4808,271,4805,343,4805,449,4801,482,4789,512,4772,539,4751,565,4702,607,4656,637,4653,632,4699,602,4747,561,4768,536,4784,509,4796,480,4800,449,4800,343,4803,271,4796,243,4775,215,4739,188,4703,176,4668,175,4632,180,4594,186,4555,189,4513,184,4468,167,4451,153,4442,138,4433,123,4417,111,4377,99,4316,88,4140,70,3910,56,3650,47,3122,38,2729,37"/>
+<area shape="rect" id="Node000023" href="$SafetySupervisor_8hpp.html" title="Declaration of the SafetySupervisor class." alt="" coords="3686,420,3849,476"/>
+<area shape="poly" id="edge127_Node000001_Node000023" title=" " alt="" coords="2729,41,2849,60,2993,91,3068,113,3144,140,3218,173,3288,210,3304,225,3313,240,3322,254,3338,266,3377,277,3429,282,3555,280,3620,280,3678,283,3727,294,3747,303,3762,315,3776,339,3782,367,3782,395,3778,420,3772,419,3776,395,3777,367,3771,341,3758,318,3744,307,3725,299,3678,289,3619,285,3556,285,3429,287,3376,283,3336,271,3319,257,3309,243,3300,228,3285,215,3216,177,3142,145,3067,119,2991,96,2848,65,2729,47"/>
+<area shape="rect" id="Node000026" href="$CommandGuard_8hpp.html" title="Declaration of the CommandGuard class." alt="" coords="4146,213,4328,268"/>
+<area shape="poly" id="edge38_Node000001_Node000026" title=" " alt="" coords="2729,35,3284,60,3588,81,3714,93,3809,106,3908,128,4005,155,4167,210,4165,215,4004,160,3907,133,3809,112,3713,98,3588,86,3284,65,2729,41"/>
+<area shape="rect" id="Node000032" href="$LocalizerNode_8hpp.html" title="Declaration of the LocalizerNode class, a ROS 2 lifecycle node for localization tasks in Easy Navigat..." alt="" coords="188,116,427,157"/>
+<area shape="poly" id="edge40_Node000001_Node000032" title=" " alt="" coords="2526,39,2103,46,1505,61,899,83,646,96,455,112,406,118,405,113,454,106,646,91,898,77,1504,56,2103,41,2526,33"/>
+<area shape="rect" id="Node000034" href="$localizer__node__tests_8cpp.html" title=" " alt="" coords="336,220,503,261"/>
+<area shape="poly" id="edge46_Node000001_Node000034" title=" " alt="" coords="2526,38,2054,46,1405,60,816,82,618,96,556,103,523,111,492,134,465,164,445,195,431,221,426,218,440,192,461,160,488,130,521,107,555,98,617,90,816,76,1405,55,2054,40,2526,33"/>
+<area shape="rect" id="Node000035" href="$faulty__localizer__tests_8cpp.html" title="FaultyLocalizer: each fault does what it says." alt="" coords="4481,116,4652,157"/>
+<area shape="poly" id="edge45_Node000001_Node000035" title=" " alt="" coords="2729,33,3093,40,3594,53,4096,75,4305,89,4463,106,4498,113,4497,119,4462,112,4304,95,4095,80,3594,58,3093,45,2729,38"/>
+<area shape="rect" id="Node000036" href="$faulty__maps__manager__tests_8cpp.html" title="FaultyMapsManager: each fault does what it says." alt="" coords="4675,109,4860,165"/>
+<area shape="poly" id="edge47_Node000001_Node000036" title=" " alt="" coords="2729,33,3128,38,3687,50,4251,72,4486,88,4664,106,4675,108,4674,113,4663,112,4486,93,4251,78,3687,56,3128,43,2729,38"/>
+<area shape="rect" id="Node000037" href="$maps__manager__node__tests_8cpp.html" title=" " alt="" coords="4884,109,5067,165"/>
+<area shape="poly" id="edge48_Node000001_Node000037" title=" " alt="" coords="2729,32,3165,36,3785,47,4109,57,4413,69,4675,86,4873,106,4884,108,4884,113,4873,112,4675,91,4413,75,4109,62,3785,53,3165,41,2729,38"/>
+<area shape="rect" id="Node000038" href="$PlannerNode_8hpp.html" title="Declaration of the PlannerNode class, a ROS 2 lifecycle node for computing navigation paths in Easy N..." alt="" coords="886,116,1111,157"/>
+<area shape="poly" id="edge49_Node000001_Node000038" title=" " alt="" coords="2527,41,1979,65,1614,85,1244,112,1111,125,1111,119,1243,106,1614,80,1979,60,2526,35"/>
+<area shape="rect" id="Node000040" href="$planner__node__tests_8cpp.html" title=" " alt="" coords="578,220,741,261"/>
+<area shape="poly" id="edge56_Node000001_Node000040" title=" " alt="" coords="2527,39,2143,45,1628,59,1149,81,975,95,914,103,874,112,817,134,765,164,684,222,681,217,762,159,815,129,872,106,913,98,975,90,1149,75,1628,54,2143,40,2527,33"/>
+<area shape="rect" id="Node000041" href="$planner__path__check__tests_8cpp.html" title="PlannerNode discards non&#45;finite paths and reports them." alt="" coords="1118,220,1319,261"/>
+<area shape="poly" id="edge57_Node000001_Node000041" title=" " alt="" coords="2527,39,2236,45,1865,58,1686,68,1529,80,1409,94,1367,103,1339,111,1304,134,1274,164,1231,221,1227,218,1269,160,1301,130,1337,107,1365,97,1408,89,1528,74,1686,62,1865,53,2236,40,2527,33"/>
+<area shape="rect" id="Node000042" href="$faulty__planner__tests_8cpp.html" title="FaultyPlanner: each fault does what it says." alt="" coords="5090,116,5256,157"/>
+<area shape="poly" id="edge55_Node000001_Node000042" title=" " alt="" coords="2728,32,3199,33,3880,42,4237,51,4572,65,4861,83,5079,106,5112,113,5111,119,5078,112,4860,88,4572,70,4236,57,3880,48,3199,39,2728,37"/>
+<area shape="rect" id="Node000043" href="$SensorsNode_8hpp.html" title="Declaration of the SensorsNode class, a ROS 2 lifecycle node for sensor fusion tasks in Easy Navigati..." alt="" coords="1496,220,1730,261"/>
+<area shape="poly" id="edge58_Node000001_Node000043" title=" " alt="" coords="2527,42,2281,64,2135,84,1991,112,1897,137,1806,166,1660,222,1658,217,1804,161,1896,131,1990,106,2135,79,2281,59,2526,37"/>
+<area shape="rect" id="Node000045" href="$plugin__tests_8cpp.html" title="Tests that verify the pluginlib plugin registration, loading, and correctness of all built&#45;in Percept..." alt="" coords="1783,324,1939,364"/>
+<area shape="poly" id="edge116_Node000001_Node000045" title=" " alt="" coords="2527,42,2450,49,2362,62,2270,83,2182,111,2134,134,2087,160,2001,220,1930,279,1882,325,1878,321,1927,275,1998,216,2085,156,2132,129,2180,107,2269,77,2361,57,2449,44,2526,36"/>
+<area shape="rect" id="Node000046" href="$sensors__data__age__tests_8cpp.html" title="SensorsNode: perceptions older than &quot;forget_time&quot; are invalidated and reported." alt="" coords="971,324,1162,364"/>
+<area shape="poly" id="edge117_Node000001_Node000046" title=" " alt="" coords="2527,39,2384,45,2204,58,2005,79,1807,112,1712,130,1639,146,1569,170,1485,215,1468,229,1457,243,1446,257,1428,271,1393,287,1362,297,1308,306,1252,309,1181,319,1150,326,1149,321,1181,314,1251,304,1307,300,1361,292,1391,282,1425,266,1442,253,1453,240,1464,225,1482,210,1567,166,1637,140,1711,124,1806,106,2005,74,2204,52,2384,40,2526,34"/>
+<area shape="rect" id="Node000047" href="$sensors__lifecycle__tests_8cpp.html" title=" " alt="" coords="2591,324,2776,364"/>
+<area shape="poly" id="edge118_Node000001_Node000047" title=" " alt="" coords="2703,66,2746,92,2790,125,2830,165,2861,212,2870,241,2868,255,2860,270,2844,285,2816,300,2750,326,2748,321,2814,295,2840,281,2856,267,2863,253,2865,241,2856,214,2826,168,2787,129,2743,97,2700,71"/>
+<area shape="rect" id="Node000048" href="$sensors__node__tests_8cpp.html" title=" " alt="" coords="780,324,947,364"/>
+<area shape="poly" id="edge119_Node000001_Node000048" title=" " alt="" coords="2526,37,2305,41,2029,52,1891,61,1763,74,1655,91,1574,112,1528,131,1496,153,1428,215,1414,230,1405,245,1394,258,1377,271,1318,296,1267,309,1219,314,1173,313,1077,308,1022,310,959,319,929,326,928,321,958,314,1022,305,1077,303,1173,308,1219,309,1266,304,1317,291,1374,266,1391,254,1401,242,1410,227,1424,211,1492,149,1526,127,1572,106,1654,85,1763,69,1890,56,2029,47,2305,36,2526,32"/>
+<area shape="rect" id="Node000049" href="$Perceptions_8hpp.html" title="Defines data structures and utilities for representing and processing sensor perceptions." alt="" coords="2193,109,2361,165"/>
+<area shape="poly" id="edge66_Node000001_Node000049" title=" " alt="" coords="2528,66,2362,114,2360,109,2526,61"/>
+<area shape="rect" id="Node000052" href="$perception__handlers__tests_8cpp.html" title="The perception handlers other than points (IMU, GNSS, odometry, detections, image): they reject wrong..." alt="" coords="3203,316,3359,372"/>
+<area shape="poly" id="edge115_Node000001_Node000052" title=" " alt="" coords="2717,65,2814,107,2895,149,2955,186,3015,224,3095,266,3207,313,3205,318,3093,271,3013,228,2952,191,2892,154,2812,111,2715,70"/>
+<area shape="rect" id="Node000066" href="$GoalManager_8hpp.html" title="Declaration of the GoalManager class." alt="" coords="3483,116,3711,157"/>
+<area shape="poly" id="edge120_Node000001_Node000066" title=" " alt="" coords="2729,39,3045,65,3240,84,3436,106,3484,113,3484,119,3435,112,3240,89,3045,70,2729,44"/>
+<area shape="rect" id="Node000068" href="$goalmanager__test__main_8cpp.html" title=" " alt="" coords="3349,220,3536,261"/>
+<area shape="poly" id="edge128_Node000001_Node000068" title=" " alt="" coords="2729,33,2880,39,3055,51,3217,73,3283,88,3332,107,3366,131,3395,161,3434,218,3430,221,3391,164,3362,135,3329,111,3281,93,3217,78,3054,57,2879,44,2729,39"/>
+<area shape="rect" id="Node000069" href="$goalmanager__tests_8cpp.html" title=" " alt="" coords="3912,220,4071,261"/>
+<area shape="poly" id="edge129_Node000001_Node000069" title=" " alt="" coords="2729,34,2957,40,3244,54,3522,75,3636,89,3723,106,3793,130,3859,160,3963,217,3960,222,3857,165,3791,135,3722,112,3635,95,3521,80,3244,59,2957,46,2729,39"/>
+<area shape="rect" id="Node000004" href="$ControllerNode_8hpp.html" title="Declaration of the ControllerNode class, a ROS 2 lifecycle node for speed computation in Easy Navigat..." alt="" coords="3940,316,4118,372"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="4214,172,4174,191,4136,215,4095,259,4050,318,4046,314,4091,256,4133,211,4171,187,4212,168"/>
+<area shape="poly" id="edge29_Node000003_Node000026" title=" " alt="" coords="4288,179,4261,214,4256,210,4284,175"/>
+<area shape="rect" id="Node000028" href="$command__guard__tests_8cpp.html" title="safety::CommandGuard around the VelocityMux: timeout, non&#45;finite commands, new controller commands,..." alt="" coords="4501,316,4656,372"/>
+<area shape="poly" id="edge35_Node000003_Node000028" title=" " alt="" coords="4422,166,4481,188,4521,211,4542,235,4557,263,4575,315,4570,317,4552,265,4537,238,4518,215,4479,193,4420,171"/>
+<area shape="rect" id="Node000029" href="$rt__allocation__tests_8cpp.html" title="The RT velocity path (proposals, mux, smoother) must not allocate memory once warm." alt="" coords="4348,316,4478,372"/>
+<area shape="poly" id="edge36_Node000003_Node000029" title=" " alt="" coords="4422,167,4469,188,4487,199,4499,211,4507,226,4509,240,4499,269,4482,296,4458,318,4455,314,4477,293,4495,267,4503,240,4502,228,4495,214,4484,204,4467,193,4420,172"/>
+<area shape="rect" id="Node000030" href="$VelocityMux_8cpp.html" title="Implementation of the VelocityMux class." alt="" coords="4610,213,4765,268"/>
+<area shape="poly" id="edge34_Node000003_Node000030" title=" " alt="" coords="4422,164,4592,210,4610,215,4609,220,4591,215,4420,169"/>
+<area shape="rect" id="Node000031" href="$velocity__mux__tests_8cpp.html" title=" " alt="" coords="4352,213,4485,268"/>
+<area shape="poly" id="edge37_Node000003_Node000031" title=" " alt="" coords="4357,174,4393,210,4389,214,4353,178"/>
+<area shape="rect" id="Node000005" href="$ControllerNode_8cpp.html" title="Implementation of the ControllerNode class." alt="" coords="4198,420,4353,476"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="4110,376,4210,417,4208,422,4108,381"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="3924,360,3760,375,3381,396,2994,413,2252,435,1638,446,1257,449,1257,444,1638,440,2252,429,2994,407,3380,391,3759,369,3924,355"/>
+<area shape="rect" id="Node000007" href="$controller__node__velocity__tests_8cpp.html" title="ControllerNode as the single exit of the velocity command: robot limits for the controller plugins,..." alt="" coords="4377,420,4524,476"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="4133,370,4251,393,4366,417,4378,421,4376,426,4364,423,4250,398,4132,375"/>
+<area shape="rect" id="Node000008" href="$faulty__controller__tests_8cpp.html" title="How ControllerNode copes with a controller plugin that misbehaves (FaultyController)." alt="" coords="3924,420,4073,476"/>
+<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="4019,388,4009,420,4004,419,4014,386"/>
+<area shape="poly" id="edge8_Node000004_Node000009" title=" " alt="" coords="3925,360,3803,383,3738,400,3675,422,3624,448,3574,477,3498,533,3495,528,3571,473,3621,443,3673,418,3736,395,3802,378,3924,355"/>
+<area shape="rect" id="Node000010" href="$SystemNode_8cpp.html" title="Implementation of the SystemNode class." alt="" coords="707,635,932,676"/>
+<area shape="poly" id="edge26_Node000004_Node000010" title=" " alt="" coords="3924,359,3760,375,933,646,933,640,3759,369,3924,353"/>
+<area shape="rect" id="Node000016" href="$system__lifecycle__mission__tests_8cpp.html" title="A mission survives reconfiguring EasyNav (active &#45;&gt; inactive &#45;&gt; unconfigured &#45;&gt; inactive &#45;&gt; active,..." alt="" coords="4148,627,4321,683"/>
+<area shape="poly" id="edge28_Node000004_Node000016" title=" " alt="" coords="4074,381,4108,418,4146,474,4179,531,4225,626,4221,628,4174,534,4142,476,4104,422,4070,385"/>
+<area shape="poly" id="edge22_Node000004_Node000023" title=" " alt="" coords="3946,380,3839,422,3837,417,3944,375"/>
+<area shape="rect" id="Node000025" href="$safety__module__tests_8cpp.html" title="The safety module of easynav_system, on its own: configuration fingerprint, parameter freezer and saf..." alt="" coords="3939,531,4108,572"/>
+<area shape="poly" id="edge27_Node000004_Node000025" title=" " alt="" coords="4068,383,4087,419,4094,448,4087,477,4070,508,4048,532,4044,529,4066,504,4083,475,4088,448,4083,421,4063,386"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="3372,578,3341,582,3187,593,2928,604,2219,625,933,654,933,649,2219,620,2928,598,3187,587,3341,577,3371,572"/>
+<area shape="rect" id="Node000011" href="$system__main_8cpp.html" title=" " alt="" coords="3983,635,4123,676"/>
+<area shape="poly" id="edge10_Node000009_Node000011" title=" " alt="" coords="3602,567,3808,596,3972,625,3998,632,3996,637,3971,630,3807,601,3601,572"/>
+<area shape="rect" id="Node000012" href="$system__actions__tests_8cpp.html" title="SystemNode as SystemActions (what a recovery system can ask of EasyNav), and recovery_node as one mor..." alt="" coords="2201,635,2377,676"/>
+<area shape="poly" id="edge11_Node000009_Node000012" title=" " alt="" coords="3370,578,3341,582,3197,596,3074,603,2865,601,2764,600,2656,603,2534,612,2391,630,2357,637,2356,632,2390,625,2534,606,2656,597,2764,595,2865,596,3074,597,3197,591,3341,577,3369,572"/>
+<area shape="rect" id="Node000013" href="$system__component__faults__tests_8cpp.html" title="SystemNode with a localizer, planner or maps manager that misbehaves (FaultyLocalizer,..." alt="" coords="2402,627,2579,683"/>
+<area shape="poly" id="edge12_Node000009_Node000013" title=" " alt="" coords="3369,578,3341,582,3227,594,3130,600,2965,602,2800,606,2704,614,2591,630,2580,632,2579,627,2590,625,2703,609,2800,601,2965,597,3130,595,3227,589,3341,577,3368,573"/>
+<area shape="rect" id="Node000014" href="$system__fault__injection__tests_8cpp.html" title="The whole RT cycle of SystemNode with a controller that misbehaves (FaultyController)." alt="" coords="2602,627,2757,683"/>
+<area shape="poly" id="edge13_Node000009_Node000014" title=" " alt="" coords="3368,578,3341,582,3180,598,3054,602,2929,608,2856,616,2769,630,2758,632,2757,627,2769,625,2855,611,2928,602,3054,596,3180,593,3341,577,3367,573"/>
+<area shape="rect" id="Node000015" href="$system__lifecycle__cycle__tests_8cpp.html" title="Exercises SystemNode&#39;s own lifecycle state machine through repeated full cycles, including active &#45;&gt; ..." alt="" coords="2780,627,2939,683"/>
+<area shape="poly" id="edge14_Node000009_Node000015" title=" " alt="" coords="3366,578,3341,582,3232,596,3146,603,3061,612,2952,630,2940,633,2939,627,2951,625,3060,606,3146,598,3231,591,3341,577,3365,573"/>
+<area shape="poly" id="edge15_Node000009_Node000016" title=" " alt="" coords="3602,567,3676,577,3805,589,3907,596,4008,605,4136,625,4148,627,4147,632,4135,630,4007,610,3906,601,3805,594,3675,582,3601,573"/>
+<area shape="poly" id="edge16_Node000009_Node000017" title=" " alt="" coords="3601,568,3676,577,3860,593,4004,603,4333,625,4532,643,4532,648,4333,630,4004,608,3860,599,3675,582,3601,573"/>
+<area shape="rect" id="Node000018" href="$system__robot__geometry__tests_8cpp.html" title="SystemNode shares &quot;robot_geometry.*&quot; with every component before they configure." alt="" coords="2963,627,3127,683"/>
+<area shape="poly" id="edge17_Node000009_Node000018" title=" " alt="" coords="3363,578,3139,630,3128,633,3126,628,3138,625,3362,573"/>
+<area shape="rect" id="Node000019" href="$system__safety__mode__tests_8cpp.html" title="Configuration validation, safety mode, frozen configuration and configuration hash." alt="" coords="3150,635,3358,676"/>
+<area shape="poly" id="edge18_Node000009_Node000019" title=" " alt="" coords="3418,581,3298,637,3296,632,3416,576"/>
+<area shape="rect" id="Node000020" href="$system__shutdown__request__tests_8cpp.html" title="A shutdown requested by a recovery mitigation takes SystemNode (and every EasyNav node) out of Active..." alt="" coords="3383,627,3563,683"/>
+<area shape="poly" id="edge19_Node000009_Node000020" title=" " alt="" coords="3476,587,3476,627,3470,627,3470,587"/>
+<area shape="rect" id="Node000021" href="$system__tfinfo__tests_8cpp.html" title=" " alt="" coords="3588,635,3750,676"/>
+<area shape="poly" id="edge20_Node000009_Node000021" title=" " alt="" coords="3525,577,3632,632,3630,637,3523,581"/>
+<area shape="rect" id="Node000022" href="$system__velocity__smoothing__tests_8cpp.html" title="End to end through SystemNode: with very low accelerations, the published commands are smoothed,..." alt="" coords="3774,627,3959,683"/>
+<area shape="poly" id="edge21_Node000009_Node000022" title=" " alt="" coords="3565,574,3774,627,3773,633,3563,579"/>
+<area shape="poly" id="edge23_Node000023_Node000009" title=" " alt="" coords="3675,484,3531,533,3529,528,3673,479"/>
+<area shape="rect" id="Node000024" href="$SafetySupervisor_8cpp.html" title="Implementation of the SafetySupervisor class." alt="" coords="3687,524,3848,579"/>
+<area shape="poly" id="edge24_Node000023_Node000024" title=" " alt="" coords="3770,491,3770,523,3765,523,3765,491"/>
+<area shape="poly" id="edge25_Node000023_Node000025" title=" " alt="" coords="3851,479,3975,528,3973,533,3849,484"/>
+<area shape="poly" id="edge30_Node000026_Node000004" title=" " alt="" coords="4169,278,4086,318,4084,313,4166,273"/>
+<area shape="rect" id="Node000027" href="$CommandGuard_8cpp.html" title="Implementation of the CommandGuard class." alt="" coords="4142,316,4324,372"/>
+<area shape="poly" id="edge31_Node000026_Node000027" title=" " alt="" coords="4238,284,4237,316,4231,316,4233,284"/>
+<area shape="poly" id="edge32_Node000026_Node000028" title=" " alt="" coords="4344,270,4491,314,4501,317,4500,322,4490,319,4342,275"/>
+<area shape="poly" id="edge33_Node000026_Node000029" title=" " alt="" coords="4298,274,4367,313,4364,318,4296,279"/>
+<area shape="poly" id="edge43_Node000032_Node000009" title=" " alt="" coords="307,173,310,220,316,244,326,267,358,314,389,352,421,381,454,404,491,423,533,439,636,473,683,481,770,488,1045,501,1855,523,2737,538,3360,546,3360,552,2737,544,1855,528,1045,507,769,493,682,486,635,478,531,445,489,428,452,409,417,385,385,355,354,317,321,270,311,246,304,221,302,173"/>
+<area shape="poly" id="edge44_Node000032_Node000010" title=" " alt="" coords="195,164,117,187,87,200,67,215,47,244,40,272,42,343,42,449,47,473,61,494,84,515,115,533,195,565,293,591,401,612,512,627,707,645,706,650,511,632,400,617,292,597,193,570,112,538,81,519,57,498,42,475,37,449,37,343,35,272,42,242,63,211,84,196,115,182,193,159"/>
+<area shape="rect" id="Node000033" href="$LocalizerNode_8cpp.html" title="Implementation of the LocalizerNode class." alt="" coords="77,213,261,268"/>
+<area shape="poly" id="edge41_Node000032_Node000033" title=" " alt="" coords="270,169,208,214,205,210,267,164"/>
+<area shape="poly" id="edge42_Node000032_Node000034" title=" " alt="" coords="342,166,400,218,396,222,338,170"/>
+<area shape="poly" id="edge53_Node000038_Node000009" title=" " alt="" coords="1030,167,1048,191,1062,218,1066,245,1063,258,1055,270,1030,293,1004,308,977,316,950,319,894,311,838,295,781,279,727,271,700,274,675,281,650,296,626,318,616,332,610,345,611,371,623,396,643,419,692,455,726,473,770,483,853,491,1118,507,1480,519,1900,529,2753,541,3360,547,3360,552,2753,547,1900,534,1480,524,1118,512,853,497,769,488,724,478,689,459,639,422,618,399,605,372,605,344,611,329,622,315,647,292,673,277,699,268,727,266,783,273,839,290,895,306,950,313,976,311,1002,303,1027,289,1051,267,1058,256,1061,245,1057,219,1044,194,1026,170"/>
+<area shape="poly" id="edge54_Node000038_Node000010" title=" " alt="" coords="910,165,856,186,805,215,790,229,781,242,771,256,754,271,732,282,710,287,671,288,635,293,619,302,603,318,591,340,584,362,583,384,586,407,605,453,636,498,675,539,717,577,791,632,788,636,713,581,671,543,632,501,600,456,581,408,577,385,579,361,586,337,599,315,615,297,633,288,670,283,710,281,730,276,752,266,767,253,776,239,786,225,802,210,854,182,908,160"/>
+<area shape="rect" id="Node000039" href="$PlannerNode_8cpp.html" title="Implementation of the PlannerNode class." alt="" coords="816,220,1042,261"/>
+<area shape="poly" id="edge50_Node000038_Node000039" title=" " alt="" coords="979,171,945,221,940,218,974,168"/>
+<area shape="poly" id="edge51_Node000038_Node000040" title=" " alt="" coords="919,165,726,222,724,217,917,160"/>
+<area shape="poly" id="edge52_Node000038_Node000041" title=" " alt="" coords="1056,162,1177,217,1175,222,1053,166"/>
+<area shape="poly" id="edge64_Node000043_Node000009" title=" " alt="" coords="1481,260,1376,271,1064,279,964,284,874,291,806,303,784,310,771,318,762,331,759,344,762,357,770,370,866,382,1112,402,1882,453,3360,541,3360,546,1882,459,1112,408,866,388,768,374,757,359,754,344,757,329,767,314,782,305,805,298,873,286,963,278,1064,273,1375,266,1481,255"/>
+<area shape="poly" id="edge65_Node000043_Node000010" title=" " alt="" coords="1481,257,1330,271,1033,279,852,292,787,303,766,310,753,318,740,336,730,355,721,397,724,442,735,488,752,532,772,572,808,633,804,636,767,575,747,534,730,490,719,443,716,397,725,353,736,333,750,314,764,306,786,298,851,287,1033,274,1330,266,1480,252"/>
+<area shape="rect" id="Node000044" href="$SensorsNode_8cpp.html" title="Implementation of the SensorsNode class." alt="" coords="2148,324,2382,364"/>
+<area shape="poly" id="edge59_Node000043_Node000044" title=" " alt="" coords="1718,262,1741,266,1852,281,1939,290,2025,298,2136,314,2174,321,2174,326,2135,319,2025,304,1938,295,1851,287,1741,271,1718,267"/>
+<area shape="poly" id="edge60_Node000043_Node000045" title=" " alt="" coords="1676,265,1814,321,1812,326,1674,269"/>
+<area shape="poly" id="edge61_Node000043_Node000046" title=" " alt="" coords="1500,267,1477,271,1329,294,1181,319,1149,326,1148,321,1181,314,1328,289,1477,266,1499,262"/>
+<area shape="poly" id="edge62_Node000043_Node000047" title=" " alt="" coords="1714,261,1741,266,1868,279,1976,286,2161,287,2345,289,2453,297,2580,314,2615,321,2614,326,2579,319,2453,303,2345,294,2161,292,1976,291,1868,285,1741,271,1713,267"/>
+<area shape="poly" id="edge63_Node000043_Node000048" title=" " alt="" coords="1482,264,1427,271,1295,284,1192,290,1089,299,959,319,929,326,927,321,958,314,1089,293,1191,285,1294,278,1426,266,1481,259"/>
+<area shape="poly" id="edge67_Node000049_Node000043" title=" " alt="" coords="2178,153,1976,179,1741,215,1705,222,1704,217,1741,210,1976,174,2178,147"/>
+<area shape="poly" id="edge114_Node000049_Node000045" title=" " alt="" coords="2180,170,2132,190,2086,215,2069,229,2058,242,2047,256,2029,271,1974,302,1919,326,1917,321,1971,297,2026,266,2043,252,2054,239,2066,225,2084,210,2130,185,2178,165"/>
+<area shape="rect" id="Node000050" href="$DetectionsPerception_8hpp.html" title="Defines data structures and utilities for representing and processing image perceptions." alt="" coords="2673,213,2846,268"/>
+<area shape="poly" id="edge68_Node000049_Node000050" title=" " alt="" coords="2377,153,2512,178,2662,210,2673,213,2672,218,2660,215,2511,184,2376,158"/>
+<area shape="rect" id="Node000054" href="$GNSSPerception_8hpp.html" title="Defines data structures and utilities for representing and processing GNSS perceptions." alt="" coords="2481,213,2649,268"/>
+<area shape="poly" id="edge75_Node000049_Node000054" title=" " alt="" coords="2369,168,2488,210,2487,215,2368,173"/>
+<area shape="rect" id="Node000056" href="$IMUPerception_8hpp.html" title="Defines data structures and utilities for representing and processing IMU perceptions." alt="" coords="2097,213,2265,268"/>
+<area shape="poly" id="edge82_Node000049_Node000056" title=" " alt="" coords="2243,178,2209,214,2205,210,2239,174"/>
+<area shape="rect" id="Node000058" href="$ImagePerception_8hpp.html" title="Defines data structures and utilities for representing and processing image perceptions." alt="" coords="2289,213,2457,268"/>
+<area shape="poly" id="edge91_Node000049_Node000058" title=" " alt="" coords="2315,174,2349,210,2345,214,2311,178"/>
+<area shape="rect" id="Node000060" href="$perceptions__tests_8cpp.html" title=" " alt="" coords="1603,324,1759,364"/>
+<area shape="poly" id="edge113_Node000049_Node000060" title=" " alt="" coords="2179,163,2102,185,2023,215,1998,229,1979,243,1960,256,1934,271,1749,326,1748,321,1932,266,1958,252,1976,238,1995,224,2021,210,2100,180,2178,158"/>
+<area shape="rect" id="Node000061" href="$OdometryPerception_8hpp.html" title="Defines data structures and utilities for representing and processing odometry perceptions." alt="" coords="3107,213,3274,268"/>
+<area shape="poly" id="edge99_Node000049_Node000061" title=" " alt="" coords="2376,146,3107,227,3106,233,2376,152"/>
+<area shape="rect" id="Node000063" href="$PointPerception_8hpp.html" title="Defines data structures and utilities for representing and processing point&#45;based sensor perceptions." alt="" coords="1753,213,1921,268"/>
+<area shape="poly" id="edge102_Node000049_Node000063" title=" " alt="" coords="2179,162,1940,215,1922,220,1920,215,1939,210,2177,156"/>
+<area shape="poly" id="edge69_Node000050_Node000044" title=" " alt="" coords="2658,272,2525,297,2395,319,2360,326,2359,321,2394,314,2524,291,2657,266"/>
+<area shape="poly" id="edge73_Node000050_Node000045" title=" " alt="" coords="2658,271,2551,285,2459,292,2302,293,2147,295,2056,303,1951,319,1921,326,1920,321,1950,314,2056,298,2146,290,2302,288,2459,287,2550,280,2657,266"/>
+<area shape="poly" id="edge74_Node000050_Node000047" title=" " alt="" coords="2732,282,2700,325,2696,322,2728,279"/>
+<area shape="rect" id="Node000051" href="$DetectionsPerception_8cpp.html" title=" " alt="" coords="3382,316,3556,372"/>
+<area shape="poly" id="edge70_Node000050_Node000051" title=" " alt="" coords="2862,247,3096,272,3234,290,3371,314,3383,316,3381,321,3370,319,3233,296,3095,277,2862,253"/>
+<area shape="poly" id="edge71_Node000050_Node000052" title=" " alt="" coords="2862,253,3018,279,3192,314,3203,316,3202,322,3191,319,3017,284,2861,259"/>
+<area shape="rect" id="Node000053" href="$perception__locking__tests_8cpp.html" title=" " alt="" coords="2800,324,2994,364"/>
+<area shape="poly" id="edge72_Node000050_Node000053" title=" " alt="" coords="2810,276,2872,321,2869,326,2807,280"/>
+<area shape="poly" id="edge76_Node000054_Node000044" title=" " alt="" coords="2471,276,2324,326,2322,321,2470,271"/>
+<area shape="poly" id="edge80_Node000054_Node000045" title=" " alt="" coords="2466,271,2388,283,2321,289,2206,294,2093,299,2027,306,1951,319,1922,326,1921,321,1950,314,2027,301,2093,294,2206,289,2321,284,2387,278,2466,266"/>
+<area shape="poly" id="edge81_Node000054_Node000047" title=" " alt="" coords="2610,277,2663,321,2659,325,2606,281"/>
+<area shape="poly" id="edge78_Node000054_Node000052" title=" " alt="" coords="2664,266,2744,278,2813,284,2930,289,3046,294,3113,301,3192,314,3203,316,3202,321,3191,319,3113,306,3046,299,2930,294,2812,290,2744,283,2664,271"/>
+<area shape="poly" id="edge79_Node000054_Node000053" title=" " alt="" coords="2664,269,2834,321,2832,326,2663,274"/>
+<area shape="rect" id="Node000055" href="$GNSSPerception_8cpp.html" title=" " alt="" coords="3018,316,3179,372"/>
+<area shape="poly" id="edge77_Node000054_Node000055" title=" " alt="" coords="2665,266,2761,282,2837,289,2913,297,3007,314,3018,316,3017,321,3006,319,2912,303,2837,295,2760,287,2664,271"/>
+<area shape="poly" id="edge83_Node000056_Node000044" title=" " alt="" coords="2215,279,2251,322,2247,325,2211,282"/>
+<area shape="poly" id="edge87_Node000056_Node000045" title=" " alt="" coords="2083,275,1924,326,1922,321,2082,270"/>
+<area shape="poly" id="edge88_Node000056_Node000046" title=" " alt="" coords="2082,256,1933,271,1734,285,1579,292,1424,300,1225,319,1163,328,1162,323,1225,314,1423,295,1579,286,1734,280,1933,266,2081,251"/>
+<area shape="poly" id="edge89_Node000056_Node000047" title=" " alt="" coords="2281,266,2365,282,2432,290,2498,299,2580,314,2611,321,2609,326,2579,319,2497,304,2431,296,2364,287,2280,271"/>
+<area shape="poly" id="edge90_Node000056_Node000048" title=" " alt="" coords="2082,256,1933,271,1785,280,1659,283,1444,282,1341,282,1231,287,1106,298,959,319,927,326,926,321,958,314,1105,293,1230,282,1341,277,1444,276,1658,278,1784,275,1933,266,2081,251"/>
+<area shape="poly" id="edge85_Node000056_Node000052" title=" " alt="" coords="2280,266,2419,283,2536,290,2640,291,2738,288,2835,285,2939,286,3055,295,3192,314,3203,316,3202,321,3191,319,3055,300,2938,292,2835,291,2738,293,2641,296,2536,296,2418,289,2280,271"/>
+<area shape="poly" id="edge86_Node000056_Node000053" title=" " alt="" coords="2280,266,2424,285,2536,291,2648,296,2789,314,2824,321,2823,326,2789,319,2648,301,2536,296,2423,290,2280,271"/>
+<area shape="rect" id="Node000057" href="$IMUPerception_8cpp.html" title=" " alt="" coords="1963,316,2124,372"/>
+<area shape="poly" id="edge84_Node000056_Node000057" title=" " alt="" coords="2134,280,2082,318,2079,314,2131,276"/>
+<area shape="poly" id="edge92_Node000058_Node000044" title=" " alt="" coords="2335,281,2288,325,2284,321,2331,277"/>
+<area shape="poly" id="edge97_Node000058_Node000045" title=" " alt="" coords="2275,271,2183,287,2111,295,2040,303,1951,319,1923,326,1922,321,1950,314,2039,297,2110,289,2182,281,2274,266"/>
+<area shape="poly" id="edge98_Node000058_Node000047" title=" " alt="" coords="2472,271,2624,321,2623,326,2470,276"/>
+<area shape="poly" id="edge94_Node000058_Node000052" title=" " alt="" coords="2472,266,2581,280,2674,287,2834,288,2992,290,3084,298,3192,314,3203,316,3202,321,3191,319,3084,303,2992,295,2834,294,2674,293,2581,286,2472,271"/>
+<area shape="poly" id="edge95_Node000058_Node000053" title=" " alt="" coords="2472,266,2562,282,2632,291,2702,299,2790,314,2822,321,2821,326,2788,319,2701,304,2632,296,2561,287,2472,271"/>
+<area shape="rect" id="Node000059" href="$ImagePerception_8cpp.html" title=" " alt="" coords="2406,316,2567,372"/>
+<area shape="poly" id="edge93_Node000058_Node000059" title=" " alt="" coords="2416,277,2458,314,2454,318,2413,281"/>
+<area shape="poly" id="edge96_Node000058_Node000060" title=" " alt="" coords="2274,271,2133,289,2021,294,1911,299,1847,307,1772,319,1743,326,1741,321,1771,314,1846,301,1910,294,2021,289,2132,284,2274,266"/>
+<area shape="poly" id="edge101_Node000061_Node000052" title=" " alt="" coords="3227,279,3259,314,3255,317,3223,282"/>
+<area shape="rect" id="Node000062" href="$OdometryPerception_8cpp.html" title=" " alt="" coords="3580,316,3747,372"/>
+<area shape="poly" id="edge100_Node000061_Node000062" title=" " alt="" coords="3290,265,3294,266,3431,289,3491,298,3568,314,3580,317,3579,322,3567,319,3490,304,3430,295,3292,271,3288,270"/>
+<area shape="poly" id="edge112_Node000063_Node000010" title=" " alt="" coords="1738,271,1616,280,1469,284,1329,293,1271,303,1226,319,1210,330,1200,343,1191,358,1176,374,1138,399,1100,422,951,541,843,636,839,632,947,537,1097,418,1136,395,1173,370,1187,355,1196,340,1206,326,1224,314,1269,298,1328,288,1469,278,1616,274,1738,266"/>
+<area shape="poly" id="edge103_Node000063_Node000044" title=" " alt="" coords="1936,263,2182,321,2181,326,1935,268"/>
+<area shape="poly" id="edge107_Node000063_Node000045" title=" " alt="" coords="1849,283,1859,323,1854,324,1844,284"/>
+<area shape="poly" id="edge109_Node000063_Node000046" title=" " alt="" coords="1738,271,1654,284,1582,291,1458,297,1336,301,1181,319,1145,326,1144,321,1181,314,1335,296,1458,291,1581,286,1653,279,1738,266"/>
+<area shape="poly" id="edge110_Node000063_Node000047" title=" " alt="" coords="1936,250,2085,266,2225,277,2333,284,2442,293,2580,314,2613,321,2612,326,2579,319,2441,299,2333,289,2224,283,2085,271,1936,255"/>
+<area shape="poly" id="edge111_Node000063_Node000048" title=" " alt="" coords="1738,271,1620,287,1519,294,1346,294,1175,295,1075,303,959,319,927,326,926,321,958,314,1075,297,1175,290,1346,289,1519,289,1619,281,1738,266"/>
+<area shape="poly" id="edge105_Node000063_Node000052" title=" " alt="" coords="1937,251,2085,266,2254,275,2397,277,2640,273,2758,272,2883,277,3025,290,3192,314,3203,316,3202,321,3191,319,3025,295,2883,282,2758,278,2640,278,2397,283,2253,280,2085,271,1936,257"/>
+<area shape="poly" id="edge106_Node000063_Node000060" title=" " alt="" coords="1784,279,1712,326,1710,321,1782,275"/>
+<area shape="rect" id="Node000064" href="$PointPerception_8cpp.html" title=" " alt="" coords="1238,316,1399,372"/>
+<area shape="poly" id="edge104_Node000063_Node000064" title=" " alt="" coords="1739,271,1646,287,1573,295,1502,303,1412,319,1400,322,1399,316,1411,314,1501,298,1573,290,1645,282,1738,266"/>
+<area shape="rect" id="Node000065" href="$pointperceptionsops__tests_8cpp.html" title=" " alt="" coords="1423,316,1579,372"/>
+<area shape="poly" id="edge108_Node000063_Node000065" title=" " alt="" coords="1739,274,1580,322,1578,317,1738,269"/>
+<area shape="poly" id="edge121_Node000066_Node000009" title=" " alt="" coords="3590,173,3585,221,3590,245,3600,267,3618,283,3637,290,3657,291,3679,290,3701,288,3722,289,3743,297,3762,315,3771,330,3774,344,3771,359,3762,374,3741,394,3719,404,3696,407,3673,406,3624,405,3599,410,3573,422,3544,447,3519,477,3485,532,3480,529,3514,474,3540,443,3570,418,3597,405,3624,399,3673,401,3696,402,3717,399,3738,389,3758,370,3766,357,3768,344,3766,332,3758,318,3740,302,3721,295,3701,293,3679,295,3657,297,3636,295,3615,287,3596,270,3585,247,3580,221,3584,172"/>
+<area shape="poly" id="edge125_Node000066_Node000016" title=" " alt="" coords="3694,159,3792,186,3830,200,3851,211,3869,234,3883,258,3895,304,3896,351,3890,398,3884,444,3885,489,3889,511,3898,533,3911,555,3930,577,3953,598,3976,610,3999,616,4022,617,4074,617,4103,619,4136,625,4148,628,4147,633,4135,630,4103,624,4074,622,4022,623,3998,621,3974,615,3950,602,3926,581,3907,559,3893,536,3884,513,3879,489,3879,443,3884,397,3890,351,3890,305,3878,260,3865,237,3847,215,3828,204,3791,191,3692,164"/>
+<area shape="rect" id="Node000067" href="$GoalManager_8cpp.html" title="Implementation of the GoalManager class." alt="" coords="3610,220,3837,261"/>
+<area shape="poly" id="edge122_Node000066_Node000067" title=" " alt="" coords="3635,165,3701,218,3698,222,3632,169"/>
+<area shape="poly" id="edge123_Node000066_Node000068" title=" " alt="" coords="3556,168,3474,222,3471,218,3553,164"/>
+<area shape="poly" id="edge124_Node000066_Node000069" title=" " alt="" coords="3692,159,3894,210,3920,217,3919,222,3892,215,3690,164"/>
 </map>

@@ -152,6 +152,8 @@ Collaboration diagram for PerceptionHandler:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a458279dbf8ca498a5ce20f368c280460" id="r_a458279dbf8ca498a5ce20f368c280460"><td class="memItemLeft">virtual bool&#160;</td><td class="memItemRight"><a class="el" href="#a458279dbf8ca498a5ce20f368c280460">cycle_rt</a> (std::shared_ptr&lt; NavState &gt; nav_state)</td></tr>
 <tr class="memdesc:a458279dbf8ca498a5ce20f368c280460"><td class="mdescLeft">&#160;</td><td class="mdescRight">Run one real-time sensor processing cycle.  <br /></td></tr>
+<tr class="memitem:ad71d57bf099c253a00248487feff8f41" id="r_ad71d57bf099c253a00248487feff8f41"><td class="memItemLeft">virtual std::shared_ptr&lt; PerceptionBase &gt;&#160;</td><td class="memItemRight"><a class="el" href="#ad71d57bf099c253a00248487feff8f41">get_perception</a> () const</td></tr>
+<tr class="memdesc:ad71d57bf099c253a00248487feff8f41"><td class="mdescLeft">&#160;</td><td class="mdescRight">The perception this handler keeps up to date, or nullptr.  <br /></td></tr>
 <tr class="memitem:ab6f232729c466045279af3865fbb1ff7" id="r_ab6f232729c466045279af3865fbb1ff7"><td class="memItemLeft">const std::string &amp;&#160;</td><td class="memItemRight"><a class="el" href="#ab6f232729c466045279af3865fbb1ff7">get_sensor_name</a> () const</td></tr>
 <tr class="memdesc:ab6f232729c466045279af3865fbb1ff7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the sensor name provided during <a class="el" href="#a380e843c8336262e18110e480d8a85e9" title="initialize">initialize</a>.  <br /></td></tr>
 <tr class="memitem:a380e843c8336262e18110e480d8a85e9" id="r_a380e843c8336262e18110e480d8a85e9"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a380e843c8336262e18110e480d8a85e9">initialize</a> (const std::shared_ptr&lt; rclcpp_lifecycle::LifecycleNode &gt; parent_node, const rclcpp::CallbackGroup::SharedPtr realtime_cbg, const std::string &amp;sensor_name)</td></tr>
@@ -265,6 +267,34 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns the parent lifecycle node. </p>
+
+</div>
+</div>
+<a id="ad71d57bf099c253a00248487feff8f41" name="ad71d57bf099c253a00248487feff8f41"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad71d57bf099c253a00248487feff8f41">&#9670;&#160;</a></span>get_perception()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual std::shared_ptr&lt; PerceptionBase &gt; get_perception </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The perception this handler keeps up to date, or nullptr. </p>
+<p>SensorsNode invalidates it once it is older than "forget_time"; the handler validates it again with new data. </p>
 
 </div>
 </div>
