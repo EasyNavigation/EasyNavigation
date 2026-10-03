@@ -15,6 +15,7 @@ find_package(nav_msgs REQUIRED)
 set(msg_files
   "msg/NavigationControl.msg"
   "msg/GoalManagerInfo.msg"
+  "msg/Heartbeat.msg"
 )
 
 rosidl_generate_interfaces(${PROJECT_NAME}

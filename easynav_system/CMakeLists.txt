@@ -23,6 +23,7 @@ find_package(OpenSSL REQUIRED)
 find_package(rcl_logging_interface REQUIRED)
 find_package(rcutils REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(diagnostic_msgs REQUIRED)
 
 set(dependencies
   rclcpp::rclcpp
@@ -55,6 +56,7 @@ set(package_dependencies
   tf2_geometry_msgs
   lifecycle_msgs
   std_msgs
+  diagnostic_msgs
   tf2
 )
 
@@ -67,6 +69,7 @@ add_library(${PROJECT_NAME} SHARED
   src/easynav_system/RealTime.cpp
   src/easynav_system/safety/ConfigurationFingerprint.cpp
   src/easynav_system/safety/ParameterFreezer.cpp
+  src/easynav_system/safety/RtMonitor.cpp
   src/easynav_system/safety/SafetySupervisor.cpp
 )
 target_include_directories(${PROJECT_NAME} PUBLIC
@@ -91,6 +94,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
   ${nav_msgs_TARGETS}
   ${lifecycle_msgs_TARGETS}
   ${std_msgs_TARGETS}
+  ${diagnostic_msgs_TARGETS}
 )
 target_link_libraries(${PROJECT_NAME} PRIVATE
   OpenSSL::Crypto

@@ -33,7 +33,7 @@ void DummyLocalizer::on_initialize()
   node->get_parameter<double>(plugin_name + ".cycle_time_rt", cycle_time_rt_);
   node->get_parameter<double>(plugin_name + ".cycle_time_nort", cycle_time_nort_);
 
-  tf_broadcaster_ = std::make_unique<tf2_ros::TransformBroadcaster>(get_node());
+  tf_broadcaster_ = std::make_unique<tf2_ros::TransformBroadcaster>(*get_node());
 }
 
 void DummyLocalizer::update_rt([[maybe_unused]] NavState & nav_state)

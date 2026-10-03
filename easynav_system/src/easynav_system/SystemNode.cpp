@@ -257,6 +257,7 @@ SystemNode::on_activate(const rclcpp_lifecycle::State & state)
 
   {
     std::lock_guard<std::mutex> lock(rt_mutex_);
+    safety_.on_activate();
     active_ = true;
   }
 
@@ -621,6 +622,11 @@ SystemNode::system_cycle_rt()
   std::lock_guard<std::mutex> lock(rt_mutex_);
   if (!active_) {
     return;
+  }
+
+  // First: a late cycle is seen even if what follows throws.
+  if (!safety_.cycle_rt(*nav_state_, std::chrono::steady_clock::now())) {
+    request_shutdown(safety_.failure());
   }
 
   RCLCPP_DEBUG(get_logger(), "SystemNode::system_cycle_rt\n%s", nav_state_->debug_string().c_str());

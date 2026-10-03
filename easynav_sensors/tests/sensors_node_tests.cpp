@@ -843,7 +843,7 @@ TEST_F(SensorsNodeTestCase, percept_fuse_all)
     });
 
   auto tf_buffer = easynav::RTTFBuffer::getInstance(test_node->get_clock());
-  tf2_ros::TransformListener tf_listener(*tf_buffer, test_node, true);
+  tf2_ros::TransformListener tf_listener(*tf_buffer, *test_node, true);
 
   auto tf_broadcaster = std::make_shared<tf2_ros::TransformBroadcaster>(*test_node);
   geometry_msgs::msg::TransformStamped transform;

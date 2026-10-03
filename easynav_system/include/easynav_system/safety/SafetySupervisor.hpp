@@ -20,8 +20,11 @@
 
 #include <atomic>
 #include <mutex>
+#include <optional>
 #include <string>
 
+#include "easynav_interfaces/msg/heartbeat.hpp"
+#include "rclcpp/clock.hpp"
 #include "rclcpp/logger.hpp"
 #include "rclcpp/publisher.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
@@ -31,6 +34,7 @@
 #include "easynav_controller/ControllerNode.hpp"
 #include "easynav_system/safety/ConfigurationFingerprint.hpp"
 #include "easynav_system/safety/ParameterFreezer.hpp"
+#include "easynav_system/safety/RtMonitor.hpp"
 
 namespace easynav::safety
 {
@@ -48,6 +52,11 @@ namespace easynav::safety
  *   configuration is frozen once configured, and reconfiguration requests are rejected.
  * - "safety.lock_memory" (default false, any mode): system_main locks the process memory; if
  *   RLIMIT_MEMLOCK does not allow it, configuring fails.
+ * - "safety.heartbeat.period" (s, default 0: off; required in safety mode): a Heartbeat is
+ *   published on "easynav_heartbeat" from the RT cycle, so it stops if that cycle does.
+ * - "safety.rt_monitor.*": an RT cycle starting more than "max_period_factor" periods after the
+ *   previous one is late; "max_late_cycles" in a row are an ERROR ("diagnostics.rt_cycle"), and in
+ *   safety mode EasyNav stops.
  *
  * Every configure, it fingerprints the configuration: a SHA-256 of every parameter, logged and
  * shared in NavState ("configuration_hash"), with the parameters saved in the ROS log directory
@@ -71,6 +80,18 @@ public:
   /// @brief Whether a reconfiguration may be requested; logs why not.
   bool allows_reconfiguration(const std::string & reason) const;
 
+  /// @brief On activation: the RT monitor starts over.
+  void on_activate();
+
+  /// @brief At the start of each RT cycle, at \p now: monitors it and publishes the heartbeat
+  /// when due. @return false if EasyNav must stop (see failure()), until on_activate().
+  bool cycle_rt(NavState & nav_state, RtMonitor::Clock::time_point now);
+
+  /// @brief Why cycle_rt() asked to stop.
+  [[nodiscard]] const std::string & failure() const {return failure_;}
+
+  [[nodiscard]] const RtMonitor & get_rt_monitor() const {return rt_monitor_;}
+
   /// @brief "safety.mode", as of the last configure.
   [[nodiscard]] bool is_safety_mode() const {return safety_mode_;}
 
@@ -90,7 +111,22 @@ private:
   /// @brief Not a lifecycle publisher: it publishes on configure, while still inactive.
   rclcpp::Publisher<std_msgs::msg::String>::SharedPtr configuration_pub_;
 
+  /// @brief Updates "diagnostics.rt_cycle" when the RT monitor's status changes.
+  void report_rt_status(NavState & nav_state, RtMonitor::Status status);
+
   ParameterFreezer freezer_;
+
+  // Real-time cycle: monitor and heartbeat, used only from the RT cycle once active.
+  RtMonitor rt_monitor_;
+  double max_period_factor_ {2.0};
+  std::optional<RtMonitor::Status> last_rt_report_;
+  std::string hardware_id_ {"system_node"};
+  std::string failure_;
+  rclcpp::Clock::SharedPtr clock_;
+  double heartbeat_period_ {0.0};
+  std::optional<RtMonitor::Clock::time_point> last_heartbeat_;
+  easynav_interfaces::msg::Heartbeat heartbeat_;
+  rclcpp::Publisher<easynav_interfaces::msg::Heartbeat>::SharedPtr heartbeat_pub_;
   std::string configuration_hash_;
   mutable std::mutex configuration_hash_mutex_;
 };
