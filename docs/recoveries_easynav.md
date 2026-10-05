@@ -352,7 +352,7 @@ has control — the worst moment to lose that protection. All recovery logic, bo
 `recovery_node`'s parameters) and runs them in its `cycle_rt()`, which `SystemNode` calls every RT
 cycle after the controller and right before publishing `cmd_vel`, regardless of who wrote it that
 cycle. The only reflex shipped today, **`CollisionSafetyReflex`**
-(`src/easynav_plugins/recoveries/easynav_diagnostic_recovery/reflexes/easynav_collision_safety_reflex`), replaces — not
+(`src/easynav_plugins/recoveries/easynav_diagnostic_recovery/src/easynav_diagnostic_recovery/reflexes/CollisionSafetyReflex.cpp`), replaces — not
 supplements — the old collision check that used to live inside `ControllerMethodBase`: it
 forward-projects the commanded `cmd_vel` against nearby point-cloud perceptions and, if continuing
 would cause a collision within the current braking distance, overwrites `cmd_vel` with a
@@ -372,7 +372,7 @@ the RT reaction itself ever depending on the slower cycle.
 **The transition from level 0 to level 1 is a condition on the data, not a cross-thread
 synchronization mechanism.** The RT and non-RT cycles run in parallel, in different threads, so an
 evaluator could read `NavState` mid-braking. `ObstacleTooCloseEvaluator`
-(`easynav_plugins/recoveries/easynav_diagnostic_recovery/evaluators/easynav_obstacle_too_close_evaluator`) illustrates the
+(`easynav_plugins/recoveries/easynav_diagnostic_recovery/src/easynav_diagnostic_recovery/evaluators/ObstacleTooCloseEvaluator.cpp`) illustrates the
 pattern actually implemented: it only raises an `ERROR` diagnostic once (1) the robot's measured
 velocity (`robot_pose.twist`) has stayed below a small epsilon for a configurable debounce window
 (`debounce_duration`, confirming the robot has actually stopped, not just that it is decelerating)
@@ -392,8 +392,8 @@ selected for it.
 | `DiagnosticRecoveryManager` (the diagnostic recovery system: reflexes, evaluators, mitigations, arbitration) | `src/easynav_plugins/recoveries/easynav_diagnostic_recovery/diagnostic_recovery` | any EasyNav plugin |
 | `SafetyReflexBase`, `RecoveryEvaluatorBase`, `RecoveryMitigationBase` (the interfaces `DiagnosticRecoveryManager` is composed of), `ObstacleProximity` (helper its plugins share) | `easynav_diagnostic_recovery` | `ControllerMethodBase`, `PlannerMethodBase`, etc. |
 | `DummyEvaluator`, `DummyMitigation`, `DummySafetyReflex` (reference/test plugins) | `easynav_diagnostic_recovery` | `DummyController`, `DummyPlanner`, ... |
-| `CollisionSafetyReflex` (reference reflex) | `src/easynav_plugins/recoveries/easynav_diagnostic_recovery/reflexes/easynav_collision_safety_reflex` | `easynav_simple_controller`, ... (replaces the collision check that lived inside `ControllerMethodBase`) |
-| `NoPathEvaluator`, `ControllerStuckEvaluator`, `ObstacleTooCloseEvaluator` (generic evaluators) | `src/easynav_plugins/recoveries/easynav_diagnostic_recovery/evaluators/...` | `easynav_simple_controller`, `easynav_vff_controller`, ... |
+| `CollisionSafetyReflex` (reference reflex) | `src/easynav_plugins/recoveries/easynav_diagnostic_recovery/src/easynav_diagnostic_recovery/reflexes/CollisionSafetyReflex.cpp` | `easynav_simple_controller`, ... (replaces the collision check that lived inside `ControllerMethodBase`) |
+| `NoPathEvaluator`, `ControllerStuckEvaluator`, `ObstacleTooCloseEvaluator` (generic evaluators) | `src/easynav_plugins/recoveries/easynav_diagnostic_recovery/src/easynav_diagnostic_recovery/evaluators/...` | `easynav_simple_controller`, `easynav_vff_controller`, ... |
 | `SafeRetreatRecovery`, `AdvanceRecovery`, `HumanAssistanceRecovery`, `CancelMissionRecovery` (generic mitigations) | `src/easynav_plugins/recoveries/easynav_diagnostic_recovery/mitigations/...` | ídem |
 | `AmclConvergenceEvaluator` / `AmclRelocalizeMitigation` (component-specialized recovery) | `easynav_costmap_localizer`, alongside `AMCLLocalizer` | New pattern — see §5.9 |
 
@@ -522,7 +522,7 @@ The three generic evaluators shipped today:
 
 | Evaluator | What it detects | `hardware_id` |
 |---|---|---|
-| `NoPathEvaluator` | `WARN` if the planner has not produced a `"path"` yet; `ERROR` if it produced an empty one; `OK` (silently) when there is no active goal | `"planner"` |
+| `NoPathEvaluator` | `WARN` if the planner has not produced a `"path"` yet; `ERROR` if its path stays empty for `debounce_duration` (2.0 s; a new goal empties it until the next planner cycle); `OK` (silently) when there is no active goal | `"planner"` |
 | `ObstacleTooCloseEvaluator` | `ERROR` once the robot has been measurably stopped for a debounce window **and** the nearest obstacle is still closer than `safe_distance` (see §5.2) | `"obstacle_proximity"` |
 | `ControllerStuckEvaluator` | `ERROR` when `cmd_vel` commands motion above `linear_velocity_threshold` but the robot's position has not moved by `progress_distance_threshold` for `stuck_time_threshold` seconds | `"controller_stuck"` |
 | `RosGraphEvaluator` | Discovers, every time the recovery node is activated, the subscriptions and velocity outputs (`Twist`/`TwistStamped`) of the EasyNav nodes (plugins included); each cycle, `ERROR` if a discovered subscription has no publisher of its type (except optional inputs in `ignored_topics`: `goal_pose`, `initialpose`, `*/incoming_*map`) or if no velocity output has a subscriber outside EasyNav (monitoring tools in `ignored_consumers`, by default the EasyNav TUI and `ros2 topic echo`, do not count). `OK` only reports the velocity topic and whether it is stamped or unstamped. Independent of the active goal; `WARN` during `startup_grace` s after activation and until a problem has lasted `error_debounce` s | `"ros_graph"` |
@@ -614,7 +614,7 @@ without knowing about `GoalManager` or any other concrete subsystem.
 ### 5.8 Mission-level escalation
 
 The final rung of the escalation ladder is **`CancelMissionRecovery`**
-(`easynav_plugins/recoveries/easynav_diagnostic_recovery/mitigations/easynav_cancel_mission_recovery`): a mitigation that
+(`easynav_plugins/recoveries/easynav_diagnostic_recovery/src/easynav_diagnostic_recovery/mitigations/CancelMissionRecovery.cpp`): a mitigation that
 accepts any `ERROR` diagnostic no other mitigation resolved, does not move the robot
 (`requires_control() == false`), and has no reference to `GoalManager`. `on_start()` writes a
 one-shot `"mission_cancel_requested"` key in `NavState`; `DiagnosticRecoveryManager` reads it, builds
@@ -629,7 +629,7 @@ reselection.
 Some diagnostics cannot be fixed by an automatic mitigation, by a human clearing the robot's
 surroundings, or by cancelling the mission — e.g. a miswired ROS graph (`RosGraphEvaluator`):
 EasyNav cannot navigate correctly as configured. **`ShutdownRecovery`**
-(`easynav_plugins/recoveries/easynav_diagnostic_recovery/mitigations/easynav_shutdown_recovery`) handles them by terminating
+(`easynav_plugins/recoveries/easynav_diagnostic_recovery/src/easynav_diagnostic_recovery/mitigations/ShutdownRecovery.cpp`) handles them by terminating
 EasyNav in an orderly way, following the ROS 2 managed-node design, where an error in `Active` is
 the one case in which a node leaves a primary state without an external request, and
 `ErrorProcessing` failing leads to `Finalized`:
@@ -805,7 +805,7 @@ recovery_node:
       plugin: easynav_diagnostic_recovery/DiagnosticRecoveryManager
       safety_reflex_types: [collision]
       collision:
-        plugin: easynav_collision_safety_reflex/CollisionSafetyReflex
+        plugin: easynav_diagnostic_recovery/CollisionSafetyReflex
       evaluator_types: [no_path, obstacle_close, amcl_convergence, controller_stuck, ros_graph]
       mitigation_types: [retreat, amcl_relocalize, advance, shutdown, human_assistance, cancel_mission]
       # priorities: retreat / advance / amcl_relocalize = 10; shutdown = 100;
