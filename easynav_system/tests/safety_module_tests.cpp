@@ -242,6 +242,52 @@ TEST_F(SafetyModuleTest, LoadedPluginsComeFromTheTypesParameters)
   EXPECT_EQ(plugins.find("Unused"), std::string::npos) << plugins;
 }
 
+TEST_F(SafetyModuleTest, DumpListsUninitializedParametersWithoutThrowing)
+{
+  // Declared with a type but no value, as robot_localization does for its optional inputs
+  // ("gps1", "odom1"...): reading one throws, so the dump must not read them all at once.
+  auto n = node("n");
+  n->declare_parameter("gps0", std::string("/gps/fix"));
+  n->declare_parameter("gps1", rclcpp::ParameterType::PARAMETER_STRING);
+  n->declare_parameter("odom1", rclcpp::ParameterType::PARAMETER_STRING);
+
+  std::string dump;
+  ASSERT_NO_THROW(dump = easynav::safety::configuration_dump({{"n", n}}));
+  EXPECT_NE(dump.find("n/gps0 (string) = \"/gps/fix\"\n"), std::string::npos) << dump;
+  EXPECT_NE(dump.find("n/gps1 (uninitialized)\n"), std::string::npos) << dump;
+  EXPECT_NE(dump.find("n/odom1 (uninitialized)\n"), std::string::npos) << dump;
+  EXPECT_LT(dump.find("n/gps0 "), dump.find("n/gps1 "));  // still sorted by name
+  EXPECT_LT(dump.find("n/gps1 "), dump.find("n/odom1 "));
+}
+
+TEST_F(SafetyModuleTest, AnUninitializedParameterChangesTheDump)
+{
+  auto with = node("n1");
+  with->declare_parameter("a", 1);
+  with->declare_parameter("b", rclcpp::ParameterType::PARAMETER_STRING);
+  auto without = node("n2");
+  without->declare_parameter("a", 1);
+  auto empty = node("n3");
+  empty->declare_parameter("a", 1);
+  empty->declare_parameter("b", std::string(""));
+
+  const auto d_with = easynav::safety::configuration_dump({{"n", with}});
+  EXPECT_NE(d_with, easynav::safety::configuration_dump({{"n", without}}));
+  EXPECT_NE(d_with, easynav::safety::configuration_dump({{"n", empty}})) << "unset is not \"\"";
+}
+
+TEST_F(SafetyModuleTest, LoadedPluginsSkipAnUninitializedTypesParameter)
+{
+  auto n = node("controller_node");
+  n->declare_parameter("controller_types", std::vector<std::string>{"ctrl"});
+  n->declare_parameter("ctrl.plugin", std::string("pkg/Controller"));
+  n->declare_parameter("extra_types", rclcpp::ParameterType::PARAMETER_STRING_ARRAY);
+
+  std::string plugins;
+  ASSERT_NO_THROW(plugins = easynav::safety::loaded_plugins({{"controller_node", n}}));
+  EXPECT_NE(plugins.find("controller_node: ctrl [pkg/Controller]"), std::string::npos) << plugins;
+}
+
 TEST_F(SafetyModuleTest, DumpFileNameIncludesTheNamespace)
 {
   EXPECT_EQ(easynav::safety::dump_file_name("", "abc"), "easynav_configuration_abc.txt");
@@ -332,6 +378,26 @@ TEST_F(SafetyModuleTest, AnAtomicSetWithOneFrozenChangeIsRejectedWhole)
     {rclcpp::Parameter("other", 1), rclcpp::Parameter("speed", 0.9)});
   EXPECT_FALSE(result.successful);
   EXPECT_DOUBLE_EQ(a->get_parameter("speed").as_double(), 0.5);
+}
+
+TEST_F(SafetyModuleTest, FreezingToleratesUninitializedParameters)
+{
+  auto a = node("a");
+  a->declare_parameter("speed", 0.5);
+  a->declare_parameter("gps1", rclcpp::ParameterType::PARAMETER_STRING);
+  easynav::safety::ParameterFreezer freezer;
+  ASSERT_NO_THROW(freezer.freeze({{"a", a}}));
+  freezer.accept_new_parameters(false);
+
+  // Frozen as unset: giving it a value is a change, and so is changing the others.
+  EXPECT_FALSE(a->set_parameter(rclcpp::Parameter("gps1", std::string("/gps/fix"))).successful);
+  EXPECT_THROW(a->get_parameter("gps1"), rclcpp::exceptions::ParameterUninitializedException);
+  EXPECT_FALSE(a->set_parameter(rclcpp::Parameter("speed", 0.9)).successful);
+  EXPECT_TRUE(a->set_parameter(rclcpp::Parameter("speed", 0.5)).successful);
+
+  // Refreezing (EasyNav reconfigured) keeps working with it still unset.
+  freezer.accept_new_parameters(true);
+  EXPECT_NO_THROW(freezer.freeze({{"a", a}}));
 }
 
 // ─── SafetySupervisor ───────────────────────────────────────────────────────────────────────

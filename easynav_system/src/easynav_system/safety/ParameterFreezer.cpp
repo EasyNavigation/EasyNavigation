@@ -30,8 +30,13 @@ ParameterFreezer::freeze(const Nodes & nodes)
   std::lock_guard<std::mutex> lock(mutex_);
   for (const auto & [name, node] : nodes) {
     auto & frozen = frozen_[name];
-    for (const auto & parameter : node->get_parameters(node->list_parameters({}, 0).names)) {
-      frozen[parameter.get_name()] = parameter.get_parameter_value();
+    for (const auto & parameter_name : node->list_parameters({}, 0).names) {
+      // Declared with a type but no value: frozen as unset, so giving it one is a change.
+      try {
+        frozen[parameter_name] = node->get_parameter(parameter_name).get_parameter_value();
+      } catch (const rclcpp::exceptions::ParameterUninitializedException &) {
+        frozen[parameter_name] = rclcpp::ParameterValue();
+      }
     }
     if (installed) {
       continue;

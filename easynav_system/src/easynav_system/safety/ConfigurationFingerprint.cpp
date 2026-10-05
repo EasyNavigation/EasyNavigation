@@ -133,7 +133,15 @@ configuration_dump(const Nodes & nodes)
   for (const auto & [name, node] : nodes) {
     auto names = node->list_parameters({}, 0).names;  // 0: any depth
     std::sort(names.begin(), names.end());
-    for (const auto & parameter : node->get_parameters(names)) {
+    for (const auto & parameter_name : names) {
+      // Declared with a type but no value (legitimate): reading it throws.
+      rclcpp::Parameter parameter;
+      try {
+        parameter = node->get_parameter(parameter_name);
+      } catch (const rclcpp::exceptions::ParameterUninitializedException &) {
+        dump << name << "/" << parameter_name << " (uninitialized)\n";
+        continue;
+      }
       dump << name << "/" << parameter.get_name() << " (" << type_name(parameter.get_type()) <<
         ") = " << value_of(parameter) << "\n";
     }
@@ -162,12 +170,19 @@ loaded_plugins(const Nodes & nodes)
   std::ostringstream plugins;
   for (const auto & [name, node] : nodes) {
     for (const auto & types : node->list_parameters({}, 0).names) {
-      if (types.size() < 6 || types.compare(types.size() - 6, 6, "_types") != 0 ||
-        node->get_parameter(types).get_type() != rclcpp::ParameterType::PARAMETER_STRING_ARRAY)
-      {
+      if (types.size() < 6 || types.compare(types.size() - 6, 6, "_types") != 0) {
         continue;
       }
-      const auto aliases = node->get_parameter(types).as_string_array();
+      rclcpp::Parameter types_parameter;
+      try {
+        types_parameter = node->get_parameter(types);
+      } catch (const rclcpp::exceptions::ParameterUninitializedException &) {
+        continue;
+      }
+      if (types_parameter.get_type() != rclcpp::ParameterType::PARAMETER_STRING_ARRAY) {
+        continue;
+      }
+      const auto aliases = types_parameter.as_string_array();
       for (const auto & alias : aliases) {
         std::string plugin;
         node->get_parameter(alias + ".plugin", plugin);
