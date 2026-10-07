@@ -46,6 +46,7 @@ set(package_dependencies
   rclcpp_lifecycle
   easynav_interfaces
   easynav_common
+  easynav_core
   easynav_controller
   easynav_localizer
   easynav_maps_manager
@@ -157,5 +158,7 @@ ament_export_dependencies(
   nav_msgs
   tf2_geometry_msgs
   lifecycle_msgs
+  std_msgs
+  diagnostic_msgs
 )
 ament_package()

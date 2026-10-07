@@ -16,7 +16,7 @@ setup(
         ('share/ament_index/resource_index/packages', [f'resource/{package_name}']),
         ('share/' + package_name, ['package.xml', 'README.md']),
     ],
-    install_requires=['setuptools', 'rich>=13.3.0', 'pydantic>=2.0.0'],
+    install_requires=['setuptools', 'rich>=13.3.0'],
     zip_safe=False,
     maintainer='Francisco Martín Rico',
     maintainer_email='fmrico@gmail.com',

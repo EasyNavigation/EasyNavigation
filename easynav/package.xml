@@ -22,14 +22,15 @@
   <depend>easynav_controller</depend>
   <depend>easynav_core</depend>
   <depend>easynav_interfaces</depend>
+  <depend>easynav_localizer</depend>
   <depend>easynav_maps_manager</depend>
   <depend>easynav_planner</depend>
   <depend>easynav_recovery</depend>
-  <depend>easynav_localizer</depend>
   <depend>easynav_sensors</depend>
-  <depend>easynav_support_py</depend>
   <depend>easynav_system</depend>
-  <depend>easynav_tools</depend>
+
+  <exec_depend>easynav_support_py</exec_depend>
+  <exec_depend>easynav_tools</exec_depend>
 
   <export>
     <build_type>ament_cmake</build_type>

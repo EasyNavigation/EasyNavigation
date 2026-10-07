@@ -47,8 +47,12 @@ void * operator new(std::size_t size)
   if (void * p = std::malloc(size ? size : 1)) {return p;}
   throw std::bad_alloc();
 }
+// GCC (-O2) doesn't see that the replaced operator new uses malloc
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmismatched-new-delete"
 void operator delete(void * p) noexcept {std::free(p);}
 void operator delete(void * p, std::size_t) noexcept {std::free(p);}
+#pragma GCC diagnostic pop
 
 namespace
 {

@@ -16,18 +16,20 @@
   <author>Francisco Martín Rico</author>
   <author>Francisco Miguel Moreno Olivo</author>
 
-  <depend>rclpy</depend>
-  <depend>rosidl_runtime_py</depend>
+  <depend>diagnostic_msgs</depend>
   <depend>geometry_msgs</depend>
   <depend>rcl_interfaces</depend>
-  <depend>diagnostic_msgs</depend>
+  <depend>rclpy</depend>
+  <depend>rosidl_runtime_py</depend>
 
+  <exec_depend>ament_index_python</exec_depend>
   <exec_depend>easynav_interfaces</exec_depend>
   <exec_depend>easynav_support_py</exec_depend>
-  <exec_depend>ros2cli</exec_depend>
+  <exec_depend>python3-platformdirs</exec_depend>
   <exec_depend>python3-rich</exec_depend>
   <exec_depend>python3-typing-extensions</exec_depend>
-  <exec_depend>python3-platformdirs</exec_depend>
+  <exec_depend>ros2cli</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
 
   <!-- Test and launch deps -->
   <test_depend>ament_cmake_pytest</test_depend>
@@ -35,6 +37,8 @@
   <test_depend>ament_flake8</test_depend>
   <test_depend>ament_pep257</test_depend>
   <test_depend>ament_xmllint</test_depend>
+  <test_depend>builtin_interfaces</test_depend>
+  <test_depend>nav_msgs</test_depend>
   <test_depend>python3-pytest</test_depend>
 
   <export>
