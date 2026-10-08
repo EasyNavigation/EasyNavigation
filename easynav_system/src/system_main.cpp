@@ -29,6 +29,7 @@
 #include "easynav_system/RealTime.hpp"
 #include "easynav_system/SystemNode.hpp"
 #include "easynav_common/RTTFBuffer.hpp"
+#include "easynav_common/TransformListener.hpp"
 #include "easynav_common/YTSession.hpp"
 
 #include "rclcpp/rclcpp.hpp"
@@ -181,7 +182,7 @@ int main(int argc, char ** argv)
             "priority.", error.c_str());
         }
 
-        tf2_ros::TransformListener tf_listener(*tf_buffer, *tf_node, true);
+        auto tf_listener = easynav::make_transform_listener(*tf_buffer, tf_node, true);
 
         rclcpp::WallRate rate(rt_freq);
         while (!g_stop.load(std::memory_order_relaxed)) {

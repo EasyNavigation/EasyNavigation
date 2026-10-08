@@ -1143,8 +1143,10 @@ TEST_F(CoreMethodTestCase, NoUpdateRunsBeforeTheLastKnownPoseHookFinishes)
 {
   // The RT and non-RT loops run concurrently: whichever comes second waits for the hook.
   for (int round = 0; round < 5; ++round) {
-    auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>(
-      "test_last_pose_race_node_" + std::to_string(round));
+    // Appended, not "literal" + to_string(): GCC 15 + LTO flags that with -Wstringop-overflow
+    std::string node_name = "test_last_pose_race_node_";
+    node_name += std::to_string(round);
+    auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>(node_name);
     auto localizer = std::make_shared<RecordingLocalizer>();
     localizer->hook_delay = std::chrono::milliseconds(50);
     localizer->initialize(node, "loc");

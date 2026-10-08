@@ -27,7 +27,11 @@
 #include <utility>
 #include <vector>
 
+#if __has_include("cv_bridge/cv_bridge.hpp")
 #include "cv_bridge/cv_bridge.hpp"
+#else
+#include "cv_bridge/cv_bridge.h"  // Humble: no .hpp header yet
+#endif
 
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 
