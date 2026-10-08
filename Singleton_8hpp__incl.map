@@ -1,9 +1,7 @@
 <map id="easynav_common/include/easynav_common/Singleton.hpp" name="easynav_common/include/easynav_common/Singleton.hpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="18,5,230,46"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,94,73,120"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="105,48,65,85,61,81,101,44"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="96,94,152,120"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="127,46,127,78,122,78,122,46"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="176,94,227,120"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="145,45,181,81,177,84,142,48"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,218,46"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="45,94,101,120"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="104,48,88,81,83,79,100,45"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="124,94,176,120"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="123,45,140,79,135,81,119,48"/>
 </map>

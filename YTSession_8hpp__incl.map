@@ -6,12 +6,10 @@
 <area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="191,48,155,84,151,81,187,45"/>
 <area shape="rect" id="Node000004" href="$Singleton_8hpp.html" title=" " alt="" coords="181,94,389,120"/>
 <area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="229,45,264,81,261,84,225,48"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="414,94,533,120"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="275,44,418,86,417,92,273,49"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="166,168,234,193"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="272,122,227,160,224,156,269,118"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="257,168,313,193"/>
-<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="288,120,288,152,282,152,282,120"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="337,168,388,193"/>
-<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="300,118,340,155,337,159,296,122"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="414,94,533,120"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="275,44,418,86,417,92,273,49"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="218,168,275,193"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="281,121,263,155,258,153,276,119"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="298,168,350,193"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="294,119,312,153,308,155,289,121"/>
 </map>

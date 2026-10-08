@@ -56,7 +56,7 @@ var searchData=
   ['sha256_5fhex_53',['sha256_hex',['../namespaceeasynav_1_1safety.html#a1bb8c12558457987eef1a38eca1c54f1',1,'easynav::safety']]],
   ['singleton_54',['Singleton',['../classeasynav_1_1Singleton.html',1,'Singleton&lt; C &gt;'],['../classeasynav_1_1Singleton.html#a48d1fc15e788981ec5f7fe3e5c8641d7',1,'easynav::Singleton::Singleton()=default'],['../classeasynav_1_1Singleton.html#a4261e9a2454202cd68bdb9c2fa4bf294',1,'easynav::Singleton::Singleton(const Singleton &amp;)=delete']]],
   ['singleton_2ehpp_55',['Singleton.hpp',['../Singleton_8hpp.html',1,'']]],
-  ['singleton_3c_20c_20_3e_3a_3ainstance_5f_56',['instance_',['../namespaceeasynav.html#af63183b88c39f568dffa0d77e441e468',1,'easynav']]],
+  ['singleton_3c_20c_20_3e_3a_3ainstance_5f_56',['instance_',['../namespaceeasynav.html#af5d93a7155a4e3ec1d05d41db1e13101',1,'easynav']]],
   ['singleton_3c_20c_20_3e_3a_3amutex_5f_57',['mutex_',['../namespaceeasynav.html#aea6f80498fbc28235e7a690b577c46fd',1,'easynav']]],
   ['singleton_3c_20robotgeometryregistry_20_3e_58',['Singleton&lt; RobotGeometryRegistry &gt;',['../classeasynav_1_1Singleton.html',1,'easynav']]],
   ['singleton_3c_20rttfbuffer_20_3e_59',['Singleton&lt; RTTFBuffer &gt;',['../classeasynav_1_1Singleton.html',1,'easynav']]],
