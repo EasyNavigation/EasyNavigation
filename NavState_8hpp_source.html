@@ -519,9 +519,9 @@ document.addEventListener('DOMContentLoaded', codefold.init);
 <div class="foldopen" id="foldopen00525" data-start="{" data-end="}">
 <div class="line"><a id="l00525" name="l00525"></a><span class="lineno"><a class="line" href="classeasynav_1_1NavState.html#a7fdd1e3b7c0cc5f8ae63d98ef8496f30">  525</a></span>  <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classeasynav_1_1NavState.html#a7fdd1e3b7c0cc5f8ae63d98ef8496f30">print_stacktrace</a>()</div>
 <div class="line"><a id="l00526" name="l00526"></a><span class="lineno">  526</span>  {</div>
-<div class="line"><a id="l00527" name="l00527"></a><span class="lineno">  527</span>    <span class="keywordtype">void</span> *array[50];</div>
+<div class="line"><a id="l00527" name="l00527"></a><span class="lineno">  527</span>    <span class="keywordtype">void</span> * array[50];</div>
 <div class="line"><a id="l00528" name="l00528"></a><span class="lineno">  528</span>    <span class="keywordtype">int</span> size = backtrace(array, 50);</div>
-<div class="line"><a id="l00529" name="l00529"></a><span class="lineno">  529</span>    <span class="keywordtype">char</span> **strings = backtrace_symbols(array, size);</div>
+<div class="line"><a id="l00529" name="l00529"></a><span class="lineno">  529</span>    <span class="keywordtype">char</span> ** strings = backtrace_symbols(array, size);</div>
 <div class="line"><a id="l00530" name="l00530"></a><span class="lineno">  530</span>    std::cerr &lt;&lt; <span class="stringliteral">&quot;\nStack trace:\n&quot;</span>;</div>
 <div class="line"><a id="l00531" name="l00531"></a><span class="lineno">  531</span>    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; size; ++i) {</div>
 <div class="line"><a id="l00532" name="l00532"></a><span class="lineno">  532</span>      std::cerr &lt;&lt; strings[i] &lt;&lt; std::endl;</div>
