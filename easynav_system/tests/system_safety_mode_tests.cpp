@@ -407,8 +407,10 @@ TEST_F(SystemSafetyModeTest, SafetyModeFreezesTheConfiguration)
     subnode("planner_node")->set_parameter(rclcpp::Parameter("use_sim_time", true)).successful);
   EXPECT_FALSE(system_node_->set_parameter(rclcpp::Parameter("safety.mode", false)).successful);
   EXPECT_FALSE(
-    system_node_->set_parameter(rclcpp::Parameter("safety.plc_limits.max_linear_vel",
-    5.0)).successful);
+    system_node_->set_parameter(
+      rclcpp::Parameter(
+        "safety.plc_limits.max_linear_vel",
+        5.0)).successful);
 
   // ...and so is a new parameter; setting the same value is not.
   EXPECT_TRUE(
@@ -450,7 +452,8 @@ TEST_F(SystemSafetyModeTest, ConfigurationHashIsAStableSha256OfEveryParameter)
   EXPECT_EQ(system_node_->get_nav_state()->get_safe<std::string>("configuration_hash"), hash);
 
   const auto dump = system_node_->get_configuration_dump();
-  EXPECT_NE(dump.find("controller_node/robot_limits.max_linear_vel (double) = "),
+  EXPECT_NE(
+    dump.find("controller_node/robot_limits.max_linear_vel (double) = "),
     std::string::npos);
   EXPECT_NE(dump.find("system_node/safety.mode (bool) = false"), std::string::npos);
 
@@ -692,7 +695,9 @@ TEST_F(SystemSafetyModeTest, AnOldRobotPoseBrakesTheRobotInSafetyMode)
   if (!easynav::check_real_time_priority(easynav::kRealTimePriority).empty()) {
     GTEST_SKIP() << "the safety mode needs real-time scheduling, not allowed here";
   }
-  start(safe({
+  start(
+    safe(
+  {
     "controller_types:=['ctrl']",
     "ctrl.plugin:=easynav_controller/FaultyController",
     "ctrl.fault:='none'",
@@ -821,7 +826,8 @@ TEST_F(SystemSafetyChannelTest, AProtectiveStopStopsTheRobotAndItResumesFromZero
     EXPECT_EQ(*it, 0.0);
   }
   EXPECT_EQ(safety_level(), diagnostic_msgs::msg::DiagnosticStatus::WARN);
-  EXPECT_TRUE(system_node_->get_nav_state()->get_safe<easynav::SafetyChannelState>(
+  EXPECT_TRUE(
+    system_node_->get_nav_state()->get_safe<easynav::SafetyChannelState>(
       easynav::kSafetyStatusKey).protective_stop);
   EXPECT_EQ(system_node_->get_current_state().id(), State::PRIMARY_STATE_ACTIVE);
 
@@ -846,7 +852,8 @@ TEST_F(SystemSafetyChannelTest, LosingTheSafetyStatusStopsTheRobot)
   EXPECT_EQ(safety_level(), diagnostic_msgs::msg::DiagnosticStatus::ERROR);
   EXPECT_NE(safety_diagnostic()->message.find("No safety status for more than"), std::string::npos)
     << safety_diagnostic()->message;
-  EXPECT_TRUE(system_node_->get_nav_state()->get_safe<easynav::SafetyChannelState>(
+  EXPECT_TRUE(
+    system_node_->get_nav_state()->get_safe<easynav::SafetyChannelState>(
       easynav::kSafetyStatusKey).status_lost);
 }
 
@@ -876,12 +883,13 @@ TEST_F(SystemSafetyChannelTest, ASpeedLimitSlowsTheRobotDownAndIsLifted)
 
 TEST_F(SystemSafetyChannelTest, WithoutSafetyStatusNothingChanges)
 {
-  start({
+  start(
+  {
     "controller_types:=['ctrl']",
     "ctrl.plugin:=easynav_controller/FaultyController",
     "ctrl.fault:='none'",
     "robot_limits.max_linear_acc:=10.0",
-    });
+  });
   ASSERT_TRUE(configure());
   ASSERT_TRUE(activate());
   listen_cmd_vel();

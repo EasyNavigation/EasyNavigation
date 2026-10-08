@@ -16,6 +16,7 @@
 /// \brief Implementation of the PlannerNode class.
 
 #include <algorithm>
+#include <iterator>
 #include <cmath>
 
 #include "pluginlib/class_loader.hpp"
@@ -122,10 +123,10 @@ PlannerNode::check_path(NavState & nav_state)
   const bool finite = std::all_of(
     path.poses.begin(), path.poses.end(), [](const geometry_msgs::msg::PoseStamped & p) {
       const auto & q = p.pose;
-      return std::isfinite(q.position.x) && std::isfinite(q.position.y) &&
-             std::isfinite(q.position.z) && std::isfinite(q.orientation.x) &&
-             std::isfinite(q.orientation.y) && std::isfinite(q.orientation.z) &&
-             std::isfinite(q.orientation.w);
+      const double values[] = {q.position.x, q.position.y, q.position.z, q.orientation.x,
+        q.orientation.y, q.orientation.z, q.orientation.w};
+      const auto is_finite = [](double v) {return std::isfinite(v);};
+      return std::all_of(std::begin(values), std::end(values), is_finite);
     });
   if (!finite) {
     path.poses.clear();  // Nothing to follow: controllers stop.

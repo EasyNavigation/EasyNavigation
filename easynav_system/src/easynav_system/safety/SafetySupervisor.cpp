@@ -180,13 +180,15 @@ SafetySupervisor::check_controller(ControllerNode & controller) const
           " exceeds system_node." + safety + " = " + std::to_string(limit));
       }
     };
-  check("max_linear_vel", limits.max_linear_vel, max_linear_vel_,
-      "safety.plc_limits.max_linear_vel");
-  check("min_linear_vel", limits.min_linear_vel, max_linear_vel_,
-      "safety.plc_limits.max_linear_vel");
+  check(
+    "max_linear_vel", limits.max_linear_vel, max_linear_vel_,
+    "safety.plc_limits.max_linear_vel");
+  check(
+    "min_linear_vel", limits.min_linear_vel, max_linear_vel_,
+    "safety.plc_limits.max_linear_vel");
   check(
     "max_angular_vel", limits.max_angular_vel, max_angular_vel_,
-      "safety.plc_limits.max_angular_vel");
+    "safety.plc_limits.max_angular_vel");
 
   for (const auto & error : errors) {
     RCLCPP_ERROR(logger_, "Invalid parameter: %s", error.c_str());

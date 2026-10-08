@@ -308,7 +308,8 @@ TEST_F(MethodBaseScheduleTest, BlockingLongerThanAWindowIsReported)
   }
   ASSERT_TRUE(diagnostic("diagnostics.plugin.rt_rate"));
   EXPECT_EQ(diagnostic("diagnostics.plugin.rt_rate")->level, DiagnosticStatus::WARN);
-  EXPECT_NE(diagnostic("diagnostics.plugin.rt_rate")->message.find("not kept for"),
+  EXPECT_NE(
+    diagnostic("diagnostics.plugin.rt_rate")->message.find("not kept for"),
     std::string::npos);
 }
 
@@ -328,7 +329,8 @@ TEST_F(MethodBaseScheduleTest, ResetClearsAReportedSlowness)
   start(50.0);
   run_rt_cycles(0.1, 4.0);
   ASSERT_EQ(diagnostic("diagnostics.plugin.rt_rate")->level, DiagnosticStatus::WARN);
-  ASSERT_NE(diagnostic("diagnostics.plugin.rt_rate")->message.find("not kept for"),
+  ASSERT_NE(
+    diagnostic("diagnostics.plugin.rt_rate")->message.find("not kept for"),
     std::string::npos);
   method_->reset_rate_monitors();
   rt_cycle();
@@ -342,7 +344,8 @@ TEST_F(MethodBaseScheduleTest, WithoutResetTheTimeInactiveIsSlow)
   set_time(now_ + 10.0);
   rt_cycle();
   EXPECT_EQ(diagnostic("diagnostics.plugin.rt_rate")->level, DiagnosticStatus::WARN);
-  EXPECT_NE(diagnostic("diagnostics.plugin.rt_rate")->message.find("not kept for"),
+  EXPECT_NE(
+    diagnostic("diagnostics.plugin.rt_rate")->message.find("not kept for"),
     std::string::npos);
 }
 
@@ -351,7 +354,8 @@ TEST_F(MethodBaseScheduleTest, ANewInstanceReplacesAStaleWarning)
   start(50.0);
   run_rt_cycles(0.1, 4.0);
   ASSERT_EQ(diagnostic("diagnostics.plugin.rt_rate")->level, DiagnosticStatus::WARN);
-  ASSERT_NE(diagnostic("diagnostics.plugin.rt_rate")->message.find("not kept for"),
+  ASSERT_NE(
+    diagnostic("diagnostics.plugin.rt_rate")->message.find("not kept for"),
     std::string::npos);
 
   // Reconfigured: the same plugin, initialized again

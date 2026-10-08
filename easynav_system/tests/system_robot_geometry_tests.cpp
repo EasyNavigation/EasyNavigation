@@ -92,7 +92,8 @@ TEST_F(SystemRobotGeometryTest, DefaultsWhenNotConfigured)
 
 TEST_F(SystemRobotGeometryTest, ConfiguredGeometryIsShared)
 {
-  auto system_node = configure({
+  auto system_node = configure(
+  {
     {"robot_geometry.radius", 0.7},
     {"robot_geometry.inscribed_radius", 0.5},
     {"robot_geometry.height", 1.2}});

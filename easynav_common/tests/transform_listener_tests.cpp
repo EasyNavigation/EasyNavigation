@@ -118,7 +118,8 @@ TEST_F(TransformListenerTest, WithoutSpinThreadTheNodeMustBeSpun)
   // Nobody spins the node: the transform cannot arrive
   EXPECT_FALSE(wait_for_transform(buffer, "map", "base_footprint", nullptr, 500ms));
   // Once the node is spun, it does
-  EXPECT_TRUE(wait_for_transform(
+  EXPECT_TRUE(
+    wait_for_transform(
       buffer, "map", "base_footprint", node->get_node_base_interface()));
 }
 
