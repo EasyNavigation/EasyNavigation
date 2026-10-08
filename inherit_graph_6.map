@@ -1,3 +1,9 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classeasynav_1_1GoalManager.html" title="Handles navigation goals, their lifecycle, and command interface." alt="" coords="5,5,104,31"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,82,86,107"/>
+<area shape="rect" id="Node000001" href="$structeasynav_1_1detail_1_1has__required__interfaces_3_01T_00_01std_1_1void__t_3_01typename_01T_1_1RequiredInterfaces_01_4_01_4.html" title=" " alt="" coords="134,5,307,61"/>
+<area shape="poly" id="edge5_Node000000_Node000001" title=" " alt="" coords="98,73,138,59,140,64,100,78"/>
+<area shape="rect" id="Node000003" href="$structeasynav_1_1detail_1_1has__required__interfaces.html" title=" " alt="" coords="141,85,300,126"/>
+<area shape="poly" id="edge6_Node000000_Node000003" title=" " alt="" coords="102,95,140,98,140,103,101,101"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="8,20,83,46"/>
+<area shape="poly" id="edge7_Node000002_Node000001" title=" " alt="" coords="98,30,133,30,133,36,98,36"/>
 </map>

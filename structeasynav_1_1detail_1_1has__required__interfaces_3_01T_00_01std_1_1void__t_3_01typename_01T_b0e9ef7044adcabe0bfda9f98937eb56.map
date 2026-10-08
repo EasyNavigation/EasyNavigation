@@ -1,0 +1,7 @@
+<map id="has_required_interfaces&lt; T, std::void_t&lt; typename T::RequiredInterfaces &gt; &gt;" name="has_required_interfaces&lt; T, std::void_t&lt; typename T::RequiredInterfaces &gt; &gt;">
+<area shape="rect" id="Node000001" title=" " alt="" coords="10,79,183,135"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,86,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="63,43,83,77,78,80,58,46"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="110,5,184,31"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="134,46,114,80,110,77,130,43"/>
+</map>

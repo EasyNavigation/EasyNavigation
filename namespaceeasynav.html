@@ -104,6 +104,7 @@ document.addEventListener('DOMContentLoaded', codefold.init);
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-namespaces" class="groupheader"><a id="namespaces" name="namespaces"></a>
 Namespaces</h2></td></tr>
+<tr class="memitem:detail" id="r_detail"><td class="memItemLeft">namespace &#160;</td><td class="memItemRight"><a class="el" href="namespaceeasynav_1_1detail.html">detail</a></td></tr>
 <tr class="memitem:safety" id="r_safety"><td class="memItemLeft">namespace &#160;</td><td class="memItemRight"><a class="el" href="namespaceeasynav_1_1safety.html">safety</a></td></tr>
 <tr class="memitem:testing" id="r_testing"><td class="memItemLeft">namespace &#160;</td><td class="memItemRight"><a class="el" href="namespaceeasynav_1_1testing.html">testing</a></td></tr>
 </table><table class="memberdecls">
@@ -242,6 +243,8 @@ Functions</h2></td></tr>
 <tr class="memdesc:ae62c28879855d52fbb5e48e976d4c306"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the latest timestamp among a set of odometry perceptions.  <br /></td></tr>
 <tr class="memitem:a41c264598339537f447072e0e490fb6f" id="r_a41c264598339537f447072e0e490fb6f"><td class="memItemLeft">rclcpp::Time&#160;</td><td class="memItemRight"><a class="el" href="#a41c264598339537f447072e0e490fb6f">get_latest_point_perceptions_stamp</a> (const <a class="el" href="#aa83db8e6a9c3d5f8bff1fe325cf9e99a">PointPerceptions</a> &amp;perceptions)</td></tr>
 <tr class="memdesc:a41c264598339537f447072e0e490fb6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the latest timestamp among a set of point-based perceptions.  <br /></td></tr>
+<tr class="memitem:a4b806bd07739d0c517b7911da88b50f5" id="r_a4b806bd07739d0c517b7911da88b50f5"><td class="memItemLeft">std::filesystem::path&#160;</td><td class="memItemRight"><a class="el" href="#a4b806bd07739d0c517b7911da88b50f5">get_package_share_path</a> (const std::string &amp;package_name)</td></tr>
+<tr class="memdesc:a4b806bd07739d0c517b7911da88b50f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the share directory of <code class="param">package_name</code>.  <br /></td></tr>
 <tr class="memitem:a85608546062d3c1c397712b595f181fd" id="r_a85608546062d3c1c397712b595f181fd"><td class="memTemplParams" colspan="2">template&lt;typename T = PerceptionBase&gt; </td></tr>
 <tr class="memitem:a85608546062d3c1c397712b595f181fd template"><td class="memItemLeft">std::vector&lt; std::shared_ptr&lt; T &gt; &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a85608546062d3c1c397712b595f181fd">get_perceptions</a> (const std::vector&lt; <a class="el" href="#a4d10e036523aceea280b71de936e1c41">PerceptionBasePtr</a> &gt; &amp;src)</td></tr>
 <tr class="memdesc:a85608546062d3c1c397712b595f181fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extracts a homogeneous collection of perceptions of type <code class="param">T</code> from a heterogeneous vector.  <br /></td></tr>
@@ -250,6 +253,9 @@ Functions</h2></td></tr>
 <tr class="memdesc:a60356f07b901b23327436276a7c57883"><td class="mdescLeft">&#160;</td><td class="mdescRight">The robot's geometry ("system_node.robot_geometry.*").  <br /></td></tr>
 <tr class="memitem:a6f6b49bdd4f311d129b5a049c9d40626" id="r_a6f6b49bdd4f311d129b5a049c9d40626"><td class="memItemLeft">std::string&#160;</td><td class="memItemRight"><a class="el" href="#a6f6b49bdd4f311d129b5a049c9d40626">lock_memory</a> ()</td></tr>
 <tr class="memdesc:a6f6b49bdd4f311d129b5a049c9d40626"><td class="mdescLeft">&#160;</td><td class="mdescRight">Locks the process memory, current and future, so the RT cycle never page-faults.  <br /></td></tr>
+<tr class="memitem:a007e1303c9e06638a7dd2ccf20ef6efa" id="r_a007e1303c9e06638a7dd2ccf20ef6efa"><td class="memTemplParams" colspan="2">template&lt;class NodeT, class ListenerT = tf2_ros::TransformListener&gt; </td></tr>
+<tr class="memitem:a007e1303c9e06638a7dd2ccf20ef6efa template"><td class="memItemLeft">std::unique_ptr&lt; ListenerT &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a007e1303c9e06638a7dd2ccf20ef6efa">make_transform_listener</a> (tf2::BufferCore &amp;buffer, const std::shared_ptr&lt; NodeT &gt; &amp;node, bool spin_thread=true)</td></tr>
+<tr class="memdesc:a007e1303c9e06638a7dd2ccf20ef6efa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a TransformListener attached to <code class="param">node</code>.  <br /></td></tr>
 <tr class="memitem:aaf7b2449dfa550dee63301e3d721ab3a" id="r_aaf7b2449dfa550dee63301e3d721ab3a"><td class="memItemLeft">constexpr double&#160;</td><td class="memItemRight"><a class="el" href="#aaf7b2449dfa550dee63301e3d721ab3a">norm_angle</a> (const double angle)</td></tr>
 <tr class="memdesc:aaf7b2449dfa550dee63301e3d721ab3a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Angle normalization to [-pi, pi) range (in radians).  <br /></td></tr>
 <tr class="memitem:a9050313b1e39e04002d6e63dfe4dd856" id="r_a9050313b1e39e04002d6e63dfe4dd856"><td class="memItemLeft">sensor_msgs::msg::PointCloud2&#160;</td><td class="memItemRight"><a class="el" href="#a9050313b1e39e04002d6e63dfe4dd856">perception_to_rosmsg</a> (const <a class="el" href="classeasynav_1_1PointPerception.html">PointPerception</a> &amp;perception)</td></tr>
@@ -777,6 +783,31 @@ template&lt;typename T, typename NodeT&gt; </div>
 
 </div>
 </div>
+<a id="a4b806bd07739d0c517b7911da88b50f5" name="a4b806bd07739d0c517b7911da88b50f5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4b806bd07739d0c517b7911da88b50f5">&#9670;&#160;</a></span>get_package_share_path()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::filesystem::path get_package_share_path </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>package_name</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the share directory of <code class="param">package_name</code>. </p>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">ament_index_cpp::PackageNotFoundError</td><td>if the package is not found. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a85608546062d3c1c397712b595f181fd" name="a85608546062d3c1c397712b595f181fd"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a85608546062d3c1c397712b595f181fd">&#9670;&#160;</a></span>get_perceptions()</h2>
 
@@ -862,6 +893,37 @@ template&lt;typename NodeT&gt; </div>
 
 <p>Locks the process memory, current and future, so the RT cycle never page-faults. </p>
 <p>Requires an unlimited RLIMIT_MEMLOCK: with a finite one, later allocations could fail. </p><dl class="section return"><dt>Returns</dt><dd>"" on success, otherwise why not. </dd></dl>
+
+</div>
+</div>
+<a id="a007e1303c9e06638a7dd2ccf20ef6efa" name="a007e1303c9e06638a7dd2ccf20ef6efa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a007e1303c9e06638a7dd2ccf20ef6efa">&#9670;&#160;</a></span>make_transform_listener()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class NodeT, class ListenerT = tf2_ros::TransformListener&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt; ListenerT &gt; make_transform_listener </td>
+          <td>(</td>
+          <td class="paramtype">tf2::BufferCore &amp;</td>          <td class="paramname"><span class="paramname"><em>buffer</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::shared_ptr&lt; NodeT &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>node</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>spin_thread</em></span><span class="paramdefsep"> = </span><span class="paramdefval">true</span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Creates a TransformListener attached to <code class="param">node</code>. </p>
+<p>Up to Kilted, tf2_ros takes the node as a pointer; from Lyrical, as NodeInterfaces (the pointer form is deprecated in Lyrical and removed in Rolling). </p>
 
 </div>
 </div>
