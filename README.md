@@ -39,8 +39,7 @@ EasyNav is developed by the **[Intelligent Robotics Lab](https://intelligentrobo
 | [**easynav_plugins**](https://github.com/EasyNavigation/easynav_plugins) | Collection of plugins implementing various **map managers**, **planners**, **localizers**, and **controllers**. |
 | [**NavMap**](https://github.com/EasyNavigation/NavMap) | Surface-based map representation for navigable 3D environments, providing geometric and semantic layers for efficient navigation. |
 | [**easynav_gridmap_stack**](https://github.com/EasyNavigation/easynav_gridmap_stack) | EasyNav stack built around **GridMaps** ([ANYbotics/grid_map](https://github.com/ANYbotics/grid_map)), integrating gridmap-based planners and controllers. |
-| [**easynav_playground_kobuki**](https://github.com/EasyNavigation/easynav_playground_kobuki) | PlayGround with the **Kobuki** mobile robot in indoor simulation environments. |
-| [**easynav_playground_summit**](https://github.com/EasyNavigation/easynav_playground_summit) | PlayGround featuring the **Summit XL** robot in outdoor environments. |
+| [**easynav_playgrounds**](https://github.com/EasyNavigation/easynav_playgrounds) | The **PlayGrounds**: complete Gazebo simulations with ready-to-run EasyNav configurations, for the **Kobuki** (indoor reference), the **Summit XL** (outdoor reference), **TIAGo** and **omnidirectional robots**. Each one comes as three packages: the robot description, the Gazebo worlds and the EasyNav configurations. |
 
 ---
 
