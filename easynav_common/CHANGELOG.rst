@@ -2,6 +2,15 @@
 Changelog for package easynav_common
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* NavState::get_safe(), and fixed races in NavState and RTTFBuffer
+* PluginSwitcher, to reconfigure plugins at runtime
+* Robot geometry (radius, inscribed radius, height) centralized in system_node
+* Builds on Humble, Jazzy, Kilted, Lyrical and Rolling: make_transform_listener() and get_package_share_path() wrap the APIs that differ between distros
+* Conda packages with pixi (pixi-build-ros)
+* Contributors: Francisco Martín Rico
+
 0.4.2 (2026-07-26)
 ------------------
 * Added get_no_group in NavState

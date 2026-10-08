@@ -2,6 +2,18 @@
 Changelog for package easynav_core
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Lifecycle states and runtime reconfiguration of the plugins (PluginSwitcher)
+* Robot limits and velocity smoother; velocity multiplexer between the controller and the recovery system
+* Recovery framework (RecoveryManagerBase)
+* Safety mode support: configuration checks, safety channel status, data age
+* Each component runs at its own frequency without drift, and whether it keeps it is reported as a WARN diagnostic (<plugin>.rt_rate / <plugin>.rate)
+* The collision checker is no longer part of the controllers
+* Builds on Humble, Jazzy, Kilted, Lyrical and Rolling
+* Conda packages with pixi (pixi-build-ros)
+* Contributors: Francisco Martín Rico
+
 0.4.2 (2026-07-26)
 ------------------
 * get_by_type and get_to_vector in NavState

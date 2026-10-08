@@ -2,6 +2,20 @@
 Changelog for package easynav_system
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Lifecycle state transitions and runtime reconfiguration
+* Pause and resume of the navigation
+* Robot limits, velocity smoother and velocity multiplexer
+* Recovery framework integration
+* Robot geometry centralized (system_node.robot_geometry.*)
+* Safety module: safety mode with configuration checks, parameter freezing and configuration fingerprint; heartbeat and real-time cycle monitoring; safety channel status; data age checks; fault injection
+* Component frequencies are checked on configure (none may exceed the system cycle that runs it); a late real-time cycle is a WARN outside safety mode
+* Custom SIGTERM handler
+* Builds on Humble, Jazzy, Kilted, Lyrical and Rolling
+* Conda packages with pixi (pixi-build-ros)
+* Contributors: Esther Aguado González, Francisco Martín Rico
+
 0.4.2 (2026-07-26)
 ------------------
 * Limit GoalManager publication freq

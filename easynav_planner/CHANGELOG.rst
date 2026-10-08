@@ -2,6 +2,14 @@
 Changelog for package easynav_planner
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Runtime reconfiguration of the planner (PluginSwitcher)
+* Fault injection plugin (FaultyPlanner)
+* Rate measurement restarts on activation
+* Conda packages with pixi (pixi-build-ros)
+* Contributors: Francisco Martín Rico
+
 0.4.2 (2026-07-26)
 ------------------
 * Merge rolling (coverage changes) into refactor_perception

@@ -2,6 +2,16 @@
 Changelog for package easynav_controller
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Robot limits, velocity smoother and velocity multiplexer
+* Velocity command robustness: command timeout and keepalive
+* Runtime reconfiguration of the controller (PluginSwitcher)
+* Safety mode: safety channel status (protective stop, safely limited speed) and motion inhibition
+* Rate measurement restarts on activation
+* Conda packages with pixi (pixi-build-ros)
+* Contributors: Esther Aguado González, Francisco Martín Rico
+
 0.4.2 (2026-07-26)
 ------------------
 * fix(tests): fix node destructors and add comprehensive tests for controller/planner/localizer/maps_manager

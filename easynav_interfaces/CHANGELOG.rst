@@ -2,6 +2,14 @@
 Changelog for package easynav_interfaces
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Pause and resume of the navigation
+* Heartbeat message (real-time cycle monitoring)
+* SafetyStatus message (safety channel)
+* Conda packages with pixi (pixi-build-ros)
+* Contributors: Francisco Martín Rico
+
 0.4.2 (2026-07-26)
 ------------------
 * GPLv3 -> Apache 2.0

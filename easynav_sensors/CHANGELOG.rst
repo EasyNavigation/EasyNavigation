@@ -2,6 +2,14 @@
 Changelog for package easynav_sensors
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Better protection of sensor data, and perceptions invalidated after forget_time
+* Runtime reconfiguration support
+* Builds on Humble, Jazzy, Kilted, Lyrical and Rolling
+* Conda packages with pixi (pixi-build-ros)
+* Contributors: Francisco Martín Rico, Francisco Miguel Moreno
+
 0.4.2 (2026-07-26)
 ------------------
 * Prevent possible race condition in PointPerceptions

@@ -2,6 +2,14 @@
 Changelog for package easynav_maps_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Runtime reconfiguration of the maps managers (PluginSwitcher)
+* Fault injection plugin (FaultyMapsManager)
+* Rate measurement restarts on activation
+* Conda packages with pixi (pixi-build-ros)
+* Contributors: Francisco Martín Rico
+
 0.4.2 (2026-07-26)
 ------------------
 * Merge rolling (coverage changes) into refactor_perception
