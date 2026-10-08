@@ -49,13 +49,16 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   $<INSTALL_INTERFACE:include/${PROJECT_NAME}>
   ${PCL_INCLUDE_DIRS}
 )
+# pcl_conversions exports a CMake target only since 2.8 (Kilted); older ones, variables
+target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${pcl_conversions_INCLUDE_DIRS})
 target_link_libraries(${PROJECT_NAME} PUBLIC
   rclcpp::rclcpp
   rclcpp_lifecycle::rclcpp_lifecycle
   easynav_common::easynav_common
   tf2_ros::tf2_ros
   tf2_geometry_msgs::tf2_geometry_msgs
-  pcl_conversions::pcl_conversions
+  ${pcl_conversions_TARGETS}
+  ${pcl_conversions_LIBRARIES}
   cv_bridge::cv_bridge
   pluginlib::pluginlib
   ${sensor_msgs_TARGETS}

@@ -84,7 +84,8 @@ SystemNode::SystemNode(const rclcpp::NodeOptions & options)
 
   safety_.declare_parameters(*this);
 
-  // Read by system_main.
+  // Read by system_main. The cycles check whether each component has to run (at its own
+  // "<plugin>.rt_freq" / "<plugin>.freq"): they must be at least as fast as any of them.
   declare_parameter("use_real_time", true);
   declare_parameter("rt_freq", 200.0);
   declare_parameter("freq", 200.0);
@@ -160,7 +161,9 @@ SystemNode::on_configure(const rclcpp_lifecycle::State & state)
     }
   }
 
-  if (!safety_.check_controller(*controller_node_)) {
+  // Both, to report every error.
+  const bool frequencies_valid = check_component_frequencies();
+  if (!safety_.check_controller(*controller_node_) || !frequencies_valid) {
     cleanup_subnodes();
     return CallbackReturnT::FAILURE;
   }
@@ -205,6 +208,42 @@ SystemNode::check_system_parameters()
     RCLCPP_ERROR(get_logger(), "Invalid parameter: %s", error.c_str());
   }
   return errors.empty();
+}
+
+bool
+SystemNode::check_component_frequencies()
+{
+  // The system cycles only check whether each component has to run: they must keep up.
+  const double rt_freq = get_parameter("rt_freq").as_double();
+  const double freq = get_parameter("freq").as_double();
+  auto ends_with = [](const std::string & name, const std::string & suffix) {
+      return name.size() > suffix.size() &&
+             name.compare(name.size() - suffix.size(), suffix.size(), suffix) == 0;
+    };
+
+  bool valid = true;
+  for (const auto & [node_name, info] : get_system_nodes()) {
+    for (const auto & name : info.node_ptr->list_parameters({}, 0).names) {
+      const bool rt = ends_with(name, ".rt_freq");
+      if (!rt && !ends_with(name, ".freq")) {continue;}
+      rclcpp::Parameter param;
+      try {
+        param = info.node_ptr->get_parameter(name);
+      } catch (const rclcpp::exceptions::ParameterUninitializedException &) {
+        continue;  // Declared without a value (e.g. dynamically typed): not a frequency yet
+      }
+      if (param.get_type() != rclcpp::ParameterType::PARAMETER_DOUBLE) {continue;}
+      const double system_freq = rt ? rt_freq : freq;
+      if (param.as_double() > system_freq) {
+        RCLCPP_ERROR(
+          get_logger(), "Invalid parameter: %s.%s = %.1f Hz: above %s = %.1f Hz, the system "
+          "cycle that runs it", node_name.c_str(), param.get_name().c_str(), param.as_double(),
+          rt ? "rt_freq" : "freq", system_freq);
+        valid = false;
+      }
+    }
+  }
+  return valid;
 }
 
 void

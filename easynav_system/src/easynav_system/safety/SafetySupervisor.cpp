@@ -315,11 +315,17 @@ SafetySupervisor::report_rt_status(NavState & nav_state, RtMonitor::Status statu
       RCLCPP_WARN_THROTTLE(logger_, *clock_, 5000, "%s", message.str().c_str());
       break;
     case RtMonitor::Status::ERROR:
-      diagnostic.level = DiagnosticStatus::ERROR;
       message << rt_monitor_.consecutive_late_cycles() <<
         " real-time cycles in a row started late (more than " << max_period_factor_ <<
         " periods after the previous one)";
-      RCLCPP_ERROR(logger_, "%s", message.str().c_str());
+      // Only a WARN outside safety mode, as the components' rates
+      if (safety_mode_) {
+        diagnostic.level = DiagnosticStatus::ERROR;
+        RCLCPP_ERROR(logger_, "%s", message.str().c_str());
+      } else {
+        diagnostic.level = DiagnosticStatus::WARN;
+        RCLCPP_WARN(logger_, "%s", message.str().c_str());
+      }
       break;
   }
   diagnostic.name = "rt_cycle";

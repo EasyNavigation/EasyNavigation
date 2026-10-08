@@ -229,7 +229,7 @@ TEST_F(SystemComponentFaultsTest, AHangingLocalizerMakesTheRtCyclesLate)
       "hang", 20, {"loc.hang_time:=0.03", "safety.rt_monitor.max_late_cycles:=3"}));
   run_for(500ms);
   ASSERT_TRUE(diagnostic("diagnostics.rt_cycle"));
-  EXPECT_EQ(diagnostic("diagnostics.rt_cycle")->level, DiagnosticStatus::ERROR);
+  EXPECT_EQ(diagnostic("diagnostics.rt_cycle")->level, DiagnosticStatus::WARN);
   expect_still_running();
 }
 

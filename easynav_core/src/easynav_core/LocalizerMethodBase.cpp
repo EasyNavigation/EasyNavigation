@@ -67,6 +67,7 @@ LocalizerMethodBase::check_last_known_pose(const NavState & nav_state)
 bool
 LocalizerMethodBase::internal_update_rt(NavState & nav_state, bool trigger)
 {
+  report_rt_rate(nav_state);
   if (isTime2RunRT() || trigger) {
     EASYNAV_TRACE_EVENT;
 
@@ -96,6 +97,7 @@ LocalizerMethodBase::internal_update_rt(NavState & nav_state, bool trigger)
 void
 LocalizerMethodBase::internal_update(NavState & nav_state)
 {
+  report_rate(nav_state);
   if (isTime2Run()) {
 
     EASYNAV_TRACE_EVENT;

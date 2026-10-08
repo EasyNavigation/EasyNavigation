@@ -60,6 +60,10 @@ MapsManagerNode::on_configure([[maybe_unused]] const rclcpp_lifecycle::State & s
 CallbackReturnT
 MapsManagerNode::on_activate([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
+  // The time inactive is not slowness
+  for (const auto & maps_manager : maps_managers_.get_all()) {
+    maps_manager->reset_rate_monitors();
+  }
   return CallbackReturnT::SUCCESS;
 }
 

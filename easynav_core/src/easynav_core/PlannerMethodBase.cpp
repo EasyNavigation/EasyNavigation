@@ -26,6 +26,7 @@ namespace easynav
 void
 PlannerMethodBase::internal_update(NavState & nav_state)
 {
+  report_rate(nav_state);
   if (isTime2Run()) {
     EASYNAV_TRACE_EVENT;
 

@@ -518,7 +518,7 @@ TEST_F(SystemSafetyModeTest, LateRtCyclesAreOnlyReportedOutsideSafetyMode)
   run_rt_cycles(4, std::chrono::milliseconds(30));
   EXPECT_FALSE(system_node_->is_shutdown_requested());
   ASSERT_TRUE(rt_diagnostic());
-  EXPECT_EQ(rt_diagnostic()->level, diagnostic_msgs::msg::DiagnosticStatus::ERROR);
+  EXPECT_EQ(rt_diagnostic()->level, diagnostic_msgs::msg::DiagnosticStatus::WARN);
 
   run_rt_cycles(3, std::chrono::milliseconds(5));
   EXPECT_EQ(rt_diagnostic()->level, diagnostic_msgs::msg::DiagnosticStatus::OK);
@@ -632,7 +632,7 @@ TEST_F(SystemSafetyModeTest, AControllerOverrunningTheRtCycleIsOnlyReportedOutsi
   run_rt_at_rate(std::chrono::milliseconds(400));
   EXPECT_FALSE(system_node_->is_shutdown_requested());
   ASSERT_TRUE(rt_diagnostic());
-  EXPECT_EQ(rt_diagnostic()->level, diagnostic_msgs::msg::DiagnosticStatus::ERROR);
+  EXPECT_EQ(rt_diagnostic()->level, diagnostic_msgs::msg::DiagnosticStatus::WARN);
   EXPECT_EQ(
     system_node_->get_safety().get_rt_monitor().status(),
     easynav::safety::RtMonitor::Status::ERROR);
@@ -904,4 +904,116 @@ TEST_F(SystemSafetyChannelTest, InvalidSafetyStatusTimeoutsFailToConfigure)
     EXPECT_FALSE(configure()) << timeout;
     expect_subnodes_in(State::PRIMARY_STATE_UNCONFIGURED);
   }
+}
+
+// ─── Component frequencies ──────────────────────────────────────────────────────────────────
+
+TEST_F(SystemSafetyModeTest, AComponentFasterThanTheSystemCycleFailsToConfigure)
+{
+  struct Case
+  {
+    std::vector<std::string> params;
+    bool valid;
+  };
+  const std::vector<Case> cases {
+    {{"ctrl.rt_freq:=200.0"}, true},  // The default rt_freq: as fast as the RT cycle
+    {{"ctrl.rt_freq:=200.1"}, false},
+    {{"rt_freq:=50.0", "ctrl.rt_freq:=50.0"}, true},
+    {{"rt_freq:=50.0", "ctrl.rt_freq:=60.0"}, false},
+    {{"freq:=20.0", "ctrl.freq:=20.0"}, true},
+    {{"freq:=20.0", "ctrl.freq:=30.0"}, false},
+    {{"rt_freq:=500.0", "freq:=5.0", "ctrl.rt_freq:=300.0"}, false},  // ctrl.freq 10 > 5
+  };
+  for (size_t i = 0; i < cases.size(); ++i) {
+    auto params = hanging_controller(0.0, 10.0, {}, 1000000);
+    params.insert(params.end(), cases[i].params.begin(), cases[i].params.end());
+    start(params);
+    EXPECT_EQ(configure(), cases[i].valid) << "case " << i;
+    expect_subnodes_in(
+      cases[i].valid ? State::PRIMARY_STATE_INACTIVE : State::PRIMARY_STATE_UNCONFIGURED);
+  }
+}
+
+TEST_F(SystemSafetyModeTest, AComponentKeepingItsFrequencyIsReportedOk)
+{
+  // 30 Hz in the 200 Hz RT cycle
+  start(hanging_controller(0.0, 30.0, {}, 1000000));
+  ASSERT_TRUE(configure());
+  ASSERT_TRUE(activate());
+  run_rt_at_rate(std::chrono::milliseconds(2500));
+
+  auto nav_state = system_node_->get_nav_state();
+  ASSERT_TRUE(nav_state->has("diagnostics.ctrl.rt_rate"));
+  EXPECT_EQ(
+    nav_state->get_safe<diagnostic_msgs::msg::DiagnosticStatus>("diagnostics.ctrl.rt_rate").level,
+    diagnostic_msgs::msg::DiagnosticStatus::OK);
+}
+
+TEST_F(SystemSafetyModeTest, AComponentThatCannotKeepItsFrequencyIsOnlyAWarning)
+{
+  // 100 Hz, but each update blocks 15 ms: at most ~65 Hz
+  start(hanging_controller(0.015, 100.0, {}, 0));
+  ASSERT_TRUE(configure());
+  ASSERT_TRUE(activate());
+  run_rt_at_rate(std::chrono::milliseconds(4500));
+
+  auto nav_state = system_node_->get_nav_state();
+  ASSERT_TRUE(nav_state->has("diagnostics.ctrl.rt_rate"));
+  const auto status =
+    nav_state->get_safe<diagnostic_msgs::msg::DiagnosticStatus>("diagnostics.ctrl.rt_rate");
+  EXPECT_EQ(status.level, diagnostic_msgs::msg::DiagnosticStatus::WARN) << status.message;
+  EXPECT_NE(status.message.find("rt_freq 100.0 Hz not kept for"), std::string::npos) <<
+    status.message;
+  EXPECT_EQ(status.hardware_id, "controller_node");
+  const auto keys = nav_state->get_group_keys("diagnostics");
+  EXPECT_NE(std::find(keys.begin(), keys.end(), "diagnostics.ctrl.rt_rate"), keys.end());
+  EXPECT_FALSE(system_node_->is_shutdown_requested()) << "only reported";
+}
+
+TEST_F(SystemSafetyModeTest, AComponentBlockingLongerThanAWindowIsReported)
+{
+  // 10 Hz, but each update blocks 1.2 s: longer than the 1 s rate window
+  start(hanging_controller(1.2, 10.0, {}, 0));
+  ASSERT_TRUE(configure());
+  ASSERT_TRUE(activate());
+  run_rt_at_rate(std::chrono::milliseconds(5000));
+
+  auto nav_state = system_node_->get_nav_state();
+  ASSERT_TRUE(nav_state->has("diagnostics.ctrl.rt_rate"));
+  const auto status =
+    nav_state->get_safe<diagnostic_msgs::msg::DiagnosticStatus>("diagnostics.ctrl.rt_rate");
+  EXPECT_EQ(status.level, diagnostic_msgs::msg::DiagnosticStatus::WARN) << status.message;
+  EXPECT_NE(status.message.find("not kept for"), std::string::npos) << status.message;
+}
+
+TEST_F(SystemSafetyModeTest, TheTimeInactiveIsNotSlowness)
+{
+  start(hanging_controller(0.0, 30.0, {}, 1000000));
+  ASSERT_TRUE(configure());
+  ASSERT_TRUE(activate());
+  run_rt_at_rate(std::chrono::milliseconds(1500));
+
+  // Inactive for 3 s: no cycles
+  system_node_->trigger_transition(Transition::TRANSITION_DEACTIVATE);
+  rclcpp::sleep_for(std::chrono::seconds(3));
+  ASSERT_TRUE(activate());
+  run_rt_at_rate(std::chrono::milliseconds(2500));
+
+  auto nav_state = system_node_->get_nav_state();
+  ASSERT_TRUE(nav_state->has("diagnostics.ctrl.rt_rate"));
+  const auto status =
+    nav_state->get_safe<diagnostic_msgs::msg::DiagnosticStatus>("diagnostics.ctrl.rt_rate");
+  EXPECT_EQ(status.level, diagnostic_msgs::msg::DiagnosticStatus::OK) << status.message;
+}
+
+TEST_F(SystemSafetyModeTest, UninitializedParametersDoNotBreakTheFrequencyCheck)
+{
+  // Like the fusion localizer's "ukf.global_filter.gps1": declared without a value
+  start(hanging_controller(0.0, 30.0, {}, 1000000));
+  subnode("localizer_node")->declare_parameter(
+    "ukf.global_filter.gps1", rclcpp::ParameterType::PARAMETER_STRING);
+  subnode("localizer_node")->declare_parameter(
+    "ukf.freq", rclcpp::ParameterType::PARAMETER_DOUBLE);
+  EXPECT_TRUE(configure());
+  expect_subnodes_in(State::PRIMARY_STATE_INACTIVE);
 }

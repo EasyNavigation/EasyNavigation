@@ -106,6 +106,7 @@ ControllerMethodBase::read_deprecated_parameter(const std::string & name, double
 bool
 ControllerMethodBase::internal_update_rt(NavState & nav_state, bool trigger)
 {
+  report_rt_rate(nav_state);
   if (isTime2RunRT() || trigger) {
     EASYNAV_TRACE_EVENT;
 

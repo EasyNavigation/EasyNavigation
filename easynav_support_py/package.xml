@@ -15,12 +15,10 @@
   <author>Francisco Martín Rico</author>
   <author>Francisco Miguel Moreno Olivo</author>
 
-  <exec_depend>builtin_interfaces</exec_depend>
   <exec_depend>easynav_interfaces</exec_depend>
   <exec_depend>geometry_msgs</exec_depend>
   <exec_depend>nav_msgs</exec_depend>
   <exec_depend>rclpy</exec_depend>
-  <exec_depend>std_msgs</exec_depend>
 
   <!-- Test and launch deps -->
   <test_depend>ament_cmake_pytest</test_depend>

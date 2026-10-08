@@ -77,6 +77,7 @@ CallbackReturnT
 RecoveryManagerNode::on_activate([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
   if (auto manager = get_recovery_manager()) {
+    manager->reset_rate_monitors();  // The time inactive is not slowness
     manager->on_activate();
   }
   return CallbackReturnT::SUCCESS;

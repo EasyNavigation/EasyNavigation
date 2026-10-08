@@ -208,6 +208,9 @@ private:
   /// @brief Checks this node's parameters (frequencies, geometry).
   bool check_system_parameters();
 
+  /// @brief Checks that no component's "*.rt_freq" / "*.freq" exceeds rt_freq / freq.
+  bool check_component_frequencies();
+
   /// @brief Leaves every configured subnode unconfigured again (after a failed configure).
   void cleanup_subnodes();
 

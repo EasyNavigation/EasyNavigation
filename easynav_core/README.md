@@ -31,14 +31,14 @@ Each plugin README in `easynav_plugins` can refer to these sections instead of d
 
 ### Parameters
 
-All parameters are declared under each derived plugin namespace; `MethodBase` just expects them to exist. Typical parameters (declared by derived classes) include:
+`MethodBase` declares, under each plugin's namespace:
 
 | Name | Type | Default | Description |
 |---|---|---:|---|
-| `<plugin>.rt_frequency` | `double` | implementation-specific | Desired real-time loop frequency (Hz). Used by `isTime2RunRT()`. |
-| `<plugin>.frequency` | `double` | implementation-specific | Desired non-RT loop frequency (Hz). Used by `isTime2Run()`. |
+| `<plugin>.rt_freq` | `double` | `10.0` | Frequency of the real-time update (Hz). Used by `isTime2RunRT()`. |
+| `<plugin>.freq` | `double` | `10.0` | Frequency of the non-RT update (Hz). Used by `isTime2Run()`. |
 
-> Note: The exact parameter names and defaults are defined in each derived plugin; `MethodBase` only consumes the configured frequencies.
+Both must be finite and > 0 (`initialize()` throws otherwise), and at most `system_node.rt_freq` / `system_node.freq` (EasyNav fails to configure otherwise). The system cycles only check whether it is time for each component to run: the component's frequency is what it runs at. The schedule does not drift (a 30 Hz component checked at 50 Hz runs 30 times per second); more than a period behind, it restarts from now.
 
 ### MethodBase Public API
 
@@ -51,12 +51,13 @@ All parameters are declared under each derived plugin namespace; `MethodBase` ju
 | `get_tf_prefix()` | Returns the TF namespace (with trailing `/`). |
 | `isTime2RunRT()` | Returns true if enough time has elapsed to run a real-time update. |
 | `isTime2Run()` | Returns true if enough time has elapsed to run a non-RT update. |
-| `setRunRT()` / `setRun()` | Mark that an RT / non-RT iteration has just been executed. |
+| `setRunRT()` / `setRun()` | Mark that an RT / non-RT iteration has just been executed (a run not scheduled, e.g. triggered, restarts the schedule). |
+| `report_rt_rate(nav_state)` / `report_rate(nav_state)` | Write whether the RT / non-RT update keeps its frequency (`diagnostics.<plugin>.rt_rate` / `.rate`, see `RateMonitor`). Called by the base classes every cycle. |
 | `get_last_rt_execution_ts()` / `get_last_execution_ts()` | Access the last execution timestamps. |
 
 ### NavState / Topics
 
-`MethodBase` itself does not read or write `NavState` and does not create publishers or subscriptions. All such interfaces are defined in derived base classes (see below) and their plugins.
+`MethodBase` writes only its rate diagnostics, `diagnostics.<plugin>.rt_rate` and `diagnostics.<plugin>.rate` (`diagnostic_msgs/DiagnosticStatus`, in the `diagnostics` group): written when first checked and then on changes; `WARN` after a window (1 s or 10 periods) with fewer than 90 % of the expected runs (after 3 in a row, the message says for how long). Never `ERROR`: it is only reported, not mitigated. Time without checks counts as slow (a component blocking its cycle is reported); the nodes call `reset_rate_monitors()` on activation, so the time inactive does not. It does not create publishers or subscriptions. All such interfaces are defined in derived base classes (see below) and their plugins.
 
 ### Robot geometry
 

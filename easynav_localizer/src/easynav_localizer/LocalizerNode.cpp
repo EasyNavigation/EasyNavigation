@@ -87,6 +87,10 @@ LocalizerNode::on_configure([[maybe_unused]] const rclcpp_lifecycle::State & sta
 CallbackReturnT
 LocalizerNode::on_activate([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
+  // The time inactive is not slowness
+  for (const auto & localizer : localizer_.get_all()) {
+    localizer->reset_rate_monitors();
+  }
   return CallbackReturnT::SUCCESS;
 }
 

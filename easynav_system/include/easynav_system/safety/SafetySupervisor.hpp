@@ -58,8 +58,10 @@ namespace easynav::safety
  * - "safety.heartbeat.period" (s, default 0: off; required in safety mode): a Heartbeat is
  *   published on "easynav_heartbeat" from the RT cycle, so it stops if that cycle does.
  * - "safety.rt_monitor.*": an RT cycle starting more than "max_period_factor" periods after the
- *   previous one is late; "max_late_cycles" in a row are an ERROR ("diagnostics.rt_cycle"), and in
- *   safety mode EasyNav stops.
+ *   previous one is late; "max_late_cycles" in a row are reported ("diagnostics.rt_cycle"): a WARN,
+ *   or in safety mode an ERROR that stops EasyNav (the RT cycle receives the sensors and publishes
+ *   the commands). Whether each component keeps its own frequency is reported separately, as a
+ *   WARN ("diagnostics.<plugin>.rt_rate" / ".rate", see MethodBase).
  * - "safety.status.timeout" (s, default 0: off; required in safety mode): the safety channel's
  *   state (SafetyStatus) is received on "easynav_safety_status" and applied every RT cycle through
  *   NavState ("safety_status"): during a protective stop EasyNav commands zero and keeps the

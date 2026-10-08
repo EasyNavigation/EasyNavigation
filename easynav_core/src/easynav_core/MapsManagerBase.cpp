@@ -26,6 +26,7 @@ namespace easynav
 void
 MapsManagerBase::internal_update(NavState & nav_state)
 {
+  report_rate(nav_state);
   if (isTime2Run()) {
     EASYNAV_TRACE_NAMED_EVENT("MapsManagerBase::internal_update [" + get_plugin_name() + "]");
 

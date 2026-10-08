@@ -9,6 +9,7 @@ find_package(ament_cmake REQUIRED)
 find_package(easynav_common REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
 find_package(pluginlib REQUIRED)
+find_package(diagnostic_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(tf2_ros REQUIRED)
@@ -20,6 +21,7 @@ add_library(${PROJECT_NAME} SHARED
   src/easynav_core/MapsManagerBase.cpp
   src/easynav_core/MethodBase.cpp
   src/easynav_core/PlannerMethodBase.cpp
+  src/easynav_core/RateMonitor.cpp
   src/easynav_core/RecoveryManagerBase.cpp
   src/easynav_core/VelocityCommand.cpp
 )
@@ -33,6 +35,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
   pluginlib::pluginlib
   tf2_ros::tf2_ros
   tf2_geometry_msgs::tf2_geometry_msgs
+  ${diagnostic_msgs_TARGETS}
   ${geometry_msgs_TARGETS}
   ${nav_msgs_TARGETS}
 )
@@ -69,6 +72,7 @@ ament_export_dependencies(
   easynav_common
   rclcpp_lifecycle
   pluginlib
+  diagnostic_msgs
   geometry_msgs
   nav_msgs
   tf2_ros

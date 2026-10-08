@@ -769,7 +769,7 @@ TEST_F(SafetyModuleTest, NoHeartbeatIfItsPeriodIsZero)
 
 TEST_F(SafetyModuleTest, RtDiagnosticFollowsTheMonitorOutsideSafetyMode)
 {
-  // 200 Hz, late if more than 10 ms after the previous cycle; 3 in a row are an error.
+  // 200 Hz, late if more than 10 ms after the previous cycle; 3 in a row are reported.
   easynav::safety::SafetySupervisor supervisor;
   auto n = system({{"safety.rt_monitor.max_late_cycles", 3}}, supervisor);
   ASSERT_TRUE(supervisor.check_system(*n));
@@ -790,7 +790,10 @@ TEST_F(SafetyModuleTest, RtDiagnosticFollowsTheMonitorOutsideSafetyMode)
 
   supervisor.cycle_rt(nav_state, t += 30ms);
   EXPECT_TRUE(supervisor.cycle_rt(nav_state, t += 30ms)) << "only reported outside safety mode";
-  EXPECT_EQ(rt_diagnostic(nav_state)->level, DiagnosticStatus::ERROR);
+  EXPECT_EQ(supervisor.get_rt_monitor().status(), easynav::safety::RtMonitor::Status::ERROR);
+  EXPECT_EQ(rt_diagnostic(nav_state)->level, DiagnosticStatus::WARN) <<
+    "a WARN: the components' rates are what matters";
+  EXPECT_NE(rt_diagnostic(nav_state)->message.find("in a row"), std::string::npos);
   const auto keys = nav_state.get_group_keys("diagnostics");
   EXPECT_NE(std::find(keys.begin(), keys.end(), "diagnostics.rt_cycle"), keys.end());
 

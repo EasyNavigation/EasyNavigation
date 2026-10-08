@@ -180,6 +180,10 @@ ControllerNode::check_cmd_timeout()
 CallbackReturnT
 ControllerNode::on_activate([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
+  // The time inactive is not slowness
+  for (const auto & controller : controller_.get_all()) {
+    controller->reset_rate_monitors();
+  }
   return CallbackReturnT::SUCCESS;
 }
 
