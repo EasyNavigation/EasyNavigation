@@ -82,7 +82,8 @@ TEST_F(RobotGeometryTest, UsesTheSystemGeometry)
 
 TEST_F(RobotGeometryTest, DeprecatedParametersApplyWhenNotConfigured)
 {
-  auto n = node({
+  auto n = node(
+  {
     {"plugin.robot_radius", 0.25}, {"plugin.inscribed_radius", 0.2},
     {"plugin.robot_height", 0.4}});
   const auto geometry = easynav::get_robot_geometry(*n, legacy_);
@@ -94,7 +95,8 @@ TEST_F(RobotGeometryTest, DeprecatedParametersApplyWhenNotConfigured)
 TEST_F(RobotGeometryTest, ConfiguredGeometryTakesPrecedence)
 {
   system_geometry(0.7, 0.5, 1.2, {"radius", "inscribed_radius", "height"});
-  auto n = node({
+  auto n = node(
+  {
     {"plugin.robot_radius", 0.25}, {"plugin.inscribed_radius", 0.2},
     {"plugin.robot_height", 0.4}});
   const auto geometry = easynav::get_robot_geometry(*n, legacy_);

@@ -106,7 +106,8 @@ public:
     node_.get_parameter(types_parameter_, types);
 
     if (max_plugins_ != 0 && types.size() > max_plugins_) {
-      RCLCPP_ERROR(node_.get_logger(),
+      RCLCPP_ERROR(
+        node_.get_logger(),
         "[%s] at most %lu plugin(s) can be instanced. [%lu] found",
         types_parameter_.c_str(), static_cast<unsigned long>(max_plugins_),
         static_cast<unsigned long>(types.size()));
@@ -203,7 +204,8 @@ private:
   std::optional<Loaded> create(const std::string & alias, const std::string & plugin_class)
   {
     try {
-      RCLCPP_INFO(node_.get_logger(), "Loading %s %s [%s]",
+      RCLCPP_INFO(
+        node_.get_logger(), "Loading %s %s [%s]",
         base_class_.c_str(), alias.c_str(), plugin_class.c_str());
 
       if (!node_.has_parameter(alias + ".plugin")) {
@@ -216,18 +218,21 @@ private:
       item.instance = loader_->createSharedInstance(plugin_class);
       item.instance->initialize(node_.shared_from_this(), alias);
 
-      RCLCPP_INFO(node_.get_logger(), "Loaded %s %s [%s]",
+      RCLCPP_INFO(
+        node_.get_logger(), "Loaded %s %s [%s]",
         base_class_.c_str(), alias.c_str(), plugin_class.c_str());
       return item;
     } catch (const rclcpp::exceptions::ParameterAlreadyDeclaredException & e) {
-      RCLCPP_ERROR(node_.get_logger(),
+      RCLCPP_ERROR(
+        node_.get_logger(),
         "Unable to load %s [%s] plugin [%s]: %s. The node keeps the parameters of a plugin "
         "declared after it is released (rclcpp cannot undeclare statically typed parameters), "
         "so the plugin must call has_parameter() before declare_parameter().",
         base_class_.c_str(), alias.c_str(), plugin_class.c_str(), e.what());
       return std::nullopt;
     } catch (const std::exception & e) {
-      RCLCPP_ERROR(node_.get_logger(), "Unable to load %s [%s] plugin [%s]. Error: %s",
+      RCLCPP_ERROR(
+        node_.get_logger(), "Unable to load %s [%s] plugin [%s]. Error: %s",
         base_class_.c_str(), alias.c_str(), plugin_class.c_str(), e.what());
       return std::nullopt;
     }

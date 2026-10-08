@@ -76,7 +76,8 @@ TEST_F(FaultyLocalizerTest, WithoutFaultItLocalizesAtTheConfiguredPoseStampedNow
   localizer->update_rt(nav_state_);
   EXPECT_DOUBLE_EQ(pose().pose.pose.position.x, 1.0);
   EXPECT_DOUBLE_EQ(pose().pose.pose.position.y, 2.0);
-  EXPECT_NEAR(2.0 * std::atan2(pose().pose.pose.orientation.z, pose().pose.pose.orientation.w),
+  EXPECT_NEAR(
+    2.0 * std::atan2(pose().pose.pose.orientation.z, pose().pose.pose.orientation.w),
     0.5, 1e-9);
   EXPECT_GE(rclcpp::Time(pose().header.stamp), before);
   EXPECT_EQ(pose().header.frame_id, "map");

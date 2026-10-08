@@ -85,8 +85,9 @@ GoalManager::GoalManager(
   // Use the constructor parameter directly here, not parent_node_: it's a live
   // shared_ptr for the duration of this constructor, no need to lock() it.
   easynav::declare_parameter_if_absent(*parent_node, "allow_preempt_goal", allow_preempt_goal_);
-  easynav::declare_parameter_if_absent(*parent_node, "position_tolerance",
-      goal_tolerance_.position);
+  easynav::declare_parameter_if_absent(
+    *parent_node, "position_tolerance",
+    goal_tolerance_.position);
   easynav::declare_parameter_if_absent(*parent_node, "height_tolerance", goal_tolerance_.height);
   easynav::declare_parameter_if_absent(*parent_node, "angle_tolerance", goal_tolerance_.yaw);
   easynav::declare_parameter_if_absent(*parent_node, "update_frequency", update_frequency_);
@@ -219,7 +220,8 @@ GoalManager::control_callback(easynav_interfaces::msg::NavigationControl::Unique
             }
             accept_request(*msg, response);
           } else {
-            RCLCPP_DEBUG(node->get_logger(),
+            RCLCPP_DEBUG(
+              node->get_logger(),
               "Rejected navigation request (unable to preempt)");
 
             response.status_message = "Goal rejected; unable to preempt current active goal";
@@ -239,7 +241,8 @@ GoalManager::control_callback(easynav_interfaces::msg::NavigationControl::Unique
         response.nav_current_user_id = msg->user_id;
       } else {
         if (state_ == State::IDLE) {
-          RCLCPP_DEBUG(node->get_logger(),
+          RCLCPP_DEBUG(
+            node->get_logger(),
             "Navigation cancelation rejected (not navigating)");
           response.status_message = "Nothing to cancel; easynav is idle";
           response.type = easynav_interfaces::msg::NavigationControl::ERROR;
@@ -428,7 +431,7 @@ GoalManager::update(NavState & nav_state)
     last_synced_paused_ = paused_;
   }
 
-   // Keep published tolerances in sync with current parameters
+  // Keep published tolerances in sync with current parameters
   nav_state.set("goal_tolerance.position", goal_tolerance_.position);
   nav_state.set("goal_tolerance.height", goal_tolerance_.height);
   nav_state.set("goal_tolerance.yaw", goal_tolerance_.yaw);

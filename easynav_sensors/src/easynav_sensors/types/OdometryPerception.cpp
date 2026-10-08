@@ -36,8 +36,9 @@ void OdometryPerceptionHandler::on_initialize()
 
   easynav::declare_parameter_if_absent(*node, get_sensor_name() + ".topic", std::string{});
   easynav::declare_parameter_if_absent(*node, get_sensor_name() + ".type", std::string{});
-  easynav::declare_parameter_if_absent(*node, get_sensor_name() + ".nav_state_key",
-      get_sensor_name());
+  easynav::declare_parameter_if_absent(
+    *node, get_sensor_name() + ".nav_state_key",
+    get_sensor_name());
 
   node->get_parameter(get_sensor_name() + ".topic", topic);
   node->get_parameter(get_sensor_name() + ".type", msg_type);

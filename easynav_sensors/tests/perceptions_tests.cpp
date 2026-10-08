@@ -352,12 +352,14 @@ TEST_F(PerceptionsTestCase, PointPerceptionHandlerWorks)
 
   node->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_CONFIGURE);
 
-  ASSERT_EQ(node->get_current_state().id(),
+  ASSERT_EQ(
+    node->get_current_state().id(),
     lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE);
 
   node->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_ACTIVATE);
 
-  ASSERT_EQ(node->get_current_state().id(),
+  ASSERT_EQ(
+    node->get_current_state().id(),
     lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE);
 
   auto handler = std::make_shared<easynav::PointPerceptionHandler>();
@@ -744,12 +746,14 @@ TEST_F(PerceptionsTestCase, PointPerceptionHandlerPC2Works)
 
   node->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_CONFIGURE);
 
-  ASSERT_EQ(node->get_current_state().id(),
+  ASSERT_EQ(
+    node->get_current_state().id(),
     lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE);
 
   node->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_ACTIVATE);
 
-  ASSERT_EQ(node->get_current_state().id(),
+  ASSERT_EQ(
+    node->get_current_state().id(),
     lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE);
 
   auto handler = std::make_shared<easynav::PointPerceptionHandler>();
@@ -820,12 +824,14 @@ TEST_F(PerceptionsTestCase, ImagePerceptionHandlerWorks)
 
   node->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_CONFIGURE);
 
-  ASSERT_EQ(node->get_current_state().id(),
+  ASSERT_EQ(
+    node->get_current_state().id(),
     lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE);
 
   node->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_ACTIVATE);
 
-  ASSERT_EQ(node->get_current_state().id(),
+  ASSERT_EQ(
+    node->get_current_state().id(),
     lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE);
 
   auto handler = std::make_shared<easynav::ImagePerceptionHandler>();

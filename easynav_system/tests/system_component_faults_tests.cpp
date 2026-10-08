@@ -225,7 +225,8 @@ TEST_F(SystemComponentFaultsTest, AJumpingPoseIsStillUpToDate)
 
 TEST_F(SystemComponentFaultsTest, AHangingLocalizerMakesTheRtCyclesLate)
 {
-  start(faulty_localizer(
+  start(
+    faulty_localizer(
       "hang", 20, {"loc.hang_time:=0.03", "safety.rt_monitor.max_late_cycles:=3"}));
   run_for(500ms);
   ASSERT_TRUE(diagnostic("diagnostics.rt_cycle"));
@@ -237,7 +238,8 @@ TEST_F(SystemComponentFaultsTest, AHangingLocalizerMakesTheRtCyclesLate)
 
 TEST_F(SystemComponentFaultsTest, AThrowingPlannerOrMapsManagerDoesNotStopEasyNav)
 {
-  start({
+  start(
+  {
     "planner_types:=['plan']",
     "plan.plugin:=easynav_planner/FaultyPlanner",
     "plan.fault:='throw'",
@@ -254,7 +256,8 @@ TEST_F(SystemComponentFaultsTest, AThrowingPlannerOrMapsManagerDoesNotStopEasyNa
 
 TEST_F(SystemComponentFaultsTest, ANanPathIsDiscardedSoTheControllerHasNothingToFollow)
 {
-  start({
+  start(
+  {
     "planner_types:=['plan']",
     "plan.plugin:=easynav_planner/FaultyPlanner",
     "plan.fault:='nan'",
@@ -311,7 +314,8 @@ TEST_F(SystemComponentFaultsTest, AHangingPlannerDoesNotDelayTheRtCycle)
   if (!easynav::check_real_time_priority(easynav::kRealTimePriority).empty()) {
     GTEST_SKIP() << "needs real-time scheduling, not allowed here";
   }
-  start({
+  start(
+  {
     "planner_types:=['plan']",
     "plan.plugin:=easynav_planner/FaultyPlanner",
     "plan.fault:='hang'",
@@ -328,14 +332,16 @@ TEST_F(SystemComponentFaultsTest, AHangingMapsManagerDoesNotDelayTheRtCycle)
   if (!easynav::check_real_time_priority(easynav::kRealTimePriority).empty()) {
     GTEST_SKIP() << "needs real-time scheduling, not allowed here";
   }
-  start({
+  start(
+  {
     "map_types:=['maps']",
     "maps.plugin:=easynav_maps_manager/FaultyMapsManager",
     "maps.fault:='hang'",
     "maps.hang_time:=0.2",
     "maps.freq:=100.0"});
 
-  EXPECT_GE(run_rt_while_nort_hangs(system_node_),
+  EXPECT_GE(
+    run_rt_while_nort_hangs(system_node_),
     2) << "the maps manager did hang the non-RT cycle";
   EXPECT_EQ(system_node_->get_safety().get_rt_monitor().late_cycles(), 0u);
   EXPECT_FALSE(diagnostic("diagnostics.rt_cycle")) << "no RT cycle was late";
