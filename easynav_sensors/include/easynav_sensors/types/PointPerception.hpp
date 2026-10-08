@@ -1,6 +1,5 @@
 // Copyright 2025 Intelligent Robotics Lab
 //
-// This file is part of the project Easy Navigation (EasyNav in short)
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -109,7 +108,7 @@ public:
                 << " points in frame [" << perception.frame_id
                 << "] with ts " << perception.stamp.seconds() << "\n";
             return ret.str();
-          });
+        });
         return true;
       }();
   }
@@ -179,12 +178,6 @@ public:
   void resize(std::size_t size)
   {
     data.points.resize(size);
-  }
-
-  /// \brief Retrieves the most recent buffered perception (independently of it has a valid TF) without removing it from the buffer.
-  const PointPerceptionBufferType & get_last_perception() const
-  {
-    return buffer.latest_ref();
   }
 
   void integrate_pending_perceptions()
@@ -257,12 +250,11 @@ public:
       bool has_tf = false;
       try {
         has_tf = tf_buffer.canTransform(
-          robot_frame,
-          item.frame,
-          tf2_ros::fromMsg(item.stamp),
-          tf2::durationFromSec(0.0));
+        robot_frame,
+        item.frame,
+        tf2_ros::fromMsg(item.stamp));
       } catch (...) {
-        // Any TF exception is treated as "no valid TF" for this item.
+      // Any TF exception is treated as "no valid TF" for this item.
         has_tf = false;
       }
 
@@ -346,6 +338,9 @@ public:
   /// \param nav_state Pointer to the NavState to store the sensor data.
   /// \return True if new data was stored (to trigger processing).
   bool cycle_rt([[maybe_unused]] std::shared_ptr<NavState> nav_state) override;
+
+  /// \brief The perception this handler keeps up to date.
+  std::shared_ptr<PerceptionBase> get_perception() const override {return perception_data_;}
 
 private:
   /// \brief pointer to the perception data
@@ -500,11 +495,6 @@ public:
   /// \return Concatenated point cloud.
   pcl::PointCloud<pcl::PointXYZ> as_points() const;
 
-  /// \brief Retrieves the filtered point cloud for a specific perception.
-  /// \param idx Index of the target perception in the underlying container.
-  /// \return Const reference to the filtered point cloud.
-  const pcl::PointCloud<pcl::PointXYZ> & as_points(int idx) const;
-
   /// \brief Configures fusion of all perceptions into a common frame.
   ///
   /// This method does not immediately build a fused point cloud. Instead, it stores the target frame
@@ -590,9 +580,6 @@ private:
   double post_max_[3] {0.0, 0.0, 0.0};
   bool use_post_min_[3] {false, false, false};
   bool use_post_max_[3] {false, false, false};
-
-  // Temporary storage for as_points(int)
-  mutable pcl::PointCloud<pcl::PointXYZ> tmp_single_cloud_;
 };
 
 }  // namespace easynav

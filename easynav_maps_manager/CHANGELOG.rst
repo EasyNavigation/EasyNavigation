@@ -2,8 +2,17 @@
 Changelog for package easynav_maps_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-0.4.0 (2026-07-26)
+0.5.0 (2026-10-08)
 ------------------
+* Runtime reconfiguration of the maps managers (PluginSwitcher)
+* Fault injection plugin (FaultyMapsManager)
+* Rate measurement restarts on activation
+* Conda packages with pixi (pixi-build-ros)
+* Contributors: Francisco Martín Rico
+
+0.4.2 (2026-07-26)
+------------------
+* Merge rolling (coverage changes) into refactor_perception
 * Fix test bug in plugin class loader
 * fix(tests): fix node destructors and add comprehensive tests for controller/planner/localizer/maps_manager
   - Fix != to == in lifecycle transition guards in all 4 node destructors
@@ -14,32 +23,15 @@ Changelog for package easynav_maps_manager
   - Add 11 tests for ControllerNode, 11 for PlannerNode, 12 for LocalizerNode, 10 for MapsManagerNode
   - All tests cover: node name, lifecycle transitions, plugin loading success/failure, cycle methods
 * GPLv3 -> Apache 2.0
-* Contributors: Francisco Martín Rico, Francisco Miguel Moreno
-
-0.3.2 (2025-12-18)
-------------------
 * Hotfix: Remove remaining C++20/23 features
-* Contributors: Francisco Miguel Moreno
-
-0.3.1 (2025-12-17)
-------------------
-* Downgrade from C++23 features
 * Remove std::expected from MethodBase::initialize interface
+* TFInfo in RTTFBuffer
+* Add world frame
+* Tests and refactoring
 * TF Refactor
-* Unify TF configuration
-* Contributors: Francisco Martín Rico, Francisco Miguel Moreno
-
-0.3.0 (2025-12-01)
-------------------
-* Merge rolling features into kilted
 * Cleanup unused headers
-* Reshape execution and sensor handling
 * Make dummies' fake processing time independent from clock source
 * Contributors: Francisco Martín Rico, Francisco Miguel Moreno
-
-0.2.0 (2025-12-01)
-------------------
-* Cleanup unused headers
 
 0.1.4 (2025-10-16)
 ------------------

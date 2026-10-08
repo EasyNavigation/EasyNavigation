@@ -8,4 +8,11 @@
       </description>
     </class>
   </library>
+  <library path="faulty_controller">
+    <class name="easynav_controller/FaultyController" type="easynav::FaultyController" base_class_type="easynav::ControllerMethodBase">
+      <description>
+      Controller that injects faults (throw, hang, stop proposing, freeze, huge or NaN velocities), to test how EasyNav copes with them.
+      </description>
+    </class>
+  </library>
 </class_libraries>

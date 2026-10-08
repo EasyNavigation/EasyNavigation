@@ -19,6 +19,7 @@
 
 #include "rclcpp/time.hpp"
 
+#include "easynav_common/Parameters.hpp"
 #include "easynav_sensors/types/OdometryPerception.hpp"
 
 namespace easynav
@@ -33,15 +34,10 @@ void OdometryPerceptionHandler::on_initialize()
   auto node = get_node();
   std::string topic, msg_type;
 
-  if (!node->has_parameter(get_sensor_name() + ".topic")) {
-    node->declare_parameter(get_sensor_name() + ".topic", std::string{});
-  }
-  if (!node->has_parameter(get_sensor_name() + ".type")) {
-    node->declare_parameter(get_sensor_name() + ".type", std::string{});
-  }
-  if (!node->has_parameter(get_sensor_name() + ".nav_state_key")) {
-    node->declare_parameter(get_sensor_name() + ".nav_state_key", get_sensor_name());
-  }
+  easynav::declare_parameter_if_absent(*node, get_sensor_name() + ".topic", std::string{});
+  easynav::declare_parameter_if_absent(*node, get_sensor_name() + ".type", std::string{});
+  easynav::declare_parameter_if_absent(*node, get_sensor_name() + ".nav_state_key",
+      get_sensor_name());
 
   node->get_parameter(get_sensor_name() + ".topic", topic);
   node->get_parameter(get_sensor_name() + ".type", msg_type);

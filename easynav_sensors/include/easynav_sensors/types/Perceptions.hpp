@@ -51,8 +51,8 @@ public:
   /// \brief Coordinate frame associated with the perception.
   std::string frame_id;
 
-  /// \brief Whether the perception contains valid data.
-  // TODO: Not in use
+  /// \brief Whether the perception holds usable data: set with new data, cleared by SensorsNode
+  /// once it is older than "forget_time".
   bool valid = false;
 
   /// \brief Whether the data has changed since the last observation.
@@ -76,9 +76,8 @@ template<typename T = PerceptionBase>
 inline std::vector<std::shared_ptr<T>>
 get_perceptions(const std::vector<PerceptionBasePtr> & src)
 {
-  static_assert(
-    std::is_base_of_v<PerceptionBase, T>,
-    "T must inherit from PerceptionBase");
+  static_assert(std::is_base_of_v<PerceptionBase, T>,
+                "T must inherit from PerceptionBase");
 
   std::vector<std::shared_ptr<T>> out;
   out.reserve(src.size());
@@ -145,6 +144,10 @@ public:
 
   /// \brief Returns the sensor name provided during \ref initialize.
   const std::string & get_sensor_name() const {return sensor_name_;}
+
+  /// \brief The perception this handler keeps up to date, or nullptr. SensorsNode invalidates it
+  /// once it is older than "forget_time"; the handler validates it again with new data.
+  virtual std::shared_ptr<PerceptionBase> get_perception() const {return nullptr;}
 
 protected:
   /// \brief Returns the parent lifecycle node.

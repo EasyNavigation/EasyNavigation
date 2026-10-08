@@ -1,6 +1,5 @@
 // Copyright 2025 Intelligent Robotics Lab
 //
-// This file is part of the project Easy Navigation (EasyNav in short)
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -18,6 +17,8 @@
 
 #ifndef EASYNAV_SYSTEM__GOALMANAGER_HPP_
 #define EASYNAV_SYSTEM__GOALMANAGER_HPP_
+
+#include <atomic>
 
 #include "rclcpp/subscription.hpp"
 #include "rclcpp/publisher.hpp"
@@ -63,8 +64,8 @@ public:
   {
     /// Positional tolerance for x/y in meters.
     double position {0.03};
-    /// Positional tolerance for z axis in meters. Very big number as default.
-    double height {std::numeric_limits<double>::max()};
+    /// Positional tolerance for z axis in meters. Large default: height ignored.
+    double height {10000.0};
     /// Angular tolerance in radians for the yaw angle.
     double yaw {0.01};
   };
@@ -91,6 +92,12 @@ public:
   [[nodiscard]] inline State get_state() const {return state_;}
 
   /**
+   * @brief Whether the current navigation (if any) is currently paused.
+   * @return True if paused.
+   */
+  [[nodiscard]] inline bool is_paused() const {return paused_;}
+
+  /**
    * @brief Mark the current goal as successfully completed.
    */
   void set_finished();
@@ -108,9 +115,23 @@ public:
   void set_error(const std::string & reason);
 
   /**
+   * @brief Holds or releases the mission's progress.
+   *
+   * While held, update() keeps publishing feedback but takes no goal as reached: the robot pose
+   * cannot be trusted (see SystemActions::hold_mission_progress()).
+   */
+  void set_progress_held(bool held);
+
+  /// @brief Whether the mission's progress is held (see set_progress_held()).
+  [[nodiscard]] bool is_progress_held() const {return progress_held_;}
+
+  /**
    * @brief Update internal logic, including preemption and timeout checks.
    */
   void update(NavState & nav_state);
+
+  /// @brief (Re)reads the parameters (on every configure: the GoalManager outlives cleanup).
+  void read_parameters(NavState & nav_state);
 
   /**
    * @brief Check if the robot is currently at the first goal.
@@ -127,8 +148,12 @@ public:
   );
 
 private:
+  /// @brief Locks \ref parent_node_, returning nullptr if the owning SystemNode has
+  /// already been destroyed.
+  rclcpp_lifecycle::LifecycleNode::SharedPtr get_node() const;
+
   /// @brief Lifecycle node.
-  rclcpp_lifecycle::LifecycleNode::SharedPtr parent_node_;
+  std::weak_ptr<rclcpp_lifecycle::LifecycleNode> parent_node_;
 
   /// @brief Goal tolerance (translation and rotation).
   GoalTolerance goal_tolerance_ {};
@@ -191,6 +216,34 @@ private:
 
   /// @brief Internal goal state.
   State state_ {State::IDLE};
+
+  /// @brief Whether the current navigation is paused: EasyNav still runs its
+  /// full cycle, but SystemNode publishes zero velocity while this is true.
+  bool paused_ {false};
+
+  /// @brief Atomic: also released from a lifecycle transition (recovery system unloaded).
+  std::atomic<bool> progress_held_ {false};
+
+  /// @brief Value of "navigation_state" as last pushed to NavState by this class
+  /// (the sole writer of that key).
+  State last_synced_navigation_state_ {State::IDLE};
+
+  /// @brief Value of "navigation_paused" as last pushed to NavState by this
+  /// class (the sole writer of that key).
+  bool last_synced_paused_ {false};
+
+  /// @brief True once NavState's "goals" has been synced to an empty Goals() since
+  /// the last time goals_ became non-empty (see accept_request()).
+  bool goals_synced_empty_ {true};
+
+  /// @brief Latest GoalManagerInfo, updated every active cycle (published throttled).
+  easynav_interfaces::msg::GoalManagerInfo info_;
+
+  /// @brief A mission was accepted and its end (IDLE info) not yet published.
+  bool info_final_pending_ {false};
+
+  /// @brief Publishes the final (IDLE) info once the mission ends, unthrottled.
+  void publish_final_info();
 };
 
 }  // namespace easynav

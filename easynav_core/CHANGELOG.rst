@@ -2,7 +2,19 @@
 Changelog for package easynav_core
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-0.4.0 (2026-07-26)
+0.5.0 (2026-10-08)
+------------------
+* Lifecycle states and runtime reconfiguration of the plugins (PluginSwitcher)
+* Robot limits and velocity smoother; velocity multiplexer between the controller and the recovery system
+* Recovery framework (RecoveryManagerBase)
+* Safety mode support: configuration checks, safety channel status, data age
+* Each component runs at its own frequency without drift, and whether it keeps it is reported as a WARN diagnostic (<plugin>.rt_rate / <plugin>.rate)
+* The collision checker is no longer part of the controllers
+* Builds on Humble, Jazzy, Kilted, Lyrical and Rolling
+* Conda packages with pixi (pixi-build-ros)
+* Contributors: Francisco Martín Rico
+
+0.4.2 (2026-07-26)
 ------------------
 * get_by_type and get_to_vector in NavState
 * Refactor PerceptionHandler
@@ -14,39 +26,29 @@ Changelog for package easynav_core
 * Adjust process time to input times
 * Sync time for markers with its the collision percetion time
 * Set robot_frame as default for collision checker
-* Add a bas_footprint frame in TFInfo
-* Contributors: Francisco Martín Rico, Francisco Miguel Moreno
-
-0.3.2 (2025-12-18)
-------------------
+* Add a base_footprint frame in TFInfo
 * Hotfix: Remove remaining C++20/23 features
-* Contributors: Francisco Miguel Moreno
-
-0.3.1 (2025-12-17)
-------------------
-* Downgrade from C++23 features
 * Remove std::expected from MethodBase::initialize interface
+* Added operation to get latest perception, with valid TF or not
+* TFInfo in RTTFBuffer
+* Create header for TFInfo
+* Tests and refactoring
 * TF Refactor
-* Unify TF configuration
-* Contributors: Francisco Martín Rico, Francisco Miguel Moreno
-
-0.3.0 (2025-12-01)
-------------------
-* Add README.md with base classes description
-* Set collision checker disabled by default
-* Cleanup unused headers
-* Reshape execution and sensor handling
-* Add warning when exceeding the target cycle time
-* Finished collision checker
-* Reset method execution time when triggered
-* Contributors: Francisco Martín Rico, Francisco Miguel Moreno
-
-0.2.0 (2025-12-01)
-------------------
 * Add README.md with base classes description
 * Remove unused include and random
 * Set collision checker disabled by default
+* Comment unused variables
 * Cleanup unused headers
+* Add warning when exceeding the target cycle time
+* Merge new changes into rolling
+* Minor linting fix
+* Finished collision checker
+* Tracing for eficiency
+* First proposal for collision checker
+* Second simple approach
+* First functional version
+* Reset method execution time when triggered
+* Contributors: Francisco Martín Rico, Francisco Miguel Moreno
 
 0.1.4 (2025-10-16)
 ------------------

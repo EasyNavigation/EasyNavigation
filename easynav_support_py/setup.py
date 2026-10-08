@@ -4,7 +4,7 @@ ros_pkg_name = 'easynav_support_py'
 py_modules_pkg = 'easynav_goalmanager_py'
 setup(
     name=ros_pkg_name,
-    version='0.4.0',
+    version='0.5.0',
     packages=[py_modules_pkg],
     data_files=[
         ('share/ament_index/resource_index/packages',
@@ -17,7 +17,6 @@ setup(
     maintainer_email='fmrico@gmail.com',
     description='Support utilities for EasyNav in Python: GoalManagerClient and tests.',
     license='Apache-2.0',
-    tests_require=['pytest'],
     entry_points={
         'console_scripts': [
             'goalmanager_demo = easynav_goalmanager_py.demo_client:main',

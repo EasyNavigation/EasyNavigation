@@ -2,7 +2,16 @@
 Changelog for package easynav_common
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-0.4.0 (2026-07-26)
+0.5.0 (2026-10-08)
+------------------
+* NavState::get_safe(), and fixed races in NavState and RTTFBuffer
+* PluginSwitcher, to reconfigure plugins at runtime
+* Robot geometry (radius, inscribed radius, height) centralized in system_node
+* Builds on Humble, Jazzy, Kilted, Lyrical and Rolling: make_transform_listener() and get_package_share_path() wrap the APIs that differ between distros
+* Conda packages with pixi (pixi-build-ros)
+* Contributors: Francisco Martín Rico
+
+0.4.2 (2026-07-26)
 ------------------
 * Added get_no_group in NavState
 * get_by_type and get_to_vector in NavState
@@ -13,51 +22,41 @@ Changelog for package easynav_common
 * Perception types and ops to easynav_sensors
 * Fix segfault in some cases and reduce extrapolation to the future
 * GPLv3 -> Apache 2.0
-  API to get perception times
 * Add the option to get the fuse() efective timestamp
 * Improve navstate print including the time
 * Add exact_time parameter to fuse to use the last TF if false
 * Adjust process time to input times
 * Fix TF stucks
-* Get last ime of the perceptions in a view
+* Get last time of the perceptions in a view
+* Update tests
 * Set robot_frame as default for the perception pipeline
-* Add a bas_footprint frame in TFInfo
-* Contributors: Francisco Martín Rico, Francisco Miguel Moreno
-
-0.3.2 (2025-12-18)
-------------------
+* Add a base_footprint frame in TFInfo
 * Hotfix: Remove remaining C++20/23 features
-* Contributors: Francisco Miguel Moreno
-
-0.3.1 (2025-12-17)
-------------------
-* Downgrade from C++23 features
 * Remove std::expected from MethodBase::initialize interface
-* TF Refactor
-* Unify TF configuration
-* Contributors: Francisco Martín Rico, Francisco Miguel Moreno
-
-0.3.0 (2025-12-01)
-------------------
+* Optimize copies in Point Perception when flushing
+* Added non-zero timeout in fuse
+* Added operation to get latest perception, with valid TF or not
+* Buffer in pointperceptions
+* TFInfo in RTTFBuffer
+* Add world frame
+* Create header fro TFInfo
 * Add vision_msgs/msg/Detection3DArray perception
 * Cleanup unused headers
-* Reshape execution and sensor handling
+* Remove queue_size param, set queues to 1
+* Merge new changes into rolling
 * Finished collision checker
-* Optimize pointperceptionview
 * Option to non-lazy ops
 * Optimize filter and collapse
 * Optimized downsample and delete risky constructors
 * Lazy update in PointPerceptions
-* Allow using yaets tracing macros from outside the easynav namespace
+* Remove unused headers
+* Optimization of fuse and collapse
+* Add queue_size parameter
+* First functional version
 * Add namespace to yaets tracing macro
-* Allow using yaets tracing macros from outside the easynav namespace
 * GNSS Support
 * Add missing dependencies
 * Contributors: Francisco Martín Rico, Francisco Miguel Moreno
-
-0.2.0 (2025-12-01)
-------------------
-* Merge rolling into jazzy
 
 0.1.4 (2025-10-16)
 ------------------

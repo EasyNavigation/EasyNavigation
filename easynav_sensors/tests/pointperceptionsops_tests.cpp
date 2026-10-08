@@ -1,6 +1,5 @@
 // Copyright 2025 Intelligent Robotics Lab
 //
-// This file is part of the project Easy Navigation (EasyNav in short)
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -13,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+
 #include "gtest/gtest.h"
 #include <memory>
 #include <vector>
@@ -24,6 +24,7 @@
 
 #include "easynav_sensors/types/PointPerception.hpp"
 #include "easynav_common/RTTFBuffer.hpp"
+#include "easynav_common/TransformListener.hpp"
 
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
@@ -80,10 +81,7 @@ public:
   {
     if (with_listener) {
       // Disable TransformListener internal thread; tests control spinning explicitly if needed.
-      tf_listener_ = std::make_unique<tf2_ros::TransformListener>(
-        *tf_buffer_, node_,
-        /*spin_thread=*/
-        false);
+      tf_listener_ = easynav::make_transform_listener(*tf_buffer_, node_, /*spin_thread=*/ false);
       exec_ = std::make_unique<rclcpp::executors::SingleThreadedExecutor>();
       exec_->add_node(node_->get_node_base_interface());
     }
@@ -353,13 +351,12 @@ TEST(PerceptionsOpsViewCtor, FromSinglePerception_FilterDownsampleCollapse)
   for (int x = -1; x <= 1; ++x) {
     for (int y = -1; y <= 1; ++y) {
       for (int z = -1; z <= 1; ++z) {
-        p.data.emplace_back(
-          static_cast<float>(x),
-          static_cast<float>(y),
-          static_cast<float>(z));
+        p.data.emplace_back(static_cast<float>(x),
+                            static_cast<float>(y),
+                            static_cast<float>(z));
       }
     }
-  }
+}
 
   easynav::PointPerceptionsOpsView view(p);
 
@@ -381,7 +378,7 @@ TEST(PerceptionsOpsViewCtor, FromSinglePerception_FilterDownsampleCollapse)
   ASSERT_EQ(collapsed.size(), 8u);
   for (const auto & pt : collapsed.points) {
     EXPECT_FLOAT_EQ(pt.z, 0.25f);
-  }
+}
 }
 
 TEST(PerceptionsOpsViewCtor, FromOneOfManyPerceptions_UseOneAndOperate)
@@ -405,7 +402,7 @@ TEST(PerceptionsOpsViewCtor, FromOneOfManyPerceptions_UseOneAndOperate)
   ASSERT_EQ(pts.size(), selected->data.size());
   for (std::size_t i = 0; i < pts.size(); ++i) {
     EXPECT_FLOAT_EQ(pts[i].x, selected->data[i].x);
-  }
+}
 
   // Apply filter
   view.filter({0.25, 0.25, 0.25}, {0.75, 0.75, 0.75});
@@ -801,7 +798,7 @@ TEST(PerceptionsOpsViewTests, CollapseEager_OwningView_ModifiesOwnedData)
 
   easynav::PointPerceptionsOpsView view(p);
 
-  view.collapse({NAN, NAN, 0.5}, /*lazy=*/ false);
+  view.collapse({NAN, NAN, 0.5}, /*lazy=*/false);
 
   auto collapsed = view.as_points();
   ASSERT_EQ(collapsed.size(), 2u);
@@ -834,7 +831,7 @@ TEST(PerceptionsOpsViewTests, CollapseEager_NonOwningView_Ignored)
 
   easynav::PointPerceptionsOpsView view(perceptions);
 
-  view.collapse({NAN, NAN, 0.5}, /*lazy=*/ false);
+  view.collapse({NAN, NAN, 0.5}, /*lazy=*/false);
 
   auto out = view.as_points();
   ASSERT_EQ(out.size(), 2u);
@@ -910,7 +907,7 @@ TEST_F(PerceptionsOpsTest, FilterPostFuse_Eager_AppliesInTargetFrame)
 
   auto cloud = view
     .fuse("odom")
-    .filter({0.5, NAN, NAN}, {NAN, NAN, NAN}, /*lazy_post_fuse=*/ false)
+    .filter({0.5, NAN, NAN}, {NAN, NAN, NAN}, /*lazy_post_fuse=*/false)
     .as_points();
 
   ASSERT_EQ(cloud.size(), 1u);
@@ -950,7 +947,7 @@ TEST_F(PerceptionsOpsTest, Filter_PreAndPostFuse_EagerCombination)
     // Fuse to "odom"
     .fuse("odom")
     // post-fuse eager filter: x >= 1.5 in odom
-    .filter({1.5, NAN, NAN}, {NAN, NAN, NAN}, /*lazy_post_fuse=*/ false)
+    .filter({1.5, NAN, NAN}, {NAN, NAN, NAN}, /*lazy_post_fuse=*/false)
     .as_points();
 
   ASSERT_EQ(cloud.size(), 1u);
@@ -969,7 +966,7 @@ TEST(PerceptionsOpsViewTests, CollapseLazy_DoesNotAffectIntermediateFilter)
   easynav::PointPerceptionsOpsView view(p);
 
   // Collapse lazy Z=1.0
-  view.collapse({NAN, NAN, 1.0}, /*lazy=*/ true);
+  view.collapse({NAN, NAN, 1.0}, /*lazy=*/true);
 
   // Filter in z [1.0, 1.0] in sensor frame: applied to original z (0.9 and 1.3),
   // so both points are discarded.

@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>easynav_recovery</name>
+  <version>0.5.0</version>
+  <description>Easy Navigation: hosts the recovery system, a RecoveryManagerBase plugin (recovery_node).</description>
+
+  <maintainer email="fmrico@gmail.com">Francisco Martín Rico</maintainer>
+  <maintainer email="franciscom.moreno@urjc.es">Francisco Miguel Moreno Olivo</maintainer>
+  <maintainer email="esther.aguado@urjc.es">Esther Aguado González</maintainer>
+  <maintainer email="juan.cely@urjc.es">Juan Sebastián Cely Gutiérrez</maintainer>
+  <maintainer email="josemiguel.guerrero@urjc.es">José Miguel Guerrero Hernández</maintainer>
+
+  <license>Apache-2.0</license>
+
+  <author>Francisco Martín Rico</author>
+  <author>Francisco Miguel Moreno Olivo</author>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>easynav_common</depend>
+  <depend>easynav_core</depend>
+  <depend>lifecycle_msgs</depend>
+  <depend>pluginlib</depend>
+  <depend>rclcpp</depend>
+  <depend>rclcpp_lifecycle</depend>
+
+  <test_depend>ament_cmake_gtest</test_depend>
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

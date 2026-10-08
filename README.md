@@ -11,6 +11,14 @@ Web: [https://easynavigation.github.io](https://easynavigation.github.io/)
 
 Doxygen documentation: [https://EasyNavigation.github.io/EasyNavigation/](https://EasyNavigation.github.io/EasyNavigation/)
 
+--- 
+
+<img width="240" height="47" alt="MICIU+Cofinanciado+AEI" src="https://github.com/user-attachments/assets/fedfcf13-6af6-43d7-8290-fe22da4e1db0" />
+<img width="240" height="50" alt="eu_funded_en" src="https://github.com/user-attachments/assets/b11da974-9201-4f79-902e-c9c20e8aa7a4" />
+Funded by the European Union through the Horizon Europe programme under Grant Agreement No. 101070254 (CoreSense), and by MICIU/AEI/10.13039/501100011033 and ERDF/EU under grants PERMAP PID2024-161761OB-C21 and PLANNAV PID2024-161761OB-C22 (AURORAS).
+
+---
+
 📋 Roadmap Project: [RoadMap](https://github.com/EasyNavigation/EasyNavigation/blob/rolling/ROADMAP.md)
 
 **EasyNavigation (EasyNav)** is an open-source navigation system for **ROS 2**, designed to be:
@@ -31,8 +39,7 @@ EasyNav is developed by the **[Intelligent Robotics Lab](https://intelligentrobo
 | [**easynav_plugins**](https://github.com/EasyNavigation/easynav_plugins) | Collection of plugins implementing various **map managers**, **planners**, **localizers**, and **controllers**. |
 | [**NavMap**](https://github.com/EasyNavigation/NavMap) | Surface-based map representation for navigable 3D environments, providing geometric and semantic layers for efficient navigation. |
 | [**easynav_gridmap_stack**](https://github.com/EasyNavigation/easynav_gridmap_stack) | EasyNav stack built around **GridMaps** ([ANYbotics/grid_map](https://github.com/ANYbotics/grid_map)), integrating gridmap-based planners and controllers. |
-| [**easynav_playground_kobuki**](https://github.com/EasyNavigation/easynav_playground_kobuki) | PlayGround with the **Kobuki** mobile robot in indoor simulation environments. |
-| [**easynav_playground_summit**](https://github.com/EasyNavigation/easynav_playground_summit) | PlayGround featuring the **Summit XL** robot in outdoor environments. |
+| [**easynav_playgrounds**](https://github.com/EasyNavigation/easynav_playgrounds) | The **PlayGrounds**: complete Gazebo simulations with ready-to-run EasyNav configurations, for the **Kobuki** (indoor reference), the **Summit XL** (outdoor reference), **TIAGo** and **omnidirectional robots**. Each one comes as three packages: the robot description, the Gazebo worlds and the EasyNav configurations. |
 
 ---
 

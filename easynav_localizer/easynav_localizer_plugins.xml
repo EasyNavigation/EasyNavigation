@@ -8,4 +8,11 @@
       </description>
     </class>
   </library>
+  <library path="faulty_localizer">
+    <class name="easynav_localizer/FaultyLocalizer" type="easynav::FaultyLocalizer" base_class_type="easynav::LocalizerMethodBase">
+      <description>
+      Localizer that injects faults (throw, hang, freeze, stop publishing, NaN or jumping pose), to test how EasyNav copes with them.
+      </description>
+    </class>
+  </library>
 </class_libraries>

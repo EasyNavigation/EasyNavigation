@@ -1,6 +1,5 @@
 // Copyright 2025 Intelligent Robotics Lab
 //
-// This file is part of the project Easy Navigation (EasyNav in short)
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -353,14 +352,12 @@ TEST_F(PerceptionsTestCase, PointPerceptionHandlerWorks)
 
   node->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_CONFIGURE);
 
-  ASSERT_EQ(
-    node->get_current_state().id(),
+  ASSERT_EQ(node->get_current_state().id(),
     lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE);
 
   node->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_ACTIVATE);
 
-  ASSERT_EQ(
-    node->get_current_state().id(),
+  ASSERT_EQ(node->get_current_state().id(),
     lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE);
 
   auto handler = std::make_shared<easynav::PointPerceptionHandler>();
@@ -747,14 +744,12 @@ TEST_F(PerceptionsTestCase, PointPerceptionHandlerPC2Works)
 
   node->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_CONFIGURE);
 
-  ASSERT_EQ(
-    node->get_current_state().id(),
+  ASSERT_EQ(node->get_current_state().id(),
     lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE);
 
   node->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_ACTIVATE);
 
-  ASSERT_EQ(
-    node->get_current_state().id(),
+  ASSERT_EQ(node->get_current_state().id(),
     lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE);
 
   auto handler = std::make_shared<easynav::PointPerceptionHandler>();
@@ -825,14 +820,12 @@ TEST_F(PerceptionsTestCase, ImagePerceptionHandlerWorks)
 
   node->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_CONFIGURE);
 
-  ASSERT_EQ(
-    node->get_current_state().id(),
+  ASSERT_EQ(node->get_current_state().id(),
     lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE);
 
   node->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_ACTIVATE);
 
-  ASSERT_EQ(
-    node->get_current_state().id(),
+  ASSERT_EQ(node->get_current_state().id(),
     lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE);
 
   auto handler = std::make_shared<easynav::ImagePerceptionHandler>();

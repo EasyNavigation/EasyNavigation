@@ -21,6 +21,7 @@ find_package(PCL REQUIRED COMPONENTS common io)
 find_package(pcl_conversions REQUIRED)
 find_package(cv_bridge REQUIRED)
 find_package(pluginlib REQUIRED)
+find_package(diagnostic_msgs REQUIRED)
 
 set(dependencies
   rclcpp::rclcpp
@@ -47,20 +48,24 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include/${PROJECT_NAME}>
   ${PCL_INCLUDE_DIRS}
-  ${pcl_conversions_INCLUDE_DIRS}
 )
+# pcl_conversions exports a CMake target only since 2.8 (Kilted); older ones, variables
+target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${pcl_conversions_INCLUDE_DIRS})
 target_link_libraries(${PROJECT_NAME} PUBLIC
   rclcpp::rclcpp
   rclcpp_lifecycle::rclcpp_lifecycle
   easynav_common::easynav_common
   tf2_ros::tf2_ros
   tf2_geometry_msgs::tf2_geometry_msgs
+  ${pcl_conversions_TARGETS}
+  ${pcl_conversions_LIBRARIES}
   cv_bridge::cv_bridge
   pluginlib::pluginlib
   ${sensor_msgs_TARGETS}
   ${vision_msgs_TARGETS}
   ${geometry_msgs_TARGETS}
   ${nav_msgs_TARGETS}
+  ${diagnostic_msgs_TARGETS}
   ${PCL_LIBRARIES}
 )
 
@@ -111,6 +116,7 @@ ament_export_dependencies(
   pcl_conversions
   cv_bridge
   pluginlib
+  diagnostic_msgs
   PCL
 )
 ament_package()

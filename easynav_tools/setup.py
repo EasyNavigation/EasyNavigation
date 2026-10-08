@@ -3,7 +3,7 @@ from setuptools import find_packages, setup
 package_name = 'easynav_tools'
 setup(
     name=package_name,
-    version='0.4.0',
+    version='0.5.0',
     packages=find_packages(
         include=[package_name, package_name + '.*'], exclude=['test', 'scripts']
     ),
@@ -16,13 +16,12 @@ setup(
         ('share/ament_index/resource_index/packages', [f'resource/{package_name}']),
         ('share/' + package_name, ['package.xml', 'README.md']),
     ],
-    install_requires=['setuptools', 'rich>=13.3.0', 'pydantic>=2.0.0'],
+    install_requires=['setuptools', 'rich>=13.3.0'],
     zip_safe=False,
     maintainer='Francisco Martín Rico',
     maintainer_email='fmrico@gmail.com',
     description='ROS 2 Navigation tools: TUI (Textual) + ros2cli commands for EasyNav.',
     license='Apache-2.0',
-    tests_require=['pytest'],
     entry_points={
         'console_scripts': [
             'tui = easynav_tools.tui.app:run_app',
@@ -42,6 +41,8 @@ setup(
             'nav_state = easynav_tools.cli.nav_state:NavStateVerb',
             'timestats = easynav_tools.cli.timetats:TimeStatsVerb',
             'plugins = easynav_tools.cli.plugins:PluginsVerb',
+            'pause = easynav_tools.cli.pause:PauseVerb',
+            'resume = easynav_tools.cli.resume:ResumeVerb',
         ],
     },
 )

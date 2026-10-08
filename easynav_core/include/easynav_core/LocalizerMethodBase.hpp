@@ -1,6 +1,5 @@
 // Copyright 2025 Intelligent Robotics Lab
 //
-// This file is part of the project Easy Navigation (EasyNav in short)
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -18,6 +17,10 @@
 
 #ifndef EASYNAV_CORE__LOCALIZERMETHODBASE_HPP_
 #define EASYNAV_CORE__LOCALIZERMETHODBASE_HPP_
+
+#include <mutex>
+
+#include "geometry_msgs/msg/pose_with_covariance_stamped.hpp"
 
 #include "easynav_common/types/NavState.hpp"
 #include "easynav_core/MethodBase.hpp"
@@ -71,6 +74,24 @@ protected:
    * @param nav_state The current state of the navigation system.
    */
   virtual void update(NavState & nav_state) = 0;
+
+  /**
+   * @brief Called once, before this instance's first cycle, with the valid robot pose (map
+   * frame, finite) that a previous localizer left in NavState, e.g. after a reconfiguration.
+   *
+   * Contract between localizers, so any can replace any other (e.g. AMCL <-> Fusion): each one
+   * writes its estimate to "robot_pose" (nav_msgs/Odometry, map frame, with covariance), and
+   * the next one starts from it here. Default: ignore it.
+   */
+  virtual void on_last_known_pose(
+    [[maybe_unused]] const geometry_msgs::msg::PoseWithCovarianceStamped & pose) {}
+
+private:
+  /// @brief Hands the last known pose to on_last_known_pose(), on the first cycle only.
+  void check_last_known_pose(const NavState & nav_state);
+
+  /// @brief Also makes the other loop (RT/non-RT) wait until the hook has finished.
+  std::once_flag last_known_pose_once_;
 };
 
 }  // namespace easynav

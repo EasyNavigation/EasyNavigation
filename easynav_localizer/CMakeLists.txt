@@ -45,6 +45,21 @@ target_link_libraries(dummy_localizer PUBLIC
   ${nav_msgs_TARGETS}
 )
 
+# Fault injection, for testing (see fault_injection/)
+add_library(faulty_localizer SHARED
+  src/easynav_localizer/fault_injection/FaultyLocalizer.cpp
+)
+target_include_directories(faulty_localizer PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include/${PROJECT_NAME}>
+)
+target_link_libraries(faulty_localizer PUBLIC
+  easynav_core::easynav_core
+  easynav_common::easynav_common
+  pluginlib::pluginlib
+  ${nav_msgs_TARGETS}
+)
+
 install(
   DIRECTORY include/
   DESTINATION include/${PROJECT_NAME}
@@ -53,6 +68,7 @@ install(
 install(TARGETS
   ${PROJECT_NAME}
   dummy_localizer
+  faulty_localizer
   EXPORT export_${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
