@@ -253,6 +253,11 @@ int main(int argc, char ** argv)
     }
   }
 
+#ifdef EASYNAV_DEBUG_WITH_YAETS
+  // Singletons are not destroyed at exit: flush the trace log now that nothing traces
+  easynav::YTSession::removeInstance();
+#endif
+
   rclcpp::shutdown();
 
   if (shutdown_reason.has_value()) {

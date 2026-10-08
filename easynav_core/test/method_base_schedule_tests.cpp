@@ -51,6 +51,7 @@ protected:
     rclcpp::NodeOptions options;
     options.parameter_overrides(
       {{"use_sim_time", true}, {"plugin.rt_freq", rt_freq}, {"plugin.freq", freq}});
+    options.use_clock_thread(false);  // The test sets the time: no /clock thread to tear down
     node_ = std::make_shared<rclcpp_lifecycle::LifecycleNode>("schedule_test_node", options);
     set_time(t0);
     method_ = std::make_unique<easynav::MethodBase>();

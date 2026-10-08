@@ -16,7 +16,6 @@
 #ifndef EASYNAV_COMMON__SINGLETON_H_
 #define EASYNAV_COMMON__SINGLETON_H_
 
-#include <memory>
 #include <mutex>
 #include <utility>
 
@@ -32,9 +31,9 @@ public:
   {
     std::lock_guard<std::mutex> lock(mutex_);
     if (!instance_) {
-      instance_ = std::make_unique<C>(std::forward<Args>(args)...);
+      instance_ = new C(std::forward<Args>(args)...);
     }
-    return instance_.get();
+    return instance_;
   }
 
   /// \brief Destroy the current instance, if any; the next getInstance()/get() call
@@ -51,7 +50,8 @@ public:
   static void removeInstance()
   {
     std::lock_guard<std::mutex> lock(mutex_);
-    instance_.reset();
+    delete instance_;
+    instance_ = nullptr;
   }
 
   template<typename ... Args>
@@ -68,12 +68,13 @@ protected:
   Singleton & operator=(const Singleton &) = delete;
 
 private:
-  static std::unique_ptr<C> instance_;
+  // Never destroyed at exit: the plugin library that built it (its vtable) may be unloaded
+  static C * instance_;
   static std::mutex mutex_;
 };
 
 template<class C>
-std::unique_ptr<C> Singleton<C>::instance_ = nullptr;
+C * Singleton<C>::instance_ = nullptr;
 
 template<class C>
 std::mutex Singleton<C>::mutex_;
