@@ -47,12 +47,16 @@ protected:
   void SetUp() override
   {
     // The Dummy planner does not write "path": the tests write it, as a planner would.
-    node_ = std::make_shared<easynav::PlannerNode>(rclcpp::NodeOptions().parameter_overrides({
+    node_ = std::make_shared<easynav::PlannerNode>(
+      rclcpp::NodeOptions().parameter_overrides(
+    {
       {"planner_types", std::vector<std::string>{"dummy"}},
       {"dummy.plugin", "easynav_planner/DummyPlanner"}}));
-    ASSERT_EQ(node_->trigger_transition(Transition::TRANSITION_CONFIGURE).id(),
+    ASSERT_EQ(
+      node_->trigger_transition(Transition::TRANSITION_CONFIGURE).id(),
       State::PRIMARY_STATE_INACTIVE);
-    ASSERT_EQ(node_->trigger_transition(Transition::TRANSITION_ACTIVATE).id(),
+    ASSERT_EQ(
+      node_->trigger_transition(Transition::TRANSITION_ACTIVATE).id(),
       State::PRIMARY_STATE_ACTIVE);
   }
 

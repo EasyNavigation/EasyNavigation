@@ -55,7 +55,8 @@ TEST(RealTimeTest, PrioritySetOrWhyNot)
   // result itself tells.
   std::string error;
   int policy = -1;
-  std::thread([&error, &policy]() {  // Its own thread: the test's keep their scheduling.
+  std::thread(
+    [&error, &policy]() {            // Its own thread: the test's keep their scheduling.
       error = easynav::set_real_time_priority(1);
       policy = sched_getscheduler(0);
     }).join();
@@ -75,7 +76,8 @@ TEST(RealTimeTest, CheckingThePriorityLeavesTheCallerUntouched)
   EXPECT_EQ(sched_getscheduler(0), before);
 
   std::string direct;
-  std::thread([&direct]() {
+  std::thread(
+    [&direct]() {
       direct = easynav::set_real_time_priority(easynav::kRealTimePriority);
     }).join();
   EXPECT_EQ(error.empty(), direct.empty()) << "the same answer as trying it";

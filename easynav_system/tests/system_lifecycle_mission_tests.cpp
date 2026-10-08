@@ -125,8 +125,8 @@ protected:
     ASSERT_TRUE(
       cycle_until(
         system_node, exe, [&]() {
-          return client_node->count_subscribers("easynav_control") >= 2 &&
-                 client_node->count_publishers("easynav_control") >= 2;
+          const bool subscribed = client_node->count_subscribers("easynav_control") >= 2;
+          return subscribed && client_node->count_publishers("easynav_control") >= 2;
         }));
   }
 
@@ -166,8 +166,8 @@ TEST_F(SystemLifecycleMissionTest, MissionSurvivesReconfigurationAndReachesTheGo
   ASSERT_TRUE(
     cycle_until(
       system_node, exe, [&]() {
-        return client_node->count_subscribers("easynav_control") >= 2 &&
-               client_node->count_publishers("easynav_control") >= 2;
+        const bool subscribed = client_node->count_subscribers("easynav_control") >= 2;
+        return subscribed && client_node->count_publishers("easynav_control") >= 2;
       }));
 
   geometry_msgs::msg::PoseStamped goal;
@@ -179,8 +179,8 @@ TEST_F(SystemLifecycleMissionTest, MissionSurvivesReconfigurationAndReachesTheGo
   ASSERT_TRUE(
     cycle_until(
       system_node, exe, [&]() {
-        return client->get_state() ==
-               easynav::GoalManagerClient::State::ACCEPTED_AND_NAVIGATING;
+        using State = easynav::GoalManagerClient::State;
+        return client->get_state() == State::ACCEPTED_AND_NAVIGATING;
       }));
 
   // Halfway there.
@@ -246,7 +246,7 @@ TEST_F(SystemLifecycleMissionTest, MissionSurvivesRepeatedReconfigurations)
     cycle_until(
       system_node, exe, [&]() {
         return client->get_state() == ClientState::ACCEPTED_AND_NAVIGATING;
-    }));
+      }));
 
   for (int i = 1; i <= 3; ++i) {
     set_robot_x(*system_node->get_nav_state(), i);
@@ -284,7 +284,7 @@ TEST_F(SystemLifecycleMissionTest, ReconfigurationWithoutMissionThenNewMission)
     cycle_until(
       system_node, exe, [&]() {
         return client->get_state() == ClientState::ACCEPTED_AND_NAVIGATING;
-    }));
+      }));
   set_robot_x(*system_node->get_nav_state(), 2.0);
   EXPECT_TRUE(
     cycle_until(
@@ -304,7 +304,7 @@ TEST_F(SystemLifecycleMissionTest, MissionCanBeCancelledAfterReconfiguration)
     cycle_until(
       system_node, exe, [&]() {
         return client->get_state() == ClientState::ACCEPTED_AND_NAVIGATING;
-    }));
+      }));
   ASSERT_TRUE(reconfigure(system_node));
   cycle_until(system_node, exe, []() {return false;}, 200ms);
 
@@ -330,7 +330,7 @@ TEST_F(SystemLifecycleMissionTest, ParametersAndPluginsChangedWhileUnconfiguredA
     cycle_until(
       system_node, exe, [&]() {
         return client->get_state() == ClientState::ACCEPTED_AND_NAVIGATING;
-    }));
+      }));
 
   // Close to the goal, but outside the default position tolerance: not finished.
   set_robot_x(*system_node->get_nav_state(), 4.2);

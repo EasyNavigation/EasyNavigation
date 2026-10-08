@@ -71,7 +71,8 @@ protected:
   bool configure(double cmd_timeout, double keepalive_period = 0.0)
   {
     node_ = std::make_shared<rclcpp_lifecycle::LifecycleNode>(
-      "guard_test_node", rclcpp::NodeOptions().parameter_overrides({
+      "guard_test_node", rclcpp::NodeOptions().parameter_overrides(
+    {
       {"cmd_timeout", cmd_timeout},
       {"cmd_vel_keepalive_period", keepalive_period}}));
     guard_.declare_parameters(*node_);

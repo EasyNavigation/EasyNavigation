@@ -524,9 +524,9 @@ public:
   /// \note Intended for debugging in exception contexts.
   static void print_stacktrace()
   {
-    void *array[50];
+    void * array[50];
     int size = backtrace(array, 50);
-    char **strings = backtrace_symbols(array, size);
+    char ** strings = backtrace_symbols(array, size);
     std::cerr << "\nStack trace:\n";
     for (int i = 0; i < size; ++i) {
       std::cerr << strings[i] << std::endl;

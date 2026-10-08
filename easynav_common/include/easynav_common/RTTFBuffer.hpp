@@ -41,7 +41,8 @@ public:
   explicit RTTFBuffer()
   : Buffer(std::make_shared<rclcpp::Clock>(RCL_ROS_TIME))
   {
-    RCLCPP_WARN(rclcpp::get_logger("RTTFBuffer"),
+    RCLCPP_WARN(
+      rclcpp::get_logger("RTTFBuffer"),
       "You should be creating this RTTFBuffer with your clock."
       "Using default clock RCL_ROS_TIME");
   }

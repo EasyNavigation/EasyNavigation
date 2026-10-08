@@ -21,6 +21,10 @@ jobs:
       - uses: actions/checkout@v6
         with:
           ref: rolling
+      # The image can lag behind the published packages, and mixing them breaks the ABI
+      # (e.g. vision_msgs built against a newer std_msgs): upgrade it first.
+      - name: Upgrade the image's packages
+        run: apt-get update && apt-get -y dist-upgrade
       - name: build and test
         uses: ros-tooling/action-ros-ci@0.4.8
         with:

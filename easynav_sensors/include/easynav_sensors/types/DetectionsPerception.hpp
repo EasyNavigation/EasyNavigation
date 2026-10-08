@@ -65,7 +65,7 @@ public:
                 << " detections in frame [" << perception.frame_id
                 << "] with ts " << perception.stamp.seconds() << "\n";
             return ret.str();
-        });
+          });
         return true;
       }();
   }

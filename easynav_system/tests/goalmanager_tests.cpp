@@ -185,7 +185,7 @@ TEST_F(GoalManagerTestCase, initpose_topic_with_preempt)
 
   ASSERT_EQ(gm_client->get_state(), easynav::GoalManagerClient::State::IDLE);
 
- // Navigation 1 succesfull
+  // Navigation 1 succesfull
   RCLCPP_INFO(client_node->get_logger(), "Navigation 1 succesfull");
 
   geometry_msgs::msg::PoseStamped goal;

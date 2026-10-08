@@ -341,10 +341,11 @@ TEST_F(ControllerNodeVelocityTest, KnowsWhichLimitsWereConfigured)
 {
   // Only some limits given: the rest are defaults, not configured.
   auto node = std::make_shared<easynav::ControllerNode>(
-    rclcpp::NodeOptions().parameter_overrides({
+    rclcpp::NodeOptions().parameter_overrides(
+  {
     {"robot_limits.max_linear_vel", 0.8},
     {"robot_limits.max_angular_acc", easynav::RobotLimits{}.max_angular_acc},
-    }));
+  }));
   EXPECT_TRUE(node->is_robot_limit_configured("max_linear_vel"));
   EXPECT_TRUE(node->is_robot_limit_configured("max_angular_acc")) << "given, even if default";
   EXPECT_FALSE(node->is_robot_limit_configured("min_linear_vel"));
@@ -381,10 +382,11 @@ const easynav::LegacyRobotLimitNames kLegacy{
 TEST_F(ControllerNodeVelocityTest, DeprecatedLimitsApplyWhenRobotLimitsAreNotConfigured)
 {
   auto node = std::make_shared<easynav::ControllerNode>(
-    rclcpp::NodeOptions().parameter_overrides({
+    rclcpp::NodeOptions().parameter_overrides(
+  {
     {"ctrl.old_max_speed", 0.8},
     {"ctrl.old_max_acc", 1.5},
-    }));
+  }));
   LimitsReadingController controller;
   controller.initialize(node, "ctrl");
 
@@ -402,11 +404,12 @@ TEST_F(ControllerNodeVelocityTest, DeprecatedLimitsApplyWhenRobotLimitsAreNotCon
 TEST_F(ControllerNodeVelocityTest, RobotLimitsTakePrecedenceOverDeprecatedOnes)
 {
   auto node = std::make_shared<easynav::ControllerNode>(
-    rclcpp::NodeOptions().parameter_overrides({
+    rclcpp::NodeOptions().parameter_overrides(
+  {
     {"robot_limits.max_linear_vel", 0.6},
     {"ctrl.old_max_speed", 0.8},
     {"ctrl.old_max_turn", 2.0},
-    }));
+  }));
   LimitsReadingController controller;
   controller.initialize(node, "ctrl");
 
@@ -570,11 +573,13 @@ TEST_F(ControllerNodeVelocityTest, ProposalsArePrintedInTheNavStateDump)
       }
       return std::string();
     };
-  EXPECT_NE(line("cmd_vel.proposal.controller").find("pending Twist with (0.5, 0, 0)"),
+  EXPECT_NE(
+    line("cmd_vel.proposal.controller").find("pending Twist with (0.5, 0, 0)"),
     std::string::npos) << line("cmd_vel.proposal.controller");
 
   node_->publish_cmd_vel_rt(nav_state_);  // The mux takes it.
-  EXPECT_NE(line("cmd_vel.proposal.controller").find("taken Twist with (0.5, 0, 0)"),
+  EXPECT_NE(
+    line("cmd_vel.proposal.controller").find("taken Twist with (0.5, 0, 0)"),
     std::string::npos) << line("cmd_vel.proposal.controller");
 }
 
@@ -717,7 +722,11 @@ TEST_F(ControllerNodeVelocityTest, VelocityQosKeepsOnlyTheLatestCommandAndOffers
     make_active_node();
     const auto info = node_->get_publishers_info_by_topic("cmd_vel_stamped");
     ASSERT_EQ(info.size(), 1u);
-    EXPECT_EQ(info[0].qos_profile().depth(), 1u);
+    // Up to Jazzy the graph does not report the history depth (0): only check it when it does
+    const auto depth = info[0].qos_profile().depth();
+    if (depth != 0u) {
+      EXPECT_EQ(depth, 1u);
+    }
     // Infinite (the middleware reports it as a huge value): no keepalive, no deadline promise.
     EXPECT_GT(info[0].qos_profile().deadline().seconds(), 1e6);
     node_.reset();
@@ -780,7 +789,8 @@ TEST_F(ControllerNodeVelocityTest, TimeoutMustBeLongerThanTheControllerPeriod)
 {
   auto make = [](double cmd_timeout) {
       return std::make_shared<easynav::ControllerNode>(
-        limits_options({
+        limits_options(
+    {
       {"controller_types", std::vector<std::string>{"ctrl"}},
       {"ctrl.plugin", std::string("easynav_controller/DummyController")},
       {"ctrl.rt_freq", 2.0},      // 0.5 s
@@ -857,8 +867,10 @@ TEST_F(ControllerNodeVelocityTest, InvalidRobotLimitsFailToConfigure)
       param.get_name() << " = " << param.value_to_string();
 
     // Fixed, it configures.
-    node->set_parameter(rclcpp::Parameter(param.get_name(), param.get_name() ==
-      "robot_limits.min_linear_vel" ? -0.1 : 0.5));
+    node->set_parameter(
+      rclcpp::Parameter(
+        param.get_name(), param.get_name() ==
+        "robot_limits.min_linear_vel" ? -0.1 : 0.5));
     node->trigger_transition(Transition::TRANSITION_CONFIGURE);
     EXPECT_EQ(node->get_current_state().id(), State::PRIMARY_STATE_INACTIVE) << param.get_name();
   }
@@ -868,7 +880,8 @@ TEST_F(ControllerNodeVelocityTest, ZeroVelocityLimitsAreValid)
 {
   // E.g. a robot that cannot reverse, or that only rotates in place.
   auto node = std::make_shared<easynav::ControllerNode>(
-    limits_options({
+    limits_options(
+  {
     {"robot_limits.max_linear_vel", 0.0},
     {"robot_limits.min_linear_vel", 0.0},
     {"robot_limits.max_angular_vel", 0.0},
