@@ -139,7 +139,8 @@ TEST_F(CoreMethodTestCase, InvalidFrequenciesAreRejected)
   // Positive and finite, however small or large: valid.
   for (const double value : {1e-3, 1e6}) {
     auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>(
-      "test_node", rclcpp::NodeOptions().parameter_overrides({
+      "test_node", rclcpp::NodeOptions().parameter_overrides(
+    {
       {"test.rt_freq", value}, {"test.freq", value}}));
     MockMethod method;
     EXPECT_NO_THROW(method.initialize(node, "test")) << value;

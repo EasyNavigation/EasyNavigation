@@ -105,8 +105,8 @@ protected:
     ASSERT_TRUE(
       cycle_until(
         [&]() {
-          return client_node_->count_subscribers("easynav_control") >= 2 &&
-                 client_node_->count_publishers("easynav_control") >= 2;
+          const bool subscribed = client_node_->count_subscribers("easynav_control") >= 2;
+          return subscribed && client_node_->count_publishers("easynav_control") >= 2;
         }));
 
     geometry_msgs::msg::PoseStamped goal;
@@ -114,9 +114,11 @@ protected:
     goal.pose.position.x = 5.0;
     goal.pose.orientation.w = 1.0;
     client_->send_goal(goal);
-    ASSERT_TRUE(cycle_until([&]() {
-        return client_->get_state() == ClientState::ACCEPTED_AND_NAVIGATING;
-                                                                                                       }));
+    ASSERT_TRUE(
+      cycle_until(
+        [&]() {
+          return client_->get_state() == ClientState::ACCEPTED_AND_NAVIGATING;
+        }));
   }
 
   bool finished() {return client_->get_state() == ClientState::NAVIGATION_FINISHED;}
@@ -151,9 +153,11 @@ TEST_F(SystemActionsTest, AbortMissionEndsItWithAnError)
   start_mission();
   system_node_->abort_mission("localization diverged");
 
-  ASSERT_TRUE(cycle_until([&]() {
-      return client_->get_state() != ClientState::ACCEPTED_AND_NAVIGATING;
-                                                                                                     }));
+  ASSERT_TRUE(
+    cycle_until(
+      [&]() {
+        return client_->get_state() != ClientState::ACCEPTED_AND_NAVIGATING;
+      }));
   EXPECT_NE(client_->get_state(), ClientState::NAVIGATION_FINISHED);
   EXPECT_EQ(
     client_->get_last_control().type, easynav_interfaces::msg::NavigationControl::ERROR);

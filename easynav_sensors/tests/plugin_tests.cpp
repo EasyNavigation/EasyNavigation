@@ -227,7 +227,8 @@ TEST_F(PluginTestCase, explicit_plugin_does_not_override_default_for_other_senso
   // sensorA: explicit plugin (same as the built-in default for LaserScan)
   sensors_node->declare_parameter("sensorA.topic", std::string("/scanA"));
   sensors_node->declare_parameter("sensorA.type", std::string("sensor_msgs/msg/LaserScan"));
-  sensors_node->declare_parameter("sensorA.plugin",
+  sensors_node->declare_parameter(
+    "sensorA.plugin",
     std::string("easynav_sensors/PointPerceptionHandler"));
 
   // sensorB: same type, NO explicit plugin — must still resolve to built-in default
@@ -460,7 +461,8 @@ TEST_F(PluginTestCase, configure_fails_on_unknown_message_type)
   auto sensors_node = easynav::SensorsNode::make_shared();
 
   sensors_node->declare_parameter("bad_sensor.topic", std::string("/unknown_topic"));
-  sensors_node->declare_parameter("bad_sensor.type",
+  sensors_node->declare_parameter(
+    "bad_sensor.type",
     std::string("unknown_pkg/msg/UnknownType"));
   sensors_node->set_parameter({"sensors", std::vector<std::string>{"bad_sensor"}});
 
@@ -486,9 +488,11 @@ TEST_F(PluginTestCase, configure_fails_on_nonexistent_plugin)
   auto sensors_node = easynav::SensorsNode::make_shared();
 
   sensors_node->declare_parameter("bad_sensor.topic", std::string("/scan_bad"));
-  sensors_node->declare_parameter("bad_sensor.type",
+  sensors_node->declare_parameter(
+    "bad_sensor.type",
     std::string("sensor_msgs/msg/LaserScan"));
-  sensors_node->declare_parameter("bad_sensor.plugin",
+  sensors_node->declare_parameter(
+    "bad_sensor.plugin",
     std::string("easynav_sensors/NonExistentHandler"));
   sensors_node->set_parameter({"sensors", std::vector<std::string>{"bad_sensor"}});
 

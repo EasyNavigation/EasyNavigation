@@ -50,8 +50,9 @@ void handle_shutdown_signal(int /*signum*/)
     std::chrono::steady_clock::now().time_since_epoch()).count();
 
   int64_t expected = 0;
-  if (g_shutdown_requested_at_ns.compare_exchange_strong(expected, now_ns,
-    std::memory_order_relaxed))
+  if (g_shutdown_requested_at_ns.compare_exchange_strong(
+      expected, now_ns,
+      std::memory_order_relaxed))
   {
     g_stop.store(true, std::memory_order_relaxed);
   } else if (now_ns - expected > kDebounceNs) {
@@ -98,8 +99,9 @@ int main(int argc, char ** argv)
 #endif
 
     exe_nort.add_node(system_node->get_node_base_interface());
-    exe_rt.add_callback_group(system_node->get_real_time_cbg(),
-                              system_node->get_node_base_interface());
+    exe_rt.add_callback_group(
+      system_node->get_real_time_cbg(),
+      system_node->get_node_base_interface());
 
     auto tf_node = rclcpp::Node::make_shared("tf_node");
 
@@ -109,8 +111,9 @@ int main(int argc, char ** argv)
     for (auto & node : system_node->get_system_nodes()) {
       exe_nort.add_node(node.second.node_ptr->get_node_base_interface());
       if (node.second.realtime_cbg != nullptr) {
-        exe_rt.add_callback_group(node.second.realtime_cbg,
-                                  node.second.node_ptr->get_node_base_interface());
+        exe_rt.add_callback_group(
+          node.second.realtime_cbg,
+          node.second.node_ptr->get_node_base_interface());
       }
     }
 

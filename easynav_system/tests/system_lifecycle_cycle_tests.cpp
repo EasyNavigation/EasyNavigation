@@ -108,10 +108,12 @@ TEST_F(SystemLifecycleCycleTest, ActiveToUnconfiguredAndBackRepeatedly)
 {
   auto system_node = std::make_shared<easynav::SystemNode>();
 
-  ASSERT_TRUE(expect_transition(
-    system_node, Transition::TRANSITION_CONFIGURE, State::PRIMARY_STATE_INACTIVE));
-  ASSERT_TRUE(expect_transition(
-    system_node, Transition::TRANSITION_ACTIVATE, State::PRIMARY_STATE_ACTIVE));
+  ASSERT_TRUE(
+    expect_transition(
+      system_node, Transition::TRANSITION_CONFIGURE, State::PRIMARY_STATE_INACTIVE));
+  ASSERT_TRUE(
+    expect_transition(
+      system_node, Transition::TRANSITION_ACTIVATE, State::PRIMARY_STATE_ACTIVE));
 
   auto listener_node = rclcpp::Node::make_shared("cmd_vel_cycle_listener");
   std::vector<geometry_msgs::msg::Twist> received;
@@ -128,15 +130,19 @@ TEST_F(SystemLifecycleCycleTest, ActiveToUnconfiguredAndBackRepeatedly)
   for (int cycle = 0; cycle < kCycles; ++cycle) {
     SCOPED_TRACE(::testing::Message() << "cycle " << cycle);
 
-    ASSERT_TRUE(expect_transition(
-      system_node, Transition::TRANSITION_DEACTIVATE, State::PRIMARY_STATE_INACTIVE));
-    ASSERT_TRUE(expect_transition(
-      system_node, Transition::TRANSITION_CLEANUP, State::PRIMARY_STATE_UNCONFIGURED));
+    ASSERT_TRUE(
+      expect_transition(
+        system_node, Transition::TRANSITION_DEACTIVATE, State::PRIMARY_STATE_INACTIVE));
+    ASSERT_TRUE(
+      expect_transition(
+        system_node, Transition::TRANSITION_CLEANUP, State::PRIMARY_STATE_UNCONFIGURED));
 
-    ASSERT_TRUE(expect_transition(
-      system_node, Transition::TRANSITION_CONFIGURE, State::PRIMARY_STATE_INACTIVE));
-    ASSERT_TRUE(expect_transition(
-      system_node, Transition::TRANSITION_ACTIVATE, State::PRIMARY_STATE_ACTIVE));
+    ASSERT_TRUE(
+      expect_transition(
+        system_node, Transition::TRANSITION_CONFIGURE, State::PRIMARY_STATE_INACTIVE));
+    ASSERT_TRUE(
+      expect_transition(
+        system_node, Transition::TRANSITION_ACTIVATE, State::PRIMARY_STATE_ACTIVE));
 
     auto nav_state = system_node->get_nav_state();
     ASSERT_TRUE(nav_state->has("navigation_paused"));
@@ -173,26 +179,34 @@ TEST_F(SystemLifecycleCycleTest, AllPrimaryTransitionsRepeatedly)
   for (int cycle = 0; cycle < 3; ++cycle) {
     SCOPED_TRACE(::testing::Message() << "cycle " << cycle);
 
-    ASSERT_TRUE(expect_transition(
-      system_node, Transition::TRANSITION_CONFIGURE, State::PRIMARY_STATE_INACTIVE));
-    ASSERT_TRUE(expect_transition(
-      system_node, Transition::TRANSITION_ACTIVATE, State::PRIMARY_STATE_ACTIVE));
+    ASSERT_TRUE(
+      expect_transition(
+        system_node, Transition::TRANSITION_CONFIGURE, State::PRIMARY_STATE_INACTIVE));
+    ASSERT_TRUE(
+      expect_transition(
+        system_node, Transition::TRANSITION_ACTIVATE, State::PRIMARY_STATE_ACTIVE));
 
-    ASSERT_TRUE(expect_transition(
-      system_node, Transition::TRANSITION_DEACTIVATE, State::PRIMARY_STATE_INACTIVE));
-    ASSERT_TRUE(expect_transition(
-      system_node, Transition::TRANSITION_ACTIVATE, State::PRIMARY_STATE_ACTIVE));
-    ASSERT_TRUE(expect_transition(
-      system_node, Transition::TRANSITION_DEACTIVATE, State::PRIMARY_STATE_INACTIVE));
+    ASSERT_TRUE(
+      expect_transition(
+        system_node, Transition::TRANSITION_DEACTIVATE, State::PRIMARY_STATE_INACTIVE));
+    ASSERT_TRUE(
+      expect_transition(
+        system_node, Transition::TRANSITION_ACTIVATE, State::PRIMARY_STATE_ACTIVE));
+    ASSERT_TRUE(
+      expect_transition(
+        system_node, Transition::TRANSITION_DEACTIVATE, State::PRIMARY_STATE_INACTIVE));
 
-    ASSERT_TRUE(expect_transition(
-      system_node, Transition::TRANSITION_CLEANUP, State::PRIMARY_STATE_UNCONFIGURED));
+    ASSERT_TRUE(
+      expect_transition(
+        system_node, Transition::TRANSITION_CLEANUP, State::PRIMARY_STATE_UNCONFIGURED));
   }
 
-  ASSERT_TRUE(expect_transition(
-    system_node, Transition::TRANSITION_CONFIGURE, State::PRIMARY_STATE_INACTIVE));
-  ASSERT_TRUE(expect_transition(
-    system_node, Transition::TRANSITION_ACTIVATE, State::PRIMARY_STATE_ACTIVE));
+  ASSERT_TRUE(
+    expect_transition(
+      system_node, Transition::TRANSITION_CONFIGURE, State::PRIMARY_STATE_INACTIVE));
+  ASSERT_TRUE(
+    expect_transition(
+      system_node, Transition::TRANSITION_ACTIVATE, State::PRIMARY_STATE_ACTIVE));
 
   ASSERT_NO_THROW(system_node->system_cycle());
   ASSERT_NO_THROW(system_node->system_cycle_rt());
@@ -202,10 +216,12 @@ TEST_F(SystemLifecycleCycleTest, DeactivationStopsTheRobot)
 {
   // Drivers usually keep executing the last command received.
   auto system_node = std::make_shared<easynav::SystemNode>();
-  ASSERT_TRUE(expect_transition(
-    system_node, Transition::TRANSITION_CONFIGURE, State::PRIMARY_STATE_INACTIVE));
-  ASSERT_TRUE(expect_transition(
-    system_node, Transition::TRANSITION_ACTIVATE, State::PRIMARY_STATE_ACTIVE));
+  ASSERT_TRUE(
+    expect_transition(
+      system_node, Transition::TRANSITION_CONFIGURE, State::PRIMARY_STATE_INACTIVE));
+  ASSERT_TRUE(
+    expect_transition(
+      system_node, Transition::TRANSITION_ACTIVATE, State::PRIMARY_STATE_ACTIVE));
 
   auto listener_node = rclcpp::Node::make_shared("cmd_vel_stop_listener");
   std::vector<geometry_msgs::msg::Twist> received;
@@ -238,17 +254,20 @@ TEST_F(SystemLifecycleCycleTest, DeactivationStopsTheRobot)
 
     // Deactivated: the last command sent is a stop, also left in NavState.
     received.clear();
-    ASSERT_TRUE(expect_transition(
-      system_node, Transition::TRANSITION_DEACTIVATE, State::PRIMARY_STATE_INACTIVE));
+    ASSERT_TRUE(
+      expect_transition(
+        system_node, Transition::TRANSITION_DEACTIVATE, State::PRIMARY_STATE_INACTIVE));
     ASSERT_TRUE(spin_until([&]() {return !received.empty();}, false)) << "round " << round;
     EXPECT_DOUBLE_EQ(received.back().linear.x, 0.0);
     EXPECT_DOUBLE_EQ(received.back().angular.z, 0.0);
-    EXPECT_DOUBLE_EQ(nav_state->get<geometry_msgs::msg::TwistStamped>("cmd_vel").twist.linear.x,
+    EXPECT_DOUBLE_EQ(
+      nav_state->get<geometry_msgs::msg::TwistStamped>("cmd_vel").twist.linear.x,
       0.0);
 
     // Active again: commands flow again.
-    ASSERT_TRUE(expect_transition(
-      system_node, Transition::TRANSITION_ACTIVATE, State::PRIMARY_STATE_ACTIVE));
+    ASSERT_TRUE(
+      expect_transition(
+        system_node, Transition::TRANSITION_ACTIVATE, State::PRIMARY_STATE_ACTIVE));
   }
 }
 
@@ -256,10 +275,12 @@ TEST_F(SystemLifecycleCycleTest, DeactivationStopsTheRobotWithStampedCommands)
 {
   auto system_node = std::make_shared<easynav::SystemNode>(
     rclcpp::NodeOptions().append_parameter_override("use_cmd_vel_stamped", true));
-  ASSERT_TRUE(expect_transition(
-    system_node, Transition::TRANSITION_CONFIGURE, State::PRIMARY_STATE_INACTIVE));
-  ASSERT_TRUE(expect_transition(
-    system_node, Transition::TRANSITION_ACTIVATE, State::PRIMARY_STATE_ACTIVE));
+  ASSERT_TRUE(
+    expect_transition(
+      system_node, Transition::TRANSITION_CONFIGURE, State::PRIMARY_STATE_INACTIVE));
+  ASSERT_TRUE(
+    expect_transition(
+      system_node, Transition::TRANSITION_ACTIVATE, State::PRIMARY_STATE_ACTIVE));
 
   auto listener_node = rclcpp::Node::make_shared("cmd_vel_stamped_stop_listener");
   std::vector<geometry_msgs::msg::TwistStamped> received;
@@ -286,8 +307,9 @@ TEST_F(SystemLifecycleCycleTest, DeactivationStopsTheRobotWithStampedCommands)
     spin_until([&]() {return !received.empty() && received.back().twist.linear.x == 0.5;}, true));
 
   received.clear();
-  ASSERT_TRUE(expect_transition(
-    system_node, Transition::TRANSITION_DEACTIVATE, State::PRIMARY_STATE_INACTIVE));
+  ASSERT_TRUE(
+    expect_transition(
+      system_node, Transition::TRANSITION_DEACTIVATE, State::PRIMARY_STATE_INACTIVE));
   ASSERT_TRUE(spin_until([&]() {return !received.empty();}, false));
   const auto & stop = received.back();
   EXPECT_DOUBLE_EQ(stop.twist.linear.x, 0.0);
@@ -300,8 +322,9 @@ TEST_F(SystemLifecycleCycleTest, StopIsTheLastCommandEvenWithAnRtCycleRunning)
 {
   // The RT loop runs in its own thread while the lifecycle transition happens.
   auto system_node = std::make_shared<easynav::SystemNode>();
-  ASSERT_TRUE(expect_transition(
-    system_node, Transition::TRANSITION_CONFIGURE, State::PRIMARY_STATE_INACTIVE));
+  ASSERT_TRUE(
+    expect_transition(
+      system_node, Transition::TRANSITION_CONFIGURE, State::PRIMARY_STATE_INACTIVE));
 
   auto listener_node = rclcpp::Node::make_shared("cmd_vel_race_listener");
   std::vector<geometry_msgs::msg::Twist> received;
@@ -325,8 +348,9 @@ TEST_F(SystemLifecycleCycleTest, StopIsTheLastCommandEvenWithAnRtCycleRunning)
   moving.twist.linear.x = 0.7;
 
   for (int round = 0; round < 5; ++round) {
-    ASSERT_TRUE(expect_transition(
-      system_node, Transition::TRANSITION_ACTIVATE, State::PRIMARY_STATE_ACTIVE));
+    ASSERT_TRUE(
+      expect_transition(
+        system_node, Transition::TRANSITION_ACTIVATE, State::PRIMARY_STATE_ACTIVE));
     std::atomic<bool> stop_loop {false};
     std::thread rt_loop([&]() {
         while (!stop_loop) {  // At the RT rate of system_main (200 Hz).
@@ -336,8 +360,9 @@ TEST_F(SystemLifecycleCycleTest, StopIsTheLastCommandEvenWithAnRtCycleRunning)
         }
       });
     std::this_thread::sleep_for(50ms);
-    ASSERT_TRUE(expect_transition(
-      system_node, Transition::TRANSITION_DEACTIVATE, State::PRIMARY_STATE_INACTIVE));
+    ASSERT_TRUE(
+      expect_transition(
+        system_node, Transition::TRANSITION_DEACTIVATE, State::PRIMARY_STATE_INACTIVE));
     std::this_thread::sleep_for(50ms);  // The loop keeps calling system_cycle_rt() meanwhile.
     stop_loop = true;
     rt_loop.join();

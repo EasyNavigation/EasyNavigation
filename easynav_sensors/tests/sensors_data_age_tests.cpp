@@ -228,7 +228,8 @@ TEST_F(SensorsDataAgeTest, DataTooOldOnArrivalIsNeverUsed)
 
 TEST_F(SensorsDataAgeTest, OnlyTheSilentSensorIsInvalidated)
 {
-  ASSERT_TRUE(start(
+  ASSERT_TRUE(
+    start(
       {{"front", "sensor_msgs/msg/LaserScan"}, {"rear", "sensor_msgs/msg/LaserScan"},
         {"imu", "sensor_msgs/msg/Imu"}}, 0.3));
   auto front = scan_publisher("front");
@@ -278,7 +279,8 @@ TEST_F(SensorsDataAgeTest, ReconfiguringStartsOver)
   node_->trigger_transition(Transition::TRANSITION_DEACTIVATE);
   node_->trigger_transition(Transition::TRANSITION_CLEANUP);
   node_->set_parameter(rclcpp::Parameter("sensors", std::vector<std::string>{}));
-  ASSERT_EQ(node_->trigger_transition(Transition::TRANSITION_CONFIGURE).id(),
+  ASSERT_EQ(
+    node_->trigger_transition(Transition::TRANSITION_CONFIGURE).id(),
     State::PRIMARY_STATE_INACTIVE);
   node_->trigger_transition(Transition::TRANSITION_ACTIVATE);
   cycle();
