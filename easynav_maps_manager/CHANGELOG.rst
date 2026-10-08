@@ -2,8 +2,8 @@
 Changelog for package easynav_maps_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.0 (2026-10-08)
+------------------
 * Runtime reconfiguration of the maps managers (PluginSwitcher)
 * Fault injection plugin (FaultyMapsManager)
 * Rate measurement restarts on activation

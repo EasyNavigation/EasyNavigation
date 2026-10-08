@@ -2,8 +2,8 @@
 Changelog for package easynav_controller
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.0 (2026-10-08)
+------------------
 * Robot limits, velocity smoother and velocity multiplexer
 * Velocity command robustness: command timeout and keepalive
 * Runtime reconfiguration of the controller (PluginSwitcher)

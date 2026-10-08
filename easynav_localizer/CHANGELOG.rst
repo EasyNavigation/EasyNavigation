@@ -2,8 +2,8 @@
 Changelog for package easynav_localizer
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.0 (2026-10-08)
+------------------
 * Runtime reconfiguration of the localizer (PluginSwitcher)
 * Data age checks, and fault injection plugin (FaultyLocalizer)
 * Rate measurement restarts on activation

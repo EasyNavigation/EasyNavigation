@@ -2,8 +2,8 @@
 Changelog for package easynav_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.0 (2026-10-08)
+------------------
 * TUI panels and documentation
 * Pause and resume of the navigation
 * Fixed races at NavState and the log name with namespaces

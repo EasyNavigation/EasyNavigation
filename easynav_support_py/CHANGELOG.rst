@@ -2,8 +2,8 @@
 Changelog for package easynav_support_py
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.0 (2026-10-08)
+------------------
 * Pause and resume of the navigation
 * Fixed a crash in the error handling path
 * Conda packages with pixi (pixi-build-ros)

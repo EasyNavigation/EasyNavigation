@@ -2,8 +2,8 @@
 Changelog for package easynav_planner
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.0 (2026-10-08)
+------------------
 * Runtime reconfiguration of the planner (PluginSwitcher)
 * Fault injection plugin (FaultyPlanner)
 * Rate measurement restarts on activation

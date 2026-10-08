@@ -2,8 +2,8 @@
 Changelog for package easynav_common
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.0 (2026-10-08)
+------------------
 * NavState::get_safe(), and fixed races in NavState and RTTFBuffer
 * PluginSwitcher, to reconfigure plugins at runtime
 * Robot geometry (radius, inscribed radius, height) centralized in system_node

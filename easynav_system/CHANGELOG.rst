@@ -2,8 +2,8 @@
 Changelog for package easynav_system
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.0 (2026-10-08)
+------------------
 * Lifecycle state transitions and runtime reconfiguration
 * Pause and resume of the navigation
 * Robot limits, velocity smoother and velocity multiplexer

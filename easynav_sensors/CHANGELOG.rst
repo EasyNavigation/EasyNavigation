@@ -2,8 +2,8 @@
 Changelog for package easynav_sensors
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.0 (2026-10-08)
+------------------
 * Better protection of sensor data, and perceptions invalidated after forget_time
 * Runtime reconfiguration support
 * Builds on Humble, Jazzy, Kilted, Lyrical and Rolling

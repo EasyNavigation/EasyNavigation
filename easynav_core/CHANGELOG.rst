@@ -2,8 +2,8 @@
 Changelog for package easynav_core
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.0 (2026-10-08)
+------------------
 * Lifecycle states and runtime reconfiguration of the plugins (PluginSwitcher)
 * Robot limits and velocity smoother; velocity multiplexer between the controller and the recovery system
 * Recovery framework (RecoveryManagerBase)
