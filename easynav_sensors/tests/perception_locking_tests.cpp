@@ -20,6 +20,7 @@
 // copy-constructs it). Without their own locking, that copy could observe a
 // partially-written object. See bugs.md finding #5.
 
+#include <chrono>
 #include <atomic>
 #include <string>
 #include <thread>
@@ -173,6 +174,11 @@ TEST_F(PerceptionLockingTestCase, ImuConcurrentSetDataDuringCopyConstruction)
         msg.linear_acceleration.x = static_cast<double>(i);
         p.set_data(msg, rclcpp::Time(i, 0, RCL_ROS_TIME), long_frame_id(i));
       }
+      // Let the reader see the writes at least once, even on a busy machine
+      const auto deadline = std::chrono::steady_clock::now() + std::chrono::seconds(5);
+      while (reads.load() == 0 && std::chrono::steady_clock::now() < deadline) {
+        std::this_thread::yield();
+      }
       stop_flag.store(true);
     };
 
@@ -283,6 +289,11 @@ TEST_F(PerceptionLockingTestCase, GnssConcurrentSetDataDuringCopyConstruction)
         msg.latitude = static_cast<double>(i);
         p.set_data(msg, rclcpp::Time(i, 0, RCL_ROS_TIME), long_frame_id(i));
       }
+      // Let the reader see the writes at least once, even on a busy machine
+      const auto deadline = std::chrono::steady_clock::now() + std::chrono::seconds(5);
+      while (reads.load() == 0 && std::chrono::steady_clock::now() < deadline) {
+        std::this_thread::yield();
+      }
       stop_flag.store(true);
     };
 
@@ -371,6 +382,11 @@ TEST_F(PerceptionLockingTestCase, DetectionsConcurrentSetDataDuringCopyConstruct
         // every write, same hazard class as NavState's "path"/"goals" bug.
         msg.detections.resize(1 + (i % 23));
         p.set_data(msg, rclcpp::Time(i, 0, RCL_ROS_TIME), long_frame_id(i));
+      }
+      // Let the reader see the writes at least once, even on a busy machine
+      const auto deadline = std::chrono::steady_clock::now() + std::chrono::seconds(5);
+      while (reads.load() == 0 && std::chrono::steady_clock::now() < deadline) {
+        std::this_thread::yield();
       }
       stop_flag.store(true);
     };
@@ -481,6 +497,11 @@ TEST_F(PerceptionLockingTestCase, ImageConcurrentSetDataDuringCopyConstruction)
         const int size = 1 + (i % 17);
         cv::Mat img(size, size, CV_8UC1, cv::Scalar(static_cast<double>(i % 256)));
         p.set_data(std::move(img), rclcpp::Time(i, 0, RCL_ROS_TIME), long_frame_id(i));
+      }
+      // Let the reader see the writes at least once, even on a busy machine
+      const auto deadline = std::chrono::steady_clock::now() + std::chrono::seconds(5);
+      while (reads.load() == 0 && std::chrono::steady_clock::now() < deadline) {
+        std::this_thread::yield();
       }
       stop_flag.store(true);
     };

@@ -871,6 +871,7 @@ TEST(NavStateStressTest, GetSafeConcurrentReadDuringReallocatingWrites)
   easynav::NavState state;
   std::atomic<bool> start_flag{false};
   std::atomic<bool> stop_flag{false};
+  std::atomic<int> reads{0};
 
   std::vector<geometry_msgs::msg::Pose> initial(1);
   state.set("path", initial);
@@ -886,10 +887,14 @@ TEST(NavStateStressTest, GetSafeConcurrentReadDuringReallocatingWrites)
         }
         state.set("path", path);
       }
+      // Let the reader see the writes at least once, even on a busy machine
+      const auto deadline = std::chrono::steady_clock::now() + std::chrono::seconds(5);
+      while (reads.load() == 0 && std::chrono::steady_clock::now() < deadline) {
+        std::this_thread::yield();
+      }
       stop_flag.store(true);
     };
 
-  std::atomic<int> reads{0};
   auto reader = [&]() {
       while (!start_flag.load()) {std::this_thread::yield();}
       while (!stop_flag.load()) {
