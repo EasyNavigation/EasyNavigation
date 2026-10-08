@@ -22,6 +22,7 @@
 #ifndef EASYNAV_SENSORS_TYPES__IMUPERCEPTIONS_HPP_
 #define EASYNAV_SENSORS_TYPES__IMUPERCEPTIONS_HPP_
 
+#include <mutex>
 #include <string>
 #include <vector>
 
@@ -71,8 +72,63 @@ public:
       }();
   }
 
+  IMUPerception(const IMUPerception & other)
+  {
+    std::lock_guard<std::mutex> lock(other.mutex_);
+    stamp = other.stamp;
+    frame_id = other.frame_id;
+    valid = other.valid;
+    new_data = other.new_data;
+    data = other.data;
+  }
+
+  IMUPerception & operator=(const IMUPerception & other)
+  {
+    if (this == &other) {
+      return *this;
+    }
+
+    std::scoped_lock lock(mutex_, other.mutex_);
+    stamp = other.stamp;
+    frame_id = other.frame_id;
+    valid = other.valid;
+    new_data = other.new_data;
+    data = other.data;
+
+    return *this;
+  }
+
   /// \brief IMU data received from the sensor.
   sensor_msgs::msg::Imu data;
+
+  /// \brief Atomically overwrites stamp/frame_id/data/valid from the subscription callback.
+  ///
+  /// Guards against a concurrent copy (e.g. via \c NavState::get_safe()) observing a
+  /// partially-updated object while this handler's RT-thread callback is writing.
+  void set_data(
+    const sensor_msgs::msg::Imu & msg, const rclcpp::Time & msg_stamp,
+    const std::string & msg_frame_id)
+  {
+    std::lock_guard<std::mutex> lock(mutex_);
+    stamp = msg_stamp;
+    frame_id = msg_frame_id;
+    new_data = true;
+    data = msg;
+    valid = true;
+  }
+
+  /// \brief Atomically reads and clears \ref new_data.
+  /// \return The value of \ref new_data before it was cleared.
+  bool consume_new_data()
+  {
+    std::lock_guard<std::mutex> lock(mutex_);
+    const bool had_new_data = new_data;
+    new_data = false;
+    return had_new_data;
+  }
+
+protected:
+  mutable std::mutex mutex_;
 };
 
 /// \class IMUPerceptionHandler
@@ -95,6 +151,9 @@ public:
   /// @param nav_state Pointer to the NavState to store the sensor data.
   /// @return True if new data was stored (to trigger processing).
   bool cycle_rt([[maybe_unused]] std::shared_ptr<NavState> nav_state) override;
+
+  /// \brief The perception this handler keeps up to date.
+  std::shared_ptr<PerceptionBase> get_perception() const override {return perception_data_;}
 
 private:
   /// \brief pointer to the perception data

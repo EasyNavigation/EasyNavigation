@@ -15,6 +15,8 @@ jobs:
     runs-on: ubuntu-26.04
     container:
       image: ghcr.io/ros-tooling/setup-ros-docker/setup-ros-docker-ubuntu-resolute-ros-rolling-ros-base:master
+      # Real-time scheduling and memory locking, so the safety mode tests run instead of skipping.
+      options: --cap-add=SYS_NICE --ulimit rtprio=99 --ulimit memlock=-1
     steps:
       - uses: actions/checkout@v6
         with:
@@ -22,7 +24,7 @@ jobs:
       - name: build and test
         uses: ros-tooling/action-ros-ci@0.4.8
         with:
-          package-name: easynav_common easynav_controller easynav_core easynav_interfaces easynav_localizer easynav_maps_manager easynav_planner easynav_sensors easynav_system easynav_support_py easynav_tools
+          package-name: easynav_common easynav_controller easynav_core easynav_interfaces easynav_localizer easynav_maps_manager easynav_planner easynav_recovery easynav_sensors easynav_system easynav_support_py easynav_tools
           target-ros2-distro: rolling
           vcs-repo-file-url: ${GITHUB_WORKSPACE}/.github/thirdparty.repos
           colcon-defaults: |

@@ -158,6 +158,40 @@ TEST_F(LocalizerNodeTestCase, complete_lifecycle_configure_activate_deactivate_c
 // ---------------------------------------------------------------------------
 // 7. Shutdown transition from inactive state.
 // ---------------------------------------------------------------------------
+// Every valid lifecycle path can be repeated, ending in shutdown from any state.
+// ---------------------------------------------------------------------------
+
+TEST_F(LocalizerNodeTestCase, lifecycle_paths_can_be_repeated)
+{
+  using lifecycle_msgs::msg::State;
+  using lifecycle_msgs::msg::Transition;
+
+  auto node = std::make_shared<easynav::LocalizerNode>(
+    rclcpp::NodeOptions()
+    .append_parameter_override(
+      "localizer_types", std::vector<std::string>{"my_localizer"})
+    .append_parameter_override(
+      "my_localizer.plugin", std::string("easynav_localizer/DummyLocalizer")));
+
+  for (int i = 0; i < 3; ++i) {
+    node->trigger_transition(Transition::TRANSITION_CONFIGURE);
+    ASSERT_EQ(node->get_current_state().id(), State::PRIMARY_STATE_INACTIVE) << "round " << i;
+    node->trigger_transition(Transition::TRANSITION_ACTIVATE);
+    ASSERT_EQ(node->get_current_state().id(), State::PRIMARY_STATE_ACTIVE) << "round " << i;
+    node->trigger_transition(Transition::TRANSITION_DEACTIVATE);
+    ASSERT_EQ(node->get_current_state().id(), State::PRIMARY_STATE_INACTIVE) << "round " << i;
+    node->trigger_transition(Transition::TRANSITION_CLEANUP);
+    ASSERT_EQ(node->get_current_state().id(), State::PRIMARY_STATE_UNCONFIGURED) << "round " << i;
+  }
+
+  node->trigger_transition(Transition::TRANSITION_CONFIGURE);
+  node->trigger_transition(Transition::TRANSITION_ACTIVATE);
+  ASSERT_EQ(node->get_current_state().id(), State::PRIMARY_STATE_ACTIVE);
+  node->trigger_transition(Transition::TRANSITION_ACTIVE_SHUTDOWN);
+  EXPECT_EQ(node->get_current_state().id(), State::PRIMARY_STATE_FINALIZED);
+}
+
+// ---------------------------------------------------------------------------
 
 TEST_F(LocalizerNodeTestCase, lifecycle_shutdown_from_inactive)
 {

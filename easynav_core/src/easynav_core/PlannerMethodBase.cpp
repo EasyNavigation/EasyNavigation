@@ -1,6 +1,5 @@
 // Copyright 2025 Intelligent Robotics Lab
 //
-// This file is part of the project Easy Navigation (EasyNav in short)
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -27,13 +26,25 @@ namespace easynav
 void
 PlannerMethodBase::internal_update(NavState & nav_state)
 {
+  report_rate(nav_state);
   if (isTime2Run()) {
     EASYNAV_TRACE_EVENT;
 
     // Save last execution time, even if triggered
     setRun();
 
-    update(nav_state);
+    try {
+      update(nav_state);
+    } catch (const std::exception & e) {
+      // A faulty plugin must not bring down EasyNav.
+      RCLCPP_ERROR_THROTTLE(
+        get_node()->get_logger(), *get_node()->get_clock(), 1000,
+        "Exception in update() of planner [%s]: %s", get_plugin_name().c_str(), e.what());
+    } catch (...) {
+      RCLCPP_ERROR_THROTTLE(
+        get_node()->get_logger(), *get_node()->get_clock(), 1000,
+        "Unknown exception in update() of planner [%s]", get_plugin_name().c_str());
+    }
   }
 }
 
@@ -41,7 +52,18 @@ void
 PlannerMethodBase::force_update(NavState & nav_state)
 {
   setRun();
-  update(nav_state);
+  try {
+    update(nav_state);
+  } catch (const std::exception & e) {
+    // A faulty plugin must not bring down EasyNav.
+    RCLCPP_ERROR_THROTTLE(
+      get_node()->get_logger(), *get_node()->get_clock(), 1000,
+      "Exception in force_update() of planner [%s]: %s", get_plugin_name().c_str(), e.what());
+  } catch (...) {
+    RCLCPP_ERROR_THROTTLE(
+      get_node()->get_logger(), *get_node()->get_clock(), 1000,
+      "Unknown exception in force_update() of planner [%s]", get_plugin_name().c_str());
+  }
 }
 
 }  // namespace easynav

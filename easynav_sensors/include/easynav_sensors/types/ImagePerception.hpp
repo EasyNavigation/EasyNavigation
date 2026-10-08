@@ -22,10 +22,16 @@
 #ifndef EASYNAV_SENSORS_TYPES__IMAGEPERCEPTIONS_HPP_
 #define EASYNAV_SENSORS_TYPES__IMAGEPERCEPTIONS_HPP_
 
+#include <mutex>
 #include <string>
+#include <utility>
 #include <vector>
 
+#if __has_include("cv_bridge/cv_bridge.hpp")
 #include "cv_bridge/cv_bridge.hpp"
+#else
+#include "cv_bridge/cv_bridge.h"  // Humble: no .hpp header yet
+#endif
 
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 
@@ -69,11 +75,78 @@ public:
       }();
   }
 
+  ImagePerception(const ImagePerception & other)
+  {
+    std::lock_guard<std::mutex> lock(other.mutex_);
+    stamp = other.stamp;
+    frame_id = other.frame_id;
+    valid = other.valid;
+    new_data = other.new_data;
+    data = other.data;
+  }
+
+  ImagePerception & operator=(const ImagePerception & other)
+  {
+    if (this == &other) {
+      return *this;
+    }
+
+    std::scoped_lock lock(mutex_, other.mutex_);
+    stamp = other.stamp;
+    frame_id = other.frame_id;
+    valid = other.valid;
+    new_data = other.new_data;
+    data = other.data;
+
+    return *this;
+  }
+
   /// \brief Image data received from the sensor.
   ///
   /// The matrix layout follows OpenCV conventions. The encoding and channel depth depend on upstream conversion
   /// (typically via cv_bridge).
   cv::Mat data;
+
+  /// \brief Atomically overwrites stamp/frame_id/data with a successfully decoded image and
+  /// marks the perception valid.
+  ///
+  /// Guards against a concurrent copy (e.g. via \c NavState::get_safe()) observing a
+  /// partially-updated object while this handler's RT-thread callback is writing.
+  void set_data(
+    cv::Mat && image, const rclcpp::Time & msg_stamp,
+    const std::string & msg_frame_id)
+  {
+    std::lock_guard<std::mutex> lock(mutex_);
+    stamp = msg_stamp;
+    frame_id = msg_frame_id;
+    new_data = true;
+    data = std::move(image);
+    valid = true;
+  }
+
+  /// \brief Atomically records a failed decode: updates stamp/frame_id, marks invalid, and
+  /// leaves \ref data untouched (matches the pre-existing behavior on cv_bridge exceptions).
+  void mark_invalid(const rclcpp::Time & msg_stamp, const std::string & msg_frame_id)
+  {
+    std::lock_guard<std::mutex> lock(mutex_);
+    stamp = msg_stamp;
+    frame_id = msg_frame_id;
+    new_data = true;
+    valid = false;
+  }
+
+  /// \brief Atomically reads and clears \ref new_data.
+  /// \return The value of \ref new_data before it was cleared.
+  bool consume_new_data()
+  {
+    std::lock_guard<std::mutex> lock(mutex_);
+    const bool had_new_data = new_data;
+    new_data = false;
+    return had_new_data;
+  }
+
+protected:
+  mutable std::mutex mutex_;
 };
 
 /// \class ImagePerceptionHandler
@@ -97,6 +170,9 @@ public:
   /// @param nav_state Pointer to the NavState to store the sensor data.
   /// @return True if new data was stored (to trigger processing).
   bool cycle_rt([[maybe_unused]] std::shared_ptr<NavState> nav_state) override;
+
+  /// \brief The perception this handler keeps up to date.
+  std::shared_ptr<PerceptionBase> get_perception() const override {return perception_data_;}
 
 private:
   /// \brief pointer to the perception data

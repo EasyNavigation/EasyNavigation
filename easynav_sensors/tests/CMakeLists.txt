@@ -22,3 +22,19 @@ ament_add_gtest(sensors_lifecycle_tests sensors_lifecycle_tests.cpp)
 target_link_libraries(sensors_lifecycle_tests
   ${PROJECT_NAME}
 )
+
+ament_add_gtest(perception_locking_tests perception_locking_tests.cpp)
+target_link_libraries(perception_locking_tests
+  ${PROJECT_NAME}
+)
+
+ament_add_gtest(sensors_data_age_tests sensors_data_age_tests.cpp)
+target_link_libraries(sensors_data_age_tests
+  ${PROJECT_NAME}
+  ${diagnostic_msgs_TARGETS}
+)
+
+ament_add_gtest(perception_handlers_tests perception_handlers_tests.cpp)
+target_link_libraries(perception_handlers_tests
+  ${PROJECT_NAME}
+)

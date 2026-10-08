@@ -1,7 +1,7 @@
 # easynav_core
 
 Core base classes for all Easy Navigation method plugins (controllers, planners, localizers, map managers).  
-This package provides a common lifecycle, timing utilities, and (for some bases) shared behaviors like collision checking.
+This package provides a common lifecycle, timing utilities and shared behaviors for EasyNav plugins.
 
 ## Base Classes Overview
 
@@ -31,14 +31,14 @@ Each plugin README in `easynav_plugins` can refer to these sections instead of d
 
 ### Parameters
 
-All parameters are declared under each derived plugin namespace; `MethodBase` just expects them to exist. Typical parameters (declared by derived classes) include:
+`MethodBase` declares, under each plugin's namespace:
 
 | Name | Type | Default | Description |
 |---|---|---:|---|
-| `<plugin>.rt_frequency` | `double` | implementation-specific | Desired real-time loop frequency (Hz). Used by `isTime2RunRT()`. |
-| `<plugin>.frequency` | `double` | implementation-specific | Desired non-RT loop frequency (Hz). Used by `isTime2Run()`. |
+| `<plugin>.rt_freq` | `double` | `10.0` | Frequency of the real-time update (Hz). Used by `isTime2RunRT()`. |
+| `<plugin>.freq` | `double` | `10.0` | Frequency of the non-RT update (Hz). Used by `isTime2Run()`. |
 
-> Note: The exact parameter names and defaults are defined in each derived plugin; `MethodBase` only consumes the configured frequencies.
+Both must be finite and > 0 (`initialize()` throws otherwise), and at most `system_node.rt_freq` / `system_node.freq` (EasyNav fails to configure otherwise). The system cycles only check whether it is time for each component to run: the component's frequency is what it runs at. The schedule does not drift (a 30 Hz component checked at 50 Hz runs 30 times per second); more than a period behind, it restarts from now.
 
 ### MethodBase Public API
 
@@ -51,73 +51,55 @@ All parameters are declared under each derived plugin namespace; `MethodBase` ju
 | `get_tf_prefix()` | Returns the TF namespace (with trailing `/`). |
 | `isTime2RunRT()` | Returns true if enough time has elapsed to run a real-time update. |
 | `isTime2Run()` | Returns true if enough time has elapsed to run a non-RT update. |
-| `setRunRT()` / `setRun()` | Mark that an RT / non-RT iteration has just been executed. |
+| `setRunRT()` / `setRun()` | Mark that an RT / non-RT iteration has just been executed (a run not scheduled, e.g. triggered, restarts the schedule). |
+| `report_rt_rate(nav_state)` / `report_rate(nav_state)` | Write whether the RT / non-RT update keeps its frequency (`diagnostics.<plugin>.rt_rate` / `.rate`, see `RateMonitor`). Called by the base classes every cycle. |
 | `get_last_rt_execution_ts()` / `get_last_execution_ts()` | Access the last execution timestamps. |
 
 ### NavState / Topics
 
-`MethodBase` itself does not read or write `NavState` and does not create publishers or subscriptions. All such interfaces are defined in derived base classes (see below) and their plugins.
+`MethodBase` writes only its rate diagnostics, `diagnostics.<plugin>.rt_rate` and `diagnostics.<plugin>.rate` (`diagnostic_msgs/DiagnosticStatus`, in the `diagnostics` group): written when first checked and then on changes; `WARN` after a window (1 s or 10 periods) with fewer than 90 % of the expected runs (after 3 in a row, the message says for how long). Never `ERROR`: it is only reported, not mitigated. Time without checks counts as slow (a component blocking its cycle is reported); the nodes call `reset_rate_monitors()` on activation, so the time inactive does not. It does not create publishers or subscriptions. All such interfaces are defined in derived base classes (see below) and their plugins.
+
+### Robot geometry
+
+The robot's shape is configured once, in `system_node`, and shared with every component (costmap
+inflation, planners, recovery...). Plugins read it with
+`MethodBase::get_robot_geometry()`; other code, with `easynav::get_robot_geometry()`
+(`easynav_common/RobotGeometry.hpp`).
+
+| Name | Type | Default | Description |
+|---|---|---:|---|
+| `robot_geometry.radius` | `double` | `0.3` | Circumscribed radius: smallest circle containing the robot (m). |
+| `robot_geometry.inscribed_radius` | `double` | `radius` | Largest circle inside the robot (m). |
+| `robot_geometry.height` | `double` | `0.5` | Top of the robot, above the robot frame (m). |
+
+A component's former geometry parameter (e.g. an inflation filter's `inscribed_radius`) still applies, with a
+deprecation warning, where `robot_geometry` does not configure that field; `robot_geometry` takes
+precedence when both are set.
 
 ---
 
 ## `easynav::ControllerMethodBase`
 
 **Header:** `easynav_core/ControllerMethodBase.hpp`  
-**Role:** Base class for controllers that generate velocity commands and optionally perform collision checking.
+**Role:** Base class for controllers that generate velocity commands.
 
 Typical derived plugins: `easynav_simple_controller`, `easynav_mppi_controller`, `easynav_serest_controller`, `easynav_vff_controller`.
 
 ### Controller Responsibilities
 
 - Extend `MethodBase` with a real-time control loop (`update_rt`).
-- Provide a standard collision-checking utility based on point clouds.
-- Optionally publish visualization markers for the collision zone.
+- Take the robot's velocity and acceleration limits from `controller_node.robot_limits` (`get_robot_limits()`).
 
-### Parameters (common collision checker)
-
-Derived controllers usually expose these parameters (names may vary slightly per plugin):
-
-| Name | Type | Default | Description |
-|---|---|---:|---|
-| `<plugin>.debug_markers` | `bool` | `false` | Enable/disable publication of collision debug markers. |
-| `<plugin>.active` | `bool` | `false` | Enable/disable collision checking. |
-| `<plugin>.robot_radius` | `double` | `0.35` | Robot radius used to compute safety distances (m). |
-| `<plugin>.robot_height` | `double` | `0.5` | Vertical extent of the robot for point cloud filtering (m). |
-| `<plugin>.z_min_filter` | `double` | `0.0` | Minimum Z to keep points in the collision check (m). |
-| `<plugin>.brake_acc` | `double` | `0.5` | Maximum braking deceleration used to compute stopping distance (m/s²). |
-| `<plugin>.safety_margin` | `double` | `0.1` | Extra margin added to the braking distance (m). |
-| `<plugin>.downsample_leaf_size` | `double` | `0.1` | Voxel leaf size for downsampling the collision point cloud (m). |
-
-(Exact declaration and defaults live in each controller plugin; this section documents the shared semantics.)
-
-### Interfaces (Topics)
-
-| Direction | Topic | Type | Purpose |
-|---|---|---|---|
-| Publisher | `<node_fqn>/<plugin>/collision_zone` | `visualization_msgs/msg/MarkerArray` | Publishes collision region and filtered points for debugging. |
-
-The actual topic name is built inside the controller plugin using `get_node()` and `get_plugin_name()`, but all controllers sharing `ControllerMethodBase` use a similar pattern.
-
-### NavState Keys (collision helper)
-
-`ControllerMethodBase` expects derived controllers to provide certain NavState entries when using its collision checker:
-
-| Key | Type | Access | Description |
-|---|---|---|---|
-| `robot_pose` | `nav_msgs::msg::Odometry` | **Read** | Current robot pose and twist used to estimate braking distance. |
-| `points` | `sensor_msgs::msg::PointCloud2` or filtered cloud | **Read** | 3D points around the robot used for collision prediction. |
-| `cmd_vel` | `geometry_msgs::msg::TwistStamped` | **Write** (via `on_inminent_collision`) | Default handler stops the robot on imminent collision. |
+Braking before an obstacle is not the controller's job: it belongs to the recovery system (`recovery_node`), which checks every RT cycle, right before publishing, whatever command is about to be sent. The former `colision_checker.*` parameters are gone.
 
 ### Controller Public API
 
 | Method | Description |
 |---|---|
-| `initialize(parent_node, plugin_name, tf_prefix)` | Declares common controller parameters, creates collision marker publisher, and calls `MethodBase::initialize()`. |
-| `internal_update_rt(nav_state, trigger)` | Checks timing and calls `update_rt(nav_state)` when appropriate; returns true if executed. |
+| `initialize(parent_node, plugin_name)` | Calls `MethodBase::initialize()`. |
+| `internal_update_rt(nav_state, trigger)` | Checks timing and calls `update_rt(nav_state)` when appropriate; returns true if executed. If `update_rt()` throws, it writes a zero `cmd_vel`. |
 | `update_rt(nav_state)` | **To implement in derived controller.** Computes and writes the `cmd_vel` command. |
-| `is_inminent_collision(nav_state)` | Runs collision prediction using current velocity, braking distance, safety margin, and point cloud. |
-| `on_inminent_collision(nav_state)` | Default handler: logs a warning and writes zero `cmd_vel`. Can be overridden. |
-| `publish_collision_zone_marker(min, max, cloud, imminent_collision)` | Publishes `MarkerArray` with the collision box and points for RViz. |
+| `get_robot_limits(legacy)` | The robot limits (see `ControllerNode`). |
 
 ---
 

@@ -13,6 +13,7 @@ find_package(rclcpp_lifecycle REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(yaets REQUIRED)
 find_package(tf2_ros REQUIRED)
+find_package(ament_index_cpp REQUIRED)
 
 add_library(${PROJECT_NAME} INTERFACE)
 target_include_directories(${PROJECT_NAME} INTERFACE
@@ -23,6 +24,7 @@ target_link_libraries(${PROJECT_NAME} INTERFACE
   rclcpp::rclcpp
   rclcpp_lifecycle::rclcpp_lifecycle
   tf2_ros::tf2_ros
+  ament_index_cpp::ament_index_cpp
   ${geometry_msgs_TARGETS}
   yaets::yaets
 )
@@ -51,12 +53,14 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 
   find_package(ament_cmake_gtest REQUIRED)
+  find_package(tf2_msgs REQUIRED)
   add_subdirectory(tests)
 endif()
 
 ament_export_include_directories("include/${PROJECT_NAME}")
 ament_export_targets(export_${PROJECT_NAME})
 ament_export_dependencies(
+  ament_index_cpp
   rclcpp
   rclcpp_lifecycle
   tf2_ros

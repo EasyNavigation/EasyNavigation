@@ -56,6 +56,18 @@ target_include_directories(dummy_maps_manager PUBLIC
 )
 target_link_libraries(dummy_maps_manager PUBLIC ${dependencies})
 
+# Fault injection, for testing (see fault_injection/)
+add_library(faulty_maps_manager SHARED
+  src/easynav_maps_manager/fault_injection/FaultyMapsManager.cpp
+)
+target_include_directories(faulty_maps_manager PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include/${PROJECT_NAME}>
+)
+target_link_libraries(faulty_maps_manager PUBLIC
+  ${dependencies}
+)
+
 install(
   DIRECTORY include/
   DESTINATION include/${PROJECT_NAME}
@@ -64,6 +76,7 @@ install(
 install(TARGETS
   ${PROJECT_NAME}
   dummy_maps_manager
+  faulty_maps_manager
   EXPORT export_${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib

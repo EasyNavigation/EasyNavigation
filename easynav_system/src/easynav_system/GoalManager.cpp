@@ -1,6 +1,5 @@
 // Copyright 2025 Intelligent Robotics Lab
 //
-// This file is part of the project Easy Navigation (EasyNav in short)
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -21,6 +20,7 @@
 #include "tf2/utils.hpp"
 #include "nav_msgs/msg/odometry.hpp"
 
+#include "easynav_common/Parameters.hpp"
 #include "easynav_system/GoalManager.hpp"
 
 
@@ -75,45 +75,37 @@ GoalManager::GoalManager(
 : parent_node_(parent_node)
 {
   nav_state.set("navigation_state", state_);
+  nav_state.set("navigation_paused", paused_);
+  // Overwrite unconditionally: nav_state is owned by SystemNode and survives a
+  // cleanup/reconfigure cycle, so it may still hold a goal from a previous
+  // GoalManager instance. Relying on update()'s goals_synced_empty_ throttle
+  // here would skip this write, since a fresh instance defaults it to true.
+  nav_state.set("goals", goals_);
 
-  parent_node_->declare_parameter("allow_preempt_goal", allow_preempt_goal_);
-  parent_node_->declare_parameter("position_tolerance", goal_tolerance_.position);
-  parent_node_->declare_parameter("height_tolerance", goal_tolerance_.height);
-  parent_node_->declare_parameter("angle_tolerance", goal_tolerance_.yaw);
-  parent_node_->declare_parameter("update_frequency", update_frequency_);
-  parent_node_->get_parameter("allow_preempt_goal", allow_preempt_goal_);
-  parent_node_->get_parameter("position_tolerance", goal_tolerance_.position);
-  parent_node_->get_parameter("height_tolerance", goal_tolerance_.height);
-  parent_node_->get_parameter("angle_tolerance", goal_tolerance_.yaw);
-  parent_node_->get_parameter("update_frequency", update_frequency_);
-  if (update_frequency_ <= 0.0) {
-    RCLCPP_WARN(
-      parent_node_->get_logger(),
-      "Parameter 'update_frequency' must be > 0.0 (got %.3f); falling back to 20.0",
-      update_frequency_);
-    update_frequency_ = 20.0;
-  }
+  // Use the constructor parameter directly here, not parent_node_: it's a live
+  // shared_ptr for the duration of this constructor, no need to lock() it.
+  easynav::declare_parameter_if_absent(*parent_node, "allow_preempt_goal", allow_preempt_goal_);
+  easynav::declare_parameter_if_absent(*parent_node, "position_tolerance",
+      goal_tolerance_.position);
+  easynav::declare_parameter_if_absent(*parent_node, "height_tolerance", goal_tolerance_.height);
+  easynav::declare_parameter_if_absent(*parent_node, "angle_tolerance", goal_tolerance_.yaw);
+  easynav::declare_parameter_if_absent(*parent_node, "update_frequency", update_frequency_);
+  read_parameters(nav_state);
 
-  update_period_ = rclcpp::Duration::from_seconds(1.0 / update_frequency_);
-  // Expose initial goal tolerances in NavState so controllers can reuse them
-  nav_state.set("goal_tolerance.position", goal_tolerance_.position);
-  nav_state.set("goal_tolerance.height", goal_tolerance_.height);
-  nav_state.set("goal_tolerance.yaw", goal_tolerance_.yaw);
-
-  control_sub_ = parent_node_->create_subscription<easynav_interfaces::msg::NavigationControl>(
+  control_sub_ = parent_node->create_subscription<easynav_interfaces::msg::NavigationControl>(
     "easynav_control", 100,
     std::bind(&GoalManager::control_callback, this, std::placeholders::_1)
   );
 
-  comanded_pose_sub_ = parent_node_->create_subscription<geometry_msgs::msg::PoseStamped>(
+  comanded_pose_sub_ = parent_node->create_subscription<geometry_msgs::msg::PoseStamped>(
     "goal_pose", 100,
     std::bind(&GoalManager::comanded_pose_callback, this, std::placeholders::_1)
   );
 
-  control_pub_ = parent_node_->create_publisher<easynav_interfaces::msg::NavigationControl>(
+  control_pub_ = parent_node->create_publisher<easynav_interfaces::msg::NavigationControl>(
     "easynav_control", 100);
 
-  info_pub_ = parent_node_->create_publisher<easynav_interfaces::msg::GoalManagerInfo>(
+  info_pub_ = parent_node->create_publisher<easynav_interfaces::msg::GoalManagerInfo>(
     "easynav_manager_info", 100);
 
   id_ = "easynav_system";
@@ -130,7 +122,39 @@ GoalManager::GoalManager(
       return ret.str();
     });
 
-  // parent_node_->get_logger().set_level(rclcpp::Logger::Level::Debug);
+  // parent_node->get_logger().set_level(rclcpp::Logger::Level::Debug);
+}
+
+void
+GoalManager::read_parameters(NavState & nav_state)
+{
+  auto node = get_node();
+  if (!node) {return;}
+
+  node->get_parameter("allow_preempt_goal", allow_preempt_goal_);
+  node->get_parameter("position_tolerance", goal_tolerance_.position);
+  node->get_parameter("height_tolerance", goal_tolerance_.height);
+  node->get_parameter("angle_tolerance", goal_tolerance_.yaw);
+  node->get_parameter("update_frequency", update_frequency_);
+  if (update_frequency_ <= 0.0) {
+    RCLCPP_WARN(
+      node->get_logger(),
+      "Parameter 'update_frequency' must be > 0.0 (got %.3f); falling back to 20.0",
+      update_frequency_);
+    update_frequency_ = 20.0;
+  }
+  update_period_ = rclcpp::Duration::from_seconds(1.0 / update_frequency_);
+
+  // Tolerances in NavState, so controllers can reuse them.
+  nav_state.set("goal_tolerance.position", goal_tolerance_.position);
+  nav_state.set("goal_tolerance.height", goal_tolerance_.height);
+  nav_state.set("goal_tolerance.yaw", goal_tolerance_.yaw);
+}
+
+rclcpp_lifecycle::LifecycleNode::SharedPtr
+GoalManager::get_node() const
+{
+  return parent_node_.lock();
 }
 
 void
@@ -138,13 +162,21 @@ GoalManager::accept_request(
   const easynav_interfaces::msg::NavigationControl & msg,
   easynav_interfaces::msg::NavigationControl & response)
 {
-  nav_start_time_ = parent_node_->now();
+  auto node = get_node();
+  if (!node) {return;}
 
-  RCLCPP_DEBUG(parent_node_->get_logger(), "Accepted navigation request");
+  nav_start_time_ = node->now();
+
+  RCLCPP_DEBUG(node->get_logger(), "Accepted navigation request");
 
   goals_ = msg.goals;
+  goals_synced_empty_ = false;
+  paused_ = false;
 
   current_client_id_ = msg.user_id;
+  // A new mission: its end will be published, however it ends.
+  info_ = easynav_interfaces::msg::GoalManagerInfo();
+  info_final_pending_ = true;
   response.status_message = "Goal accepted";
   response.type = easynav_interfaces::msg::NavigationControl::ACCEPT;
   response.nav_current_user_id = current_client_id_;
@@ -157,19 +189,22 @@ GoalManager::control_callback(easynav_interfaces::msg::NavigationControl::Unique
 {
   if (msg->user_id == id_) {return;}  // Avoid self messages
 
-  RCLCPP_DEBUG(parent_node_->get_logger(), "Managing navigation control message received");
+  auto node = get_node();
+  if (!node) {return;}
+
+  RCLCPP_DEBUG(node->get_logger(), "Managing navigation control message received");
 
   easynav_interfaces::msg::NavigationControl response;
   response = *msg;
-  response.header.stamp = parent_node_->now();
+  response.header.stamp = node->now();
   response.seq = msg->seq + 1;
   response.user_id = id_;
 
   switch (msg->type) {
     case easynav_interfaces::msg::NavigationControl::REQUEST:
-      RCLCPP_DEBUG(parent_node_->get_logger(), "Navigation request");
+      RCLCPP_DEBUG(node->get_logger(), "Navigation request");
       if (msg->goals.goals.empty()) {
-        RCLCPP_DEBUG(parent_node_->get_logger(), "Rejected navigation request (empty goals)");
+        RCLCPP_DEBUG(node->get_logger(), "Rejected navigation request (empty goals)");
 
         response.status_message = "Goals are empty";
         response.type = easynav_interfaces::msg::NavigationControl::REJECT;
@@ -184,10 +219,10 @@ GoalManager::control_callback(easynav_interfaces::msg::NavigationControl::Unique
             }
             accept_request(*msg, response);
           } else {
-            RCLCPP_DEBUG(parent_node_->get_logger(),
+            RCLCPP_DEBUG(node->get_logger(),
               "Rejected navigation request (unable to preempt)");
 
-            response.status_message = "Goal rejected; unable to preemp current active goal";
+            response.status_message = "Goal rejected; unable to preempt current active goal";
             response.type = easynav_interfaces::msg::NavigationControl::REJECT;
             response.nav_current_user_id = msg->user_id;
           }
@@ -195,32 +230,66 @@ GoalManager::control_callback(easynav_interfaces::msg::NavigationControl::Unique
       }
       break;
     case easynav_interfaces::msg::NavigationControl::CANCEL:
-      RCLCPP_DEBUG(parent_node_->get_logger(), "Navigation cancelation requested");
+      RCLCPP_DEBUG(node->get_logger(), "Navigation cancelation requested");
 
       if (current_client_id_ != msg->user_id) {
-        RCLCPP_DEBUG(parent_node_->get_logger(), "Navigation cancelation rejected (not yours)");
+        RCLCPP_DEBUG(node->get_logger(), "Navigation cancelation rejected (not yours)");
         response.status_message = "Trying to cancel a navigation not commanded by you";
         response.type = easynav_interfaces::msg::NavigationControl::REJECT;
         response.nav_current_user_id = msg->user_id;
       } else {
         if (state_ == State::IDLE) {
-          RCLCPP_DEBUG(parent_node_->get_logger(),
+          RCLCPP_DEBUG(node->get_logger(),
             "Navigation cancelation rejected (not navigating)");
           response.status_message = "Nothing to cancel; easynav is idle";
           response.type = easynav_interfaces::msg::NavigationControl::ERROR;
           response.nav_current_user_id = msg->user_id;
         } else {
-          RCLCPP_DEBUG(parent_node_->get_logger(), "Navigation cancelation accepted");
+          RCLCPP_DEBUG(node->get_logger(), "Navigation cancelation accepted");
           goals_.goals.clear();
           response.status_message = "Goal cancelled";
           response.type = easynav_interfaces::msg::NavigationControl::CANCELLED;
           response.nav_current_user_id = current_client_id_;
           state_ = State::IDLE;
+          paused_ = false;
         }
       }
       break;
+    case easynav_interfaces::msg::NavigationControl::PAUSE:
+      RCLCPP_DEBUG(node->get_logger(), "Navigation pause requested");
+
+      // Unlike CANCEL, pausing is not restricted to the goal's owner: any
+      // GoalManagerClient (an operator tool, a fleet-level conflict monitor...)
+      // may pause/resume whatever navigation is currently active.
+      if (state_ == State::IDLE) {
+        RCLCPP_DEBUG(node->get_logger(), "Navigation pause rejected (not navigating)");
+        response.status_message = "Nothing to pause; easynav is idle";
+        response.type = easynav_interfaces::msg::NavigationControl::REJECT;
+      } else {
+        RCLCPP_DEBUG(node->get_logger(), "Navigation pause accepted");
+        paused_ = true;
+        response.status_message = "Navigation paused";
+        response.type = easynav_interfaces::msg::NavigationControl::PAUSED;
+      }
+      response.nav_current_user_id = msg->user_id;
+      break;
+    case easynav_interfaces::msg::NavigationControl::RESUME:
+      RCLCPP_DEBUG(node->get_logger(), "Navigation resume requested");
+
+      if (state_ == State::IDLE) {
+        RCLCPP_DEBUG(node->get_logger(), "Navigation resume rejected (not navigating)");
+        response.status_message = "Nothing to resume; easynav is idle";
+        response.type = easynav_interfaces::msg::NavigationControl::REJECT;
+      } else {
+        RCLCPP_DEBUG(node->get_logger(), "Navigation resume accepted");
+        paused_ = false;
+        response.status_message = "Navigation resumed";
+        response.type = easynav_interfaces::msg::NavigationControl::RESUMED;
+      }
+      response.nav_current_user_id = msg->user_id;
+      break;
     default:
-      RCLCPP_WARN(parent_node_->get_logger(), "Received erroneous control message %d", msg->type);
+      RCLCPP_WARN(node->get_logger(), "Received erroneous control message %d", msg->type);
       response.status_message = "Unable to process message";
       response.type = easynav_interfaces::msg::NavigationControl::ERROR;
       response.nav_current_user_id = msg->user_id;
@@ -234,11 +303,14 @@ GoalManager::control_callback(easynav_interfaces::msg::NavigationControl::Unique
 void
 GoalManager::set_preempted()
 {
+  auto node = get_node();
+  if (!node) {return;}
+
   goals_.goals.clear();
 
   easynav_interfaces::msg::NavigationControl response;
   response = *last_control_;
-  response.header.stamp = parent_node_->now();
+  response.header.stamp = node->now();
   response.seq = last_control_->seq + 1;
   response.user_id = id_;
   response.type = easynav_interfaces::msg::NavigationControl::CANCELLED;
@@ -251,12 +323,16 @@ GoalManager::set_preempted()
 void
 GoalManager::set_finished()
 {
+  auto node = get_node();
+  if (!node) {return;}
+
   state_ = State::IDLE;
-  goals_.goals.clear();
+  goals_ = nav_msgs::msg::Goals();
+  paused_ = false;
 
   easynav_interfaces::msg::NavigationControl response;
   response = *last_control_;
-  response.header.stamp = parent_node_->now();
+  response.header.stamp = node->now();
   response.seq = last_control_->seq + 1;
   response.user_id = id_;
   response.type = easynav_interfaces::msg::NavigationControl::FINISHED;
@@ -267,14 +343,33 @@ GoalManager::set_finished()
 }
 
 void
+GoalManager::set_progress_held(bool held)
+{
+  if (progress_held_.exchange(held) == held) {return;}
+
+  if (auto node = get_node()) {
+    if (held) {
+      RCLCPP_WARN(
+        node->get_logger(), "Mission progress held by recovery: no goal will be taken as reached");
+    } else {
+      RCLCPP_INFO(node->get_logger(), "Mission progress released by recovery");
+    }
+  }
+}
+
+void
 GoalManager::set_error(const std::string & reason)
 {
+  auto node = get_node();
+  if (!node) {return;}
+
   state_ = State::IDLE;
-  goals_.goals.clear();
+  goals_ = nav_msgs::msg::Goals();
+  paused_ = false;
 
   easynav_interfaces::msg::NavigationControl response;
   response = *last_control_;
-  response.header.stamp = parent_node_->now();
+  response.header.stamp = node->now();
   response.seq = last_control_->seq + 1;
   response.user_id = id_;
   response.type = easynav_interfaces::msg::NavigationControl::ERROR;
@@ -287,12 +382,16 @@ GoalManager::set_error(const std::string & reason)
 void
 GoalManager::set_failed(const std::string & reason)
 {
+  auto node = get_node();
+  if (!node) {return;}
+
   state_ = State::IDLE;
-  goals_.goals.clear();
+  goals_ = nav_msgs::msg::Goals();
+  paused_ = false;
 
   easynav_interfaces::msg::NavigationControl response;
   response = *last_control_;
-  response.header.stamp = parent_node_->now();
+  response.header.stamp = node->now();
   response.seq = last_control_->seq + 1;
   response.user_id = id_;
   response.type = easynav_interfaces::msg::NavigationControl::FAILED;
@@ -319,8 +418,14 @@ GoalManager::comanded_pose_callback(geometry_msgs::msg::PoseStamped::UniquePtr m
 void
 GoalManager::update(NavState & nav_state)
 {
-  if (nav_state.get<State>("navigation_state") != state_) {
+  if (last_synced_navigation_state_ != state_) {
     nav_state.set("navigation_state", state_);
+    last_synced_navigation_state_ = state_;
+  }
+
+  if (last_synced_paused_ != paused_) {
+    nav_state.set("navigation_paused", paused_);
+    last_synced_paused_ = paused_;
   }
 
    // Keep published tolerances in sync with current parameters
@@ -329,31 +434,38 @@ GoalManager::update(NavState & nav_state)
   nav_state.set("goal_tolerance.yaw", goal_tolerance_.yaw);
 
   if (state_ == State::IDLE) {
-    goals_ = nav_msgs::msg::Goals();
-    nav_state.set("goals", goals_);
+    // The mission may have ended outside update() (set_error(), CANCEL...).
+    publish_final_info();
+    if (!goals_synced_empty_) {
+      goals_ = nav_msgs::msg::Goals();
+      nav_state.set("goals", goals_);
+      goals_synced_empty_ = true;
+    }
     return;
   }
+
+  auto node = get_node();
+  if (!node) {return;}
 
   if (!nav_state.has("robot_pose")) {
-    RCLCPP_WARN(parent_node_->get_logger(), "No robot pose at GoalManager::Update");
+    RCLCPP_WARN(node->get_logger(), "No robot pose at GoalManager::Update");
     return;
   }
 
-  const auto & robot_pose = nav_state.get<nav_msgs::msg::Odometry>("robot_pose").pose.pose;
+  const auto odom = nav_state.get_safe<nav_msgs::msg::Odometry>("robot_pose");
+  const auto & robot_pose = odom.pose.pose;
 
   easynav_interfaces::msg::NavigationControl feedback;
   feedback.type = easynav_interfaces::msg::NavigationControl::FEEDBACK;
-  feedback.header.stamp = parent_node_->now();
+  feedback.header.stamp = node->now();
   feedback.seq = last_control_->seq + 1;
   feedback.user_id = id_;
   feedback.nav_current_user_id = current_client_id_;
 
-  const auto & odom = nav_state.get<nav_msgs::msg::Odometry>("robot_pose");
-
   feedback.goals = goals_;
   feedback.current_pose.header = odom.header;
   feedback.current_pose.pose = odom.pose.pose;
-  feedback.navigation_time = parent_node_->now() - nav_start_time_;
+  feedback.navigation_time = node->now() - nav_start_time_;
 
   // Copy (not reference): check_goals() below may erase the front goal, which would
   // otherwise leave this dangling.
@@ -367,24 +479,31 @@ GoalManager::update(NavState & nav_state)
   // every cycle regardless, since the planner reacts to it as soon as a new goal's
   // timestamp is newer than its last planned one (see SystemNode::system_cycle()); delaying
   // that sync here would make the planner compute a path from stale/empty goals.
-  const auto now = parent_node_->now();
+  const auto now = node->now();
   const bool should_publish = first_update_ || (now - last_update_time_) >= update_period_;
 
   if (should_publish) {
-    RCLCPP_DEBUG(parent_node_->get_logger(), "Sending navigation feedback");
+    RCLCPP_DEBUG(node->get_logger(), "Sending navigation feedback");
     control_pub_->publish(feedback);
     *last_control_ = feedback;
     first_update_ = false;
     last_update_time_ = now;
   }
 
-  check_goals(robot_pose, goal_tolerance_);
+  info_.position_tolerance = goal_tolerance_.position;
+  info_.angle_tolerance = goal_tolerance_.yaw;
+  info_.position_distance = feedback.distance_to_goal;
+  info_.angle_distance = calculate_angle(robot_pose, first_goal);
+
+  if (!progress_held_) {
+    check_goals(robot_pose, goal_tolerance_);
+  }
 
   if (!nav_state.has("goals")) {
     nav_state.set("goals", goals_);
   }
 
-  const auto & goals = nav_state.get<nav_msgs::msg::Goals>("goals");
+  const auto & goals = nav_state.get_safe<nav_msgs::msg::Goals>("goals");
 
   if (goals != goals_) {
     nav_state.set("goals", goals_);
@@ -394,19 +513,30 @@ GoalManager::update(NavState & nav_state)
     set_finished();
   }
 
-  if (nav_state.get<State>("navigation_state") != state_) {
+  if (last_synced_navigation_state_ != state_) {
     nav_state.set("navigation_state", state_);
+    last_synced_navigation_state_ = state_;
   }
 
-  if (should_publish && info_pub_->get_subscription_count() > 0) {
-    easynav_interfaces::msg::GoalManagerInfo msg;
-    msg.status = static_cast<int>(get_state());
-    msg.goals = get_goals();
-    msg.position_tolerance = goal_tolerance_.position;
-    msg.angle_tolerance = goal_tolerance_.yaw;
-    msg.position_distance = feedback.distance_to_goal;
-    msg.angle_distance = calculate_angle(robot_pose, first_goal);
-    info_pub_->publish(msg);
+  if (state_ == State::IDLE) {
+    publish_final_info();
+  } else if (should_publish && info_pub_->get_subscription_count() > 0) {
+    info_.status = easynav_interfaces::msg::GoalManagerInfo::ACTIVE;
+    info_.goals = goals_;
+    info_pub_->publish(info_);
+  }
+}
+
+void
+GoalManager::publish_final_info()
+{
+  if (!info_final_pending_) {return;}
+  info_final_pending_ = false;
+
+  info_.status = easynav_interfaces::msg::GoalManagerInfo::IDLE;
+  info_.goals = goals_;
+  if (info_pub_->get_subscription_count() > 0) {
+    info_pub_->publish(info_);
   }
 }
 

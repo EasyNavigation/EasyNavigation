@@ -15,6 +15,8 @@ jobs:
     runs-on: ubuntu-26.04
     container:
       image: ghcr.io/ros-tooling/setup-ros-docker/setup-ros-docker-ubuntu-resolute-ros-lyrical-ros-base:master
+      # Real-time scheduling and memory locking, so the safety mode tests run instead of skipping.
+      options: --cap-add=SYS_NICE --ulimit rtprio=99 --ulimit memlock=-1
     steps:
       - uses: actions/checkout@v6
         with:

@@ -1,6 +1,5 @@
 // Copyright 2025 Intelligent Robotics Lab
 //
-// This file is part of the project Easy Navigation (EasyNav in short)
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -21,7 +20,7 @@
 
 #include "rclcpp/macros.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
-#include "pluginlib/class_loader.hpp"
+#include "easynav_core/PluginSwitcher.hpp"
 
 #include "easynav_core/LocalizerMethodBase.hpp"
 #include "easynav_common/types/NavState.hpp"
@@ -118,11 +117,9 @@ private:
   /// @brief Callback group reserved for real-time operations.
   rclcpp::CallbackGroup::SharedPtr realtime_cbg_;
 
-  /// @brief Instance of the loaded localization plugin.
-  std::shared_ptr<LocalizerMethodBase> localizer_method_ {nullptr};
-
-  /// @brief Plugin loader for LocalizerMethodBase implementations.
-  std::unique_ptr<pluginlib::ClassLoader<easynav::LocalizerMethodBase>> localizer_loader_;
+  /// @brief Owns the localizer plugin. To change it: deactivate, cleanup, set
+  /// "localizer_types" and configure again.
+  PluginSwitcher<LocalizerMethodBase> localizer_;
 };
 
 }  // namespace easynav

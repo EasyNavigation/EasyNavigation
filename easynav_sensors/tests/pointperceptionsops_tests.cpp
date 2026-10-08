@@ -1,6 +1,5 @@
 // Copyright 2025 Intelligent Robotics Lab
 //
-// This file is part of the project Easy Navigation (EasyNav in short)
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -13,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+
 #include "gtest/gtest.h"
 #include <memory>
 #include <vector>
@@ -24,6 +24,7 @@
 
 #include "easynav_sensors/types/PointPerception.hpp"
 #include "easynav_common/RTTFBuffer.hpp"
+#include "easynav_common/TransformListener.hpp"
 
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
@@ -80,9 +81,7 @@ public:
   {
     if (with_listener) {
       // Disable TransformListener internal thread; tests control spinning explicitly if needed.
-      tf_listener_ = std::make_unique<tf2_ros::TransformListener>(*tf_buffer_, node_,
-                                                                                      /*spin_thread=*/
-          false);
+      tf_listener_ = easynav::make_transform_listener(*tf_buffer_, node_, /*spin_thread=*/ false);
       exec_ = std::make_unique<rclcpp::executors::SingleThreadedExecutor>();
       exec_->add_node(node_->get_node_base_interface());
     }

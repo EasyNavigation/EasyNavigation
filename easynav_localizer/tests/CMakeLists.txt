@@ -2,3 +2,8 @@ ament_add_gtest(localizer_node_tests localizer_node_tests.cpp)
 target_link_libraries(localizer_node_tests
   easynav_localizer
 )
+
+ament_add_gtest(faulty_localizer_tests faulty_localizer_tests.cpp)
+target_link_libraries(faulty_localizer_tests
+  faulty_localizer
+)

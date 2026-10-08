@@ -1,6 +1,5 @@
 // Copyright 2025 Intelligent Robotics Lab
 //
-// This file is part of the project Easy Navigation (EasyNav in short)
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -13,12 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <atomic>
+#include <chrono>
+#include <string>
+#include <vector>
+#include <memory>
+#include <limits>
+#include <stdexcept>
+#include <thread>
+
 #include "gtest/gtest.h"
 
+#include "geometry_msgs/msg/pose_with_covariance_stamped.hpp"
+#include "geometry_msgs/msg/twist_stamped.hpp"
 #include "nav_msgs/msg/odometry.hpp"
 
 #include "easynav_common/types/NavState.hpp"
+#include "easynav_common/RobotGeometry.hpp"
 #include "easynav_common/RTTFBuffer.hpp"
+#include "easynav_sensors/types/PointPerception.hpp"
 #include "easynav_core/MethodBase.hpp"
 #include "easynav_core/LocalizerMethodBase.hpp"
 #include "easynav_core/PlannerMethodBase.hpp"
@@ -110,6 +122,30 @@ TEST_F(CoreMethodTestCase, OnInitializeCalled)
     "on_initialize() should be called during initialization.";
 }
 
+TEST_F(CoreMethodTestCase, InvalidFrequenciesAreRejected)
+{
+  const double nan = std::numeric_limits<double>::quiet_NaN();
+  const double inf = std::numeric_limits<double>::infinity();
+  for (const std::string name : {"test.rt_freq", "test.freq"}) {
+    for (const double value : {0.0, -1.0, nan, inf, -inf}) {
+      auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>(
+        "test_node", rclcpp::NodeOptions().parameter_overrides({{name, value}}));
+      MockMethod method;
+      EXPECT_THROW(method.initialize(node, "test"), std::runtime_error) << name << " = " << value;
+      EXPECT_FALSE(method.on_initialize_called_) << name << " = " << value;
+    }
+  }
+
+  // Positive and finite, however small or large: valid.
+  for (const double value : {1e-3, 1e6}) {
+    auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>(
+      "test_node", rclcpp::NodeOptions().parameter_overrides({
+      {"test.rt_freq", value}, {"test.freq", value}}));
+    MockMethod method;
+    EXPECT_NO_THROW(method.initialize(node, "test")) << value;
+  }
+}
+
 TEST_F(CoreMethodTestCase, TFInfoPropagatesToDerived)
 {
   auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_tfinfo_node");
@@ -190,6 +226,158 @@ public:
 
   void on_initialize() override {}
   void update_rt(easynav::NavState &) override {rt_call_count++;}
+};
+
+// Plugins that throw on every update.
+class ThrowingLocalizer : public easynav::LocalizerMethodBase
+{
+public:
+  int rt_call_count {0};
+  int non_rt_call_count {0};
+
+  void on_initialize() override {}
+  void update_rt(easynav::NavState &) override
+  {
+    rt_call_count++;
+    throw std::runtime_error("boom in localizer update_rt");
+  }
+  void update(easynav::NavState &) override
+  {
+    non_rt_call_count++;
+    throw std::runtime_error("boom in localizer update");
+  }
+};
+
+class ThrowingPlanner : public easynav::PlannerMethodBase
+{
+public:
+  int call_count {0};
+
+  void on_initialize() override {}
+  void update(easynav::NavState &) override
+  {
+    call_count++;
+    throw std::runtime_error("boom in planner update");
+  }
+};
+
+class ThrowingMapsManager : public easynav::MapsManagerBase
+{
+public:
+  int call_count {0};
+
+  void on_initialize() override {}
+  void update(easynav::NavState &) override
+  {
+    call_count++;
+    throw std::runtime_error("boom in maps manager update");
+  }
+};
+
+class ThrowingController : public easynav::ControllerMethodBase
+{
+public:
+  int rt_call_count {0};
+
+  void on_initialize() override {}
+  void update_rt(easynav::NavState &) override
+  {
+    rt_call_count++;
+    throw std::runtime_error("boom in controller update_rt");
+  }
+};
+
+// Throws something that is not a std::exception.
+class NonStdThrowingLocalizer : public easynav::LocalizerMethodBase
+{
+public:
+  int calls {0};
+  void on_initialize() override {}
+  void update_rt(easynav::NavState &) override {calls++; throw 42;}
+  void update(easynav::NavState &) override {calls++; throw 42;}
+};
+
+class NonStdThrowingPlanner : public easynav::PlannerMethodBase
+{
+public:
+  int calls {0};
+  void on_initialize() override {}
+  void update(easynav::NavState &) override {calls++; throw 42;}
+};
+
+class NonStdThrowingMapsManager : public easynav::MapsManagerBase
+{
+public:
+  int calls {0};
+  void on_initialize() override {}
+  void update(easynav::NavState &) override {calls++; throw 42;}
+};
+
+class NonStdThrowingController : public easynav::ControllerMethodBase
+{
+public:
+  int calls {0};
+  void on_initialize() override {}
+  void update_rt(easynav::NavState &) override {calls++; throw 42;}
+};
+
+// Records the last known poses it is handed; optionally throws from the hook.
+class RecordingLocalizer : public easynav::LocalizerMethodBase
+{
+public:
+  std::vector<geometry_msgs::msg::PoseWithCovarianceStamped> last_known;
+  std::atomic<int> updates {0};
+  bool throw_in_hook {false};
+  std::chrono::milliseconds hook_delay {0};
+  std::atomic<bool> hook_done {false};
+  std::atomic<bool> updated_before_hook_done {false};
+  void on_initialize() override {}
+  void update_rt(easynav::NavState &) override {record_update();}
+  void update(easynav::NavState &) override {record_update();}
+
+protected:
+  void on_last_known_pose(const geometry_msgs::msg::PoseWithCovarianceStamped & pose) override
+  {
+    last_known.push_back(pose);
+    std::this_thread::sleep_for(hook_delay);
+    hook_done = true;
+    if (throw_in_hook) {throw std::runtime_error("bad pose");}
+  }
+
+private:
+  void record_update()
+  {
+    if (!last_known.empty() && !hook_done) {updated_before_hook_done = true;}
+    updates++;
+  }
+};
+
+// Writes a command, then throws on odd calls.
+class FlakyController : public easynav::ControllerMethodBase
+{
+public:
+  int calls {0};
+  void on_initialize() override {}
+  void update_rt(easynav::NavState & nav_state) override
+  {
+    geometry_msgs::msg::TwistStamped cmd;
+    cmd.twist.linear.x = 0.4;
+    nav_state.set("cmd_vel", cmd);
+    if (++calls % 2 == 1) {throw std::runtime_error("flaky");}
+  }
+};
+
+// Throws on odd calls, counts successful ones in NavState.
+class FlakyPlanner : public easynav::PlannerMethodBase
+{
+public:
+  int calls {0};
+  void on_initialize() override {}
+  void update(easynav::NavState & nav_state) override
+  {
+    if (++calls % 2 == 1) {throw std::runtime_error("flaky");}
+    nav_state.set("ok", nav_state.has("ok") ? nav_state.get<int>("ok") + 1 : 1);
+  }
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -434,17 +622,92 @@ TEST_F(CoreMethodTestCase, MapsManagerInternalUpdateRunsWhenTimeElapsed)
 // ControllerMethodBase: initialize and internal_update_rt
 // ─────────────────────────────────────────────────────────────────────────────
 
-TEST_F(CoreMethodTestCase, ControllerInitializeDeclaresCollisionParams)
+// The collision checker moved to the recovery system.
+class CollisionCheckerRemovedTest : public CoreMethodTestCase {};
+
+// A controller that always commands forward.
+class ForwardController : public easynav::ControllerMethodBase
+{
+public:
+  void on_initialize() override {}
+  void update_rt(easynav::NavState & nav_state) override
+  {
+    geometry_msgs::msg::TwistStamped cmd;
+    cmd.twist.linear.x = 0.5;
+    nav_state.set("cmd_vel", cmd);
+  }
+};
+
+TEST_F(CollisionCheckerRemovedTest, NoCollisionCheckerParameters)
 {
   auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_ctrl_init_node");
   TrackingController ctrl;
   ctrl.initialize(node, "ctrl_p");
+  for (const auto & name : {"active", "debug_markers", "robot_radius", "robot_height",
+      "brake_acc", "safety_margin", "z_min_filter", "downsample_leaf_size"})
+  {
+    EXPECT_FALSE(node->has_parameter(std::string("colision_checker.") + name)) << name;
+  }
+}
 
-  // All collision checker parameters should have been declared
-  EXPECT_TRUE(node->has_parameter("colision_checker.active"));
-  EXPECT_TRUE(node->has_parameter("colision_checker.robot_radius"));
-  EXPECT_TRUE(node->has_parameter("colision_checker.brake_acc"));
-  EXPECT_TRUE(node->has_parameter("colision_checker.safety_margin"));
+TEST_F(CollisionCheckerRemovedTest, TheControllerCommandIsNotAltered)
+{
+  // Even configured as before and with an obstacle right ahead: braking is the recovery
+  // system's job now.
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>(
+    "test_ctrl_checker_node", rclcpp::NodeOptions().parameter_overrides(
+      {{"colision_checker.active", true}, {"colision_checker.robot_radius", 0.3}}));
+  ForwardController ctrl;
+  ctrl.initialize(node, "ctrl");
+
+  easynav::NavState nav_state;
+  easynav::PointPerception perception;
+  perception.data.push_back(pcl::PointXYZ(0.2, 0.0, 0.2));
+  perception.frame_id = "base_link";
+  perception.stamp = node->now();
+  perception.valid = true;
+  nav_state.set("scan", perception);
+  ASSERT_TRUE(ctrl.internal_update_rt(nav_state, true));
+  EXPECT_DOUBLE_EQ(
+    nav_state.get<geometry_msgs::msg::TwistStamped>("cmd_vel").twist.linear.x, 0.5);
+}
+
+// ─── Robot geometry ──────────────────────────────────────────────────────────────────────────
+
+class RobotGeometryCoreTest : public CoreMethodTestCase
+{
+protected:
+  void SetUp() override
+  {
+    CoreMethodTestCase::SetUp();
+    easynav::RobotGeometryRegistry::getInstance()->set_geometry(easynav::RobotGeometry{});
+  }
+
+  void TearDown() override
+  {
+    easynav::RobotGeometryRegistry::getInstance()->set_geometry(easynav::RobotGeometry{});
+    CoreMethodTestCase::TearDown();
+  }
+
+  static rclcpp_lifecycle::LifecycleNode::SharedPtr node(
+    const std::vector<rclcpp::Parameter> & overrides = {})
+  {
+    return std::make_shared<rclcpp_lifecycle::LifecycleNode>(
+      "test_geometry_node", rclcpp::NodeOptions().parameter_overrides(overrides));
+  }
+};
+
+TEST_F(RobotGeometryCoreTest, PluginDeprecatedNamesAreRelativeToThePlugin)
+{
+  TrackingController ctrl;
+  auto n = node({{"ctrl.robot_radius", 0.2}, {"robot_radius", 0.9}, {"ctrl.inscribed", 0.15}});
+  ctrl.initialize(n, "ctrl");
+  const auto geometry = ctrl.get_robot_geometry({"robot_radius", "inscribed", ""});
+  EXPECT_DOUBLE_EQ(geometry.radius, 0.2);
+  EXPECT_DOUBLE_EQ(geometry.inscribed_radius, 0.15);
+  EXPECT_DOUBLE_EQ(geometry.height, easynav::RobotGeometry{}.height);
+  EXPECT_DOUBLE_EQ(ctrl.get_robot_geometry().radius, easynav::RobotGeometry{}.radius)
+    << "no deprecated names";
 }
 
 TEST_F(CoreMethodTestCase, ControllerInternalUpdateRtWithTriggerAlwaysRuns)
@@ -487,6 +750,420 @@ TEST_F(CoreMethodTestCase, ControllerInternalUpdateRtRunsWhenTimeElapsed)
 
   EXPECT_TRUE(result);
   EXPECT_EQ(ctrl.rt_call_count, 1);
+}
+
+// A throwing plugin must not propagate the exception.
+
+TEST_F(CoreMethodTestCase, LocalizerUpdateRtExceptionDoesNotPropagate)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_loc_throw_rt_node");
+  ThrowingLocalizer localizer;
+  localizer.initialize(node, "loc_throw_rt");
+
+  easynav::NavState nav_state;
+  bool result = false;
+  EXPECT_NO_THROW(result = localizer.internal_update_rt(nav_state, true));
+
+  EXPECT_TRUE(result);
+  EXPECT_EQ(localizer.rt_call_count, 1);
+}
+
+TEST_F(CoreMethodTestCase, LocalizerUpdateExceptionDoesNotPropagate)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_loc_throw_node");
+  ThrowingLocalizer localizer;
+  localizer.initialize(node, "loc_throw");
+
+  std::this_thread::sleep_for(std::chrono::milliseconds(120));
+  easynav::NavState nav_state;
+  EXPECT_NO_THROW(localizer.internal_update(nav_state));
+
+  EXPECT_EQ(localizer.non_rt_call_count, 1);
+}
+
+TEST_F(CoreMethodTestCase, PlannerInternalUpdateExceptionDoesNotPropagate)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_plan_throw_node");
+  ThrowingPlanner planner;
+  planner.initialize(node, "plan_throw");
+
+  std::this_thread::sleep_for(std::chrono::milliseconds(120));
+  easynav::NavState nav_state;
+  EXPECT_NO_THROW(planner.internal_update(nav_state));
+
+  EXPECT_EQ(planner.call_count, 1);
+}
+
+TEST_F(CoreMethodTestCase, PlannerForceUpdateExceptionDoesNotPropagate)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_plan_throw_force_node");
+  ThrowingPlanner planner;
+  planner.initialize(node, "plan_throw_force");
+
+  easynav::NavState nav_state;
+  EXPECT_NO_THROW(planner.force_update(nav_state));
+
+  EXPECT_EQ(planner.call_count, 1);
+}
+
+TEST_F(CoreMethodTestCase, MapsManagerInternalUpdateExceptionDoesNotPropagate)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_maps_throw_node");
+  ThrowingMapsManager maps;
+  maps.initialize(node, "maps_throw");
+
+  std::this_thread::sleep_for(std::chrono::milliseconds(120));
+  easynav::NavState nav_state;
+  EXPECT_NO_THROW(maps.internal_update(nav_state));
+
+  EXPECT_EQ(maps.call_count, 1);
+}
+
+TEST_F(CoreMethodTestCase, ControllerInternalUpdateRtExceptionDoesNotPropagate)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_ctrl_throw_node");
+  ThrowingController ctrl;
+  ctrl.initialize(node, "ctrl_throw");
+
+  easynav::NavState nav_state;
+  bool result = false;
+  EXPECT_NO_THROW(result = ctrl.internal_update_rt(nav_state, true));
+
+  EXPECT_TRUE(result);
+  EXPECT_EQ(ctrl.rt_call_count, 1);
+}
+
+TEST_F(CoreMethodTestCase, ThrowingPluginsKeepBeingCalled)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_keep_called_node");
+  ThrowingLocalizer localizer;
+  localizer.initialize(node, "loc_keep");
+  ThrowingController ctrl;
+  ctrl.initialize(node, "ctrl_keep");
+  ThrowingPlanner planner;
+  planner.initialize(node, "plan_keep");
+
+  easynav::NavState nav_state;
+  for (int i = 1; i <= 3; ++i) {
+    EXPECT_TRUE(localizer.internal_update_rt(nav_state, true));
+    EXPECT_TRUE(ctrl.internal_update_rt(nav_state, true));
+    EXPECT_NO_THROW(planner.force_update(nav_state));
+    EXPECT_EQ(localizer.rt_call_count, i);
+    EXPECT_EQ(ctrl.rt_call_count, i);
+    EXPECT_EQ(planner.call_count, i);
+  }
+}
+
+TEST_F(CoreMethodTestCase, IntermittentFailuresDoNotAffectGoodCycles)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_flaky_node");
+  FlakyPlanner planner;
+  planner.initialize(node, "flaky");
+
+  easynav::NavState nav_state;
+  for (int i = 0; i < 6; ++i) {
+    EXPECT_NO_THROW(planner.force_update(nav_state));
+  }
+  EXPECT_EQ(planner.calls, 6);
+  ASSERT_TRUE(nav_state.has("ok"));
+  EXPECT_EQ(nav_state.get<int>("ok"), 3);
+}
+
+TEST_F(CoreMethodTestCase, AFailedCycleStillCountsForTheRate)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_fail_rate_node");
+  ThrowingPlanner planner;
+  planner.initialize(node, "plan_rate");
+  easynav::NavState nav_state;
+
+  std::this_thread::sleep_for(std::chrono::milliseconds(120));
+  planner.internal_update(nav_state);
+  EXPECT_EQ(planner.call_count, 1);
+
+  // Too soon after the failed run: not retried every cycle.
+  planner.internal_update(nav_state);
+  EXPECT_EQ(planner.call_count, 1);
+
+  std::this_thread::sleep_for(std::chrono::milliseconds(120));
+  planner.internal_update(nav_state);
+  EXPECT_EQ(planner.call_count, 2);
+}
+
+TEST_F(CoreMethodTestCase, NonStdExceptionsDoNotPropagate)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_non_std_node");
+  NonStdThrowingLocalizer localizer;
+  localizer.initialize(node, "loc_non_std");
+  NonStdThrowingPlanner planner;
+  planner.initialize(node, "plan_non_std");
+  NonStdThrowingMapsManager maps;
+  maps.initialize(node, "maps_non_std");
+  NonStdThrowingController ctrl;
+  ctrl.initialize(node, "ctrl_non_std");
+
+  easynav::NavState nav_state;
+  EXPECT_NO_THROW(localizer.internal_update_rt(nav_state, true));
+  EXPECT_NO_THROW(ctrl.internal_update_rt(nav_state, true));
+  EXPECT_NO_THROW(planner.force_update(nav_state));
+
+  std::this_thread::sleep_for(std::chrono::milliseconds(120));
+  EXPECT_NO_THROW(localizer.internal_update(nav_state));
+  EXPECT_NO_THROW(planner.internal_update(nav_state));
+  EXPECT_NO_THROW(maps.internal_update(nav_state));
+
+  EXPECT_EQ(localizer.calls, 2);
+  EXPECT_EQ(planner.calls, 2);
+  EXPECT_EQ(maps.calls, 1);
+  EXPECT_EQ(ctrl.calls, 1);
+}
+
+namespace
+{
+geometry_msgs::msg::TwistStamped moving_cmd()
+{
+  geometry_msgs::msg::TwistStamped cmd;
+  cmd.twist.linear.x = 0.5;
+  cmd.twist.angular.z = 0.3;
+  return cmd;
+}
+
+bool is_stop(const easynav::NavState & nav_state)
+{
+  const auto & t = nav_state.get<geometry_msgs::msg::TwistStamped>("cmd_vel").twist;
+  return t.linear.x == 0.0 && t.linear.y == 0.0 && t.angular.z == 0.0;
+}
+}  // namespace
+
+TEST_F(CoreMethodTestCase, ControllerExceptionStopsTheRobot)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_ctrl_stop_node");
+  ThrowingController ctrl;
+  ctrl.initialize(node, "ctrl_stop");
+
+  easynav::NavState nav_state;
+  nav_state.set("cmd_vel", moving_cmd());  // Last command, from a previous cycle.
+  EXPECT_TRUE(ctrl.internal_update_rt(nav_state, true)) << "the stop must be published";
+  EXPECT_TRUE(is_stop(nav_state));
+}
+
+TEST_F(CoreMethodTestCase, ControllerNonStdExceptionStopsTheRobot)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_ctrl_stop_non_std_node");
+  NonStdThrowingController ctrl;
+  ctrl.initialize(node, "ctrl_stop_non_std");
+
+  easynav::NavState nav_state;
+  nav_state.set("cmd_vel", moving_cmd());
+  EXPECT_TRUE(ctrl.internal_update_rt(nav_state, true));
+  EXPECT_TRUE(is_stop(nav_state));
+}
+
+TEST_F(CoreMethodTestCase, ControllerCommandWrittenBeforeThrowingIsDiscarded)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_ctrl_partial_node");
+  FlakyController ctrl;  // First call writes 0.4 and throws.
+  ctrl.initialize(node, "ctrl_partial");
+
+  easynav::NavState nav_state;
+  EXPECT_TRUE(ctrl.internal_update_rt(nav_state, true));
+  EXPECT_TRUE(is_stop(nav_state));
+}
+
+TEST_F(CoreMethodTestCase, ControllerRecoversAfterAFailedCycle)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_ctrl_recover_node");
+  FlakyController ctrl;  // Fails on odd calls.
+  ctrl.initialize(node, "ctrl_recover");
+
+  easynav::NavState nav_state;
+  for (int i = 1; i <= 4; ++i) {
+    EXPECT_TRUE(ctrl.internal_update_rt(nav_state, true));
+    const double x = nav_state.get<geometry_msgs::msg::TwistStamped>("cmd_vel").twist.linear.x;
+    EXPECT_DOUBLE_EQ(x, i % 2 == 1 ? 0.0 : 0.4) << "cycle " << i;
+  }
+}
+
+namespace
+{
+nav_msgs::msg::Odometry robot_pose(double x, double y, const std::string & frame = "")
+{
+  nav_msgs::msg::Odometry odom;
+  odom.header.frame_id =
+    frame.empty() ? easynav::RTTFBuffer::getInstance()->get_tf_info().map_frame : frame;
+  odom.pose.pose.position.x = x;
+  odom.pose.pose.position.y = y;
+  odom.pose.pose.orientation.w = 1.0;
+  odom.pose.covariance[0] = 0.25;
+  return odom;
+}
+
+std::shared_ptr<RecordingLocalizer> make_localizer(
+  const rclcpp_lifecycle::LifecycleNode::SharedPtr & node, const std::string & name)
+{
+  auto localizer = std::make_shared<RecordingLocalizer>();
+  localizer->initialize(node, name);
+  return localizer;
+}
+}  // namespace
+
+TEST_F(CoreMethodTestCase, LastKnownPoseIsHandedOnTheFirstCycle)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_last_pose_node");
+  auto localizer = make_localizer(node, "loc");
+
+  easynav::NavState nav_state;
+  nav_state.set("robot_pose", robot_pose(1.5, -2.0));
+  localizer->internal_update_rt(nav_state, true);
+
+  ASSERT_EQ(localizer->last_known.size(), 1u);
+  const auto & pose = localizer->last_known.front();
+  EXPECT_DOUBLE_EQ(pose.pose.pose.position.x, 1.5);
+  EXPECT_DOUBLE_EQ(pose.pose.pose.position.y, -2.0);
+  EXPECT_DOUBLE_EQ(pose.pose.covariance[0], 0.25) << "covariance kept";
+  EXPECT_EQ(localizer->updates, 1);
+}
+
+TEST_F(CoreMethodTestCase, LastKnownPoseAlsoOnAFirstNonRtCycle)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_last_pose_nort_node");
+  auto localizer = make_localizer(node, "loc");
+
+  easynav::NavState nav_state;
+  nav_state.set("robot_pose", robot_pose(1.0, 1.0));
+  std::this_thread::sleep_for(std::chrono::milliseconds(120));
+  localizer->internal_update(nav_state);
+  EXPECT_EQ(localizer->last_known.size(), 1u);
+}
+
+TEST_F(CoreMethodTestCase, LastKnownPoseOnlyOnce)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_last_pose_once_node");
+  auto localizer = make_localizer(node, "loc");
+
+  easynav::NavState nav_state;
+  nav_state.set("robot_pose", robot_pose(1.0, 1.0));
+  for (int i = 0; i < 5; ++i) {
+    nav_state.set("robot_pose", robot_pose(1.0 + i, 1.0));  // Its own estimate from now on.
+    localizer->internal_update_rt(nav_state, true);
+  }
+  std::this_thread::sleep_for(std::chrono::milliseconds(120));
+  localizer->internal_update(nav_state);
+
+  ASSERT_EQ(localizer->last_known.size(), 1u);
+  EXPECT_DOUBLE_EQ(localizer->last_known.front().pose.pose.position.x, 1.0);
+}
+
+TEST_F(CoreMethodTestCase, NoLastKnownPoseOnAFreshStart)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_last_pose_fresh_node");
+  auto localizer = make_localizer(node, "loc");
+
+  easynav::NavState nav_state;
+  localizer->internal_update_rt(nav_state, true);
+  // A pose written afterwards is this localizer's own: not handed back.
+  nav_state.set("robot_pose", robot_pose(1.0, 1.0));
+  localizer->internal_update_rt(nav_state, true);
+
+  EXPECT_TRUE(localizer->last_known.empty());
+  EXPECT_EQ(localizer->updates, 2);
+}
+
+TEST_F(CoreMethodTestCase, InvalidLastKnownPosesAreIgnored)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_last_pose_invalid_node");
+  const double nan = std::numeric_limits<double>::quiet_NaN();
+  std::vector<nav_msgs::msg::Odometry> invalid;
+  invalid.push_back(robot_pose(1.0, 1.0, "odom"));  // Not the map frame.
+  invalid.push_back(robot_pose(nan, 1.0));
+  invalid.push_back(robot_pose(1.0, std::numeric_limits<double>::infinity()));
+  invalid.push_back(robot_pose(1.0, 1.0));
+  invalid.back().pose.pose.orientation.w = 0.0;  // Zero quaternion.
+  invalid.push_back(robot_pose(1.0, 1.0));
+  invalid.back().pose.pose.position.z = nan;
+  invalid.push_back(robot_pose(1.0, 1.0));
+  invalid.back().pose.pose.orientation.x = nan;
+
+  for (std::size_t i = 0; i < invalid.size(); ++i) {
+    auto localizer = make_localizer(node, "loc_invalid_" + std::to_string(i));
+    easynav::NavState nav_state;
+    nav_state.set("robot_pose", invalid[i]);
+    localizer->internal_update_rt(nav_state, true);
+    EXPECT_TRUE(localizer->last_known.empty()) << "case " << i;
+    EXPECT_EQ(localizer->updates, 1) << "case " << i;
+  }
+}
+
+TEST_F(CoreMethodTestCase, ThrowingLastKnownPoseHookDoesNotStopTheLocalizer)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_last_pose_throw_node");
+  auto localizer = std::make_shared<RecordingLocalizer>();
+  localizer->throw_in_hook = true;
+  localizer->initialize(node, "loc");
+
+  easynav::NavState nav_state;
+  nav_state.set("robot_pose", robot_pose(1.0, 1.0));
+  EXPECT_NO_THROW(localizer->internal_update_rt(nav_state, true));
+  EXPECT_NO_THROW(localizer->internal_update_rt(nav_state, true));
+  EXPECT_EQ(localizer->last_known.size(), 1u);
+  EXPECT_EQ(localizer->updates, 2);
+}
+
+TEST_F(CoreMethodTestCase, EachNewLocalizerInstanceGetsTheLastKnownPose)
+{
+  // Reconfiguration: every configure creates a new instance, even of another localizer type.
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_last_pose_reconf_node");
+  easynav::NavState nav_state;
+  nav_state.set("robot_pose", robot_pose(0.0, 0.0));
+
+  for (int i = 1; i <= 3; ++i) {
+    auto localizer = make_localizer(node, "loc_" + std::to_string(i));
+    localizer->internal_update_rt(nav_state, true);
+    ASSERT_EQ(localizer->last_known.size(), 1u) << "instance " << i;
+    EXPECT_DOUBLE_EQ(localizer->last_known.front().pose.pose.position.x, i - 1.0);
+    nav_state.set("robot_pose", robot_pose(i, 0.0));  // Where it leaves the robot.
+  }
+}
+
+TEST_F(CoreMethodTestCase, NonZeroQuaternionWithZeroWIsValid)
+{
+  auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test_last_pose_quat_node");
+  auto localizer = make_localizer(node, "loc");
+
+  easynav::NavState nav_state;
+  auto odom = robot_pose(1.0, 1.0);
+  odom.pose.pose.orientation.w = 0.0;
+  odom.pose.pose.orientation.x = 1.0;  // 180 deg about x: unusual, but a valid rotation.
+  nav_state.set("robot_pose", odom);
+  localizer->internal_update_rt(nav_state, true);
+
+  EXPECT_EQ(localizer->last_known.size(), 1u);
+}
+
+TEST_F(CoreMethodTestCase, NoUpdateRunsBeforeTheLastKnownPoseHookFinishes)
+{
+  // The RT and non-RT loops run concurrently: whichever comes second waits for the hook.
+  for (int round = 0; round < 5; ++round) {
+    // Appended, not "literal" + to_string(): GCC 15 + LTO flags that with -Wstringop-overflow
+    std::string node_name = "test_last_pose_race_node_";
+    node_name += std::to_string(round);
+    auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>(node_name);
+    auto localizer = std::make_shared<RecordingLocalizer>();
+    localizer->hook_delay = std::chrono::milliseconds(50);
+    localizer->initialize(node, "loc");
+
+    easynav::NavState nav_state;
+    nav_state.set("robot_pose", robot_pose(1.0, 1.0));
+    std::this_thread::sleep_for(std::chrono::milliseconds(120));  // Non-RT is due.
+
+    std::thread rt([&]() {localizer->internal_update_rt(nav_state, true);});
+    std::thread nort([&]() {localizer->internal_update(nav_state);});
+    rt.join();
+    nort.join();
+
+    EXPECT_EQ(localizer->last_known.size(), 1u) << "round " << round;
+    EXPECT_EQ(localizer->updates, 2) << "round " << round;
+    EXPECT_FALSE(localizer->updated_before_hook_done) << "round " << round;
+  }
 }
 
 int main(int argc, char ** argv)

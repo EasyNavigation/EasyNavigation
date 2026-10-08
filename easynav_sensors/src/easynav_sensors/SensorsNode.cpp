@@ -1,6 +1,5 @@
 // Copyright 2025 Intelligent Robotics Lab
 //
-// This file is part of the project Easy Navigation (EasyNav in short)
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -16,6 +15,7 @@
 /// \file
 /// \brief Implementation of the SensorsNode class.
 
+#include <cmath>
 #include <string>
 #include <vector>
 #include <unordered_map>
@@ -26,6 +26,9 @@
 #include "lifecycle_msgs/msg/state.hpp"
 
 #include "sensor_msgs/msg/point_cloud2.hpp"
+
+#include "diagnostic_msgs/msg/diagnostic_status.hpp"
+#include "easynav_common/Parameters.hpp"
 
 #include "easynav_sensors/SensorsNode.hpp"
 
@@ -48,13 +51,9 @@ SensorsNode::SensorsNode(const rclcpp::NodeOptions & options)
   percept_pub_ = create_publisher<sensor_msgs::msg::PointCloud2>(
     "sensors_node/perceptions", rclcpp::SensorDataQoS().reliable());
 
-  if (!has_parameter("sensors")) {
-    declare_parameter("sensors", std::vector<std::string>());
-  }
+  easynav::declare_parameter_if_absent(*this, "sensors", std::vector<std::string>());
 
-  if (!has_parameter("forget_time")) {
-    declare_parameter("forget_time", 1.0);
-  }
+  easynav::declare_parameter_if_absent(*this, "forget_time", 1.0);
 
   handler_loader_ = std::make_unique<pluginlib::ClassLoader<PerceptionHandler>>(
     "easynav_sensors", "easynav::PerceptionHandler");
@@ -72,9 +71,26 @@ SensorsNode::SensorsNode(const rclcpp::NodeOptions & options)
 
 SensorsNode::~SensorsNode()
 {
-  if (get_current_state().id() != lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE) {
+  if (get_current_state().id() == lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE) {
     trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_ACTIVE_SHUTDOWN);
   }
+  if (get_current_state().id() == lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE) {
+    trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_INACTIVE_SHUTDOWN);
+  }
+  if (get_current_state().id() == lifecycle_msgs::msg::State::PRIMARY_STATE_UNCONFIGURED) {
+    trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_UNCONFIGURED_SHUTDOWN);
+  }
+}
+
+void
+SensorsNode::release_handlers()
+{
+  {
+    std::lock_guard<std::mutex> lock(handler_list_mutex_);
+    handler_list_.clear();
+  }
+  groups_.clear();
+  groups_initialized = false;
 }
 
 
@@ -85,19 +101,18 @@ SensorsNode::on_configure([[maybe_unused]] const rclcpp_lifecycle::State & state
   std::vector<std::string> sensors;
   get_parameter("sensors", sensors);
   get_parameter("forget_time", forget_time_);
+  if (!std::isfinite(forget_time_) || forget_time_ <= 0.0) {
+    RCLCPP_ERROR(
+      get_logger(), "Invalid parameter: forget_time = %f (> 0)", forget_time_);
+    return CallbackReturnT::FAILURE;
+  }
 
   for (const auto & sensor_id : sensors) {
     std::string topic, msg_type, plugin;
 
-    if (!has_parameter(sensor_id + ".topic")) {
-      declare_parameter(sensor_id + ".topic", std::string{});
-    }
-    if (!has_parameter(sensor_id + ".type")) {
-      declare_parameter(sensor_id + ".type", std::string{});
-    }
-    if (!has_parameter(sensor_id + ".plugin")) {
-      declare_parameter(sensor_id + ".plugin", std::string{});
-    }
+    easynav::declare_parameter_if_absent(*this, sensor_id + ".topic", std::string{});
+    easynav::declare_parameter_if_absent(*this, sensor_id + ".type", std::string{});
+    easynav::declare_parameter_if_absent(*this, sensor_id + ".plugin", std::string{});
 
     get_parameter(sensor_id + ".topic", topic);
     get_parameter(sensor_id + ".type", msg_type);
@@ -137,9 +152,7 @@ SensorsNode::on_configure([[maybe_unused]] const rclcpp_lifecycle::State & state
     handler->initialize(shared_from_this(), realtime_cbg_, sensor_id);
 
     std::string group = "";
-    if (!has_parameter(sensor_id + ".group")) {
-      declare_parameter(sensor_id + ".group", "");
-    }
+    easynav::declare_parameter_if_absent(*this, sensor_id + ".group", "");
     get_parameter(sensor_id + ".group", group);
 
     // Store the handler and add sensor to the group
@@ -155,6 +168,10 @@ SensorsNode::on_configure([[maybe_unused]] const rclcpp_lifecycle::State & state
       "Configured sensor [%s] with plugin [%s] on topic [%s] in group [%s]",
       sensor_id.c_str(), plugin.c_str(), topic.c_str(), group.c_str());
   }
+
+  // Preallocated: checked every RT cycle.
+  data_states_.assign(handler_list_.size(), DataState::NO_DATA);
+  data_age_reported_ = false;
 
   return CallbackReturnT::SUCCESS;
 }
@@ -184,6 +201,9 @@ CallbackReturnT
 SensorsNode::on_cleanup(const rclcpp_lifecycle::State & state)
 {
   (void)state;
+
+  release_handlers();
+
   return CallbackReturnT::SUCCESS;
 }
 
@@ -191,6 +211,10 @@ CallbackReturnT
 SensorsNode::on_shutdown(const rclcpp_lifecycle::State & state)
 {
   (void)state;
+
+  // A shutdown from ACTIVE skips on_deactivate.
+  percept_pub_->on_deactivate();
+  release_handlers();
   return CallbackReturnT::SUCCESS;
 }
 
@@ -198,6 +222,9 @@ CallbackReturnT
 SensorsNode::on_error(const rclcpp_lifecycle::State & state)
 {
   (void)state;
+
+  percept_pub_->on_deactivate();
+  release_handlers();
   return CallbackReturnT::SUCCESS;
 }
 
@@ -212,14 +239,104 @@ SensorsNode::cycle_rt(
   std::shared_ptr<NavState> nav_state,
   [[maybe_unused]] bool trigger)
 {
+  // Copy the list so handlers stay alive for this call even if on_cleanup()
+  // clears handler_list_ right after we release the lock.
+  std::vector<std::shared_ptr<PerceptionHandler>> handlers;
+  {
+    std::lock_guard<std::mutex> lock(handler_list_mutex_);
+    handlers = handler_list_;
+  }
+
   bool trigger_perceptions = false;
   // Run handlers' cycle and check if there is new sensor data o trigger perceptions
-  for (auto & handler : handler_list_) {
+  for (auto & handler : handlers) {
     const bool trigger = handler->cycle_rt(nav_state);
     trigger_perceptions = trigger_perceptions || trigger;
   }
 
+  check_data_age(handlers, *nav_state);
+
   return trigger_perceptions;
+}
+
+void
+SensorsNode::check_data_age(
+  const std::vector<std::shared_ptr<PerceptionHandler>> & handlers, NavState & nav_state)
+{
+  if (data_states_.size() != handlers.size()) {
+    return;  // Reconfiguring.
+  }
+  const auto now = this->now();
+  bool changed = !data_age_reported_;
+  for (std::size_t i = 0; i < handlers.size(); ++i) {
+    const auto perception = handlers[i]->get_perception();
+    if (!perception) {
+      continue;  // A handler that does not expose its perception is not checked.
+    }
+    DataState state = DataState::FRESH;
+    if (perception->stamp.nanoseconds() == 0 && !perception->valid) {
+      state = DataState::NO_DATA;
+    } else if (perception->stamp.get_clock_type() == now.get_clock_type() &&
+      (now - perception->stamp).seconds() > forget_time_)
+    {
+      perception->valid = false;  // Nothing uses it until new data arrives.
+      state = DataState::STALE;
+    } else if (!perception->valid) {
+      state = DataState::STALE;
+    }
+    if (state != data_states_[i]) {
+      data_states_[i] = state;
+      changed = true;
+    }
+  }
+  if (changed) {
+    report_data_age(handlers, nav_state);
+  }
+}
+
+void
+SensorsNode::report_data_age(
+  const std::vector<std::shared_ptr<PerceptionHandler>> & handlers, NavState & nav_state)
+{
+  using diagnostic_msgs::msg::DiagnosticStatus;
+  data_age_reported_ = true;
+
+  std::string no_data, stale;
+  for (std::size_t i = 0; i < handlers.size(); ++i) {
+    if (data_states_[i] == DataState::FRESH) {continue;}
+    auto & list = data_states_[i] == DataState::NO_DATA ? no_data : stale;
+    list += (list.empty() ? "" : ", ") + handlers[i]->get_sensor_name();
+  }
+
+  DiagnosticStatus status;
+  status.name = "sensors";
+  status.hardware_id = get_name();
+  if (no_data.empty() && stale.empty()) {
+    status.level = DiagnosticStatus::OK;
+    status.message = "Sensor data up to date";
+  } else {
+    status.level = DiagnosticStatus::WARN;
+    if (!stale.empty()) {
+      status.message = "No data for more than " + std::to_string(forget_time_) + " s from: " +
+        stale;
+    }
+    if (!no_data.empty()) {
+      status.message += (status.message.empty() ? "" : "; ") + std::string("No data yet from: ") +
+        no_data;
+    }
+    RCLCPP_WARN(get_logger(), "%s", status.message.c_str());
+  }
+  diagnostic_msgs::msg::KeyValue stale_kv;
+  stale_kv.key = "stale";
+  stale_kv.value = stale;
+  status.values.push_back(stale_kv);
+  diagnostic_msgs::msg::KeyValue no_data_kv;
+  no_data_kv.key = "no_data";
+  no_data_kv.value = no_data;
+  status.values.push_back(no_data_kv);
+
+  nav_state.set("diagnostics.sensors", status);
+  nav_state.add_to_group("diagnostics", "diagnostics.sensors");
 }
 
 void

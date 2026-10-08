@@ -7,12 +7,13 @@ endif()
 
 find_package(ament_cmake REQUIRED)
 find_package(easynav_common REQUIRED)
-find_package(easynav_sensors REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
-find_package(visualization_msgs REQUIRED)
+find_package(pluginlib REQUIRED)
+find_package(diagnostic_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(nav_msgs REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
-find_package(PCL REQUIRED COMPONENTS common io)
 
 add_library(${PROJECT_NAME} SHARED
   src/easynav_core/ControllerMethodBase.cpp
@@ -20,20 +21,23 @@ add_library(${PROJECT_NAME} SHARED
   src/easynav_core/MapsManagerBase.cpp
   src/easynav_core/MethodBase.cpp
   src/easynav_core/PlannerMethodBase.cpp
+  src/easynav_core/RateMonitor.cpp
+  src/easynav_core/RecoveryManagerBase.cpp
+  src/easynav_core/VelocityCommand.cpp
 )
 target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include/${PROJECT_NAME}>
-  ${PCL_INCLUDE_DIRS}
 )
 target_link_libraries(${PROJECT_NAME} PUBLIC
   easynav_common::easynav_common
-  easynav_sensors::easynav_sensors
   rclcpp_lifecycle::rclcpp_lifecycle
+  pluginlib::pluginlib
   tf2_ros::tf2_ros
   tf2_geometry_msgs::tf2_geometry_msgs
-  ${visualization_msgs_TARGETS}
-  ${PCL_LIBRARIES}
+  ${diagnostic_msgs_TARGETS}
+  ${geometry_msgs_TARGETS}
+  ${nav_msgs_TARGETS}
 )
 
 install(
@@ -66,10 +70,12 @@ ament_export_targets(export_${PROJECT_NAME})
 
 ament_export_dependencies(
   easynav_common
-  easynav_sensors
   rclcpp_lifecycle
-  visualization_msgs
+  pluginlib
+  diagnostic_msgs
+  geometry_msgs
+  nav_msgs
   tf2_ros
-  PCL
+  tf2_geometry_msgs
 )
 ament_package()

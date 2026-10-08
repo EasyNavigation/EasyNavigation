@@ -1,6 +1,5 @@
 // Copyright 2025 Intelligent Robotics Lab
 //
-// This file is part of the project Easy Navigation (EasyNav in short)
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -18,6 +17,7 @@
 #include "sensor_msgs/msg/imu.hpp"
 #include "easynav_sensors/SensorsNode.hpp"
 #include "easynav_common/RTTFBuffer.hpp"
+#include "easynav_common/TransformListener.hpp"
 #include "easynav_common/types/NavState.hpp"
 #include "easynav_sensors/types/PointPerception.hpp"
 #include "easynav_sensors/types/IMUPerception.hpp"
@@ -421,7 +421,7 @@ TEST_F(SensorsNodeTestCase, percept_fuse_laserscan)
     });
 
   auto tf_buffer = easynav::RTTFBuffer::getInstance(test_node->get_clock());
-  tf2_ros::TransformListener tf_listener(*tf_buffer, test_node, true);
+  auto tf_listener = easynav::make_transform_listener(*tf_buffer, test_node, true);
 
   auto tf_broadcaster = std::make_shared<tf2_ros::TransformBroadcaster>(*test_node);
   geometry_msgs::msg::TransformStamped transform;
@@ -844,7 +844,7 @@ TEST_F(SensorsNodeTestCase, percept_fuse_all)
     });
 
   auto tf_buffer = easynav::RTTFBuffer::getInstance(test_node->get_clock());
-  tf2_ros::TransformListener tf_listener(*tf_buffer, test_node, true);
+  auto tf_listener = easynav::make_transform_listener(*tf_buffer, test_node, true);
 
   auto tf_broadcaster = std::make_shared<tf2_ros::TransformBroadcaster>(*test_node);
   geometry_msgs::msg::TransformStamped transform;

@@ -2,25 +2,19 @@
 Changelog for package easynav_support_py
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-0.4.0 (2026-07-26)
+0.5.0 (2026-10-08)
 ------------------
-* Merge remote-tracking branch 'origin/rolling' into rolling
+* Pause and resume of the navigation
+* Fixed a crash in the error handling path
+* Conda packages with pixi (pixi-build-ros)
+* Contributors: Francisco Martín Rico
+
+0.4.2 (2026-07-26)
+------------------
 * Try fix Python tests
 * GPLv3 -> Apache 2.0
-* Merge rolling into kilted and fix build issues
-* Contributors: Francisco Martín Rico, Francisco Miguel Moreno, jagutic
-
-0.3.2 (2025-12-18)
-------------------
-
-0.3.1 (2025-12-17)
-------------------
-
-0.3.0 (2025-12-01)
-------------------
-* Merge rolling features into kilted
-* Small fixes in Python Goal Manager
-* Contributors: Esther Aguado, Francisco Martín Rico, Francisco Miguel Moreno, estherag
+* small fixes in py goal manager client
+* Contributors: Esther Aguado, Francisco Martín Rico, Francisco Miguel Moreno, estherag, jagutic
 
 0.1.4 (2025-10-16)
 ------------------

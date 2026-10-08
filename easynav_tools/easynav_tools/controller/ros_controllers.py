@@ -1,6 +1,5 @@
 # Copyright 2025 Intelligent Robotics Lab
 #
-# This file is part of the project Easy Navigation (EasyNav in short)
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -13,12 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import glob
 import math
 import os
 import re
 
+from diagnostic_msgs.msg import DiagnosticArray, DiagnosticStatus
+
 from easynav_interfaces.msg import GoalManagerInfo, NavigationControl
 from geometry_msgs.msg import Twist, TwistStamped
+
+from rcl_interfaces.msg import Log
+
+from rich.markup import escape
 
 from std_msgs.msg import String
 
@@ -75,6 +81,10 @@ NC_TYPE_MAP: dict[int, tuple[str, str]] = {
     6: ('CANCEL',    'yellow'),
     7: ('CANCELLED', 'yellow'),
     8: ('ERROR',     'red'),
+    9: ('PAUSE',     'yellow'),
+    10: ('RESUME',   'green'),
+    11: ('PAUSED',   'yellow'),
+    12: ('RESUMED',  'green'),
 }
 
 
@@ -234,9 +244,131 @@ class NavStateProcessor():
         self.node.destroy_subscription(self.navstate_sub)
 
 
+# Mapping of DiagnosticStatus.level (uint8) to (label, color)
+DIAG_LEVEL_MAP: dict[int, tuple[str, str]] = {
+    DiagnosticStatus.OK: ('OK', 'green'),
+    DiagnosticStatus.WARN: ('WARN', 'yellow'),
+    DiagnosticStatus.ERROR: ('ERROR', 'red'),
+    DiagnosticStatus.STALE: ('STALE', 'red'),
+}
+
+
+class DiagnosticsProcessor():
+
+    def __init__(self, node, callback):
+        self.node = node
+        self.diagnostics_sub = node.create_subscription(
+            DiagnosticArray,
+            'diagnostics',
+            callback,
+            10)
+
+        self.diagnostics_sub
+
+    @staticmethod
+    def msg2text(msg: DiagnosticArray) -> str:
+        if not msg.status:
+            return 'No diagnostics yet…'
+
+        lines = []
+        for status in msg.status:
+            label, color = DIAG_LEVEL_MAP.get(status.level, (str(status.level), 'white'))
+            hw = f' ({status.hardware_id})' if status.hardware_id else ''
+            values = ''
+            if status.values:
+                values = ' {' + ', '.join(f'{v.key}={v.value}' for v in status.values) + '}'
+            # Only the severity label is markup: ROS text may contain brackets.
+            text = escape(f'[{status.name}]{hw}: {status.message}{values}')
+            lines.append(f'[{color}]{label}[/{color}] {text}')
+        return '\n'.join(lines)
+
+    def destroy(self):
+        self.node.destroy_subscription(self.diagnostics_sub)
+
+
+# Mapping of rcl_interfaces/Log.level (uint8) to (label, color) -- same severity numbering
+# rosout itself uses.
+LOG_LEVEL_MAP: dict[int, tuple[str, str]] = {
+    Log.DEBUG: ('DEBUG', 'white'),
+    Log.INFO: ('INFO', 'green'),
+    Log.WARN: ('WARN', 'yellow'),
+    Log.ERROR: ('ERROR', 'red'),
+    Log.FATAL: ('FATAL', 'red'),
+}
+
+
+class MitigationProcessor():
+    """Subscribes to 'mitigation' (rcl_interfaces/msg/Log).
+
+    Carries what RecoveryMitigationBase::report() logs while a mitigation is active, plus
+    DiagnosticRecoveryManager's "resolved" sentinel (level DEBUG, see is_resolved_sentinel) once
+    the diagnostic that triggered it clears.
+    """
+
+    def __init__(self, node, callback):
+        self.node = node
+        self.mitigation_sub = node.create_subscription(
+            Log,
+            'mitigation',
+            callback,
+            10)
+
+        self.mitigation_sub
+
+    @staticmethod
+    def is_resolved_sentinel(msg: Log) -> bool:
+        """Check whether msg is the "clear your log" marker, not a report."""
+        return msg.level == Log.DEBUG
+
+    @staticmethod
+    def msg2line(msg: Log) -> str:
+        """Render one Log entry as a single colored line for the Mitigation panel."""
+        label, color = LOG_LEVEL_MAP.get(msg.level, (str(msg.level), 'white'))
+        return f'[{color}]{label}[/{color}] ' + escape(f'[{msg.name}]: {msg.msg}')
+
+    def destroy(self):
+        self.node.destroy_subscription(self.mitigation_sub)
+
+
 # ---------- Time stats config ----------
-_LOG_PATH = '/tmp/easynav.log'
+# Each EasyNav process writes its own /tmp/easynav_<ns>.log, keyed by ROS
+# namespace rather than PID (a single shared /tmp/easynav.log broke with
+# multiple concurrent instances on the same host; a PID-keyed name made the
+# file unfindable without knowing the PID -- see easynav::YTSession).
+_LOG_GLOB = '/tmp/easynav*.log'
 _LOG_RE = re.compile(r'^(?P<name>\S+)\s+(?P<start>\d+)\s+(?P<end>\d+)\s*$')
+
+
+def _namespace_to_log_path(namespace: str) -> str:
+    """Mirror easynav::YTSession::log_path()'s namespace -> filename mapping."""
+    ns = namespace.strip('/')
+    if not ns:
+        return '/tmp/easynav.log'
+    return f'/tmp/easynav_{ns.replace("/", "_")}.log'
+
+
+def _discover_log_path(namespace: str | None = None) -> str | None:
+    """Resolve the trace-log path for a running EasyNav instance.
+
+    With an explicit namespace, targets that instance directly. Otherwise,
+    auto-discovers among currently-present /tmp/easynav*.log files, picking
+    the most recently modified one if more than one EasyNav instance is
+    running. Returns None if no namespace was given and no log file exists
+    yet (e.g. EasyNav hasn't started).
+    """
+    if namespace is not None:
+        return _namespace_to_log_path(namespace)
+
+    dated_candidates = []
+    for path in glob.glob(_LOG_GLOB):
+        try:
+            dated_candidates.append((os.path.getmtime(path), path))
+        except FileNotFoundError:
+            # Deleted/rotated between glob() and getmtime(); skip it.
+            continue
+    if not dated_candidates:
+        return None
+    return max(dated_candidates)[1]
 
 
 # -------- Running stats (Welford) --------
@@ -277,8 +409,9 @@ def _sort_key_suffix(full: str) -> tuple[str, str]:
 
 class LogReader:
 
-    def __init__(self):
+    def __init__(self, namespace: str | None = None):
         # ---- Time stats state (tailing the log) ----
+        self._log_path = _discover_log_path(namespace)
         self._log_fh = None
         self._log_inode = None
         self._log_pos = 0
@@ -286,8 +419,15 @@ class LogReader:
 
     def _open_log_if_needed(self) -> None:
         """Open the log file if available, preserving position; handle rotation/truncation."""
+        if self._log_path is None:
+            # No pid was given and no instance was running yet at construction time;
+            # keep looking in case one has started since.
+            self._log_path = _discover_log_path()
+            if self._log_path is None:
+                return
+
         try:
-            st = os.stat(_LOG_PATH)
+            st = os.stat(self._log_path)
         except FileNotFoundError:
             # file missing: close if we had it
             if self._log_fh:
@@ -302,7 +442,7 @@ class LogReader:
 
         if self._log_fh is None:
             # first open: read from start to accumulate history
-            self._log_fh = open(_LOG_PATH, 'r', encoding='utf-8', errors='ignore')
+            self._log_fh = open(self._log_path, 'r', encoding='utf-8', errors='ignore')
             self._log_inode = st.st_ino
             self._log_pos = 0
             return
@@ -316,7 +456,7 @@ class LogReader:
                     self._log_fh.close()
                 except Exception:
                     pass
-                self._log_fh = open(_LOG_PATH, 'r', encoding='utf-8', errors='ignore')
+                self._log_fh = open(self._log_path, 'r', encoding='utf-8', errors='ignore')
                 self._log_inode = st.st_ino
                 self._log_pos = 0
         except Exception:
@@ -377,7 +517,7 @@ class LogReader:
         rows = []
         for full_name, d in sorted(self._ts_stats.items(), key=lambda kv: _sort_key_suffix(kv[0])):
             short = _shorten_name(full_name)
-            exec_mean, exec_std = d['exec'].as_tuple()            # μs
+            exec_mean, exec_std = d['exec'].as_tuple()            # ms
             elap_mean, elap_std = d['elapsed'].as_tuple()         # ms
             freq_mean, freq_std = d['freq'].as_tuple()            # Hz
             rows.append((short, (exec_mean, exec_std),

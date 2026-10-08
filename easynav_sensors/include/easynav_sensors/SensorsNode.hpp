@@ -1,6 +1,5 @@
 // Copyright 2025 Intelligent Robotics Lab
 //
-// This file is part of the project Easy Navigation (EasyNav in short)
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -19,6 +18,7 @@
 #ifndef EASYNAV_SENSORS__SENSORNODE_HPP_
 #define EASYNAV_SENSORS__SENSORNODE_HPP_
 
+#include <mutex>
 #include <unordered_map>
 
 #include "rclcpp/rclcpp.hpp"
@@ -26,6 +26,8 @@
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 
 #include "sensor_msgs/msg/point_cloud2.hpp"
+
+#include <vector>
 
 #include "easynav_sensors/types/Perceptions.hpp"
 #include "easynav_common/types/NavState.hpp"
@@ -41,6 +43,10 @@ namespace easynav
  * Collects, transforms, and publishes fused perception data from multiple sources.
  * Sensor handlers are loaded at runtime as pluginlib plugins, allowing users to add
  * new sensor types without modifying this node.
+ *
+ * Every RT cycle, a perception older than "forget_time" seconds (ROS time) is invalidated, so
+ * nothing uses it until new data arrives. Sensors without data, or with old data, are reported
+ * as "diagnostics.sensors" (WARN), on changes only.
  */
 class SensorsNode : public rclcpp_lifecycle::LifecycleNode
 {
@@ -120,10 +126,44 @@ public:
 protected:
   /// @brief Sensor groups (set as group of keys in the NavState)
   std::map<std::string, std::vector<std::string>> groups_;
+
+  /// @brief Pluginlib class loader for PerceptionHandler plugins.
+  ///
+  /// Declared before \ref handler_list_ so it is destroyed *after* it: members are
+  /// destroyed in reverse declaration order, and each handler instance's vtable/code
+  /// lives inside the shared library this loader dlopen()s. Destroying the loader
+  /// (and therefore dlclose()-ing the library) before the instances would make their
+  /// destructors call into unloaded code.
+  std::unique_ptr<pluginlib::ClassLoader<PerceptionHandler>> handler_loader_;
+
   /// @brief vector of PerceptionHandler instances
   std::vector<std::shared_ptr<PerceptionHandler>> handler_list_;
 
+  /**
+   * @brief Guards \ref handler_list_ between the RT thread (cycle_rt) and
+   * the non-RT thread (on_cleanup), which run concurrently.
+   */
+  std::mutex handler_list_mutex_;
+
 private:
+  /// @brief Drops the handlers and the sensor groups (cleanup, shutdown and error).
+  void release_handlers();
+
+  /// @brief Freshness of a sensor's data.
+  enum class DataState : uint8_t {FRESH, NO_DATA, STALE};
+
+  /// @brief Invalidates the perceptions older than "forget_time" and reports any change.
+  void check_data_age(
+    const std::vector<std::shared_ptr<PerceptionHandler>> & handlers, NavState & nav_state);
+
+  /// @brief Writes "diagnostics.sensors" from data_states_.
+  void report_data_age(
+    const std::vector<std::shared_ptr<PerceptionHandler>> & handlers, NavState & nav_state);
+
+  /// @brief Per handler (same order), the state last reported; sized on configure.
+  std::vector<DataState> data_states_;
+  bool data_age_reported_ {false};
+
   /// @brief Callback group for real-time operations.
   rclcpp::CallbackGroup::SharedPtr realtime_cbg_;
 
@@ -133,17 +173,14 @@ private:
   /// @brief Last fused perception message.
   sensor_msgs::msg::PointCloud2 perecption_msg_;
 
-  /// @brief Maximum time (seconds) a perception remains valid.
-  double forget_time_;
+  /// @brief Maximum age (seconds) of a perception to be used.
+  double forget_time_ {1.0};
 
   /// @brief Target frame for perception fusion.
   std::string tf_prefix_;
 
   /// @brief A flag to initialize groups in the NavState just once
   bool groups_initialized = false;
-
-  /// @brief Pluginlib class loader for PerceptionHandler plugins.
-  std::unique_ptr<pluginlib::ClassLoader<PerceptionHandler>> handler_loader_;
 
   /// @brief Map from ROS message type string to the built-in default plugin name.
   /// Initialised once in the constructor with the five standard handlers.
