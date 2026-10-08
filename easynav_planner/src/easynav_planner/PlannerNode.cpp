@@ -1,6 +1,5 @@
 // Copyright 2025 Intelligent Robotics Lab
 //
-// This file is part of the project Easy Navigation (EasyNav in short)
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -16,8 +15,12 @@
 /// \file
 /// \brief Implementation of the PlannerNode class.
 
+#include <algorithm>
+#include <cmath>
+
 #include "pluginlib/class_loader.hpp"
 
+#include "diagnostic_msgs/msg/diagnostic_status.hpp"
 #include "lifecycle_msgs/msg/transition.hpp"
 #include "lifecycle_msgs/msg/state.hpp"
 
@@ -30,11 +33,9 @@ using namespace std::chrono_literals;
 
 PlannerNode::PlannerNode(
   const rclcpp::NodeOptions & options)
-: LifecycleNode("planner_node", options)
+: LifecycleNode("planner_node", options),
+  planner_(*this, "easynav_core", "easynav::PlannerMethodBase", "planner_types")
 {
-  planner_loader_ = std::make_unique<pluginlib::ClassLoader<PlannerMethodBase>>(
-    "easynav_core", "easynav::PlannerMethodBase");
-
 }
 
 PlannerNode::~PlannerNode()
@@ -49,19 +50,7 @@ PlannerNode::~PlannerNode()
     trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_UNCONFIGURED_SHUTDOWN);
   }
 
-  planner_method_ = nullptr;
-  std::vector<std::string> planner_types;
-  get_parameter("planner_types", planner_types);
-  for (const auto & planner_type : planner_types) {
-    std::string plugin;
-    if (has_parameter(planner_type + ".plugin")) {
-      get_parameter(planner_type + ".plugin", plugin);
-      try {
-        planner_loader_->unloadLibraryForClass(plugin);
-      } catch (const std::exception &) {
-      }
-    }
-  }
+  planner_.release();
 }
 
 using CallbackReturnT = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
@@ -69,50 +58,16 @@ using CallbackReturnT = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterfac
 CallbackReturnT
 PlannerNode::on_configure([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
-  std::vector<std::string> planner_types;
-  declare_parameter("planner_types", planner_types);
-  get_parameter("planner_types", planner_types);
-
-  if (planner_types.size() > 1) {
-    RCLCPP_ERROR(get_logger(),
-      "You must instance one planner.  [%lu] found", planner_types.size());
-    return CallbackReturnT::FAILURE;
-  }
-
-  for (const auto & planner_type : planner_types) {
-    std::string plugin;
-    declare_parameter(planner_type + std::string(".plugin"), plugin);
-    get_parameter(planner_type + std::string(".plugin"), plugin);
-
-    try {
-      RCLCPP_INFO(get_logger(),
-        "Loading PlannerMethodBase %s [%s]", planner_type.c_str(), plugin.c_str());
-
-      planner_method_ = planner_loader_->createSharedInstance(plugin);
-
-      try {
-        planner_method_->initialize(shared_from_this(), planner_type);
-      } catch (const std::runtime_error & e) {
-        RCLCPP_ERROR(get_logger(),
-          "Unable to initialize [%s]. Error: %s", plugin.c_str(), e.what());
-        return CallbackReturnT::FAILURE;
-      }
-
-      RCLCPP_INFO(get_logger(),
-        "Loaded PlannerMethodBase %s [%s]", planner_type.c_str(), plugin.c_str());
-    } catch (pluginlib::PluginlibException & ex) {
-      RCLCPP_ERROR(get_logger(),
-        "Unable to load plugin %s. Error: %s", plugin.c_str(), ex.what());
-      return CallbackReturnT::FAILURE;
-    }
-  }
-
-  return CallbackReturnT::SUCCESS;
+  return planner_.configure() ? CallbackReturnT::SUCCESS : CallbackReturnT::FAILURE;
 }
 
 CallbackReturnT
 PlannerNode::on_activate([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
+  // The time inactive is not slowness
+  for (const auto & planner : planner_.get_all()) {
+    planner->reset_rate_monitors();
+  }
   return CallbackReturnT::SUCCESS;
 }
 
@@ -125,48 +80,93 @@ PlannerNode::on_deactivate([[maybe_unused]] const rclcpp_lifecycle::State & stat
 CallbackReturnT
 PlannerNode::on_cleanup([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
+  planner_.release();
   return CallbackReturnT::SUCCESS;
 }
 
 CallbackReturnT
 PlannerNode::on_shutdown([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
+  planner_.release();
   return CallbackReturnT::SUCCESS;
 }
 
 CallbackReturnT
 PlannerNode::on_error([[maybe_unused]] const rclcpp_lifecycle::State & state)
 {
+  planner_.release();
   return CallbackReturnT::SUCCESS;
 }
 
 void
 PlannerNode::cycle(std::shared_ptr<NavState> nav_state, bool trigger)
 {
-  if (planner_method_ == nullptr) {return;}
+  auto planner_method = planner_.get();
+  if (planner_method == nullptr) {return;}
 
   if (trigger) {
-    planner_method_->force_update(*nav_state);
+    planner_method->force_update(*nav_state);
   } else {
-    planner_method_->internal_update(*nav_state);
+    planner_method->internal_update(*nav_state);
   }
+  check_path(*nav_state);
+}
+
+void
+PlannerNode::check_path(NavState & nav_state)
+{
+  using diagnostic_msgs::msg::DiagnosticStatus;
+  if (!nav_state.has("path")) {return;}
+
+  auto path = nav_state.get_safe<nav_msgs::msg::Path>("path");
+  const bool finite = std::all_of(
+    path.poses.begin(), path.poses.end(), [](const geometry_msgs::msg::PoseStamped & p) {
+      const auto & q = p.pose;
+      return std::isfinite(q.position.x) && std::isfinite(q.position.y) &&
+             std::isfinite(q.position.z) && std::isfinite(q.orientation.x) &&
+             std::isfinite(q.orientation.y) && std::isfinite(q.orientation.z) &&
+             std::isfinite(q.orientation.w);
+    });
+  if (!finite) {
+    path.poses.clear();  // Nothing to follow: controllers stop.
+    nav_state.set("path", path);
+  }
+
+  // Nothing to report until something goes wrong; then, only changes.
+  if (last_path_finite_ ? *last_path_finite_ == finite : finite) {return;}
+  last_path_finite_ = finite;
+
+  DiagnosticStatus status;
+  status.name = "path";
+  status.hardware_id = "planner";
+  if (finite) {
+    status.level = DiagnosticStatus::OK;
+    status.message = "Path finite";
+  } else {
+    status.level = DiagnosticStatus::ERROR;
+    status.message = "The planner produced a non-finite path: discarded";
+    RCLCPP_ERROR(get_logger(), "%s", status.message.c_str());
+  }
+  nav_state.set("diagnostics.path", status);
+  nav_state.add_to_group("diagnostics", "diagnostics.path");
 }
 
 const rclcpp::Time
 PlannerNode::get_last_rt_execution_ts() const
 {
-  if (planner_method_ == nullptr) {return rclcpp::Time();}
+  auto planner_method = planner_.get();
+  if (planner_method == nullptr) {return rclcpp::Time();}
 
-  return planner_method_->get_last_rt_execution_ts();
+  return planner_method->get_last_rt_execution_ts();
 }
 
 const rclcpp::Time
 PlannerNode::get_last_execution_ts() const
 {
-  if (planner_method_ == nullptr) {return rclcpp::Time();}
+  auto planner_method = planner_.get();
+  if (planner_method == nullptr) {return rclcpp::Time();}
 
-  return planner_method_->get_last_execution_ts();
+  return planner_method->get_last_execution_ts();
 }
-
 
 }  // namespace easynav

@@ -1,6 +1,5 @@
 // Copyright 2025 Intelligent Robotics Lab
 //
-// This file is part of the project Easy Navigation (EasyNav in short)
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -19,10 +18,12 @@
 #ifndef EASYNAV_PLANNER__PLANNERNODE_HPP_
 #define EASYNAV_PLANNER__PLANNERNODE_HPP_
 
+#include <optional>
+
 #include "rclcpp/macros.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 #include "easynav_core/PlannerMethodBase.hpp"
-#include "pluginlib/class_loader.hpp"
+#include "easynav_core/PluginSwitcher.hpp"
 #include "nav_msgs/msg/path.hpp"
 #include "easynav_common/types/NavState.hpp"
 
@@ -34,6 +35,9 @@ namespace easynav
  * @brief ROS 2 lifecycle node that manages path planning in Easy Navigation.
  *
  * Handles lifecycle transitions, plugin loading, and invokes the planner to compute paths.
+ *
+ * After each planning cycle, a "path" with a non-finite pose (NaN, inf) is replaced by an empty
+ * one, so no controller follows it, and reported as "diagnostics.path" (ERROR), on changes.
  */
 class PlannerNode : public rclcpp_lifecycle::LifecycleNode
 {
@@ -119,11 +123,15 @@ public:
   const rclcpp::Time get_last_execution_ts() const;
 
 private:
-  /// @brief Plugin loader for planner methods.
-  std::unique_ptr<pluginlib::ClassLoader<PlannerMethodBase>> planner_loader_;
+  /// @brief Replaces a non-finite "path" with an empty one, and reports it.
+  void check_path(NavState & nav_state);
 
-  /// @brief Loaded planner plugin.
-  std::shared_ptr<PlannerMethodBase> planner_method_ {nullptr};
+  /// @brief Whether the last path checked was finite, if any was.
+  std::optional<bool> last_path_finite_;
+
+  /// @brief Owns the planner plugin. To change it: deactivate, cleanup, set
+  /// "planner_types" and configure again.
+  PluginSwitcher<PlannerMethodBase> planner_;
 };
 
 }  // namespace easynav

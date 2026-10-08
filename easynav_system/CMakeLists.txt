@@ -14,10 +14,16 @@ find_package(easynav_controller)
 find_package(easynav_localizer)
 find_package(easynav_maps_manager)
 find_package(easynav_planner)
+find_package(easynav_recovery)
 find_package(easynav_sensors)
 find_package(geometry_msgs)
 find_package(tf2_geometry_msgs)
 find_package(tf2)
+find_package(OpenSSL REQUIRED)
+find_package(rcl_logging_interface REQUIRED)
+find_package(rcutils REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(diagnostic_msgs REQUIRED)
 
 set(dependencies
   rclcpp::rclcpp
@@ -27,6 +33,7 @@ set(dependencies
   easynav_localizer::easynav_localizer
   easynav_maps_manager::easynav_maps_manager
   easynav_planner::easynav_planner
+  easynav_recovery::easynav_recovery
   easynav_sensors::easynav_sensors
   tf2::tf2
   ${geometry_msgs_TARGETS}
@@ -39,14 +46,18 @@ set(package_dependencies
   rclcpp_lifecycle
   easynav_interfaces
   easynav_common
+  easynav_core
   easynav_controller
   easynav_localizer
   easynav_maps_manager
   easynav_planner
+  easynav_recovery
   easynav_sensors
   geometry_msgs
   tf2_geometry_msgs
   lifecycle_msgs
+  std_msgs
+  diagnostic_msgs
   tf2
 )
 
@@ -56,6 +67,12 @@ add_library(${PROJECT_NAME} SHARED
   src/easynav_system/SystemNode.cpp
   src/easynav_system/GoalManager.cpp
   src/easynav_system/GoalManagerClient.cpp
+  src/easynav_system/RealTime.cpp
+  src/easynav_system/safety/ConfigurationFingerprint.cpp
+  src/easynav_system/safety/ParameterFreezer.cpp
+  src/easynav_system/safety/RtMonitor.cpp
+  src/easynav_system/safety/SafetyChannelMonitor.cpp
+  src/easynav_system/safety/SafetySupervisor.cpp
 )
 target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -70,6 +87,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
   easynav_localizer::easynav_localizer
   easynav_maps_manager::easynav_maps_manager
   easynav_planner::easynav_planner
+  easynav_recovery::easynav_recovery
   easynav_sensors::easynav_sensors
   tf2_geometry_msgs::tf2_geometry_msgs
   ${easynav_interfaces_TARGETS}
@@ -77,6 +95,13 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
   ${sensor_msgs_TARGETS}
   ${nav_msgs_TARGETS}
   ${lifecycle_msgs_TARGETS}
+  ${std_msgs_TARGETS}
+  ${diagnostic_msgs_TARGETS}
+)
+target_link_libraries(${PROJECT_NAME} PRIVATE
+  OpenSSL::Crypto
+  rcl_logging_interface::rcl_logging_interface
+  rcutils::rcutils
 )
 
 add_executable(system_main src/system_main.cpp)
@@ -126,11 +151,14 @@ ament_export_dependencies(
   easynav_localizer
   easynav_maps_manager
   easynav_planner
+  easynav_recovery
   easynav_sensors
   geometry_msgs
   sensor_msgs
   nav_msgs
   tf2_geometry_msgs
   lifecycle_msgs
+  std_msgs
+  diagnostic_msgs
 )
 ament_package()

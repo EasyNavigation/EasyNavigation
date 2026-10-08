@@ -12,11 +12,15 @@ find_package(easynav_core REQUIRED)
 find_package(easynav_common REQUIRED)
 find_package(pluginlib REQUIRED)
 find_package(geometry_msgs REQUIRED)
+find_package(diagnostic_msgs REQUIRED)
 find_package(lifecycle_msgs REQUIRED)
 
 
 add_library(${PROJECT_NAME} SHARED
   src/easynav_controller/ControllerNode.cpp
+  src/easynav_controller/VelocityMux.cpp
+  src/easynav_controller/VelocitySmoother.cpp
+  src/easynav_controller/safety/CommandGuard.cpp
 )
 target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -30,6 +34,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
   easynav_core::easynav_core
   ${lifecycle_msgs_TARGETS}
   ${geometry_msgs_TARGETS}
+  ${diagnostic_msgs_TARGETS}
 )
 
 add_library(dummy_controller SHARED
@@ -45,6 +50,21 @@ target_link_libraries(dummy_controller PUBLIC
   ${geometry_msgs_TARGETS}
 )
 
+# Fault injection, for testing (see fault_injection/)
+add_library(faulty_controller SHARED
+  src/easynav_controller/fault_injection/FaultyController.cpp
+)
+target_include_directories(faulty_controller PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include/${PROJECT_NAME}>
+)
+target_link_libraries(faulty_controller PUBLIC
+  easynav_core::easynav_core
+  easynav_common::easynav_common
+  pluginlib::pluginlib
+  ${geometry_msgs_TARGETS}
+)
+
 install(
   DIRECTORY include/
   DESTINATION include/${PROJECT_NAME}
@@ -53,6 +73,7 @@ install(
 install(TARGETS
   ${PROJECT_NAME}
   dummy_controller
+  faulty_controller
   EXPORT export_${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
@@ -73,6 +94,7 @@ ament_export_include_directories("include/${PROJECT_NAME}")
 ament_export_libraries(
   ${PROJECT_NAME}
   dummy_controller
+  faulty_controller
 )
 ament_export_targets(export_${PROJECT_NAME})
 
@@ -86,6 +108,7 @@ ament_export_dependencies(
   easynav_common
   pluginlib
   geometry_msgs
+  diagnostic_msgs
   lifecycle_msgs
 )
 ament_package()

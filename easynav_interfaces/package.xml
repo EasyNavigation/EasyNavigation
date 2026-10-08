@@ -2,7 +2,7 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>easynav_interfaces</name>
-  <version>0.4.1</version>
+  <version>0.5.0</version>
   <description>Easy Navigation: Message, Service, and Action definitions.</description>
 
   <maintainer email="fmrico@gmail.com">Francisco Martín Rico</maintainer>
@@ -20,9 +20,9 @@
   <buildtool_depend>rosidl_default_generators</buildtool_depend>
 
   <depend>builtin_interfaces</depend>
-  <depend>std_msgs</depend>
   <depend>geometry_msgs</depend>
   <depend>nav_msgs</depend>
+  <depend>std_msgs</depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>

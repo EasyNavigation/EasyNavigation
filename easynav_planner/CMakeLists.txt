@@ -13,6 +13,7 @@ find_package(easynav_common REQUIRED)
 find_package(pluginlib REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(lifecycle_msgs REQUIRED)
+find_package(diagnostic_msgs REQUIRED)
 
 
 add_library(${PROJECT_NAME} SHARED
@@ -30,6 +31,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
   pluginlib::pluginlib
   ${nav_msgs_TARGETS}
   ${lifecycle_msgs_TARGETS}
+  ${diagnostic_msgs_TARGETS}
 )
 
 add_library(dummy_planner SHARED
@@ -45,6 +47,21 @@ target_link_libraries(dummy_planner PUBLIC
   ${nav_msgs_TARGETS}
 )
 
+# Fault injection, for testing (see fault_injection/)
+add_library(faulty_planner SHARED
+  src/easynav_planner/fault_injection/FaultyPlanner.cpp
+)
+target_include_directories(faulty_planner PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include/${PROJECT_NAME}>
+)
+target_link_libraries(faulty_planner PUBLIC
+  easynav_core::easynav_core
+  easynav_common::easynav_common
+  pluginlib::pluginlib
+  ${nav_msgs_TARGETS}
+)
+
 install(
   DIRECTORY include/
   DESTINATION include/${PROJECT_NAME}
@@ -53,6 +70,7 @@ install(
 install(TARGETS
 ${PROJECT_NAME}
   dummy_planner
+  faulty_planner
   EXPORT export_${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
@@ -87,5 +105,6 @@ ament_export_dependencies(
   pluginlib
   nav_msgs
   lifecycle_msgs
+  diagnostic_msgs
 )
 ament_package()

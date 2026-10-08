@@ -1,0 +1,77 @@
+// Copyright 2026 Intelligent Robotics Lab
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+/// \file
+/// \brief Implementation of the VelocityMux class.
+
+#include <string>
+
+#include "easynav_controller/VelocityMux.hpp"
+
+namespace easynav
+{
+
+namespace
+{
+// Built once: select() runs every RT cycle, where no memory may be allocated.
+const std::string kNavigationPaused {"navigation_paused"};
+}  // namespace
+
+VelocityMux::Selection
+VelocityMux::select(NavState & nav_state)
+{
+  // Take every proposal, so none of them lingers into the next cycle.
+  const auto override_cmd = velocity_command::take(nav_state, VelocitySource::OVERRIDE);
+  const auto takeover = velocity_command::take(nav_state, VelocitySource::TAKEOVER);
+  const auto controller = velocity_command::take(nav_state, VelocitySource::CONTROLLER);
+  const bool paused = nav_state.has(kNavigationPaused) &&
+    nav_state.get_safe<bool>(kNavigationPaused);
+  const bool protective_stop = nav_state.has(kSafetyStatusKey) &&
+    nav_state.get_safe<SafetyChannelState>(kSafetyStatusKey).protective_stop;
+  const bool inhibited = nav_state.has(kInhibitMotionKey) &&
+    nav_state.get_safe<bool>(kInhibitMotionKey);
+
+  Selection selection;
+  if (protective_stop) {
+    // The safety channel is stopping the robot: nobody may command it, recoveries included.
+    geometry_msgs::msg::TwistStamped stop;
+    stop.header = controller ? controller->header : last_target_.header;
+    const bool fresh = controller.has_value() || last_choice_ != Choice::SAFETY_STOP;
+    selection = {stop, Choice::SAFETY_STOP, fresh, true};
+  } else if (inhibited) {
+    // Nobody may command the robot: it brakes within the limits.
+    geometry_msgs::msg::TwistStamped stop;
+    stop.header = controller ? controller->header : last_target_.header;
+    const bool fresh = controller.has_value() || last_choice_ != Choice::INHIBITED;
+    selection = {stop, Choice::INHIBITED, fresh, true};
+  } else if (override_cmd) {
+    selection = {*override_cmd, Choice::OVERRIDE, true, false};
+  } else if (takeover) {
+    selection = {*takeover, Choice::TAKEOVER, true, true};
+  } else if (paused) {
+    geometry_msgs::msg::TwistStamped stop;
+    stop.header = controller ? controller->header : last_target_.header;
+    selection = {stop, Choice::PAUSED, controller.has_value(), true};
+  } else if (controller) {
+    selection = {*controller, Choice::CONTROLLER, true, true};
+  } else {
+    selection = {last_target_, Choice::NONE, false, true};
+  }
+
+  last_target_ = selection.cmd;
+  last_choice_ = selection.choice;
+  return selection;
+}
+
+}  // namespace easynav

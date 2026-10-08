@@ -1,0 +1,15 @@
+# Conda package built by pixi (pixi-build-ros): name, version and deps come from package.xml
+[package]
+publish = true
+
+[package.build.backend]
+name = "pixi-build-ros"
+workspace = true
+
+# rosdep keys missing from pixi-build-ros' mapping table (robostack.yaml)
+[package.build.config]
+extra-package-mappings = [
+  { "python3-platformdirs" = { conda = ["platformdirs"] } },
+  { "python3-rich" = { conda = ["rich"] } },
+  { "python3-typing-extensions" = { conda = ["typing_extensions"] } },
+]

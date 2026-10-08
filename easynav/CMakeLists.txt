@@ -11,9 +11,8 @@ ament_export_dependencies(
   easynav_maps_manager
   easynav_planner
   easynav_localizer
+  easynav_recovery
   easynav_sensors
-  easynav_support_py
   easynav_system
-  easynav_tools
 )
 ament_package()

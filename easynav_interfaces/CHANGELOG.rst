@@ -2,22 +2,18 @@
 Changelog for package easynav_interfaces
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-0.4.1 (2026-07-26)
+0.5.0 (2026-10-08)
 ------------------
-* GPLv3 -> Apache 2.0
+* Pause and resume of the navigation
+* Heartbeat message (real-time cycle monitoring)
+* SafetyStatus message (safety channel)
+* Conda packages with pixi (pixi-build-ros)
 * Contributors: Francisco Martín Rico
 
-0.3.2 (2025-12-18)
+0.4.2 (2026-07-26)
 ------------------
+* GPLv3 -> Apache 2.0
 * Hotfix: Remove remaining C++20/23 features
-* Contributors: Francisco Miguel Moreno
-
-0.3.1 (2025-12-17)
-------------------
-
-0.3.0 (2025-12-01)
-------------------
-* Merge rolling features into kilted
 * Contributors: Francisco Martín Rico, Francisco Miguel Moreno
 
 0.1.4 (2025-10-16)

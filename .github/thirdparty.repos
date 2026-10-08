@@ -2,4 +2,4 @@ repositories:
   ThirdParty/yaets:
     type: git
     url: https://github.com/fmrico/yaets.git
-    version: kilted
+    version: rolling

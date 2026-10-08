@@ -2,9 +2,16 @@
 Changelog for package easynav_sensors
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-0.4.1 (2026-07-26)
+0.5.0 (2026-10-08)
 ------------------
-* Merge remote-tracking branch 'origin/rolling' into rolling
+* Better protection of sensor data, and perceptions invalidated after forget_time
+* Runtime reconfiguration support
+* Builds on Humble, Jazzy, Kilted, Lyrical and Rolling
+* Conda packages with pixi (pixi-build-ros)
+* Contributors: Francisco Martín Rico, Francisco Miguel Moreno
+
+0.4.2 (2026-07-26)
+------------------
 * Prevent possible race condition in PointPerceptions
 * Fix out-of-bounds error in SensorsNode
 * Add Odometry perception handler to sensors
@@ -26,32 +33,23 @@ Changelog for package easynav_sensors
 * GPLv3 -> Apache 2.0
 * Improve navstate print including the time
 * Update tests
-* Add a base_footprint frame in TFInfo
-* Contributors: Francisco Martín Rico, Francisco Miguel Moreno, jagutic
-
-0.3.2 (2025-12-18)
-------------------
+* Add a bas_footprint frame in TFInfo
 * Hotfix: Remove remaining C++20/23 features
-* Contributors: Francisco Miguel Moreno
-
-0.3.1 (2025-12-17)
-------------------
+* Buffer in pointperceptions
+* TFInfo in RTTFBuffer
+* Final adjustments
 * TF Refactor
-* Unify TF configuration
-* Contributors: Francisco Martín Rico, Francisco Miguel Moreno
-
-0.3.0 (2025-12-01)
-------------------
-* Merge rolling features into kilted
 * Add vision_msgs/msg/Detection3DArray perception
 * Cleanup unused headers
-* Reshape execution and sensor handling
+* Remove queue_size param, set queues to 1
+* Fix typo in variable name
 * Finished collision checker
-* Optimize pointperceptionview
+* Lazy update in PointPerceptions
 * Refactor set_by_group to avoid runtime lookups
+* Add queue_size parameter
 * GNSS Support
 * Fix TF compilation warnings
-* Contributors: Francisco Martín Rico, Francisco Miguel Moreno
+* Contributors: Francisco Martín Rico, Francisco Miguel Moreno, jagutic
 
 0.1.4 (2025-10-16)
 ------------------

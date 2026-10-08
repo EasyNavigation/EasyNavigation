@@ -2,3 +2,21 @@ ament_add_gtest(controller_node_tests controller_node_tests.cpp)
 target_link_libraries(controller_node_tests
   easynav_controller
 )
+
+ament_add_gtest(velocity_smoother_tests velocity_smoother_tests.cpp)
+target_link_libraries(velocity_smoother_tests easynav_controller)
+
+ament_add_gtest(controller_node_velocity_tests controller_node_velocity_tests.cpp TIMEOUT 120)
+target_link_libraries(controller_node_velocity_tests easynav_controller)
+
+ament_add_gtest(velocity_mux_tests velocity_mux_tests.cpp)
+target_link_libraries(velocity_mux_tests easynav_controller)
+
+ament_add_gtest(rt_allocation_tests rt_allocation_tests.cpp)
+target_link_libraries(rt_allocation_tests easynav_controller)
+
+ament_add_gtest(faulty_controller_tests faulty_controller_tests.cpp TIMEOUT 120)
+target_link_libraries(faulty_controller_tests easynav_controller ${diagnostic_msgs_TARGETS})
+
+ament_add_gtest(command_guard_tests command_guard_tests.cpp)
+target_link_libraries(command_guard_tests easynav_controller ${diagnostic_msgs_TARGETS})

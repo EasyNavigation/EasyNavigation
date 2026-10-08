@@ -1,6 +1,5 @@
 // Copyright 2025 Intelligent Robotics Lab
 //
-// This file is part of the project Easy Navigation (EasyNav in short)
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -13,8 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <algorithm>
+#include <chrono>
 #include <thread>
 #include <atomic>
+#include <sstream>
+#include <string>
 #include <vector>
 
 #include "gtest/gtest.h"
@@ -173,6 +176,124 @@ TEST_F(NavStateTest, VectorStringPrinterMultipleElements)
     << "Multiple elements must render comma-separated\n" << s;
 }
 
+TEST_F(NavStateTest, DebugStringListsKeysInAlphabeticalOrder)
+{
+  easynav::NavState state;
+  state.set("zebra", 1);
+  state.set("apple", 2);
+  state.set("mango", 3);
+
+  const std::string s = state.debug_string();
+  const auto apple_pos = s.find("apple");
+  const auto mango_pos = s.find("mango");
+  const auto zebra_pos = s.find("zebra");
+
+  ASSERT_NE(apple_pos, std::string::npos);
+  ASSERT_NE(mango_pos, std::string::npos);
+  ASSERT_NE(zebra_pos, std::string::npos);
+  EXPECT_LT(apple_pos, mango_pos) << s;
+  EXPECT_LT(mango_pos, zebra_pos) << s;
+}
+
+namespace
+{
+// Keys of debug_string(), in output order ("key = ..." lines).
+std::vector<std::string> debug_keys(const easynav::NavState & state)
+{
+  std::vector<std::string> keys;
+  std::istringstream lines(state.debug_string());
+  std::string line;
+  while (std::getline(lines, line)) {
+    const auto sep = line.find(" = ");
+    if (sep != std::string::npos) {
+      keys.push_back(line.substr(0, sep));
+    }
+  }
+  return keys;
+}
+}  // namespace
+
+TEST_F(NavStateTest, DebugStringOfAnEmptyStateIsEmpty)
+{
+  easynav::NavState state;
+  EXPECT_TRUE(debug_keys(state).empty());
+}
+
+TEST_F(NavStateTest, DebugStringDoesNotDependOnInsertionOrder)
+{
+  easynav::NavState a;
+  a.set("robot_pose.x", 1);
+  a.set("goals", 2);
+  a.set("map", 3);
+
+  easynav::NavState b;
+  b.set("map", 3);
+  b.set("robot_pose.x", 1);
+  b.set("goals", 2);
+
+  EXPECT_EQ(debug_keys(a), debug_keys(b));
+  EXPECT_EQ(debug_keys(a), std::vector<std::string>({"goals", "map", "robot_pose.x"}));
+}
+
+TEST_F(NavStateTest, DebugStringSortsKeysWithCommonPrefixes)
+{
+  easynav::NavState state;
+  for (const auto & key : {"map.b", "map", "map.a", "map_time", "Z", "a10", "a2"}) {
+    state.set(key, 0);
+  }
+  EXPECT_EQ(
+    debug_keys(state),
+    std::vector<std::string>({"Z", "a10", "a2", "map", "map.a", "map.b", "map_time"}));
+}
+
+TEST_F(NavStateTest, DebugStringKeepsEachValueWithItsKey)
+{
+  easynav::NavState state;
+  state.set("zeta", 30);
+  state.set("alpha", 10);
+  state.set("mid", 20);
+  state.set("mid", 21);  // Overwritten: listed once, with the new value.
+
+  std::istringstream lines(state.debug_string());
+  std::string line;
+  int found = 0;
+  while (std::getline(lines, line)) {
+    if (line.rfind("alpha = ", 0) == 0) {EXPECT_NE(line.find(": 10"), std::string::npos); ++found;}
+    if (line.rfind("mid = ", 0) == 0) {EXPECT_NE(line.find(": 21"), std::string::npos); ++found;}
+    if (line.rfind("zeta = ", 0) == 0) {EXPECT_NE(line.find(": 30"), std::string::npos); ++found;}
+  }
+  EXPECT_EQ(found, 3);
+}
+
+TEST_F(NavStateTest, DebugStringIsSafeWhileOtherThreadsWrite)
+{
+  // The RT and non-RT loops write while the TUI/topic dumps the state.
+  easynav::NavState state;
+  std::atomic<bool> stop {false};
+
+  std::thread writer([&]() {
+      for (int i = 0; !stop.load(); ++i) {
+        state.set("key_" + std::to_string(i % 50), i);  // new keys and overwrites
+        state.set("counter", i);
+      }
+    });
+
+  int dumps = 0;
+  const auto end = std::chrono::steady_clock::now() + std::chrono::milliseconds(300);
+  while (std::chrono::steady_clock::now() < end) {
+    std::string s;
+    ASSERT_NO_THROW(s = state.debug_string());
+    ++dumps;
+  }
+  stop = true;
+  writer.join();
+
+  EXPECT_GT(dumps, 0);
+  const auto keys = debug_keys(state);
+  EXPECT_EQ(keys.size(), 51u);
+  EXPECT_TRUE(std::is_sorted(keys.begin(), keys.end()));
+}
+
 TEST_F(NavStateTest, SetGroupIsVisibleInDebugString)
 {
   easynav::NavState state;
@@ -182,6 +303,84 @@ TEST_F(NavStateTest, SetGroupIsVisibleInDebugString)
     << "Group member must appear in debug_string\n" << s;
   EXPECT_NE(s.find("lidar_back"), std::string::npos)
     << "Group member must appear in debug_string\n" << s;
+}
+
+TEST_F(NavStateTest, GetGroupKeysReturnsMembers)
+{
+  easynav::NavState state;
+  state.set_group("points", {"lidar_front", "lidar_back"});
+  EXPECT_EQ(
+    state.get_group_keys("points"), std::vector<std::string>({"lidar_front", "lidar_back"}));
+}
+
+TEST_F(NavStateTest, GetGroupKeysReturnsEmptyForMissingGroup)
+{
+  easynav::NavState state;
+  state.set("points", 1);  // A plain value is not a group
+  EXPECT_TRUE(state.get_group_keys("points").empty());
+  EXPECT_TRUE(state.get_group_keys("missing").empty());
+}
+
+TEST_F(NavStateTest, GetGroupKeysSupportsIncrementalGrowth)
+{
+  easynav::NavState state;
+  state.set_group("diagnostics", {"planner"});
+
+  auto keys = state.get_group_keys("diagnostics");
+  keys.push_back("controller");
+  state.set_group("diagnostics", keys);
+
+  EXPECT_EQ(
+    state.get_group_keys("diagnostics"), std::vector<std::string>({"planner", "controller"}));
+}
+
+TEST_F(NavStateTest, AddToGroupCreatesAndGrowsTheGroup)
+{
+  easynav::NavState state;
+  state.add_to_group("diagnostics", "planner");
+  EXPECT_TRUE(state.has_group("diagnostics"));
+  state.add_to_group("diagnostics", "controller");
+  EXPECT_EQ(
+    state.get_group_keys("diagnostics"), std::vector<std::string>({"planner", "controller"}));
+  EXPECT_EQ(
+    state.get<std::vector<std::string>>("diagnostics"),
+    std::vector<std::string>({"planner", "controller"})) << "same introspection value as set_group";
+}
+
+TEST_F(NavStateTest, AddToGroupIgnoresDuplicates)
+{
+  easynav::NavState state;
+  state.set_group("diagnostics", {"planner"});
+  state.add_to_group("diagnostics", "planner");
+  state.add_to_group("diagnostics", "controller");
+  state.add_to_group("diagnostics", "controller");
+  EXPECT_EQ(
+    state.get_group_keys("diagnostics"), std::vector<std::string>({"planner", "controller"}));
+}
+
+TEST_F(NavStateTest, AddToGroupFromSeveralThreadsLosesNoMember)
+{
+  // E.g. evaluators (non-RT) and safety reflexes (RT) registering their diagnostics.
+  easynav::NavState state;
+  constexpr int kPerThread = 200;
+  auto add = [&state](const std::string & prefix) {
+      for (int i = 0; i < kPerThread; ++i) {
+        state.add_to_group("diagnostics", prefix + std::to_string(i));
+      }
+    };
+  std::thread a(add, "a"), b(add, "b"), c(add, "c");
+  a.join();
+  b.join();
+  c.join();
+  EXPECT_EQ(state.get_group_keys("diagnostics").size(), 3u * kPerThread);
+}
+
+TEST_F(NavStateTest, GetGroupKeysDoesNotRequireMembersToExist)
+{
+  easynav::NavState state;
+  state.set_group("diagnostics", {"not_set_yet"});
+  EXPECT_FALSE(state.has("not_set_yet"));
+  EXPECT_EQ(state.get_group_keys("diagnostics"), std::vector<std::string>({"not_set_yet"}));
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -511,4 +710,211 @@ TEST_F(NavStateTest, GetNoGroupExcludesGroupedButNotUngroupedSameType)
   auto result = state.get_no_group<geometry_msgs::msg::Pose>();
   ASSERT_EQ(result.size(), 1u);
   EXPECT_DOUBLE_EQ(result[0]->position.x, 2.0);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// get_safe<T>()
+// ─────────────────────────────────────────────────────────────────────────────
+
+TEST_F(NavStateTest, GetSafeReturnsStoredValuePrimitive)
+{
+  easynav::NavState state;
+  state.set("count", 42);
+  state.set("ratio", 3.5);
+  EXPECT_EQ(state.get_safe<int>("count"), 42);
+  EXPECT_DOUBLE_EQ(state.get_safe<double>("ratio"), 3.5);
+}
+
+TEST_F(NavStateTest, GetSafeReturnsStoredValueComplex)
+{
+  easynav::NavState state;
+  geometry_msgs::msg::Pose pose;
+  pose.position.x = 1.0;
+  pose.position.y = 2.0;
+  pose.position.z = 3.0;
+  pose.orientation.w = 1.0;
+  state.set("pose", pose);
+
+  geometry_msgs::msg::Pose copy = state.get_safe<geometry_msgs::msg::Pose>("pose");
+  EXPECT_DOUBLE_EQ(copy.position.x, 1.0);
+  EXPECT_DOUBLE_EQ(copy.position.y, 2.0);
+  EXPECT_DOUBLE_EQ(copy.position.z, 3.0);
+  EXPECT_DOUBLE_EQ(copy.orientation.w, 1.0);
+}
+
+TEST_F(NavStateTest, GetSafeMissingKeyThrows)
+{
+  easynav::NavState state;
+  EXPECT_THROW(state.get_safe<int>("missing"), std::runtime_error);
+}
+
+TEST_F(NavStateTest, GetSafeMissingKeyThrowsWithKeyInMessage)
+{
+  easynav::NavState state;
+  try {
+    state.get_safe<int>("missing_key_xyz");
+    FAIL() << "Expected std::runtime_error";
+  } catch (const std::runtime_error & e) {
+    EXPECT_NE(std::string(e.what()).find("missing_key_xyz"), std::string::npos);
+  }
+}
+
+TEST_F(NavStateTest, GetSafeTypeMismatchThrows)
+{
+  easynav::NavState state;
+  state.set("value", std::string("hello"));
+  EXPECT_THROW(state.get_safe<int>("value"), std::runtime_error);
+}
+
+TEST_F(NavStateTest, GetSafeTypeMismatchThrowsWithTypeNamesInMessage)
+{
+  easynav::NavState state;
+  state.set("value", std::string("hello"));
+  try {
+    state.get_safe<int>("value");
+    FAIL() << "Expected std::runtime_error";
+  } catch (const std::runtime_error & e) {
+    std::string msg = e.what();
+    EXPECT_NE(msg.find("value"), std::string::npos);
+    EXPECT_NE(msg.find("Type mismatch"), std::string::npos);
+  }
+}
+
+TEST_F(NavStateTest, GetSafeDoesNotAliasInternalStorage)
+{
+  // Unlike get_ptr()/get(), get_safe() must hand back an object that is NOT
+  // the same instance as the one stored internally (it's a value copy).
+  easynav::NavState state;
+  geometry_msgs::msg::Pose pose;
+  pose.position.x = 1.0;
+  state.set("pose", pose);
+
+  auto internal_ptr = state.get_ptr<geometry_msgs::msg::Pose>("pose");
+  geometry_msgs::msg::Pose safe_copy = state.get_safe<geometry_msgs::msg::Pose>("pose");
+
+  EXPECT_NE(static_cast<const void *>(&safe_copy), static_cast<const void *>(internal_ptr.get()));
+}
+
+TEST_F(NavStateTest, GetSafeCopyIsUnaffectedByLaterSet)
+{
+  // The snapshot returned by get_safe() must not change when the key is
+  // overwritten afterwards (get<T>() would be unsafe here: set() mutates
+  // the referenced object in place).
+  easynav::NavState state;
+  geometry_msgs::msg::Pose pose;
+  pose.position.x = 1.0;
+  state.set("pose", pose);
+
+  geometry_msgs::msg::Pose snapshot = state.get_safe<geometry_msgs::msg::Pose>("pose");
+
+  geometry_msgs::msg::Pose updated;
+  updated.position.x = 999.0;
+  state.set("pose", updated);
+
+  EXPECT_DOUBLE_EQ(snapshot.position.x, 1.0);
+  EXPECT_DOUBLE_EQ(state.get_safe<geometry_msgs::msg::Pose>("pose").position.x, 999.0);
+}
+
+TEST_F(NavStateTest, GetSafeMutatingReturnedCopyDoesNotAffectInternalState)
+{
+  easynav::NavState state;
+  state.set("count", 10);
+
+  int copy = state.get_safe<int>("count");
+  copy = 12345;
+
+  EXPECT_EQ(copy, 12345);
+  EXPECT_EQ(state.get_safe<int>("count"), 10);
+}
+
+TEST_F(NavStateTest, GetSafeWorksWithVectorType)
+{
+  easynav::NavState state;
+  std::vector<geometry_msgs::msg::Pose> poses(3);
+  poses[0].position.x = 0.0;
+  poses[1].position.x = 1.0;
+  poses[2].position.x = 2.0;
+  state.set("path", poses);
+
+  auto copy = state.get_safe<std::vector<geometry_msgs::msg::Pose>>("path");
+  ASSERT_EQ(copy.size(), 3u);
+  EXPECT_DOUBLE_EQ(copy[0].position.x, 0.0);
+  EXPECT_DOUBLE_EQ(copy[1].position.x, 1.0);
+  EXPECT_DOUBLE_EQ(copy[2].position.x, 2.0);
+
+  // Independent storage: the copied vector's buffer must not alias the
+  // internal one (this is the whole point of get_safe over get()).
+  auto internal_ptr = state.get_ptr<std::vector<geometry_msgs::msg::Pose>>("path");
+  EXPECT_NE(copy.data(), internal_ptr->data());
+}
+
+TEST_F(NavStateTest, GetSafeCoexistsWithPlainGet)
+{
+  // get_safe() must not disturb the entry for subsequent plain get() calls.
+  easynav::NavState state;
+  state.set("x", 7);
+  EXPECT_EQ(state.get_safe<int>("x"), 7);
+  EXPECT_EQ(state.get<int>("x"), 7);
+  state.set("x", 8);
+  EXPECT_EQ(state.get<int>("x"), 8);
+  EXPECT_EQ(state.get_safe<int>("x"), 8);
+}
+
+// Reproduces the exact hazard get_safe() is meant to close: a writer thread
+// repeatedly replacing a vector-valued key (forcing reallocation, as real
+// planners do with "path"/"goals") while a reader thread concurrently calls
+// get_safe<std::vector<T>>(). Because the copy is made while state_mutex_ is
+// held, every snapshot the reader observes must be a fully-formed vector of
+// consistent size/content — never a torn read, dangling pointer, or crash.
+TEST(NavStateStressTest, GetSafeConcurrentReadDuringReallocatingWrites)
+{
+  easynav::NavState state;
+  std::atomic<bool> start_flag{false};
+  std::atomic<bool> stop_flag{false};
+
+  std::vector<geometry_msgs::msg::Pose> initial(1);
+  state.set("path", initial);
+
+  auto writer = [&]() {
+      while (!start_flag.load()) {std::this_thread::yield();}
+      for (int i = 0; i < 5000 && !stop_flag.load(); ++i) {
+        // Varying size forces the internal std::vector to reallocate/free
+        // its buffer on (almost) every write.
+        std::vector<geometry_msgs::msg::Pose> path(1 + (i % 37));
+        for (size_t j = 0; j < path.size(); ++j) {
+          path[j].position.x = static_cast<double>(j);
+        }
+        state.set("path", path);
+      }
+      stop_flag.store(true);
+    };
+
+  std::atomic<int> reads{0};
+  auto reader = [&]() {
+      while (!start_flag.load()) {std::this_thread::yield();}
+      while (!stop_flag.load()) {
+        auto snapshot = state.get_safe<std::vector<geometry_msgs::msg::Pose>>("path");
+        // Every element index must equal its own position.x: proves the
+        // vector observed is internally consistent, never a mix of two
+        // different writes.
+        for (size_t j = 0; j < snapshot.size(); ++j) {
+          ASSERT_DOUBLE_EQ(snapshot[j].position.x, static_cast<double>(j));
+        }
+        reads.fetch_add(1);
+      }
+    };
+
+  std::vector<std::thread> threads;
+  threads.emplace_back(writer);
+  for (int i = 0; i < 3; ++i) {
+    threads.emplace_back(reader);
+  }
+
+  start_flag.store(true);
+  for (auto & t : threads) {
+    t.join();
+  }
+
+  EXPECT_GT(reads.load(), 0);
+  SUCCEED();
 }

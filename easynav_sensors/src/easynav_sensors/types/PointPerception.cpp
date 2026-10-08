@@ -1,6 +1,5 @@
 // Copyright 2025 Intelligent Robotics Lab
 //
-// This file is part of the project Easy Navigation (EasyNav in short)
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -13,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <cmath>
 #include <string>
 #include <vector>
 #include <optional>
@@ -35,9 +35,11 @@
 #include "sensor_msgs/msg/laser_scan.hpp"
 #include "sensor_msgs/msg/point_cloud2.hpp"
 
+#include "rclcpp/clock.hpp"
 #include "rclcpp/time.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 
+#include "easynav_common/Parameters.hpp"
 #include "easynav_sensors/types/PointPerception.hpp"
 #include "easynav_common/RTTFBuffer.hpp"
 
@@ -99,12 +101,8 @@ void PointPerceptionHandler::on_initialize()
   auto node = get_node();
   std::string topic, msg_type;
 
-  if (!node->has_parameter(get_sensor_name() + ".topic")) {
-    node->declare_parameter(get_sensor_name() + ".topic", std::string{});
-  }
-  if (!node->has_parameter(get_sensor_name() + ".type")) {
-    node->declare_parameter(get_sensor_name() + ".type", std::string{});
-  }
+  easynav::declare_parameter_if_absent(*node, get_sensor_name() + ".topic", std::string{});
+  easynav::declare_parameter_if_absent(*node, get_sensor_name() + ".type", std::string{});
 
   node->get_parameter(get_sensor_name() + ".topic", topic);
   node->get_parameter(get_sensor_name() + ".type", msg_type);
@@ -411,9 +409,9 @@ PointPerceptionsOpsView::downsample(double resolution)
       const float z_val = collapse_z_ ? collapse_val_z_ : pt.z;
 
       VoxelKey key{
-        static_cast<int>(pt.x * inv_res),
-        static_cast<int>(pt.y * inv_res),
-        static_cast<int>(z_val * inv_res)};
+        static_cast<int>(std::floor(pt.x * inv_res)),
+        static_cast<int>(std::floor(pt.y * inv_res)),
+        static_cast<int>(std::floor(z_val * inv_res))};
 
       if (voxel_set.insert(key).second) {
         indices[write_idx++] = idx;
@@ -559,63 +557,6 @@ PointPerceptionsOpsView::as_points() const
   return out;
 }
 
-const pcl::PointCloud<pcl::PointXYZ> &
-PointPerceptionsOpsView::as_points(int idx) const
-{
-  tmp_single_cloud_.clear();
-  tmp_single_cloud_.height = 1;
-  tmp_single_cloud_.is_dense = false;
-
-  if (idx < 0 || static_cast<std::size_t>(idx) >= perceptions_.size()) {
-    tmp_single_cloud_.width = 0;
-    return tmp_single_cloud_;
-  }
-
-  const std::size_t i = static_cast<std::size_t>(idx);
-  const auto & pptr = perceptions_[i];
-  const auto & idx_list = indices_[i].indices;
-
-  if (!pptr || !pptr->valid || pptr->data.empty() || idx_list.empty()) {
-    tmp_single_cloud_.width = 0;
-    return tmp_single_cloud_;
-  }
-
-  const auto & cloud = pptr->data;
-
-  const bool has_tf = has_target_frame_ &&
-    tf_valid_.size() == perceptions_.size() &&
-    tf_valid_[i];
-
-  for (int id : idx_list) {
-    if (id < 0 || static_cast<std::size_t>(id) >= cloud.size()) {
-      continue;
-    }
-
-    const auto & src = cloud[id];
-    tf2::Vector3 p(src.x, src.y, src.z);
-
-    if (has_tf) {
-      p = tf_transforms_[i] * p;
-    }
-
-    pcl::PointXYZ dst(
-      static_cast<float>(p.x()),
-      static_cast<float>(p.y()),
-      static_cast<float>(p.z()));
-
-    if (collapse_x_) {dst.x = collapse_val_x_;}
-    if (collapse_y_) {dst.y = collapse_val_y_;}
-    if (collapse_z_) {dst.z = collapse_val_z_;}
-
-    tmp_single_cloud_.points.push_back(dst);
-  }
-
-  tmp_single_cloud_.width =
-    static_cast<uint32_t>(tmp_single_cloud_.points.size());
-  return tmp_single_cloud_;
-}
-
-
 PointPerceptionsOpsView &
 PointPerceptionsOpsView::fuse(const std::string & target_frame, bool exact_time)
 {
@@ -706,8 +647,7 @@ PointPerceptionsOpsView::fuse(
       try {
         tf_msg = tf_buffer->lookupTransform(
           target_frame_, pptr->frame_id,
-          query_time,
-          tf2::durationFromSec(0.0));
+          query_time);
       } catch (const tf2::TransformException & ex) {
         // Common in RT loops: exact-time request is a few ms ahead of the latest TF.
         // Fall back to latest TF rather than dropping the perception.
@@ -718,8 +658,7 @@ PointPerceptionsOpsView::fuse(
           {
             tf_msg = tf_buffer->lookupTransform(
               target_frame_, pptr->frame_id,
-              tf2::TimePointZero,
-              tf2::durationFromSec(0.0));
+              tf2::TimePointZero);
             used_fallback_latest_tf = true;
           } else {
             throw;
@@ -739,19 +678,23 @@ PointPerceptionsOpsView::fuse(
       tf_valid_[i] = true;
     } catch (const tf2::TransformException & ex) {
       auto logger = rclcpp::get_logger("PointPerceptionsOpsView");
+      // Throttled: frequent at startup, before TFs are available.
+      static rclcpp::Clock steady_clock(RCL_STEADY_TIME);
 
       if (allow_backtrace_now()) {
         const std::string bt = backtrace_to_string(64, 1);
         if (!bt.empty()) {
-          RCLCPP_WARN(
-            logger,
+          RCLCPP_WARN_THROTTLE(
+            logger, steady_clock, 2000,
             "TF lookup failed in fuse(): %s\nBacktrace:\n%s",
             ex.what(), bt.c_str());
         } else {
-          RCLCPP_WARN(logger, "TF lookup failed in fuse(): %s", ex.what());
+          RCLCPP_WARN_THROTTLE(
+            logger, steady_clock, 2000, "TF lookup failed in fuse(): %s", ex.what());
         }
       } else {
-        RCLCPP_WARN(logger, "TF lookup failed in fuse(): %s", ex.what());
+        RCLCPP_WARN_THROTTLE(
+          logger, steady_clock, 2000, "TF lookup failed in fuse(): %s", ex.what());
       }
       tf_valid_[i] = false;
     }
@@ -788,7 +731,7 @@ PointPerceptionsOpsView::add(
   idx.resize(points.size());
   std::iota(idx.begin(), idx.end(), 0);
 
-  tf_transforms_.push_back(tf2::Transform());
+  tf_transforms_.push_back(tf2::Transform::getIdentity());
   tf_valid_.push_back(false);
 
   return *this;

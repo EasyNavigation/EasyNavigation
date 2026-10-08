@@ -1,6 +1,5 @@
 // Copyright 2025 Intelligent Robotics Lab
 //
-// This file is part of the project Easy Navigation (EasyNav in short)
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -23,11 +22,13 @@
 #ifndef EASYNAV__TYPES__NAVSTATE_HPP_
 #define EASYNAV__TYPES__NAVSTATE_HPP_
 
+#include <algorithm>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
 #include <memory>
 #include <mutex>
+#include <optional>
 #include <stdexcept>
 #include <sstream>
 #include <type_traits>
@@ -35,6 +36,7 @@
 #include <functional>
 #include <execinfo.h>
 #include <typeinfo>
+#include <vector>
 #include <cxxabi.h>
 #include <execinfo.h>
 
@@ -206,6 +208,46 @@ public:
     return *ptr;
   }
 
+  /// \brief Retrieves a snapshot copy of the stored value of type \p T for \p key.
+  ///
+  /// Unlike \ref get(), which returns a reference to the object owned by the internal
+  /// \c std::shared_ptr<T> (only valid for as long as no other thread calls \ref set() on the
+  /// same key), this makes the copy of \p T while \ref state_mutex_ is still held, so the
+  /// returned value is a stable, independent snapshot regardless of concurrent writers.
+  ///
+  /// Use this instead of \ref get() whenever the key can be written from a different thread
+  /// than the one calling this method (for example, values crossing the RT / non-RT boundary,
+  /// such as "path", "goals", "robot_pose" or "navigation_state"). Prefer \ref get() when the
+  /// writer and reader are known to run on the same thread (for example, most maps stored by a
+  /// maps manager and consumed by a localizer/planner on the non-RT cycle) to avoid paying an
+  /// unnecessary copy for potentially large values.
+  ///
+  /// \tparam T Expected stored type.
+  /// \param key Key to retrieve.
+  /// \return An independent copy of the stored \p T.
+  /// \throws std::runtime_error If \p key is missing or the stored type does not match \p T.
+  template<typename T>
+  T get_safe(const std::string & key) const
+  {
+    std::lock_guard<std::mutex> lock(state_mutex_);
+    auto it = values_.find(key);
+
+    if (it == values_.end()) {
+      throw std::runtime_error("Key not found in get_safe: " + key);
+    }
+
+    if (types_.at(key) != typeid(T).hash_code()) {
+      std::ostringstream oss;
+      oss << "Type mismatch in get_safe(\"" << key << "\")\n"
+          << "  stored type   : " << type_names_.at(key) << "\n"
+          << "  requested type: " << demangle(typeid(T).name());
+      throw std::runtime_error(oss.str());
+    }
+
+    auto ptr = std::static_pointer_cast<T>(it->second);
+    return *ptr;  // copy made while state_mutex_ is still held
+  }
+
   /// \brief Retrieves the shared_ptr to the stored value of type \p T for \p key.
   ///
   /// The pointer refers to the object managed by the internal \c std::shared_ptr<T>.
@@ -371,6 +413,32 @@ public:
     return groups_.find(key) != groups_.end();
   }
 
+  /// \brief Adds \p key to the group \p group_key (created if missing), atomically: safe when
+  /// several threads add members to the same group. Nothing happens if it is already a member.
+  void add_to_group(const std::string & group_key, const std::string & key)
+  {
+    std::lock_guard<std::mutex> lock(group_mutex_);
+    auto & members = groups_[group_key];
+    if (std::find(members.begin(), members.end(), key) != members.end()) {
+      return;
+    }
+    members.push_back(key);
+    set<std::vector<std::string>>(group_key, members);
+  }
+
+  /// \brief Member keys of \p group_key, as recorded by \ref set_group() (without dereferencing
+  /// them). Useful to grow a group incrementally.
+  /// \return The member keys, or an empty vector if the group does not exist.
+  std::vector<std::string> get_group_keys(const std::string & group_key) const
+  {
+    std::lock_guard<std::mutex> lock(group_mutex_);
+    auto it = groups_.find(group_key);
+    if (it == groups_.end()) {
+      return {};
+    }
+    return it->second;
+  }
+
   /// \brief Type alias for a generic printer functor used by \ref debug_string().
   ///
   /// The functor receives the stored value as a \c std::shared_ptr<void>
@@ -388,7 +456,9 @@ public:
         auto typed_ptr = std::static_pointer_cast<T>(base_ptr);
         return printer(*typed_ptr);
       };
-    type_printers_[typeid(T).hash_code()] = wrapper;
+    auto & registry = printer_registry();
+    std::lock_guard<std::mutex> lock(registry.mutex);
+    registry.printers[typeid(T).hash_code()] = wrapper;
   }
 
   /// \brief Generates a human-readable dump of all stored keys and values.
@@ -398,18 +468,46 @@ public:
   /// \return Multi-line string with one entry per key.
   std::string debug_string() const
   {
+    // Snapshot under the lock, format outside it (printers may be slow).
+    struct Entry
+    {
+      std::string key;
+      std::shared_ptr<void> ptr;
+      std::optional<size_t> type;
+    };
+    std::vector<Entry> entries;
+    {
+      std::lock_guard<std::mutex> lock(state_mutex_);
+      entries.reserve(values_.size());
+      for (const auto & [key, ptr] : values_) {
+        const auto type_it = types_.find(key);
+        entries.push_back(
+          {key, ptr, type_it != types_.end() ? std::optional(type_it->second) : std::nullopt});
+      }
+    }
+    // Sorted keys: stable, readable output.
+    std::sort(
+      entries.begin(), entries.end(),
+      [](const Entry & a, const Entry & b) {return a.key < b.key;});
+
     std::stringstream ss;
-    for (const auto & kv : values_) {
-      ss << kv.first << " = ";
-      auto ptr = kv.second;
+    for (const auto & [key, ptr, type] : entries) {
+      ss << key << " = ";
       if (ptr) {
-        auto type_it = types_.find(kv.first);
-        if (type_it != types_.end()) {
-          auto printer_it = type_printers_.find(type_it->second);
-          if (printer_it != type_printers_.end()) {
-            ss << "[" << ptr.get() << "] : " << printer_it->second(ptr);
+        if (type) {
+          AnyPrinter printer;
+          {
+            auto & registry = printer_registry();
+            std::lock_guard<std::mutex> lock(registry.mutex);
+            const auto printer_it = registry.printers.find(*type);
+            if (printer_it != registry.printers.end()) {
+              printer = printer_it->second;
+            }
+          }
+          if (printer) {
+            ss << "[" << ptr.get() << "] : " << printer(ptr);
           } else {
-            ss << "[" << ptr.get() << "] : " << type_it->second << "]";
+            ss << "[" << ptr.get() << "] : " << *type << "]";
           }
         } else {
           ss << "[" << ptr.get() << "] : unknown]";
@@ -478,7 +576,23 @@ private:
   mutable std::unordered_map<std::string, std::string> type_names_;
 
   /// \brief Registry of type-hash -> printer functors used by \ref debug_string().
-  static inline std::unordered_map<size_t, AnyPrinter> type_printers_;
+  struct PrinterRegistry
+  {
+    std::mutex mutex;
+    std::unordered_map<size_t, AnyPrinter> printers;
+  };
+
+  /// \brief Process-wide printer registry.
+  ///
+  /// It is deliberately never destroyed. Plugins register printers whose code lives in their
+  /// own shared library, and those libraries are unloaded (class_loader does it from its own
+  /// static destructors) before the static destructors of this library run at exit. Destroying
+  /// the std::function objects then would call code that is no longer mapped.
+  static PrinterRegistry & printer_registry()
+  {
+    static PrinterRegistry * const registry = new PrinterRegistry();
+    return *registry;
+  }
 };
 
 }  // namespace easynav

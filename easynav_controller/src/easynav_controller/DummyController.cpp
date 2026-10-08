@@ -1,6 +1,5 @@
 // Copyright 2025 Intelligent Robotics Lab
 //
-// This file is part of the project Easy Navigation (EasyNav in short)
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -16,6 +15,7 @@
 /// \file
 /// \brief Implementation of the DummyController class.
 
+#include "easynav_common/Parameters.hpp"
 #include "easynav_controller/DummyController.hpp"
 #include "geometry_msgs/msg/twist_stamped.hpp"
 #include "easynav_common/RTTFBuffer.hpp"
@@ -28,7 +28,7 @@ void DummyController::on_initialize()
   auto node = get_node();
   const auto & plugin_name = get_plugin_name();
 
-  node->declare_parameter<double>(plugin_name + ".cycle_time_rt", 0.0);
+  easynav::declare_parameter_if_absent<double>(*node, plugin_name + ".cycle_time_rt", 0.0);
   node->get_parameter<double>(plugin_name + ".cycle_time_rt", cycle_time_rt_);
 }
 

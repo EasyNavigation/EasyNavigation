@@ -1,0 +1,10 @@
+<class_libraries>
+  <library path="dummy_recovery_manager">
+    <class name="easynav_recovery/DummyRecoveryManager" type="easynav::DummyRecoveryManager" base_class_type="easynav::RecoveryManagerBase">
+      <description>
+      A "dummy" recovery system: it never diagnoses, commands or asks anything. Loaded when
+      "recovery_manager.plugin" is not set. It serves as an example and a reference plugin.
+      </description>
+    </class>
+  </library>
+</class_libraries>
