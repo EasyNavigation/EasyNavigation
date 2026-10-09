@@ -498,15 +498,16 @@ TEST_F(SystemSafetyModeTest, LateRtCyclesStopEasyNavInSafetyMode)
     GTEST_SKIP() << "the safety mode needs real-time scheduling, not allowed here";
   }
 
-  start(safe({"safety.rt_monitor.max_late_cycles:=3"}));
+  // 20 Hz: late above 100 ms, so a loaded machine never makes a 5 ms gap late
+  start(safe({"safety.rt_monitor.max_late_cycles:=3", "rt_freq:=20.0"}));
   ASSERT_TRUE(configure());
   ASSERT_TRUE(activate());
 
   run_rt_cycles(20, std::chrono::milliseconds(5));
   EXPECT_FALSE(system_node_->is_shutdown_requested()) << "on time";
 
-  // E.g. a plugin that blocks the cycle: more than 2 periods (10 ms) between cycles.
-  run_rt_cycles(4, std::chrono::milliseconds(30));
+  // E.g. a plugin that blocks the cycle: more than 2 periods (100 ms) between cycles.
+  run_rt_cycles(4, std::chrono::milliseconds(150));
   EXPECT_TRUE(system_node_->is_shutdown_requested());
   EXPECT_NE(system_node_->get_shutdown_reason().find("late"), std::string::npos) <<
     system_node_->get_shutdown_reason();
@@ -514,11 +515,12 @@ TEST_F(SystemSafetyModeTest, LateRtCyclesStopEasyNavInSafetyMode)
 
 TEST_F(SystemSafetyModeTest, LateRtCyclesAreOnlyReportedOutsideSafetyMode)
 {
-  start({"safety.rt_monitor.max_late_cycles:=3"});
+  // 20 Hz: late above 100 ms, so a loaded machine never makes a 5 ms gap late
+  start({"safety.rt_monitor.max_late_cycles:=3", "rt_freq:=20.0"});
   ASSERT_TRUE(configure());
   ASSERT_TRUE(activate());
 
-  run_rt_cycles(4, std::chrono::milliseconds(30));
+  run_rt_cycles(4, std::chrono::milliseconds(150));
   EXPECT_FALSE(system_node_->is_shutdown_requested());
   ASSERT_TRUE(rt_diagnostic());
   EXPECT_EQ(rt_diagnostic()->level, diagnostic_msgs::msg::DiagnosticStatus::WARN);
@@ -529,14 +531,15 @@ TEST_F(SystemSafetyModeTest, LateRtCyclesAreOnlyReportedOutsideSafetyMode)
 
 TEST_F(SystemSafetyModeTest, AnInactivePeriodIsNotALateCycle)
 {
-  start({"safety.rt_monitor.max_late_cycles:=1"});
+  // 20 Hz: late above 100 ms, so a loaded machine never makes a 5 ms gap late
+  start({"safety.rt_monitor.max_late_cycles:=1", "rt_freq:=20.0"});
   ASSERT_TRUE(configure());
   ASSERT_TRUE(activate());
   run_rt_cycles(5, std::chrono::milliseconds(5));
 
   // No RT cycles while inactive: the first one after activating again is not late.
   system_node_->trigger_transition(Transition::TRANSITION_DEACTIVATE);
-  rclcpp::sleep_for(std::chrono::milliseconds(100));
+  rclcpp::sleep_for(std::chrono::milliseconds(300));
   ASSERT_TRUE(activate());
   run_rt_cycles(5, std::chrono::milliseconds(5));
   EXPECT_FALSE(rt_diagnostic()) << "nothing late";
