@@ -1,41 +1,43 @@
 <map id="easynav_localizer/src/easynav_localizer/fault_injection/FaultyLocalizer.cpp" name="easynav_localizer/src/easynav_localizer/fault_injection/FaultyLocalizer.cpp">
-<area shape="rect" id="Node000001" title="Implementation of the FaultyLocalizer class." alt="" coords="486,5,677,61"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="59,116,120,142"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="486,46,319,69,224,87,132,112,128,113,126,108,130,106,223,82,318,63,485,40"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="144,116,201,142"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="486,50,355,74,283,91,213,112,210,113,208,108,211,106,282,86,354,69,485,45"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="224,116,264,142"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="486,53,384,76,277,112,277,112,275,107,275,106,382,71,485,48"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="288,116,366,142"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="508,64,378,112,374,113,372,108,377,106,506,59"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="760,286,814,312"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="668,59,716,81,764,111,807,149,824,172,839,197,844,218,839,239,828,260,814,277,810,274,824,257,834,237,839,218,834,199,820,175,803,153,761,115,713,86,666,64"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="636,116,693,142"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="607,60,646,103,642,107,603,63"/>
-<area shape="rect" id="Node000008" href="$Parameters_8hpp.html" title="Parameter helpers for plugins that may be initialized several times on the same node." alt="" coords="603,205,824,231"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="653,59,683,80,708,108,717,128,721,149,721,190,715,189,716,150,712,129,703,110,680,84,650,64"/>
-<area shape="rect" id="Node000009" href="$RTTFBuffer_8hpp.html" title=" " alt="" coords="390,116,611,142"/>
-<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="560,63,522,107,518,103,556,60"/>
-<area shape="rect" id="Node000015" href="$FaultyLocalizer_8hpp.html" title="Declaration of the FaultyLocalizer class." alt="" coords="899,109,1090,150"/>
-<area shape="poly" id="edge17_Node000001_Node000015" title=" " alt="" coords="678,54,894,102,893,108,677,59"/>
-<area shape="rect" id="Node000018" title=" " alt="" coords="1115,109,1242,150"/>
-<area shape="poly" id="edge21_Node000001_Node000018" title=" " alt="" coords="678,43,869,68,1100,106,1099,111,868,73,677,48"/>
-<area shape="poly" id="edge8_Node000008_Node000006" title=" " alt="" coords="727,229,767,273,763,277,723,233"/>
-<area shape="rect" id="Node000010" title=" " alt="" coords="5,286,62,312"/>
-<area shape="poly" id="edge10_Node000009_Node000010" title=" " alt="" coords="424,145,378,152,297,156,192,158,140,162,93,169,55,181,29,199,20,215,18,234,25,271,20,272,13,234,15,214,25,196,52,177,92,164,140,157,192,153,297,151,377,147,423,140"/>
-<area shape="rect" id="Node000011" href="$Singleton_8hpp.html" title=" " alt="" coords="39,205,247,231"/>
-<area shape="poly" id="edge11_Node000009_Node000011" title=" " alt="" coords="450,145,208,204,207,198,449,140"/>
-<area shape="rect" id="Node000013" href="$TFInfo_8hpp.html" title=" " alt="" coords="272,198,433,238"/>
-<area shape="poly" id="edge14_Node000009_Node000013" title=" " alt="" coords="481,145,400,192,397,187,478,140"/>
-<area shape="rect" id="Node000014" title=" " alt="" coords="457,205,578,231"/>
-<area shape="poly" id="edge16_Node000009_Node000014" title=" " alt="" coords="505,142,515,189,510,191,500,143"/>
-<area shape="poly" id="edge12_Node000011_Node000010" title=" " alt="" coords="128,233,64,279,61,275,125,229"/>
-<area shape="rect" id="Node000012" title=" " alt="" coords="117,286,168,312"/>
-<area shape="poly" id="edge13_Node000011_Node000012" title=" " alt="" coords="146,231,146,270,140,270,140,231"/>
-<area shape="poly" id="edge15_Node000013_Node000006" title=" " alt="" coords="434,233,446,236,745,288,744,294,445,241,433,239"/>
-<area shape="poly" id="edge18_Node000015_Node000006" title=" " alt="" coords="978,152,935,194,882,240,823,280,820,276,879,236,932,190,974,148"/>
-<area shape="rect" id="Node000016" title=" " alt="" coords="950,205,1141,231"/>
-<area shape="poly" id="edge19_Node000015_Node000016" title=" " alt="" coords="1009,149,1033,191,1029,193,1004,152"/>
-<area shape="rect" id="Node000017" title=" " alt="" coords="1165,198,1366,238"/>
-<area shape="poly" id="edge20_Node000015_Node000017" title=" " alt="" coords="1057,148,1190,190,1189,195,1056,153"/>
+<area shape="rect" id="Node000001" title="Implementation of the FaultyLocalizer class." alt="" coords="278,5,470,61"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,116,66,142"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="279,56,181,80,78,112,75,113,73,108,76,106,179,75,277,51"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="90,116,147,142"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="290,64,159,111,157,112,155,107,157,107,288,59"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="170,116,210,142"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="317,64,224,111,222,106,315,59"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="234,116,312,142"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="347,64,298,108,295,104,343,60"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="481,286,534,312"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="368,62,351,105,326,151,313,166,300,175,289,184,279,199,273,219,274,227,279,237,291,247,309,256,358,271,466,290,465,296,357,276,307,261,288,251,275,240,269,229,267,219,274,197,285,180,297,170,309,162,321,148,346,103,363,61"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="1138,116,1195,142"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="471,31,602,34,767,45,948,68,1039,85,1127,106,1131,108,1129,113,1125,112,1038,90,947,73,767,50,602,39,470,36"/>
+<area shape="rect" id="Node000008" href="$Parameters_8hpp.html" title="Parameter helpers for plugins that may be initialized several times on the same node." alt="" coords="289,205,510,231"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="381,61,398,189,393,190,375,62"/>
+<area shape="rect" id="Node000009" href="$RTTFBuffer_8hpp.html" title=" " alt="" coords="673,116,894,142"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="471,54,717,110,716,115,470,59"/>
+<area shape="rect" id="Node000016" href="$FaultyLocalizer_8hpp.html" title="Declaration of the FaultyLocalizer class." alt="" coords="922,109,1114,150"/>
+<area shape="poly" id="edge18_Node000001_Node000016" title=" " alt="" coords="471,44,907,106,908,107,907,112,906,112,470,50"/>
+<area shape="rect" id="Node000019" title=" " alt="" coords="1218,109,1346,150"/>
+<area shape="poly" id="edge22_Node000001_Node000019" title=" " alt="" coords="471,35,611,43,793,56,996,77,1203,106,1203,111,995,82,792,61,611,48,470,41"/>
+<area shape="poly" id="edge8_Node000008_Node000006" title=" " alt="" coords="417,229,480,275,477,279,414,233"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="999,286,1056,312"/>
+<area shape="poly" id="edge10_Node000009_Node000010" title=" " alt="" coords="829,140,887,162,918,177,946,196,986,233,1014,272,1010,275,982,237,943,200,915,182,885,167,827,145"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="866,205,933,231"/>
+<area shape="poly" id="edge11_Node000009_Node000011" title=" " alt="" coords="801,140,873,193,869,198,798,145"/>
+<area shape="rect" id="Node000012" href="$Singleton_8hpp.html" title=" " alt="" coords="1058,205,1266,231"/>
+<area shape="poly" id="edge12_Node000009_Node000012" title=" " alt="" coords="838,140,1095,199,1094,204,836,145"/>
+<area shape="rect" id="Node000014" href="$TFInfo_8hpp.html" title=" " alt="" coords="535,198,696,238"/>
+<area shape="poly" id="edge15_Node000009_Node000014" title=" " alt="" coords="761,145,668,193,666,188,759,140"/>
+<area shape="rect" id="Node000015" title=" " alt="" coords="720,205,842,231"/>
+<area shape="poly" id="edge17_Node000009_Node000015" title=" " alt="" coords="786,143,784,190,779,189,780,143"/>
+<area shape="poly" id="edge13_Node000012_Node000010" title=" " alt="" coords="1143,234,1063,280,1060,276,1140,229"/>
+<area shape="rect" id="Node000013" title=" " alt="" coords="1136,286,1188,312"/>
+<area shape="poly" id="edge14_Node000012_Node000013" title=" " alt="" coords="1165,231,1165,270,1160,270,1160,231"/>
+<area shape="poly" id="edge16_Node000014_Node000006" title=" " alt="" coords="590,241,538,279,535,275,587,237"/>
+<area shape="poly" id="edge19_Node000016_Node000006" title=" " alt="" coords="1013,151,989,197,970,221,946,241,914,255,870,267,759,284,643,294,550,299,550,294,643,289,759,278,868,261,912,250,943,236,966,217,984,194,1009,149"/>
+<area shape="rect" id="Node000017" title=" " alt="" coords="1290,205,1482,231"/>
+<area shape="poly" id="edge20_Node000016_Node000017" title=" " alt="" coords="1103,148,1320,198,1319,204,1102,153"/>
+<area shape="rect" id="Node000018" title=" " alt="" coords="1506,198,1706,238"/>
+<area shape="poly" id="edge21_Node000016_Node000018" title=" " alt="" coords="1115,145,1127,147,1307,171,1491,195,1490,200,1307,176,1126,152,1114,150"/>
 </map>

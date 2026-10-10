@@ -105,7 +105,8 @@ document.addEventListener('DOMContentLoaded', codefold.init);
 
 <p>Declaration of the LocalizerNode class, a ROS 2 lifecycle node for localization tasks in Easy Navigation.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;rclcpp/macros.hpp&quot;</code><br />
+<div class="textblock"><code>#include &lt;memory&gt;</code><br />
+<code>#include &quot;rclcpp/macros.hpp&quot;</code><br />
 <code>#include &quot;rclcpp_lifecycle/lifecycle_node.hpp&quot;</code><br />
 <code>#include &quot;easynav_core/PluginSwitcher.hpp&quot;</code><br />
 <code>#include &quot;easynav_core/LocalizerMethodBase.hpp&quot;</code><br />
@@ -115,49 +116,52 @@ Include dependency graph for LocalizerNode.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="LocalizerNode_8hpp__incl.png" border="0" usemap="#aeasynav__localizer_2include_2easynav__localizer_2LocalizerNode_8hpp" loading="lazy" alt=""/></div>
 <map name="aeasynav__localizer_2include_2easynav__localizer_2LocalizerNode_8hpp" id="aeasynav__localizer_2include_2easynav__localizer_2LocalizerNode_8hpp">
-<area shape="rect" title="Declaration of the LocalizerNode class, a ROS 2 lifecycle node for localization tasks in Easy Navigat..." alt="" coords="331,5,570,46"/>
-<area shape="rect" title=" " alt="" coords="5,102,133,127"/>
-<area shape="poly" title=" " alt="" coords="358,49,146,97,132,100,131,95,144,91,357,44"/>
-<area shape="rect" title=" " alt="" coords="156,94,318,135"/>
-<area shape="poly" title=" " alt="" coords="403,49,301,90,299,85,401,44"/>
-<area shape="rect" title=" " alt="" coords="342,102,558,127"/>
-<area shape="poly" title=" " alt="" coords="453,47,453,86,448,86,448,47"/>
-<area shape="rect" title=" " alt="" coords="582,94,782,135"/>
-<area shape="poly" title=" " alt="" coords="504,44,616,86,614,91,502,49"/>
-<area shape="rect" href="NavState_8hpp.html" title="A blackboard&#45;like structure to hold the current state of the navigation system." alt="" coords="807,94,968,135"/>
-<area shape="poly" title=" " alt="" coords="553,44,792,91,791,96,552,49"/>
-<area shape="rect" title=" " alt="" coords="101,183,176,208"/>
-<area shape="poly" title=" " alt="" coords="807,135,795,137,627,155,494,160,361,166,191,185,191,180,360,161,494,155,626,149,794,132,806,130"/>
-<area shape="rect" title=" " alt="" coords="200,183,253,208"/>
-<area shape="poly" title=" " alt="" coords="807,135,795,137,648,153,532,158,416,164,269,185,268,180,416,159,532,152,648,148,794,132,806,130"/>
-<area shape="rect" title=" " alt="" coords="276,183,387,208"/>
-<area shape="poly" title=" " alt="" coords="807,135,795,137,686,153,600,162,403,185,402,180,599,157,685,148,794,132,806,130"/>
-<area shape="rect" title=" " alt="" coords="411,183,514,208"/>
-<area shape="poly" title=" " alt="" coords="807,135,795,137,530,185,529,180,794,132,806,130"/>
-<area shape="rect" title=" " alt="" coords="538,183,605,208"/>
-<area shape="poly" title=" " alt="" coords="809,138,621,184,620,179,808,133"/>
-<area shape="rect" title=" " alt="" coords="629,183,685,208"/>
-<area shape="poly" title=" " alt="" coords="831,138,700,182,698,177,829,133"/>
-<area shape="rect" title=" " alt="" coords="709,183,776,208"/>
-<area shape="poly" title=" " alt="" coords="853,138,779,177,776,173,850,133"/>
-<area shape="rect" title=" " alt="" coords="800,183,877,208"/>
-<area shape="poly" title=" " alt="" coords="878,136,856,171,852,168,873,134"/>
-<area shape="rect" title=" " alt="" coords="902,183,970,208"/>
-<area shape="poly" title=" " alt="" coords="902,134,923,168,918,171,897,136"/>
-<area shape="rect" title=" " alt="" coords="994,183,1075,208"/>
-<area shape="poly" title=" " alt="" coords="926,133,1000,173,997,177,923,138"/>
-<area shape="rect" title=" " alt="" coords="1099,183,1170,208"/>
-<area shape="poly" title=" " alt="" coords="950,133,1085,176,1083,181,948,138"/>
-<area shape="rect" title=" " alt="" coords="1194,183,1272,208"/>
-<area shape="poly" title=" " alt="" coords="969,131,1180,179,1179,185,968,137"/>
-<area shape="rect" title=" " alt="" coords="1296,183,1375,208"/>
-<area shape="poly" title=" " alt="" coords="969,126,1281,180,1280,185,968,131"/>
-<area shape="rect" title=" " alt="" coords="1400,183,1466,208"/>
-<area shape="poly" title=" " alt="" coords="969,121,1155,143,1385,180,1384,185,1154,148,968,126"/>
-<area shape="rect" title=" " alt="" coords="1490,183,1547,208"/>
-<area shape="poly" title=" " alt="" coords="969,118,1193,138,1333,156,1475,180,1474,185,1332,161,1193,143,968,123"/>
-<area shape="rect" title=" " alt="" coords="1571,183,1639,208"/>
-<area shape="poly" title=" " alt="" coords="969,117,1227,137,1390,155,1556,180,1556,185,1389,160,1227,142,969,123"/>
+<area shape="rect" title="Declaration of the LocalizerNode class, a ROS 2 lifecycle node for localization tasks in Easy Navigat..." alt="" coords="245,5,484,46"/>
+<area shape="rect" title=" " alt="" coords="14,183,81,208"/>
+<area shape="poly" title=" " alt="" coords="245,37,176,44,107,56,51,73,30,84,16,96,9,113,11,131,19,151,30,169,25,172,14,153,5,133,3,112,12,92,27,79,49,68,106,51,175,39,245,31"/>
+<area shape="rect" title=" " alt="" coords="26,102,154,127"/>
+<area shape="poly" title=" " alt="" coords="303,49,144,99,142,94,301,44"/>
+<area shape="rect" title=" " alt="" coords="177,94,339,135"/>
+<area shape="poly" title=" " alt="" coords="342,49,295,86,292,82,339,44"/>
+<area shape="rect" title=" " alt="" coords="363,102,579,127"/>
+<area shape="poly" title=" " alt="" coords="390,44,447,90,443,94,387,49"/>
+<area shape="rect" title=" " alt="" coords="603,94,803,135"/>
+<area shape="poly" title=" " alt="" coords="442,44,612,87,611,92,441,49"/>
+<area shape="rect" href="NavState_8hpp.html" title="A blackboard&#45;like structure to hold the current state of the navigation system." alt="" coords="828,94,989,135"/>
+<area shape="poly" title=" " alt="" coords="484,40,813,91,812,96,483,46"/>
+<area shape="poly" title=" " alt="" coords="828,135,816,137,707,150,616,157,459,161,303,166,211,173,104,185,97,186,96,181,103,180,211,167,303,160,459,156,615,151,707,144,815,132,827,130"/>
+<area shape="rect" title=" " alt="" coords="116,183,195,208"/>
+<area shape="poly" title=" " alt="" coords="828,135,816,137,647,155,514,161,381,167,211,185,210,180,380,161,514,155,647,150,815,132,827,130"/>
+<area shape="rect" title=" " alt="" coords="219,183,286,208"/>
+<area shape="poly" title=" " alt="" coords="828,135,816,137,673,153,560,159,446,166,302,185,301,180,446,161,559,154,672,148,815,132,827,130"/>
+<area shape="rect" title=" " alt="" coords="310,183,384,208"/>
+<area shape="poly" title=" " alt="" coords="828,135,816,137,700,152,609,160,517,169,400,185,399,180,516,163,609,155,700,147,815,132,827,130"/>
+<area shape="rect" title=" " alt="" coords="409,183,462,208"/>
+<area shape="poly" title=" " alt="" coords="828,135,816,137,722,151,648,159,573,168,478,185,477,180,572,162,647,153,721,146,815,132,827,130"/>
+<area shape="rect" title=" " alt="" coords="485,183,596,208"/>
+<area shape="poly" title=" " alt="" coords="828,136,611,182,610,177,827,130"/>
+<area shape="rect" title=" " alt="" coords="620,183,723,208"/>
+<area shape="poly" title=" " alt="" coords="850,138,723,180,721,175,848,133"/>
+<area shape="rect" title=" " alt="" coords="747,183,803,208"/>
+<area shape="poly" title=" " alt="" coords="877,138,810,177,807,172,874,133"/>
+<area shape="rect" title=" " alt="" coords="827,183,894,208"/>
+<area shape="poly" title=" " alt="" coords="899,136,878,171,873,168,894,134"/>
+<area shape="rect" title=" " alt="" coords="918,183,995,208"/>
+<area shape="poly" title=" " alt="" coords="923,134,944,168,939,171,918,136"/>
+<area shape="rect" title=" " alt="" coords="1020,183,1088,208"/>
+<area shape="poly" title=" " alt="" coords="946,133,1020,173,1017,177,944,138"/>
+<area shape="rect" title=" " alt="" coords="1112,183,1193,208"/>
+<area shape="poly" title=" " alt="" coords="970,133,1101,175,1099,180,969,138"/>
+<area shape="rect" title=" " alt="" coords="1217,183,1288,208"/>
+<area shape="poly" title=" " alt="" coords="990,131,1202,179,1201,184,989,136"/>
+<area shape="rect" title=" " alt="" coords="1313,183,1390,208"/>
+<area shape="poly" title=" " alt="" coords="990,126,1297,179,1297,185,989,131"/>
+<area shape="rect" title=" " alt="" coords="1414,183,1480,208"/>
+<area shape="poly" title=" " alt="" coords="990,121,1173,143,1399,180,1399,185,1173,149,989,126"/>
+<area shape="rect" title=" " alt="" coords="1504,183,1561,208"/>
+<area shape="poly" title=" " alt="" coords="990,118,1211,138,1348,156,1489,180,1488,185,1348,161,1211,144,989,123"/>
+<area shape="rect" title=" " alt="" coords="1585,183,1624,208"/>
+<area shape="poly" title=" " alt="" coords="990,114,1102,119,1246,130,1407,150,1570,180,1569,185,1406,155,1245,136,1102,125,989,120"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
