@@ -108,9 +108,8 @@ public:
     if (max_plugins_ != 0 && types.size() > max_plugins_) {
       RCLCPP_ERROR(
         node_.get_logger(),
-        "[%s] at most %lu plugin(s) can be instanced. [%lu] found",
-        types_parameter_.c_str(), static_cast<unsigned long>(max_plugins_),
-        static_cast<unsigned long>(types.size()));
+        "[%s] at most %zu plugin(s) can be instanced. [%zu] found",
+        types_parameter_.c_str(), static_cast<size_t>(max_plugins_), types.size());
       return false;
     }
 

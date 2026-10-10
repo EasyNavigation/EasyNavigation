@@ -13,7 +13,8 @@
 // limitations under the License.
 
 /// \file
-/// \brief Declaration of the ControllerNode class, a ROS 2 lifecycle node for speed computation in Easy Navigation.
+/// \brief Declaration of the ControllerNode class, a ROS 2 lifecycle node for speed computation in
+/// Easy Navigation.
 
 #ifndef EASYNAV_CONTROLLER__CONTROLLERNODE_HPP_
 #define EASYNAV_CONTROLLER__CONTROLLERNODE_HPP_
@@ -41,7 +42,8 @@ namespace easynav
 {
 
 /// \file
-/// \brief Declaration of the ControllerNode class, a ROS 2 lifecycle node for calculating speeds tasks in Easy Navigation.
+/// \brief Declaration of the ControllerNode class, a ROS 2 lifecycle node for calculating speeds
+/// tasks in Easy Navigation.
 
 /**
  * @class ControllerNode

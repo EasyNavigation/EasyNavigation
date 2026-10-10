@@ -15,15 +15,12 @@
 import sys
 import time
 
+from easynav_goalmanager_py.goal_manager_client import GoalManagerClient
+from easynav_interfaces.msg import NavigationControl
 import rclpy
 from rclpy.executors import ExternalShutdownException
-
 from ros2cli.node.strategy import add_arguments, NodeStrategy
 from ros2cli.verb import VerbExtension
-
-from easynav_goalmanager_py.goal_manager_client import GoalManagerClient
-
-from easynav_interfaces.msg import NavigationControl
 
 
 class ResumeVerb(VerbExtension):

@@ -13,21 +13,23 @@
 // limitations under the License.
 
 /// \file
-/// \brief Defines data structures and utilities for representing and processing odometry perceptions.
-///
-/// This file contains the definition of the OdometryPerception class, which holds odometry sensor data,
-/// and the OdometryPerceptionHandler class, which handles subscriptions to odometry messages and
-/// transforms them into OdometryPerception instances. It also defines an alias for a collection of such
+/// \brief Defines data structures and utilities for representing and processing odometry
 /// perceptions.
+///
+/// This file contains the definition of the OdometryPerception class, which holds odometry sensor
+/// data, and the OdometryPerceptionHandler class, which handles subscriptions to odometry messages
+/// and transforms them into OdometryPerception instances. It also defines an alias for a collection
+/// of such perceptions.
 
-#ifndef EASYNAV_SENSORS_TYPES__ODOMETRYPERCEPTIONS_HPP_
-#define EASYNAV_SENSORS_TYPES__ODOMETRYPERCEPTIONS_HPP_
+#ifndef EASYNAV_SENSORS__TYPES__ODOMETRYPERCEPTION_HPP_
+#define EASYNAV_SENSORS__TYPES__ODOMETRYPERCEPTION_HPP_
 
 #include <string_view>
 #include <vector>
+#include <memory>
+#include <string>
 
 #include "nav_msgs/msg/odometry.hpp"
-
 #include "easynav_sensors/types/Perceptions.hpp"
 
 namespace easynav
@@ -80,9 +82,11 @@ public:
 };
 
 /// \class OdometryPerceptionHandler
-/// \brief Handles the creation and updating of OdometryPerception instances from nav_msgs::msg::Odometry messages.
+/// \brief Handles the creation and updating of OdometryPerception instances from
+/// nav_msgs::msg::Odometry messages.
 ///
-/// This class provides methods to register subscriptions to odometry topics and update OdometryPerception objects.
+/// This class provides methods to register subscriptions to odometry topics and update
+/// OdometryPerception objects.
 class OdometryPerceptionHandler : public PerceptionHandler
 {
 public:
@@ -125,9 +129,10 @@ using OdometryPerceptions =
 
 /// @brief Retrieves the latest timestamp among a set of odometry perceptions.
 /// @param perceptions Container of odometry perceptions.
-/// @return The most recent timestamp found in \p perceptions, or a default-constructed \c rclcpp::Time if \p perceptions is empty.
+/// @return The most recent timestamp found in \p perceptions, or a default-constructed
+/// \c rclcpp::Time if \p perceptions is empty.
 rclcpp::Time get_latest_odometry_perceptions_stamp(const OdometryPerceptions & perceptions);
 
 }  // namespace easynav
 
-#endif  // EASYNAV_SENSORS_TYPES__ODOMETRYPERCEPTIONS_HPP_
+#endif  // EASYNAV_SENSORS__TYPES__ODOMETRYPERCEPTION_HPP_

@@ -18,16 +18,15 @@
 #ifndef EASYNAV_SYSTEM__GOALMANAGERCLIENT_HPP_
 #define EASYNAV_SYSTEM__GOALMANAGERCLIENT_HPP_
 
-#include "rclcpp/rclcpp.hpp"
+#include <string>
 
+#include "rclcpp/rclcpp.hpp"
 #include "easynav_interfaces/msg/navigation_control.hpp"
 #include "geometry_msgs/msg/pose_stamped.hpp"
 #include "nav_msgs/msg/goals.hpp"
 
 namespace easynav
 {
-
-using namespace std::placeholders;
 
 /**
  * @class GoalManagerClient
@@ -61,7 +60,7 @@ public:
    * @brief Constructor.
    * @param node Shared pointer to a ROS 2 node.
    */
-  GoalManagerClient(rclcpp::Node::SharedPtr node);
+  explicit GoalManagerClient(rclcpp::Node::SharedPtr node);
 
   /**
    * @brief Send a single goal to the GoalManager.

@@ -99,7 +99,8 @@ public:
   void on_activate();
 
   /// @brief At the start of each RT cycle, at \p now: monitors it, publishes the heartbeat when
-  /// due, and writes the safety channel's state to NavState. @return false if EasyNav must stop (see failure()), until on_activate().
+  /// due, and writes the safety channel's state to NavState. @return false if EasyNav must stop
+  /// (see failure()), until on_activate().
   bool cycle_rt(NavState & nav_state, RtMonitor::Clock::time_point now);
 
   /// @brief Why cycle_rt() asked to stop.

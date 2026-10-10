@@ -13,15 +13,17 @@
 // limitations under the License.
 
 /// \file
-/// \brief Declaration of the LocalizerNode class, a ROS 2 lifecycle node for localization tasks in Easy Navigation.
+/// \brief Declaration of the LocalizerNode class, a ROS 2 lifecycle node for localization tasks in
+/// Easy Navigation.
 
 #ifndef EASYNAV_LOCALIZER__LOCALIZERNODE_HPP_
 #define EASYNAV_LOCALIZER__LOCALIZERNODE_HPP_
 
+#include <memory>
+
 #include "rclcpp/macros.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 #include "easynav_core/PluginSwitcher.hpp"
-
 #include "easynav_core/LocalizerMethodBase.hpp"
 #include "easynav_common/types/NavState.hpp"
 

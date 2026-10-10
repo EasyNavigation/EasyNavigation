@@ -13,14 +13,14 @@
 // limitations under the License.
 
 
-#ifndef EASYNAV_COMMON_TYPES__RTTFBUFFER_HPP_
-#define EASYNAV_COMMON_TYPES__RTTFBUFFER_HPP_
+#ifndef EASYNAV_COMMON__RTTFBUFFER_HPP_
+#define EASYNAV_COMMON__RTTFBUFFER_HPP_
 
 #include <mutex>
+#include <memory>
 
 #include "easynav_common/Singleton.hpp"
 #include "easynav_common/types/TFInfo.hpp"
-
 #include "tf2_ros/buffer.hpp"
 
 namespace easynav
@@ -38,7 +38,7 @@ public:
   : tf2_ros::Buffer(clock)
   {}
 
-  explicit RTTFBuffer()
+  RTTFBuffer()
   : Buffer(std::make_shared<rclcpp::Clock>(RCL_ROS_TIME))
   {
     RCLCPP_WARN(
@@ -84,4 +84,4 @@ private:
 }  // namespace easynav
 
 
-#endif  // EASYNAV_COMMON_TYPES__RTTFBUFFER_HPP_
+#endif  // EASYNAV_COMMON__RTTFBUFFER_HPP_
