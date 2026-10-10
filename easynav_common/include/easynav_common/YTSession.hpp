@@ -13,8 +13,8 @@
 // limitations under the License.
 
 
-#ifndef EASYNAV_COMMON_TYPES__YTSESSION_HPP_
-#define EASYNAV_COMMON_TYPES__YTSESSION_HPP_
+#ifndef EASYNAV_COMMON__YTSESSION_HPP_
+#define EASYNAV_COMMON__YTSESSION_HPP_
 
 #include <algorithm>
 #include <string>
@@ -86,4 +86,4 @@ private:
 #endif
 
 
-#endif  // EASYNAV_COMMON_TYPES__YTSESSION_HPP_
+#endif  // EASYNAV_COMMON__YTSESSION_HPP_

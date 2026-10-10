@@ -162,7 +162,7 @@ SensorsNode::on_configure([[maybe_unused]] const rclcpp_lifecycle::State & state
     handler_list_.push_back(handler);
     // Store group only if specified (if param exists)
     if (group != "") {
-      // TODO: This assumes that the handler uses the sensor name to write in the
+      // TODO(butakus): This assumes that the handler uses the sensor name to write in the
       // NavState and it assumes it sets only one value
       groups_[group].emplace_back(handler->get_sensor_name());
     }
@@ -278,11 +278,11 @@ SensorsNode::check_data_age(
       continue;  // A handler that does not expose its perception is not checked.
     }
     DataState state = DataState::FRESH;
+    const bool expired = perception->stamp.get_clock_type() == now.get_clock_type() &&
+      (now - perception->stamp).seconds() > forget_time_;
     if (perception->stamp.nanoseconds() == 0 && !perception->valid) {
       state = DataState::NO_DATA;
-    } else if (perception->stamp.get_clock_type() == now.get_clock_type() &&
-      (now - perception->stamp).seconds() > forget_time_)
-    {
+    } else if (expired) {
       perception->valid = false;  // Nothing uses it until new data arrives.
       state = DataState::STALE;
     } else if (!perception->valid) {

@@ -31,8 +31,8 @@
 
 #include "gtest/gtest.h"
 
-/// \brief Subclass of SensorsNode that exposes the protected groups_ and handler_list_ for unit testing.
-/// Not part of the production API: only instantiated in test code.
+/// \brief Subclass of SensorsNode that exposes the protected groups_ and handler_list_ for unit
+/// testing. Not part of the production API: only instantiated in test code.
 class SensorsNodeForTesting : public easynav::SensorsNode
 {
 public:
@@ -587,7 +587,8 @@ TEST_F(SensorsNodeTestCase, percept_fuse_laserscan)
 
     ASSERT_NE(fused_perception, nullptr);
 
-    // TODO: Revisit after deciding what to do with the valid flag and the forget_time param
+    // TODO(butakus): Revisit after deciding what to do with the valid flag and the forget_time
+    // param
     // pcl::PointCloud<pcl::PointXYZ> fused_pcl;
     // pcl::fromROSMsg(*fused_perception, fused_pcl);
     // ASSERT_EQ(fused_pcl.points.size(), 16u);
@@ -596,7 +597,6 @@ TEST_F(SensorsNodeTestCase, percept_fuse_laserscan)
     //   ASSERT_EQ(p.z, 1.0);
     // }
   }
-
 }
 
 TEST_F(SensorsNodeTestCase, percept_pc2)
@@ -666,7 +666,7 @@ TEST_F(SensorsNodeTestCase, percept_pc2)
   ASSERT_EQ(perceptions[0]->frame_id, "base_lidar3d");
   ASSERT_EQ(perceptions[0]->valid, true);
 
-  // TODO: Re-check forget_time
+  // TODO(butakus): Re-check forget_time
   // {
   //   auto start = test_node->now();
   //   while (test_node->now() - start < 1s) {

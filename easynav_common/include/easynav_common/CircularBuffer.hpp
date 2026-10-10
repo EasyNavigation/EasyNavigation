@@ -18,6 +18,7 @@
 #include <vector>
 #include <mutex>
 #include <cstddef>
+#include <utility>
 
 namespace easynav
 {

@@ -13,19 +13,17 @@
 // limitations under the License.
 
 
-#include "gtest/gtest.h"
 #include <memory>
 #include <vector>
 #include <cmath>
 #include <thread>
 #include <chrono>
 
+#include "gtest/gtest.h"
 #include "tf2_ros/transform_listener.hpp"
-
 #include "easynav_sensors/types/PointPerception.hpp"
 #include "easynav_common/RTTFBuffer.hpp"
 #include "easynav_common/TransformListener.hpp"
-
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 
@@ -497,11 +495,11 @@ TEST_F(PerceptionsOpsTest, FromSinglePerception_AddAndFuseWithTFDense)
   const int rings = 128;
   const int points_per_ring = 2000;
   for (int r = 0; r < rings; r++) {
-    float elev = -15.0f + 30.0f * (float(r) / float(rings));
+    float elev = -15.0f + 30.0f * (static_cast<float>(r) / static_cast<float>(rings));
     float elev_rad = elev * M_PI / 180.0f;
 
     for (int i = 0; i < points_per_ring; i++) {
-      float azim = float(i) * 0.18f;
+      float azim = static_cast<float>(i) * 0.18f;
       float azim_rad = azim * M_PI / 180.0f;
 
       float dist = 10.0f + 5.0f * std::sin(i * 0.002f);
@@ -517,11 +515,11 @@ TEST_F(PerceptionsOpsTest, FromSinglePerception_AddAndFuseWithTFDense)
   pcl::PointCloud<pcl::PointXYZ> dense_cloud_2;
   dense_cloud_2.reserve(250000);
   for (int r = 0; r < rings; r++) {
-    float elev = -15.0f + 30.0f * (float(r) / float(rings));
+    float elev = -15.0f + 30.0f * (static_cast<float>(r) / static_cast<float>(rings));
     float elev_rad = elev * M_PI / 180.0f;
 
     for (int i = 0; i < points_per_ring; i++) {
-      float azim = float(i) * 0.18f;
+      float azim = static_cast<float>(i) * 0.18f;
       float azim_rad = azim * M_PI / 180.0f;
 
       float dist = 10.0f + 5.0f * std::sin(i * 0.002f);
@@ -697,11 +695,11 @@ TEST_F(PerceptionsOpsTest, All_pipeline)
   const int rings = 128;
   const int points_per_ring = 2000;
   for (int r = 0; r < rings; r++) {
-    float elev = -15.0f + 30.0f * (float(r) / float(rings));
+    float elev = -15.0f + 30.0f * (static_cast<float>(r) / static_cast<float>(rings));
     float elev_rad = elev * M_PI / 180.0f;
 
     for (int i = 0; i < points_per_ring; i++) {
-      float azim = float(i) * 0.18f;
+      float azim = static_cast<float>(i) * 0.18f;
       float azim_rad = azim * M_PI / 180.0f;
 
       float dist = 10.0f + 5.0f * std::sin(i * 0.002f);
@@ -717,11 +715,11 @@ TEST_F(PerceptionsOpsTest, All_pipeline)
   pcl::PointCloud<pcl::PointXYZ> dense_cloud_2;
   dense_cloud_2.reserve(250000);
   for (int r = 0; r < rings; r++) {
-    float elev = -15.0f + 30.0f * (float(r) / float(rings));
+    float elev = -15.0f + 30.0f * (static_cast<float>(r) / static_cast<float>(rings));
     float elev_rad = elev * M_PI / 180.0f;
 
     for (int i = 0; i < points_per_ring; i++) {
-      float azim = float(i) * 0.18f;
+      float azim = static_cast<float>(i) * 0.18f;
       float azim_rad = azim * M_PI / 180.0f;
 
       float dist = 10.0f + 5.0f * std::sin(i * 0.002f);

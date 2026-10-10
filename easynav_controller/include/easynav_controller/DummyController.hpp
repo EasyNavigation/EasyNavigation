@@ -44,7 +44,7 @@ public:
    * This method is called once during the configuration phase of the controller node,
    * and can be optionally overridden by derived classes to perform custom setup logic.
    */
-  virtual void on_initialize() override;
+  void on_initialize() override;
 
   /**
    * @brief Run the control method and update the control command.
@@ -53,7 +53,7 @@ public:
    *
    * @param nav_state The current state of the navigation system.
    */
-  virtual void update_rt(NavState & nav_state) override;
+  void update_rt(NavState & nav_state) override;
 
 private:
   /**

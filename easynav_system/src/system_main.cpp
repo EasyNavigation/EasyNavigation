@@ -43,7 +43,7 @@ namespace
 std::atomic_bool g_stop{false};
 std::atomic<int64_t> g_shutdown_requested_at_ns{0};
 
-void handle_shutdown_signal(int /*signum*/)
+void handle_shutdown_signal([[maybe_unused]] int signum)
 {
   constexpr int64_t kDebounceNs = 1'000'000'000;  // 1s
   const int64_t now_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(
@@ -211,7 +211,6 @@ int main(int argc, char ** argv)
     // Non-RT loop
     rclcpp::WallRate rate(freq);
     while (!g_stop.load(std::memory_order_relaxed) && !system_node->is_shutdown_requested()) {
-
       if (system_node->get_current_state().id() ==
         lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE)
       {

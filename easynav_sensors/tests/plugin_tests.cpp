@@ -17,17 +17,15 @@
 ///        correctness of all built-in PerceptionHandler plugins.
 
 #include <memory>
-#include <rclcpp/callback_group.hpp>
 #include <string>
 #include <vector>
 
+#include "rclcpp/callback_group.hpp"
 #include "pluginlib/class_loader.hpp"
-
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 #include "lifecycle_msgs/msg/transition.hpp"
 #include "lifecycle_msgs/msg/state.hpp"
-
 #include "easynav_sensors/SensorsNode.hpp"
 #include "easynav_sensors/types/Perceptions.hpp"
 #include "easynav_sensors/types/PointPerception.hpp"
@@ -36,15 +34,6 @@
 #include "easynav_sensors/types/ImagePerception.hpp"
 #include "easynav_sensors/types/DetectionsPerception.hpp"
 #include "easynav_common/types/NavState.hpp"
-
-// Concrete handler types needed for dynamic_cast checks.
-// These headers expose the handler class definitions.
-#include "easynav_sensors/types/PointPerception.hpp"
-#include "easynav_sensors/types/IMUPerception.hpp"
-#include "easynav_sensors/types/GNSSPerception.hpp"
-#include "easynav_sensors/types/ImagePerception.hpp"
-#include "easynav_sensors/types/DetectionsPerception.hpp"
-
 #include "gtest/gtest.h"
 
 using easynav::PerceptionHandler;
@@ -59,8 +48,8 @@ static const std::vector<std::string> kAllPlugins = {
   "easynav_sensors/DetectionsPerceptionHandler",
 };
 
-/// \brief Subclass of SensorsNode that exposes the protected groups_ and handler_list_ for unit testing.
-/// Not part of the production API: only instantiated in test code.
+/// \brief Subclass of SensorsNode that exposes the protected groups_ and handler_list_ for unit
+/// testing. Not part of the production API: only instantiated in test code.
 class SensorsNodeForTesting : public easynav::SensorsNode
 {
 public:

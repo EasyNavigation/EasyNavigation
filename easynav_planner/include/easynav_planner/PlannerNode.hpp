@@ -13,12 +13,14 @@
 // limitations under the License.
 
 /// \file
-/// \brief Declaration of the PlannerNode class, a ROS 2 lifecycle node for computing navigation paths in Easy Navigation.
+/// \brief Declaration of the PlannerNode class, a ROS 2 lifecycle node for computing navigation
+/// paths in Easy Navigation.
 
 #ifndef EASYNAV_PLANNER__PLANNERNODE_HPP_
 #define EASYNAV_PLANNER__PLANNERNODE_HPP_
 
 #include <optional>
+#include <memory>
 
 #include "rclcpp/macros.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"

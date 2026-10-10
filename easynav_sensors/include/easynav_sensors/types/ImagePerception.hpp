@@ -15,17 +15,19 @@
 /// \file
 /// \brief Defines data structures and utilities for representing and processing image perceptions.
 ///
-/// This file contains the definition of the ImagePerception class, which holds image sensor data (as cv::Mat),
-/// and the ImagePerceptionHandler class, which handles subscriptions to image messages and transforms them into
-/// ImagePerception instances. It also defines an alias for a collection of such perceptions.
+/// This file contains the definition of the ImagePerception class, which holds image sensor data
+/// (as cv::Mat), and the ImagePerceptionHandler class, which handles subscriptions to image
+/// messages and transforms them into ImagePerception instances. It also defines an alias for a
+/// collection of such perceptions.
 
-#ifndef EASYNAV_SENSORS_TYPES__IMAGEPERCEPTIONS_HPP_
-#define EASYNAV_SENSORS_TYPES__IMAGEPERCEPTIONS_HPP_
+#ifndef EASYNAV_SENSORS__TYPES__IMAGEPERCEPTION_HPP_
+#define EASYNAV_SENSORS__TYPES__IMAGEPERCEPTION_HPP_
 
 #include <mutex>
 #include <string>
 #include <utility>
 #include <vector>
+#include <memory>
 
 #if __has_include("cv_bridge/cv_bridge.hpp")
 #include "cv_bridge/cv_bridge.hpp"
@@ -43,7 +45,8 @@ namespace easynav
 /// \class ImagePerception
 /// \brief Represents a single image perception from a sensor.
 ///
-/// Inherits from PerceptionBase and stores an OpenCV image (cv::Mat) along with metadata such as timestamp and frame_id.
+/// Inherits from PerceptionBase and stores an OpenCV image (cv::Mat) along with metadata such as
+/// timestamp and frame_id.
 class ImagePerception : public PerceptionBase
 {
 public:
@@ -103,8 +106,8 @@ public:
 
   /// \brief Image data received from the sensor.
   ///
-  /// The matrix layout follows OpenCV conventions. The encoding and channel depth depend on upstream conversion
-  /// (typically via cv_bridge).
+  /// The matrix layout follows OpenCV conventions. The encoding and channel depth depend on
+  /// upstream conversion (typically via cv_bridge).
   cv::Mat data;
 
   /// \brief Atomically overwrites stamp/frame_id/data with a successfully decoded image and
@@ -150,10 +153,11 @@ protected:
 };
 
 /// \class ImagePerceptionHandler
-/// \brief Handles the creation and updating of ImagePerception instances from sensor_msgs::msg::Image messages.
+/// \brief Handles the creation and updating of ImagePerception instances from
+/// sensor_msgs::msg::Image messages.
 ///
-/// This class provides methods to register subscriptions to image topics, decode incoming messages into cv::Mat
-/// using cv_bridge, and update target ImagePerception instances.
+/// This class provides methods to register subscriptions to image topics, decode incoming messages
+/// into cv::Mat using cv_bridge, and update target ImagePerception instances.
 class ImagePerceptionHandler : public PerceptionHandler
 {
 public:
@@ -193,9 +197,10 @@ using ImagePerceptions =
 
 /// \brief Retrieves the latest timestamp among a set of image-based perceptions.
 /// \param perceptions Container of image-based perceptions.
-/// \return The most recent timestamp found in \p perceptions, or a default-constructed \c rclcpp::Time if \p perceptions is empty.
+/// \return The most recent timestamp found in \p perceptions, or a default-constructed
+/// \c rclcpp::Time if \p perceptions is empty.
 rclcpp::Time get_latest_image_perceptions_stamp(const ImagePerceptions & perceptions);
 
 }  // namespace easynav
 
-#endif  // EASYNAV_SENSORS_TYPES__IMAGEPERCEPTIONS_HPP_
+#endif  // EASYNAV_SENSORS__TYPES__IMAGEPERCEPTION_HPP_

@@ -148,7 +148,7 @@ TEST_F(PerceptionLockingTestCase, ImuSelfCopyAssignmentIsNoop)
   msg.linear_acceleration.x = 1.0;
   p.set_data(msg, rclcpp::Time(1, 0, RCL_ROS_TIME), "imu_link");
 
-  p = p;  // NOLINT(clang-diagnostic-self-assign-overloaded)
+  p = p;  // NOLINT
 
   EXPECT_EQ(p.frame_id, "imu_link");
   EXPECT_DOUBLE_EQ(p.data.linear_acceleration.x, 1.0);

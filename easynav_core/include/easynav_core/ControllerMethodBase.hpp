@@ -19,6 +19,7 @@
 #define EASYNAV_CORE__CONTROLLERMETHODBASE_HPP_
 
 #include <string>
+#include <memory>
 
 #include "easynav_common/types/NavState.hpp"
 #include "easynav_core/MethodBase.hpp"

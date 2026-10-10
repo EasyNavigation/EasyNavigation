@@ -12,33 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <execinfo.h>
+#include <cxxabi.h>
+
 #include <cmath>
 #include <string>
 #include <vector>
 #include <optional>
-
-#include <execinfo.h>
-
-#include <cxxabi.h>
-
 #include <cstdlib>
 #include <sstream>
 #include <chrono>
 
 #include "pcl_conversions/pcl_conversions.h"
-
 #include "pcl/point_cloud.h"
 #include "pcl/point_types.h"
-
 #include "tf2_geometry_msgs/tf2_geometry_msgs.hpp"
-
 #include "sensor_msgs/msg/laser_scan.hpp"
 #include "sensor_msgs/msg/point_cloud2.hpp"
-
 #include "rclcpp/clock.hpp"
 #include "rclcpp/time.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
-
 #include "easynav_common/Parameters.hpp"
 #include "easynav_sensors/types/PointPerception.hpp"
 #include "easynav_common/RTTFBuffer.hpp"
@@ -145,7 +138,6 @@ void PointPerceptionHandler::on_initialize()
     throw std::runtime_error(
             "Unsupported message type for PointPerceptionHandler [" + msg_type + "]");
   }
-
 }
 
 bool PointPerceptionHandler::cycle_rt(std::shared_ptr<NavState> nav_state)

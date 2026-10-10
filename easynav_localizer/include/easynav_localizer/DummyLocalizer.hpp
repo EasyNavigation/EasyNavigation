@@ -13,10 +13,13 @@
 // limitations under the License.
 
 /// \file
-/// \brief Declaration of the DummyLocalizer class, a default plugin implementation for localization.
+/// \brief Declaration of the DummyLocalizer class, a default plugin implementation for
+/// localization.
 
 #ifndef EASYNAV_LOCALIZER__DUMMYLOCALIZER_HPP_
 #define EASYNAV_LOCALIZER__DUMMYLOCALIZER_HPP_
+
+#include <memory>
 
 #include "nav_msgs/msg/odometry.hpp"
 #include "easynav_core/LocalizerMethodBase.hpp"
@@ -44,7 +47,7 @@ public:
   /**
    * @brief Plugin-specific initialization logic.
    */
-  virtual void on_initialize() override;
+  void on_initialize() override;
 
   /**
    * @brief Update the localization using the current navigation state.
@@ -53,7 +56,7 @@ public:
    *
    * @param nav_state The current navigation state.
    */
-  virtual void update_rt(NavState & nav_state) override;
+  void update_rt(NavState & nav_state) override;
 
   /**
    * @brief Update the localization using the current navigation state.
@@ -62,7 +65,7 @@ public:
    *
    * @param nav_state The current navigation state.
    */
-  virtual void update(NavState & nav_state) override;
+  void update(NavState & nav_state) override;
 
 private:
   std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
