@@ -219,6 +219,10 @@ private:
   /// @brief When the smoother last stepped (node clock), to know how much time it covers.
   std::optional<rclcpp::Time> last_smoother_step_;
 
+  /// @brief Whether the last published command was an exact zero: at rest, a zero restamped
+  /// every cycle is not republished (only the keepalive does).
+  bool last_published_zero_ {false};
+
   /**
    * @brief Callback group intended for real-time tasks.
    */
