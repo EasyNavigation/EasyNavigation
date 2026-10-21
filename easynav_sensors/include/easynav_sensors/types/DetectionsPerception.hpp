@@ -16,20 +16,20 @@
 /// \brief Defines data structures and utilities for representing and processing image perceptions.
 ///
 /// This file contains the definition of the DetectionsPerceptions class
-/// and the DetectionsPerceptionsHandler class, which handles subscriptions to image messages and transforms them into
-/// DetectionsPerceptions instances. It also defines an alias for a collection of such perceptions.
+/// and the DetectionsPerceptionsHandler class, which handles subscriptions to image messages and
+/// transforms them into DetectionsPerceptions instances. It also defines an alias for a collection
+/// of such perceptions.
 
-#ifndef EASYNAV_SENSORS_TYPES__DETECTIONSPERCEPTIONS_HPP_
-#define EASYNAV_SENSORS_TYPES__DETECTIONSPERCEPTIONS_HPP_
+#ifndef EASYNAV_SENSORS__TYPES__DETECTIONSPERCEPTION_HPP_
+#define EASYNAV_SENSORS__TYPES__DETECTIONSPERCEPTION_HPP_
 
 #include <mutex>
 #include <string>
 #include <vector>
+#include <memory>
 
 #include "vision_msgs/msg/detection3_d_array.hpp"
-
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
-
 #include "easynav_sensors/types/Perceptions.hpp"
 
 namespace easynav
@@ -38,7 +38,8 @@ namespace easynav
 /// \class DetectionsPerceptions
 /// \brief Represents a single image perception from a sensor.
 ///
-/// Inherits from PerceptionBase and stores an OpenCV image (cv::Mat) along with metadata such as timestamp and frame_id.
+/// Inherits from PerceptionBase and stores an OpenCV image (cv::Mat) along with metadata such as
+/// timestamp and frame_id.
 class DetectionsPerception : public PerceptionBase
 {
 public:
@@ -130,10 +131,11 @@ protected:
 };
 
 /// \class DetectionsPerceptionsHandler
-/// \brief Handles the creation and updating of DetectionsPerceptions instances from sensor_msgs::msg::Image messages.
+/// \brief Handles the creation and updating of DetectionsPerceptions instances from
+/// sensor_msgs::msg::Image messages.
 ///
-/// This class provides methods to register subscriptions to image topics, decode incoming messages into cv::Mat
-/// using cv_bridge, and update target DetectionsPerceptions instances.
+/// This class provides methods to register subscriptions to image topics, decode incoming messages
+/// into cv::Mat using cv_bridge, and update target DetectionsPerceptions instances.
 class DetectionsPerceptionsHandler : public PerceptionHandler
 {
 public:
@@ -173,9 +175,10 @@ using DetectionsPerceptions =
 
 /// \brief Retrieves the latest timestamp among a set of detection-based perceptions.
 /// \param perceptions Container of detection-based perceptions.
-/// \return The most recent timestamp found in \p perceptions, or a default-constructed \c rclcpp::Time if \p perceptions is empty.
+/// \return The most recent timestamp found in \p perceptions, or a default-constructed
+/// \c rclcpp::Time if \p perceptions is empty.
 rclcpp::Time get_latest_detections_perceptions_stamp(const DetectionsPerceptions & perceptions);
 
 }  // namespace easynav
 
-#endif  // EASYNAV_SENSORS_TYPES__DETECTIONSPERCEPTIONS_HPP_
+#endif  // EASYNAV_SENSORS__TYPES__DETECTIONSPERCEPTION_HPP_

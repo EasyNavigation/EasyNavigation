@@ -19,12 +19,16 @@
 /// - `PerceptionBase`: base class for sensor data.
 /// - `PerceptionPtr`: utility for holding perception state and its subscription.
 /// - `get_perceptions`: helper to extract typed collections from a heterogeneous container.
-/// - `PerceptionHandler`: abstract base class for group-specific sensor handlers (pluginlib plugin).
+/// - `PerceptionHandler`: abstract base class for group-specific sensor handlers (pluginlib
+///   plugin).
 
-#ifndef EASYNAV_SENSORS_TYPES__PERCEPTIONS_HPP_
-#define EASYNAV_SENSORS_TYPES__PERCEPTIONS_HPP_
+#ifndef EASYNAV_SENSORS__TYPES__PERCEPTIONS_HPP_
+#define EASYNAV_SENSORS__TYPES__PERCEPTIONS_HPP_
 
 #include <string>
+#include <memory>
+#include <utility>
+#include <vector>
 
 #include "rclcpp/time.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
@@ -64,14 +68,19 @@ public:
 using PerceptionBasePtr = std::shared_ptr<PerceptionBase>;
 
 
-/// \brief Extracts a homogeneous collection of perceptions of type \p T from a heterogeneous vector.
+/// \brief Extracts a homogeneous collection of perceptions of type \p T from a heterogeneous
+/// vector.
 ///
-/// This helper iterates the input vector of \ref PerceptionBasePtr and attempts a `std::dynamic_pointer_cast<T>`
-/// and includes only those perceptions that match (homogeneous view).
+/// This helper iterates the input vector of \ref PerceptionBasePtr and attempts a
+/// `std::dynamic_pointer_cast<T>` and includes only those perceptions that match (homogeneous
+/// view).
 ///
-/// \tparam T Target perception type. Must inherit from \ref PerceptionBase. Defaults to \ref PerceptionBase.
-/// \param src Source vector containing pointers to heterogeneous perceptions ( \ref PerceptionBasePtr ).
-/// \return A vector of `std::shared_ptr<T>` containing the matching perceptions, in the same order as \p src.
+/// \tparam T Target perception type. Must inherit from \ref PerceptionBase. Defaults to
+/// \ref PerceptionBase.
+/// \param src Source vector containing pointers to heterogeneous perceptions (
+/// \ref PerceptionBasePtr ).
+/// \return A vector of `std::shared_ptr<T>` containing the matching perceptions, in the same order
+/// as \p src.
 template<typename T = PerceptionBase>
 inline std::vector<std::shared_ptr<T>>
 get_perceptions(const std::vector<PerceptionBasePtr> & src)
@@ -97,14 +106,13 @@ get_perceptions(const std::vector<PerceptionBasePtr> & src)
 /// \class PerceptionHandler
 /// \brief Abstract base class for pluginlib-based sensor perception handlers.
 ///
-/// Each handler is responsible for a single sensor input (e.g., "lidar_center", "image_color", "imu_0").
-/// Concrete handlers are registered as pluginlib plugins and loaded at runtime.
-/// A user can implement a new sensor input handler by deriving from this class and registering it
-/// as a plugin in the corresponding package's plugin XML file.
-/// The handler is the owner of the sensor data.
-/// It is also responsible for reserving memory to hold the sensor data and
-/// must keep the data address consistent during the whole execution.
-/// The handler must populate the NavState with the sensor data
+/// Each handler is responsible for a single sensor input (e.g., "lidar_center", "image_color",
+/// "imu_0"). Concrete handlers are registered as pluginlib plugins and loaded at runtime. A user
+/// can implement a new sensor input handler by deriving from this class and registering it as a
+/// plugin in the corresponding package's plugin XML file. The handler is the owner of the sensor
+/// data. It is also responsible for reserving memory to hold the sensor data and must keep the data
+/// address consistent during the whole execution. The handler must populate the NavState with the
+/// sensor data
 class PerceptionHandler
 {
 public:
@@ -169,4 +177,4 @@ protected:
 
 }  // namespace easynav
 
-#endif  // EASYNAV_SENSORS_TYPES__PERCEPTIONS_HPP_
+#endif  // EASYNAV_SENSORS__TYPES__PERCEPTIONS_HPP_

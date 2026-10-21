@@ -19,8 +19,11 @@
 /// where values can be of any type and stored/retrieved via smart pointers.
 /// It is designed for concurrent, type-safe access in robotics applications.
 
-#ifndef EASYNAV__TYPES__NAVSTATE_HPP_
-#define EASYNAV__TYPES__NAVSTATE_HPP_
+#ifndef EASYNAV_COMMON__TYPES__NAVSTATE_HPP_
+#define EASYNAV_COMMON__TYPES__NAVSTATE_HPP_
+
+#include <execinfo.h>
+#include <cxxabi.h>
 
 #include <algorithm>
 #include <string>
@@ -34,11 +37,9 @@
 #include <type_traits>
 #include <iostream>
 #include <functional>
-#include <execinfo.h>
 #include <typeinfo>
 #include <vector>
-#include <cxxabi.h>
-#include <execinfo.h>
+#include <set>
 
 namespace easynav
 {
@@ -102,7 +103,8 @@ public:
   /// \tparam T Value type. Must be copy-assignable.
   /// \param key Key associated with the value.
   /// \param value Value to store (copied into internal storage).
-  /// \throws std::runtime_error If \p key exists with a different stored type; includes a stack trace.
+  /// \throws std::runtime_error If \p key exists with a different stored type; includes a stack
+  /// trace.
   template<typename T>
   void set(const std::string & key, const T & value)
   {
@@ -136,7 +138,8 @@ public:
   /// \tparam T Value type.
   /// \param key Key associated with the value.
   /// \param value_ptr Shared pointer to the value to store.
-  /// \throws std::runtime_error If \p key exists with a different stored type; includes a stack trace.
+  /// \throws std::runtime_error If \p key exists with a different stored type; includes a stack
+  /// trace.
   template<typename T>
   void set(const std::string & key, const std::shared_ptr<T> value_ptr)
   {
@@ -161,14 +164,16 @@ public:
     }
   }
 
-  /// \brief Sets a new group of values as a list of strings. It aslo stores the group keys as a value for introspection/debugging purposes.
-  /// The group consists of a vector of keys, where each key points to a NavState element.
+  /// \brief Sets a new group of values as a list of strings. It aslo stores the group keys as a
+  /// value for introspection/debugging purposes. The group consists of a vector of keys, where each
+  /// key points to a NavState element.
   ///
   /// If \p key does not exist, a new list is created and stored.
   /// If \p key exists, the stored list is overwritten in place.
   ///
   /// \param key Key associated with the group.
-  /// \param group_keys Value to store. The list of other keys in the NavState that compose this group.
+  /// \param group_keys Value to store. The list of other keys in the NavState that compose this
+  /// group.
   void set_group(const std::string & key, const std::vector<std::string> & group_keys)
   {
     std::lock_guard<std::mutex> lock(group_mutex_);
@@ -566,7 +571,8 @@ private:
   /// \brief Internal storage of values as type-erased shared pointers.
   mutable std::unordered_map<std::string, std::shared_ptr<void>> values_;
 
-  /// \brief Group of NavState values, indexed by their keys. Useful to get multiple sensors together.
+  /// \brief Group of NavState values, indexed by their keys. Useful to get multiple sensors
+  /// together.
   mutable std::unordered_map<std::string, std::vector<std::string>> groups_;
 
   /// \brief Stored type hash (from \c typeid(T).hash_code()) per key.
@@ -597,4 +603,4 @@ private:
 
 }  // namespace easynav
 
-#endif  // EASYNAV__TYPES__NAVSTATE_HPP_
+#endif  // EASYNAV_COMMON__TYPES__NAVSTATE_HPP_

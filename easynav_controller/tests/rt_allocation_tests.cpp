@@ -57,7 +57,8 @@ void operator delete(void * p, std::size_t) noexcept {std::free(p);}
 namespace
 {
 
-// One RT cycle of the velocity path, as ControllerNode and a component taking over the motion run it.
+// One RT cycle of the velocity path, as ControllerNode and a component taking over the motion run
+// it.
 void rt_cycle(
   easynav::NavState & nav_state, easynav::VelocityMux & mux, easynav::VelocitySmoother & smoother,
   const geometry_msgs::msg::TwistStamped & controller_cmd,

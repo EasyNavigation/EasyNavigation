@@ -125,7 +125,8 @@ class GoalManagerClient:
         self._control_pub.publish(msg)
 
     def pause(self) -> None:
-        """Pause whatever navigation is currently active.
+        """
+        Pause whatever navigation is currently active.
 
         Unlike cancel(), this is not restricted to a goal this client itself
         commanded: any GoalManagerClient may pause/resume the active
@@ -163,7 +164,8 @@ class GoalManagerClient:
         return self.paused
 
     def wait_for_server(self, timeout_sec: float = 1.0) -> bool:
-        """Wait until this client is fully matched with a running GoalManager.
+        """
+        Wait until this client is fully matched with a running GoalManager.
 
         A short-lived client (e.g. a CLI invocation) that publishes right
         after construction can otherwise lose its very first message -- or

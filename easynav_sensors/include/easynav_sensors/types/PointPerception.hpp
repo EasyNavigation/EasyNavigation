@@ -13,35 +13,36 @@
 // limitations under the License.
 
 /// \file
-/// \brief Defines data structures and utilities for representing and processing point-based sensor perceptions.
+/// \brief Defines data structures and utilities for representing and processing point-based sensor
+/// perceptions.
 ///
 /// This header provides:
 /// - \c PointPerception: a concrete class for point cloud data.
 /// - \c PointPerceptionHandler: a handler for \c sensor_msgs::msg::LaserScan and
 ///   \c sensor_msgs::msg::PointCloud2 messages.
-/// - \c PointPerceptionsOpsView: an efficient view-based operator class for processing multiple perceptions
-///   (filtering, downsampling, fusion, and collapsing) without duplicating memory.
+/// - \c PointPerceptionsOpsView: an efficient view-based operator class for processing multiple
+///   perceptions (filtering, downsampling, fusion, and collapsing) without duplicating memory.
 /// - Conversion utilities between ROS messages and PCL point clouds.
 
-#ifndef EASYNAV_SENSORS_TYPES__POINTPERCEPTIONS_HPP_
-#define EASYNAV_SENSORS_TYPES__POINTPERCEPTIONS_HPP_
+#ifndef EASYNAV_SENSORS__TYPES__POINTPERCEPTION_HPP_
+#define EASYNAV_SENSORS__TYPES__POINTPERCEPTION_HPP_
 
 #include <string>
 #include <vector>
 #include <optional>
 #include <mutex>
+#include <memory>
+#include <tuple>
+#include <utility>
 
 #include "tf2/LinearMath/Transform.hpp"
 #include "pcl/point_cloud.h"
 #include "pcl/point_types.h"
 #include "pcl/PointIndices.h"
-
 #include "sensor_msgs/msg/laser_scan.hpp"
 #include "sensor_msgs/msg/point_cloud2.hpp"
-
 #include "rclcpp/time.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
-
 #include "easynav_sensors/types/Perceptions.hpp"
 #include "easynav_common/CircularBuffer.hpp"
 #include "easynav_common/RTTFBuffer.hpp"
@@ -90,7 +91,8 @@ public:
 
   /// \brief Checks if a ROS message type is supported by this perception.
   /// \param t Fully-qualified ROS 2 message type name (e.g., \c "sensor_msgs/msg/PointCloud2").
-  /// \return \c true if \p t is \c sensor_msgs/msg/LaserScan or \c sensor_msgs/msg/PointCloud2, otherwise \c false.
+  /// \return \c true if \p t is \c sensor_msgs/msg/LaserScan or \c sensor_msgs/msg/PointCloud2,
+  /// otherwise \c false.
   static inline bool supports_msg_type(std::string_view t)
   {
     return t == "sensor_msgs/msg/LaserScan" ||
@@ -194,7 +196,7 @@ public:
     // ------------------------------------------------------------------
     if (pending_available_) {
       PointPerceptionBufferType pending_item;
-      pending_item.data = std::move(pending_cloud_); // avoid deep copy
+      pending_item.data = std::move(pending_cloud_);  // avoid deep copy
       pending_item.frame = pending_frame_;
       pending_item.stamp = pending_stamp_;
 
@@ -218,7 +220,7 @@ public:
     for (std::size_t i = 0; i < count; ++i) {
       PointPerceptionBufferType item;
       if (!buffer.pop(item)) {
-        break; // Defensive guard if pop() fails unexpectedly.
+        break;  // Defensive guard if pop() fails unexpectedly.
       }
       items.push_back(std::move(item));
     }
@@ -372,15 +374,18 @@ using PointPerceptions =
 
 /// \brief Retrieves the latest timestamp among a set of point-based perceptions.
 /// \param perceptions Container of point-based perceptions.
-/// \return The most recent timestamp found in \p perceptions, or a default-constructed \c rclcpp::Time if \p perceptions is empty.
+/// \return The most recent timestamp found in \p perceptions, or a default-constructed
+/// \c rclcpp::Time if \p perceptions is empty.
 rclcpp::Time get_latest_point_perceptions_stamp(const PointPerceptions & perceptions);
 
 /// \class PointPerceptionsOpsView
-/// \brief Provides efficient, non-destructive, chainable operations over a set of point-based perceptions.
+/// \brief Provides efficient, non-destructive, chainable operations over a set of point-based
+/// perceptions.
 ///
-/// This view enables filtering, downsampling, fusion, and dimensional collapsing across multiple point clouds
-/// without duplicating the underlying perceptions. Most operations work lazily by keeping index-based selections
-/// and transformation options, and only materialize a new point cloud when required (for example in as_points()).
+/// This view enables filtering, downsampling, fusion, and dimensional collapsing across multiple
+/// point clouds without duplicating the underlying perceptions. Most operations work lazily by
+/// keeping index-based selections and transformation options, and only materialize a new point
+/// cloud when required (for example in as_points()).
 class PointPerceptionsOpsView
 {
 public:
@@ -497,8 +502,8 @@ public:
 
   /// \brief Configures fusion of all perceptions into a common frame.
   ///
-  /// This method does not immediately build a fused point cloud. Instead, it stores the target frame
-  /// and the required transforms so that subsequent operations (for example filter) and final
+  /// This method does not immediately build a fused point cloud. Instead, it stores the target
+  /// frame and the required transforms so that subsequent operations (for example filter) and final
   /// materialization (as_points()) work in \p target_frame without duplicating the underlying data.
   ///
   /// \param target_frame Frame ID to which all clouds are conceptually transformed.
@@ -508,10 +513,11 @@ public:
   /// \return Reference to \c *this to allow chaining.
   PointPerceptionsOpsView & fuse(const std::string & target_frame, bool exact_time = false);
 
-  /// \brief Configures fusion of all perceptions into a common frame, returning the effective stamp.
+  /// \brief Configures fusion of all perceptions into a common frame, returning the effective
+  /// stamp.
   ///
-  /// This method does not immediately build a fused point cloud. Instead, it stores the target frame
-  /// and the required transforms so that subsequent operations (for example filter) and final
+  /// This method does not immediately build a fused point cloud. Instead, it stores the target
+  /// frame and the required transforms so that subsequent operations (for example filter) and final
   /// materialization (as_points()) work in \p target_frame without duplicating the underlying data.
   ///
   /// The effective timestamp used for TF lookups is returned via the \p stamp parameter.
@@ -519,7 +525,8 @@ public:
   /// If \p exact_time is \c true, \p stamp is set to the timestamp of the most recent perception
   /// among those being fused; otherwise, it is set to the time at which the TF lookup is performed.
   /// \param target_frame Frame ID to which all clouds are conceptually transformed.
-  /// \param stamp Reference to a \c rclcpp::Time variable where the effective timestamp will be stored.
+  /// \param stamp Reference to a \c rclcpp::Time variable where the effective timestamp will be
+  /// stored.
   /// \param exact_time If \c true, TF lookups use the exact timestamp of each perception;
   ///        if \c false (default), the most recent available transform is used.
   /// \return Reference to \c *this to allow chaining.
@@ -562,10 +569,14 @@ private:
   std::vector<pcl::PointIndices> indices_;     ///< Filtered indices per perception.
 
   // Lazy fusion state
-  bool has_target_frame_ {false};              ///< True if a common target frame has been configured.
-  std::string target_frame_;                   ///< Target frame configured by fuse().
-  std::vector<tf2::Transform> tf_transforms_;  ///< Cached transforms from perception frame to target frame.
-  std::vector<bool> tf_valid_;                 ///< True if corresponding transform is valid.
+  /// True if a common target frame has been configured.
+  bool has_target_frame_ {false};
+  /// Target frame configured by fuse().
+  std::string target_frame_;
+  /// Cached transforms from perception frame to target frame.
+  std::vector<tf2::Transform> tf_transforms_;
+  /// True if corresponding transform is valid.
+  std::vector<bool> tf_valid_;
 
   // Lazy collapse state
   bool collapse_x_ {false};                    ///< Collapse X dimension if true.
@@ -584,4 +595,4 @@ private:
 
 }  // namespace easynav
 
-#endif  // EASYNAV_SENSORS_TYPES__POINTPERCEPTIONS_HPP_
+#endif  // EASYNAV_SENSORS__TYPES__POINTPERCEPTION_HPP_

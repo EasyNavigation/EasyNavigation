@@ -677,6 +677,71 @@ TEST_F(ControllerNodeVelocityTest, NonFiniteCommandsAreNeverPublished)
   EXPECT_EQ(diag->level, diagnostic_msgs::msg::DiagnosticStatus::OK);
 }
 
+TEST_F(ControllerNodeVelocityTest, AtRestARestampedZeroIsNotRepublished)
+{
+  // Controllers with nothing to do write a zero stamped with the current time every cycle
+  make_active_node();
+  auto stop = [this](int k) {
+      auto c = cmd(0.0);
+      c.header.stamp = rclcpp::Time(1, static_cast<uint32_t>(k) * 1000000u);
+      return c;
+    };
+  auto cycle_with = [this](const geometry_msgs::msg::TwistStamped & c) {
+      easynav::velocity_command::propose(*nav_state_, easynav::VelocitySource::CONTROLLER, c);
+      node_->publish_cmd_vel_rt(nav_state_);
+      rclcpp::sleep_for(10ms);
+      exe_->spin_some();
+    };
+  for (int k = 0; k < 30; ++k) {
+    cycle_with(stop(k));
+  }
+  spin_for(50ms);
+  EXPECT_LE(received_.size(), 1u) << "at most the first zero";
+
+  // Moving, then stopping: the ramp down ends in an exact zero, published once
+  for (int k = 0; k < 50; ++k) {
+    auto c = cmd(0.5);
+    c.header.stamp = rclcpp::Time(2, static_cast<uint32_t>(k) * 1000000u);
+    cycle_with(c);
+  }
+  received_.clear();
+  for (int k = 0; k < 60; ++k) {
+    cycle_with(stop(100 + k));
+  }
+  spin_for(50ms);
+  ASSERT_GT(received_.size(), 2u) << "the braking ramp is published";
+  EXPECT_DOUBLE_EQ(received_.back(), 0.0);
+  EXPECT_EQ(std::count(received_.begin(), received_.end(), 0.0), 1) << "one zero, then quiet";
+
+  // And it moves again as soon as there is a command
+  received_.clear();
+  auto go = cmd(0.3);
+  go.header.stamp = rclcpp::Time(3, 0);
+  cycle_with(go);
+  spin_for(50ms);
+  ASSERT_FALSE(received_.empty());
+  EXPECT_GT(received_.back(), 0.0);
+}
+
+TEST_F(ControllerNodeVelocityTest, AtRestTheKeepaliveStillRepublishesTheRestampedZero)
+{
+  make_active_node({{"cmd_vel_keepalive_period", 0.05}});
+  for (int k = 0; k < 30; ++k) {
+    auto c = cmd(0.0);
+    c.header.stamp = rclcpp::Time(1, static_cast<uint32_t>(k) * 1000000u);
+    easynav::velocity_command::propose(*nav_state_, easynav::VelocitySource::CONTROLLER, c);
+    node_->publish_cmd_vel_rt(nav_state_);
+    rclcpp::sleep_for(10ms);
+    exe_->spin_some();
+  }
+  spin_for(50ms);
+  EXPECT_GE(received_.size(), 3u);
+  EXPECT_LE(received_.size(), 15u) << "only when the keepalive is due";
+  for (const auto v : received_) {
+    EXPECT_DOUBLE_EQ(v, 0.0);
+  }
+}
+
 TEST_F(ControllerNodeVelocityTest, KeepaliveRepublishesTheHeldCommand)
 {
   make_active_node({{"cmd_timeout", 0.0}, {"cmd_vel_keepalive_period", 0.05}});

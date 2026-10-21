@@ -42,13 +42,13 @@ public:
   /**
    * @brief Initialization hook.
    */
-  virtual void on_initialize() override;
+  void on_initialize() override;
 
   /**
    * @brief Dummy update method.
    * @param nav_state Current navigation state.
    */
-  virtual void update(NavState & nav_state) override;
+  void update(NavState & nav_state) override;
 
 private:
   /// @brief Stored path message (unused in dummy).

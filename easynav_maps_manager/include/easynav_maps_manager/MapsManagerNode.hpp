@@ -13,14 +13,16 @@
 // limitations under the License.
 
 /// \file
-/// \brief Declaration of the MapsManagerNode class, a ROS 2 lifecycle node for map handling in Easy Navigation.
+/// \brief Declaration of the MapsManagerNode class, a ROS 2 lifecycle node for map handling in Easy
+/// Navigation.
 
-#ifndef EASYNAV_MAPSMANAGER__MAPSMANAGERNODE_HPP_
-#define EASYNAV_MAPSMANAGER__MAPSMANAGERNODE_HPP_
+#ifndef EASYNAV_MAPS_MANAGER__MAPSMANAGERNODE_HPP_
+#define EASYNAV_MAPS_MANAGER__MAPSMANAGERNODE_HPP_
+
+#include <memory>
 
 #include "rclcpp/macros.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
-
 #include "easynav_core/MapsManagerBase.hpp"
 #include "easynav_core/PluginSwitcher.hpp"
 
@@ -106,4 +108,4 @@ private:
 
 }  // namespace easynav
 
-#endif  // EASYNAV_MAPSMANAGER__MAPSMANAGERNODE_HPP_
+#endif  // EASYNAV_MAPS_MANAGER__MAPSMANAGERNODE_HPP_

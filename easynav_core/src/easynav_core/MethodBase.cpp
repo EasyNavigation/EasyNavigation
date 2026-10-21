@@ -13,7 +13,8 @@
 // limitations under the License.
 
 /// \file
-/// \brief Implementation of the base class MethodBase used in plugin-based EasyNav method components.
+/// \brief Implementation of the base class MethodBase used in plugin-based EasyNav method
+/// components.
 
 #include <cmath>
 #include <cstdio>
