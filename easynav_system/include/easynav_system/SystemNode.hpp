@@ -13,7 +13,8 @@
 // limitations under the License.
 
 /// \file
-/// \brief Declaration of the SystemNode class, the central coordinator node for Easy Navigation components.
+/// \brief Declaration of the SystemNode class, the central coordinator node for Easy Navigation
+/// components.
 
 #ifndef EASYNAV_SYSTEM__SYSTEMNODE_HPP_
 #define EASYNAV_SYSTEM__SYSTEMNODE_HPP_
@@ -24,15 +25,14 @@
 #include <optional>
 #include <string>
 #include <vector>
+#include <memory>
 
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp/macros.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
-
 #include "geometry_msgs/msg/twist.hpp"
 #include "geometry_msgs/msg/twist_stamped.hpp"
 #include "std_msgs/msg/string.hpp"
-
 #include "easynav_common/types/NavState.hpp"
 #include "easynav_controller/ControllerNode.hpp"
 #include "easynav_core/SystemActions.hpp"
@@ -53,8 +53,10 @@ namespace easynav
  */
 struct SystemNodeInfo
 {
-  rclcpp_lifecycle::LifecycleNode::SharedPtr node_ptr; ///< Shared pointer to the managed lifecycle node.
-  rclcpp::CallbackGroup::SharedPtr realtime_cbg;       ///< Associated real-time callback group.
+  /// Shared pointer to the managed lifecycle node.
+  rclcpp_lifecycle::LifecycleNode::SharedPtr node_ptr;
+  /// Associated real-time callback group.
+  rclcpp::CallbackGroup::SharedPtr realtime_cbg;
 };
 
 /**
@@ -281,8 +283,6 @@ private:
 
   /// @brief Publisher for nav_state as string.
   rclcpp::Publisher<std_msgs::msg::String>::SharedPtr navstate_pub_;
-
-
 };
 
 }  // namespace easynav

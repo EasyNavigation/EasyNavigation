@@ -16,20 +16,20 @@
 /// \brief Defines data structures and utilities for representing and processing GNSS perceptions.
 ///
 /// This file contains the definition of the GNSSPerception class, which holds GNSS sensor data,
-/// and the GNSSPerceptionHandler class, which handles subscriptions to GNSS messages and transforms them into
-/// GNSSPerception instances. It also defines an alias for a collection of such perceptions.
+/// and the GNSSPerceptionHandler class, which handles subscriptions to GNSS messages and transforms
+/// them into GNSSPerception instances. It also defines an alias for a collection of such
+/// perceptions.
 
-#ifndef EASYNAV_SENSORS_TYPES__GNSSPERCEPTIONS_HPP_
-#define EASYNAV_SENSORS_TYPES__GNSSPERCEPTIONS_HPP_
+#ifndef EASYNAV_SENSORS__TYPES__GNSSPERCEPTION_HPP_
+#define EASYNAV_SENSORS__TYPES__GNSSPERCEPTION_HPP_
 
 #include <mutex>
 #include <string>
 #include <vector>
+#include <memory>
 
 #include "sensor_msgs/msg/nav_sat_fix.hpp"
-
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
-
 #include "easynav_sensors/types/Perceptions.hpp"
 
 namespace easynav
@@ -134,9 +134,11 @@ protected:
 };
 
 /// \class GNSSPerceptionHandler
-/// \brief Handles the creation and updating of GNSSPerception instances from sensor_msgs::msg::NavSatFix messages.
+/// \brief Handles the creation and updating of GNSSPerception instances from
+/// sensor_msgs::msg::NavSatFix messages.
 ///
-/// This class provides methods to register subscriptions to GNSS topics and update GNSSPerception objects.
+/// This class provides methods to register subscriptions to GNSS topics and update GNSSPerception
+/// objects.
 class GNSSPerceptionHandler : public PerceptionHandler
 {
 public:
@@ -176,9 +178,10 @@ using GNSSPerceptions =
 
 /// @brief  Retrieves the latest timestamp among a set of GNSS perceptions.
 /// @param perceptions Container of GNSS perceptions.
-/// @return  The most recent timestamp found in \p perceptions, or a default-constructed \c rclcpp::Time if \p perceptions is empty.
+/// @return  The most recent timestamp found in \p perceptions, or a default-constructed
+/// \c rclcpp::Time if \p perceptions is empty.
 rclcpp::Time get_latest_gnss_perceptions_stamp(const GNSSPerceptions & perceptions);
 
 }  // namespace easynav
 
-#endif  // EASYNAV_SENSORS_TYPES__GNSSPERCEPTIONS_HPP_
+#endif  // EASYNAV_SENSORS__TYPES__GNSSPERCEPTION_HPP_

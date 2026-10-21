@@ -80,13 +80,13 @@ public:
     odom_.pose.pose.position.x = 5;
   }
 
-  virtual void update_rt(easynav::NavState & nav_state) override
+  void update_rt(easynav::NavState & nav_state) override
   {
     (void) nav_state;
     odom_.pose.pose.position.x = 10;
   }
 
-  virtual void update(easynav::NavState & nav_state) override
+  void update(easynav::NavState & nav_state) override
   {
     (void) nav_state;
     odom_.pose.pose.position.x = 10;

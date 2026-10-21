@@ -25,7 +25,7 @@ namespace easynav
 namespace
 {
 // Built once: select() runs every RT cycle, where no memory may be allocated.
-const std::string kNavigationPaused {"navigation_paused"};
+const std::string kNavigationPaused {"navigation_paused"};  // NOLINT(runtime/string)
 }  // namespace
 
 VelocityMux::Selection

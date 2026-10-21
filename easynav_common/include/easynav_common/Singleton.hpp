@@ -13,8 +13,8 @@
 // limitations under the License.
 
 
-#ifndef EASYNAV_COMMON__SINGLETON_H_
-#define EASYNAV_COMMON__SINGLETON_H_
+#ifndef EASYNAV_COMMON__SINGLETON_HPP_
+#define EASYNAV_COMMON__SINGLETON_HPP_
 
 #include <mutex>
 #include <utility>
@@ -94,4 +94,4 @@ public: \
 
 }  // namespace easynav
 
-#endif  // EASYNAV_COMMON__SINGLETON_H_
+#endif  // EASYNAV_COMMON__SINGLETON_HPP_

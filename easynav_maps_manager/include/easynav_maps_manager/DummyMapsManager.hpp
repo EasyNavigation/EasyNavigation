@@ -13,10 +13,11 @@
 // limitations under the License.
 
 /// \file
-/// \brief Declaration of the DummyMapsManager class, a default map manager plugin for Easy Navigation.
+/// \brief Declaration of the DummyMapsManager class, a default map manager plugin for Easy
+/// Navigation.
 
-#ifndef EASYNAV_PLANNER__DUMMYMAPMANAGER_HPP_
-#define EASYNAV_PLANNER__DUMMYMAPMANAGER_HPP_
+#ifndef EASYNAV_MAPS_MANAGER__DUMMYMAPSMANAGER_HPP_
+#define EASYNAV_MAPS_MANAGER__DUMMYMAPSMANAGER_HPP_
 
 #include "easynav_core/MapsManagerBase.hpp"
 
@@ -41,13 +42,13 @@ public:
   /**
    * @brief Initialize the plugin.
    */
-  virtual void on_initialize() override;
+  void on_initialize() override;
 
   /**
    * @brief Dummy update method.
    * @param nav_state The current navigation state.
    */
-  virtual void update(NavState & nav_state) override;
+  void update(NavState & nav_state) override;
 
 private:
   double cycle_time_rt_ {0.0};
@@ -56,4 +57,4 @@ private:
 
 }  // namespace easynav
 
-#endif  // EASYNAV_PLANNER__DUMMYMAPMANAGER_HPP_
+#endif  // EASYNAV_MAPS_MANAGER__DUMMYMAPSMANAGER_HPP_

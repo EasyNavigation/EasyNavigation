@@ -298,7 +298,8 @@ LOG_LEVEL_MAP: dict[int, tuple[str, str]] = {
 
 
 class MitigationProcessor():
-    """Subscribes to 'mitigation' (rcl_interfaces/msg/Log).
+    """
+    Subscribes to 'mitigation' (rcl_interfaces/msg/Log).
 
     Carries what RecoveryMitigationBase::report() logs while a mitigation is active, plus
     DiagnosticRecoveryManager's "resolved" sentinel (level DEBUG, see is_resolved_sentinel) once
@@ -348,7 +349,8 @@ def _namespace_to_log_path(namespace: str) -> str:
 
 
 def _discover_log_path(namespace: str | None = None) -> str | None:
-    """Resolve the trace-log path for a running EasyNav instance.
+    """
+    Resolve the trace-log path for a running EasyNav instance.
 
     With an explicit namespace, targets that instance directly. Otherwise,
     auto-discovers among currently-present /tmp/easynav*.log files, picking

@@ -31,9 +31,10 @@ namespace easynav::safety
 namespace
 {
 // Static: no allocation in the RT cycle.
-const std::string kDiagnostic {"diagnostics.cmd_vel"};
-const std::string kDiscardedMessage {"Non-finite velocity command discarded"};
-const std::string kReceivingMessage {"Receiving velocity commands"};
+const std::string kDiagnostic {"diagnostics.cmd_vel"};  // NOLINT(runtime/string)
+const std::string kDiscardedMessage {  // NOLINT(runtime/string)
+  "Non-finite velocity command discarded"};
+const std::string kReceivingMessage {"Receiving velocity commands"};  // NOLINT(runtime/string)
 
 bool is_finite(const geometry_msgs::msg::Twist & t)
 {

@@ -2,6 +2,11 @@
 Changelog for package easynav_maps_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.5.1 (2026-10-21)
+------------------
+* Enable cpplint and copyright linters
+* Contributors: Francisco Martín Rico
+
 0.5.0 (2026-10-08)
 ------------------
 * Runtime reconfiguration of the maps managers (PluginSwitcher)

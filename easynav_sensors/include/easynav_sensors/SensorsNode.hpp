@@ -13,22 +13,23 @@
 // limitations under the License.
 
 /// \file
-/// \brief Declaration of the SensorsNode class, a ROS 2 lifecycle node for sensor fusion tasks in Easy Navigation.
+/// \brief Declaration of the SensorsNode class, a ROS 2 lifecycle node for sensor fusion tasks in
+/// Easy Navigation.
 
-#ifndef EASYNAV_SENSORS__SENSORNODE_HPP_
-#define EASYNAV_SENSORS__SENSORNODE_HPP_
+#ifndef EASYNAV_SENSORS__SENSORSNODE_HPP_
+#define EASYNAV_SENSORS__SENSORSNODE_HPP_
 
 #include <mutex>
 #include <unordered_map>
+#include <vector>
+#include <map>
+#include <memory>
+#include <string>
 
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp/macros.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
-
 #include "sensor_msgs/msg/point_cloud2.hpp"
-
-#include <vector>
-
 #include "easynav_sensors/types/Perceptions.hpp"
 #include "easynav_common/types/NavState.hpp"
 #include "pluginlib/class_loader.hpp"
@@ -188,9 +189,8 @@ private:
   /// it never modifies this table, so other sensors of the same type always
   /// fall back to the built-in default when 'plugin:' is omitted.
   std::unordered_map<std::string, std::string> type_to_plugin_;
-
 };
 
 }  // namespace easynav
 
-#endif  // EASYNAV_SENSORS__SENSORNODE_HPP_
+#endif  // EASYNAV_SENSORS__SENSORSNODE_HPP_
