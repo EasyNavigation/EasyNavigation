@@ -16,20 +16,20 @@
 /// \brief Defines data structures and utilities for representing and processing IMU perceptions.
 ///
 /// This file contains the definition of the IMUPerception class, which holds IMU sensor data,
-/// and the IMUPerceptionHandler class, which handles subscriptions to IMU messages and transforms them into
-/// IMUPerception instances. It also defines an alias for a collection of such perceptions.
+/// and the IMUPerceptionHandler class, which handles subscriptions to IMU messages and transforms
+/// them into IMUPerception instances. It also defines an alias for a collection of such
+/// perceptions.
 
-#ifndef EASYNAV_SENSORS_TYPES__IMUPERCEPTIONS_HPP_
-#define EASYNAV_SENSORS_TYPES__IMUPERCEPTIONS_HPP_
+#ifndef EASYNAV_SENSORS__TYPES__IMUPERCEPTION_HPP_
+#define EASYNAV_SENSORS__TYPES__IMUPERCEPTION_HPP_
 
 #include <mutex>
 #include <string>
 #include <vector>
+#include <memory>
 
 #include "sensor_msgs/msg/imu.hpp"
-
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
-
 #include "easynav_sensors/types/Perceptions.hpp"
 
 namespace easynav
@@ -132,9 +132,11 @@ protected:
 };
 
 /// \class IMUPerceptionHandler
-/// \brief Handles the creation and updating of IMUPerception instances from sensor_msgs::msg::Imu messages.
+/// \brief Handles the creation and updating of IMUPerception instances from sensor_msgs::msg::Imu
+/// messages.
 ///
-/// This class provides methods to register subscriptions to IMU topics and update IMUPerception objects.
+/// This class provides methods to register subscriptions to IMU topics and update IMUPerception
+/// objects.
 class IMUPerceptionHandler : public PerceptionHandler
 {
 public:
@@ -174,9 +176,10 @@ using IMUPerceptions =
 
 /// \brief Retrieves the latest timestamp among a set of IMU perceptions.
 /// \param perceptions Container of IMU perceptions.
-/// \return The most recent timestamp found in \p perceptions, or a default-constructed \c rclcpp::Time if \p perceptions is empty.
+/// \return The most recent timestamp found in \p perceptions, or a default-constructed
+/// \c rclcpp::Time if \p perceptions is empty.
 rclcpp::Time get_latest_imu_perceptions_stamp(const IMUPerceptions & perceptions);
 
 }  // namespace easynav
 
-#endif  // EASYNAV_SENSORS_TYPES__IMUPERCEPTIONS_HPP_
+#endif  // EASYNAV_SENSORS__TYPES__IMUPERCEPTION_HPP_

@@ -25,7 +25,7 @@
 namespace easynav
 {
 
-using namespace  std::placeholders;
+using std::placeholders::_1;
 
 
 GoalManagerClient::GoalManagerClient(rclcpp::Node::SharedPtr node)

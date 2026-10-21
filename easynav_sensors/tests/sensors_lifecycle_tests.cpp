@@ -12,15 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <map>
+
 #include "easynav_sensors/SensorsNode.hpp"
 #include "easynav_common/types/NavState.hpp"
-
 #include "lifecycle_msgs/msg/transition.hpp"
 #include "lifecycle_msgs/msg/state.hpp"
-
 #include "gtest/gtest.h"
-
-#include <map>
 #include "easynav_sensors/types/PointPerception.hpp"
 #include "easynav_sensors/types/IMUPerception.hpp"
 #include "easynav_sensors/types/GNSSPerception.hpp"

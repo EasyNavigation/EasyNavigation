@@ -47,6 +47,13 @@ constexpr double kStopPeriod = 0.02;
 /// @brief Extra time allowed for the braking ramp over the theoretical one (s).
 constexpr double kStopMargin = 0.2;
 
+/// @brief Whether every component of \p t is exactly zero.
+bool is_zero(const geometry_msgs::msg::Twist & t)
+{
+  return t.linear.x == 0.0 && t.linear.y == 0.0 && t.linear.z == 0.0 && t.angular.x == 0.0 &&
+         t.angular.y == 0.0 && t.angular.z == 0.0;
+}
+
 /// @brief "robot_limits.*" fields and their RobotLimits member.
 std::vector<std::pair<std::string, double RobotLimits::*>> limit_fields()
 {
@@ -148,6 +155,7 @@ ControllerNode::on_configure([[maybe_unused]] const rclcpp_lifecycle::State & st
   smoother_.reset();
   mux_.reset();
   last_smoother_step_.reset();
+  last_published_zero_ = false;
 
   if (!controller_.configure()) {
     return CallbackReturnT::FAILURE;
@@ -279,7 +287,9 @@ ControllerNode::publish_cmd_vel_rt(std::shared_ptr<NavState> nav_state)
   }
   if (selection.smooth) {
     const bool ramping = !smoother_.reached(selection.cmd.twist);
-    if (!selection.fresh && !ramping && !command_guard_.keepalive_due(now)) {
+    // Controllers restamp their stop every cycle: a zero at rest is nothing new either
+    const bool at_rest = last_published_zero_ && is_zero(selection.cmd.twist);
+    if ((!selection.fresh || at_rest) && !ramping && !command_guard_.keepalive_due(now)) {
       return;  // Nothing new, and the robot is already at the last target.
     }
     cmd.twist = smoother_.step(selection.cmd.twist, dt);
@@ -361,6 +371,7 @@ ControllerNode::publish(const geometry_msgs::msg::TwistStamped & cmd)
     vel_pub_->publish(cmd.twist);
   }
   command_guard_.published(rclcpp::Time(cmd.header.stamp, get_clock()->get_clock_type()));
+  last_published_zero_ = is_zero(cmd.twist);
 }
 
 void

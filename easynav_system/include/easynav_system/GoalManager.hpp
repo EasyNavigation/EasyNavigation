@@ -19,17 +19,17 @@
 #define EASYNAV_SYSTEM__GOALMANAGER_HPP_
 
 #include <atomic>
+#include <memory>
+#include <string>
 
 #include "rclcpp/subscription.hpp"
 #include "rclcpp/publisher.hpp"
 #include "rclcpp/macros.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
-
 #include "easynav_interfaces/msg/navigation_control.hpp"
 #include "easynav_interfaces/msg/goal_manager_info.hpp"
 #include "geometry_msgs/msg/pose_stamped.hpp"
 #include "nav_msgs/msg/goals.hpp"
-
 #include "easynav_common/types/NavState.hpp"
 
 namespace easynav

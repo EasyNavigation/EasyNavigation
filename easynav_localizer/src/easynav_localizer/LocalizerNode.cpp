@@ -57,8 +57,6 @@ LocalizerNode::LocalizerNode(
         x << ", y: " << y << ", z: " << z << ", yaw: " << yaw << ")";
       return ret.str();
     });
-
-
 }
 
 LocalizerNode::~LocalizerNode()

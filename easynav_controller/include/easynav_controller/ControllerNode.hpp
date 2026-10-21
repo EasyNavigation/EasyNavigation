@@ -13,7 +13,8 @@
 // limitations under the License.
 
 /// \file
-/// \brief Declaration of the ControllerNode class, a ROS 2 lifecycle node for speed computation in Easy Navigation.
+/// \brief Declaration of the ControllerNode class, a ROS 2 lifecycle node for speed computation in
+/// Easy Navigation.
 
 #ifndef EASYNAV_CONTROLLER__CONTROLLERNODE_HPP_
 #define EASYNAV_CONTROLLER__CONTROLLERNODE_HPP_
@@ -41,7 +42,8 @@ namespace easynav
 {
 
 /// \file
-/// \brief Declaration of the ControllerNode class, a ROS 2 lifecycle node for calculating speeds tasks in Easy Navigation.
+/// \brief Declaration of the ControllerNode class, a ROS 2 lifecycle node for calculating speeds
+/// tasks in Easy Navigation.
 
 /**
  * @class ControllerNode
@@ -216,6 +218,10 @@ private:
 
   /// @brief When the smoother last stepped (node clock), to know how much time it covers.
   std::optional<rclcpp::Time> last_smoother_step_;
+
+  /// @brief Whether the last published command was an exact zero: at rest, a zero restamped
+  /// every cycle is not republished (only the keepalive does).
+  bool last_published_zero_ {false};
 
   /**
    * @brief Callback group intended for real-time tasks.

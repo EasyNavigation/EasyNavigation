@@ -2,6 +2,12 @@
 Changelog for package easynav_sensors
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.5.1 (2026-10-21)
+------------------
+* Do not force the Debug build type (`#141 <https://github.com/EasyNavigation/EasyNavigation/issues/141>`_)
+* Enable cpplint and copyright linters
+* Contributors: Francisco Martín Rico
+
 0.5.0 (2026-10-08)
 ------------------
 * Better protection of sensor data, and perceptions invalidated after forget_time
