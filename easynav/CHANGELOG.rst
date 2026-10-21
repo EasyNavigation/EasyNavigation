@@ -2,6 +2,9 @@
 Changelog for package easynav
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.5.0 (2026-10-08)
 ------------------
 * Conda packages with pixi (pixi-build-ros)

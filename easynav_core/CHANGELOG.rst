@@ -2,6 +2,11 @@
 Changelog for package easynav_core
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Enable cpplint and copyright linters
+* Contributors: Francisco Martín Rico
+
 0.5.0 (2026-10-08)
 ------------------
 * Lifecycle states and runtime reconfiguration of the plugins (PluginSwitcher)

@@ -2,6 +2,9 @@
 Changelog for package easynav_interfaces
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.5.0 (2026-10-08)
 ------------------
 * Pause and resume of the navigation

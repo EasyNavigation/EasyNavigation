@@ -2,6 +2,11 @@
 Changelog for package easynav_recovery
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Enable cpplint and copyright linters
+* Contributors: Francisco Martín Rico
+
 0.5.0 (2026-10-08)
 ------------------
 * First release: recovery node, which loads a recovery manager plugin
