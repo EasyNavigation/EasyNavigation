@@ -2,8 +2,8 @@
 Changelog for package easynav_support_py
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.1 (2026-10-21)
+------------------
 * Enable cpplint and copyright linters
 * Contributors: Francisco Martín Rico
 

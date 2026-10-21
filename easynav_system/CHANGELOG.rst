@@ -2,8 +2,8 @@
 Changelog for package easynav_system
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.1 (2026-10-21)
+------------------
 * Enable cpplint and copyright linters
 * Wider timing margins in the RT monitor tests
 * Contributors: Francisco Martín Rico

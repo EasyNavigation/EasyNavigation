@@ -2,8 +2,8 @@
 Changelog for package easynav_controller
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.1 (2026-10-21)
+------------------
 * Do not republish zero velocities at rest
 * Enable cpplint and copyright linters
 * Contributors: Francisco Martín Rico
