@@ -300,6 +300,8 @@ SystemNode::on_activate(const rclcpp_lifecycle::State & state)
     safety_.on_activate();
     active_ = true;
   }
+  activated_at_ = std::chrono::steady_clock::now();
+  next_clock_check_ = activated_at_ + kClockCheckPeriod;
 
   return CallbackReturnT::SUCCESS;
 }
@@ -690,6 +692,8 @@ SystemNode::system_cycle()
 
   RCLCPP_DEBUG(get_logger(), "SystemNode::system_cycle\n%s", nav_state_->debug_string().c_str());
 
+  check_clocks();
+
   sensors_node_->cycle(nav_state_);
   localizer_node_->cycle(nav_state_);
   maps_manager_node_->cycle(nav_state_);
@@ -707,6 +711,36 @@ SystemNode::system_cycle()
     std_msgs::msg::String msg;
     msg.data = nav_state_->debug_string();
     navstate_pub_->publish(msg);
+  }
+}
+
+std::vector<std::string>
+SystemNode::get_nodes_without_clock()
+{
+  std::vector<std::string> names;
+  for (const auto & [name, node] : get_all_nodes()) {
+    const auto clock = node->get_clock();
+    if (clock->ros_time_is_active() && clock->now().nanoseconds() == 0) {
+      names.push_back(name);
+    }
+  }
+  return names;
+}
+
+void
+SystemNode::check_clocks()
+{
+  // Wall time: a node without /clock has no ROS time to tell when to warn
+  const auto now = std::chrono::steady_clock::now();
+  if (now < next_clock_check_) {return;}
+  next_clock_check_ = now + kClockCheckPeriod;
+
+  const auto since = std::chrono::duration_cast<std::chrono::seconds>(now - activated_at_);
+  for (const auto & name : get_nodes_without_clock()) {
+    RCLCPP_WARN(
+      get_logger(), "[%s] use_sim_time is true and its ROS clock is still at 0, %d s after "
+      "activation: no /clock reaches it, so its components do not run",
+      name.c_str(), static_cast<int>(since.count()));
   }
 }
 

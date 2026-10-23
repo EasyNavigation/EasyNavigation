@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <semaphore.h>
+
 #include <csignal>
 #include <cstdint>
 #include <cstdio>
@@ -41,24 +43,59 @@ using namespace std::chrono_literals;
 namespace
 {
 std::atomic_bool g_stop{false};
-std::atomic<int64_t> g_shutdown_requested_at_ns{0};
+std::atomic<int64_t> g_last_signal_ns{0};
+std::atomic<int> g_signals{0};
+std::atomic_bool g_watcher_done{false};
+sem_t g_signal_sem;
 
+// 1st signal: stop the loops. 2nd: shut rclcpp down (unblocks a wait for the clock while
+// configuring) from signal_watcher(). 3rd: last resort, exit without closing DDS.
 void handle_shutdown_signal([[maybe_unused]] int signum)
 {
   constexpr int64_t kDebounceNs = 1'000'000'000;  // 1s
   const int64_t now_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(
     std::chrono::steady_clock::now().time_since_epoch()).count();
+  const int64_t last_ns = g_last_signal_ns.load(std::memory_order_relaxed);
+  if (last_ns != 0 && now_ns - last_ns <= kDebounceNs) {return;}
+  g_last_signal_ns.store(now_ns, std::memory_order_relaxed);
 
-  int64_t expected = 0;
-  if (g_shutdown_requested_at_ns.compare_exchange_strong(
-      expected, now_ns,
-      std::memory_order_relaxed))
-  {
-    g_stop.store(true, std::memory_order_relaxed);
-  } else if (now_ns - expected > kDebounceNs) {
+  const int n = g_signals.fetch_add(1, std::memory_order_relaxed) + 1;
+  g_stop.store(true, std::memory_order_relaxed);
+  if (n == 2) {
+    sem_post(&g_signal_sem);  // async-signal-safe
+  } else if (n >= 3) {
     std::_Exit(1);
   }
 }
+
+// rclcpp::shutdown() is not async-signal-safe: a thread does it, as rclcpp's own handler.
+void signal_watcher()
+{
+  while (sem_wait(&g_signal_sem) != 0) {}  // EINTR
+  if (!g_watcher_done.load() && rclcpp::ok()) {
+    RCLCPP_WARN(rclcpp::get_logger("easynav_system"), "Second signal: shutting rclcpp down");
+    rclcpp::shutdown();
+  }
+}
+
+/// @brief Runs signal_watcher() and stops it on destruction.
+struct SignalWatcher
+{
+  SignalWatcher()
+  {
+    sem_init(&g_signal_sem, 0, 0);
+    thread = std::thread(signal_watcher);
+  }
+  ~SignalWatcher()
+  {
+    g_watcher_done.store(true);
+    sem_post(&g_signal_sem);
+    thread.join();
+    sem_destroy(&g_signal_sem);
+  }
+  std::thread thread;
+};
+
 /// @brief Shuts rclcpp down on destruction. Declared before the nodes, it runs after they are
 /// destroyed on any return, so their shutdown transitions still have a valid context.
 struct RclcppShutdownGuard
@@ -76,6 +113,7 @@ int main(int argc, char ** argv)
 {
   rclcpp::init(argc, argv, rclcpp::InitOptions(), rclcpp::SignalHandlerOptions::None);
   RclcppShutdownGuard rclcpp_shutdown_guard;
+  SignalWatcher signal_watcher_guard;
   std::signal(SIGINT, handle_shutdown_signal);
   std::signal(SIGTERM, handle_shutdown_signal);
 
@@ -119,6 +157,10 @@ int main(int argc, char ** argv)
 
     // Lifecycle: configure -> activate
     system_node->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_CONFIGURE);
+    if (g_stop.load(std::memory_order_relaxed)) {
+      RCLCPP_INFO(system_node->get_logger(), "Stopped while configuring");
+      return 0;
+    }
     if (system_node->get_current_state().id() !=
       lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE)
     {
