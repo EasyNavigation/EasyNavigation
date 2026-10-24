@@ -20,6 +20,7 @@
 #define EASYNAV_SYSTEM__SYSTEMNODE_HPP_
 
 #include <atomic>
+#include <chrono>
 #include <map>
 #include <mutex>
 #include <optional>
@@ -153,6 +154,13 @@ public:
    */
   [[nodiscard]] std::shared_ptr<NavState> get_nav_state() const {return nav_state_;}
 
+  /// @brief EasyNav nodes with use_sim_time whose ROS clock has not started (still at 0):
+  /// no /clock reaches them, so their components never run.
+  [[nodiscard]] std::vector<std::string> get_nodes_without_clock();
+
+  /// @brief While Active, how often system_cycle() warns about get_nodes_without_clock().
+  static constexpr std::chrono::seconds kClockCheckPeriod {5};
+
   /**
    * @brief Whether the recovery system asked EasyNav to terminate (request_shutdown()).
    * Whoever drives this node's lifecycle should then deactivate it, which ends in Finalized
@@ -218,6 +226,13 @@ private:
 
   /// @brief This node and its subnodes, by name (get_system_nodes(): only the subnodes).
   std::map<std::string, rclcpp_lifecycle::LifecycleNode::SharedPtr> get_all_nodes();
+
+  /// @brief Warns, every kClockCheckPeriod (wall time), about get_nodes_without_clock().
+  void check_clocks();
+
+  /// @brief When EasyNav was activated and when check_clocks() checks next.
+  std::chrono::steady_clock::time_point activated_at_;
+  std::chrono::steady_clock::time_point next_clock_check_;
 
   /// @brief Safety checks, configuration hash and frozen configuration.
   safety::SafetySupervisor safety_;

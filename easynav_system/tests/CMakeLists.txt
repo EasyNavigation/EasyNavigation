@@ -62,3 +62,8 @@ target_link_libraries(rt_monitor_tests ${PROJECT_NAME})
 ament_add_gtest(system_component_faults_tests system_component_faults_tests.cpp TIMEOUT 120
   ENV ROS_LOG_DIR=${CMAKE_CURRENT_BINARY_DIR}/ros_log)
 target_link_libraries(system_component_faults_tests ${PROJECT_NAME})
+
+find_package(rosgraph_msgs REQUIRED)
+ament_add_gtest(system_clock_watchdog_tests system_clock_watchdog_tests.cpp TIMEOUT 120
+  ENV ROS_LOG_DIR=${CMAKE_CURRENT_BINARY_DIR}/ros_log)
+target_link_libraries(system_clock_watchdog_tests ${PROJECT_NAME} ${rosgraph_msgs_TARGETS})
