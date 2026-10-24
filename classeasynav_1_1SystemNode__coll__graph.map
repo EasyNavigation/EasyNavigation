@@ -1,7 +1,9 @@
 <map id="SystemNode" name="SystemNode">
-<area shape="rect" id="Node000001" title="ROS 2 lifecycle node coordinating all Easy Navigation components." alt="" coords="75,79,171,105"/>
+<area shape="rect" id="Node000001" title="ROS 2 lifecycle node coordinating all Easy Navigation components." alt="" coords="140,102,236,128"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,5,110,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="80,40,114,77,110,80,76,44"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="88,38,173,99,170,104,85,43"/>
 <area shape="rect" id="Node000003" href="$classSystemActions.html" title=" " alt="" coords="134,5,243,31"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="169,44,136,80,132,77,165,40"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="191,46,191,101,186,101,186,46"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="266,5,337,31"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="277,43,204,103,201,99,274,39"/>
 </map>

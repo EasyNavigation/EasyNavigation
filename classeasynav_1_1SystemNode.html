@@ -99,6 +99,7 @@ document.addEventListener('DOMContentLoaded', codefold.init);
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="classeasynav_1_1SystemNode-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">SystemNode Class Reference</div></div>
 </div><!--header-->
@@ -125,11 +126,13 @@ Collaboration diagram for SystemNode:</div>
 <div class="dyncontent">
 <div class="center"><img src="classeasynav_1_1SystemNode__coll__graph.png" border="0" usemap="#aSystemNode_coll__map" loading="lazy" alt="Collaboration graph"/></div>
 <map name="aSystemNode_coll__map" id="aSystemNode_coll__map">
-<area shape="rect" title="ROS 2 lifecycle node coordinating all Easy Navigation components." alt="" coords="75,79,171,105"/>
+<area shape="rect" title="ROS 2 lifecycle node coordinating all Easy Navigation components." alt="" coords="140,102,236,128"/>
 <area shape="rect" title=" " alt="" coords="5,5,110,31"/>
-<area shape="poly" title=" " alt="" coords="80,40,114,77,110,80,76,44"/>
+<area shape="poly" title=" " alt="" coords="88,38,173,99,170,104,85,43"/>
 <area shape="rect" href="classSystemActions.html" title=" " alt="" coords="134,5,243,31"/>
-<area shape="poly" title=" " alt="" coords="169,44,136,80,132,77,165,40"/>
+<area shape="poly" title=" " alt="" coords="191,46,191,101,186,101,186,46"/>
+<area shape="rect" title=" " alt="" coords="266,5,337,31"/>
+<area shape="poly" title=" " alt="" coords="277,43,204,103,201,99,274,39"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -147,6 +150,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ac884d4953f8aaa5a95d572c0a654a9dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Every EasyNav parameter, one "node/parameter=value" per line, sorted.  <br /></td></tr>
 <tr class="memitem:a76a94058e57592e7255a930e8e015af7" id="r_a76a94058e57592e7255a930e8e015af7"><td class="memItemLeft">std::shared_ptr&lt; <a class="el" href="classeasynav_1_1NavState.html">NavState</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a76a94058e57592e7255a930e8e015af7">get_nav_state</a> () const</td></tr>
 <tr class="memdesc:a76a94058e57592e7255a930e8e015af7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Access to the shared navigation state (for testing and tools).  <br /></td></tr>
+<tr class="memitem:a2bcf7dd3eb66af4200c8a67cd7824ee9" id="r_a2bcf7dd3eb66af4200c8a67cd7824ee9"><td class="memItemLeft">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a2bcf7dd3eb66af4200c8a67cd7824ee9">get_nodes_without_clock</a> ()</td></tr>
+<tr class="memdesc:a2bcf7dd3eb66af4200c8a67cd7824ee9"><td class="mdescLeft">&#160;</td><td class="mdescRight">EasyNav nodes with use_sim_time whose ROS clock has not started (still at 0): no /clock reaches them, so their components never run.  <br /></td></tr>
 <tr class="memitem:a8366fef9515c0b0cd47949fbfc018641" id="r_a8366fef9515c0b0cd47949fbfc018641"><td class="memItemLeft">rclcpp::CallbackGroup::SharedPtr&#160;</td><td class="memItemRight"><a class="el" href="#a8366fef9515c0b0cd47949fbfc018641">get_real_time_cbg</a> ()</td></tr>
 <tr class="memdesc:a8366fef9515c0b0cd47949fbfc018641"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the real-time callback group.  <br /></td></tr>
 <tr class="memitem:a70bd8d3f16f097dda90ebf976ca2c80e" id="r_a70bd8d3f16f097dda90ebf976ca2c80e"><td class="memItemLeft">const <a class="el" href="classeasynav_1_1safety_1_1SafetySupervisor.html">safety::SafetySupervisor</a> &amp;&#160;</td><td class="memItemRight"><a class="el" href="#a70bd8d3f16f097dda90ebf976ca2c80e">get_safety</a> () const</td></tr>
@@ -187,6 +192,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:abff1721399712e8fc6091a43b83d95aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <br /></td></tr>
 <tr class="memitem:a3bd1259a93656594885b4c59ac3cec93" id="r_a3bd1259a93656594885b4c59ac3cec93"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a3bd1259a93656594885b4c59ac3cec93">~SystemNode</a> ()</td></tr>
 <tr class="memdesc:a3bd1259a93656594885b4c59ac3cec93"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-static-attribs" class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:acec0ff93c7813f0e78dafe8e9093d29e" id="r_acec0ff93c7813f0e78dafe8e9093d29e"><td class="memItemLeft">static constexpr std::chrono::seconds&#160;</td><td class="memItemRight"><a class="el" href="#acec0ff93c7813f0e78dafe8e9093d29e">kClockCheckPeriod</a> {5}</td></tr>
+<tr class="memdesc:acec0ff93c7813f0e78dafe8e9093d29e"><td class="mdescLeft">&#160;</td><td class="mdescRight">While Active, how often <a class="el" href="#acca79767d43dedc09e182e9125a847f3" title="Non-real-time system cycle.">system_cycle()</a> warns about <a class="el" href="#a2bcf7dd3eb66af4200c8a67cd7824ee9" title="EasyNav nodes with use_sim_time whose ROS clock has not started (still at 0): no /clock reaches them,...">get_nodes_without_clock()</a>.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>ROS 2 lifecycle node coordinating all Easy Navigation components. </p>
@@ -360,6 +370,33 @@ Public Member Functions</h2></td></tr>
 
 <p>Access to the shared navigation state (for testing and tools). </p>
 <dl class="section return"><dt>Returns</dt><dd>Shared pointer to the <a class="el" href="classeasynav_1_1NavState.html" title="A generic, type-safe, thread-safe blackboard to hold runtime state.">NavState</a>. </dd></dl>
+
+</div>
+</div>
+<a id="a2bcf7dd3eb66af4200c8a67cd7824ee9" name="a2bcf7dd3eb66af4200c8a67cd7824ee9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2bcf7dd3eb66af4200c8a67cd7824ee9">&#9670;&#160;</a></span>get_nodes_without_clock()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; std::string &gt; get_nodes_without_clock </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>EasyNav nodes with use_sim_time whose ROS clock has not started (still at 0): no /clock reaches them, so their components never run. </p>
 
 </div>
 </div>
@@ -815,6 +852,31 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Real-time system cycle. </p>
+
+</div>
+</div>
+<a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
+<a id="acec0ff93c7813f0e78dafe8e9093d29e" name="acec0ff93c7813f0e78dafe8e9093d29e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acec0ff93c7813f0e78dafe8e9093d29e">&#9670;&#160;</a></span>kClockCheckPeriod</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::chrono::seconds kClockCheckPeriod {5}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>While Active, how often <a class="el" href="#acca79767d43dedc09e182e9125a847f3" title="Non-real-time system cycle.">system_cycle()</a> warns about <a class="el" href="#a2bcf7dd3eb66af4200c8a67cd7824ee9" title="EasyNav nodes with use_sim_time whose ROS clock has not started (still at 0): no /clock reaches them,...">get_nodes_without_clock()</a>. </p>
 
 </div>
 </div>

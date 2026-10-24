@@ -1,0 +1,7 @@
+<map id="SystemClockWatchdogTest" name="SystemClockWatchdogTest">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,117,188,143"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="13,13,60,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="53,50,92,115,87,118,49,53"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="84,5,232,46"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="141,61,106,118,101,115,136,58"/>
+</map>

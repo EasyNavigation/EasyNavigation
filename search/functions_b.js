@@ -4,7 +4,7 @@ var searchData=
   ['make_1',['make',['../classFaultyLocalizerTest.html#a069039ec660b5aa9a9da57d33d32affc',1,'FaultyLocalizerTest::make()'],['../classFaultyMapsManagerTest.html#a5220b4459b64df84cea2649a34d4ea9a',1,'FaultyMapsManagerTest::make()'],['../classFaultyPlannerTest.html#a344af169b3884b2b2e1d86768f254308',1,'FaultyPlannerTest::make()']]],
   ['make_5factive_2',['make_active',['../classSystemReconfigureTest.html#a59fe1d2e7531e92349fed75575d60d98',1,'SystemReconfigureTest']]],
   ['make_5factive_5fnode_3',['make_active_node',['../classControllerNodeVelocityTest.html#ad63a1ed55def63730969e8f993edeba5',1,'ControllerNodeVelocityTest::make_active_node()'],['../classFaultyControllerTest.html#abbfa11b531eff880b68ecc93f85ec569',1,'FaultyControllerTest::make_active_node()']]],
-  ['make_5factive_5fsystem_4',['make_active_system',['../classSystemShutdownRequestTest.html#a9fa29d787a73ee781cb51925e0c50788',1,'SystemShutdownRequestTest']]],
+  ['make_5factive_5fsystem_4',['make_active_system',['../classSystemClockWatchdogTest.html#a6f311d250ad5420f1f52a402555bec63',1,'SystemClockWatchdogTest::make_active_system()'],['../classSystemShutdownRequestTest.html#a9fa29d787a73ee781cb51925e0c50788',1,'SystemShutdownRequestTest::make_active_system()']]],
   ['make_5fhandler_5',['make_handler',['../classPerceptionHandlersTest.html#acca167e4b2bfa4488ea8affdfcf52f0a',1,'PerceptionHandlersTest']]],
   ['make_5fserver_6',['make_server',['../classGoalManagerHeightTest.html#a3d26e1fe65f638c48ad248cf59050e36',1,'GoalManagerHeightTest']]],
   ['make_5ftransform_5flistener_7',['make_transform_listener',['../namespaceeasynav.html#a007e1303c9e06638a7dd2ccf20ef6efa',1,'easynav']]],
