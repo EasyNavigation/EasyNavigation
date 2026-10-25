@@ -710,6 +710,78 @@ TEST_F(PerceptionsTestCase, PointPerceptionBufferAndTFWorks)
 }
 */
 
+TEST_F(PerceptionsTestCase, PointPerceptionHandlerTakesAnEmptyPC2)
+{
+  using easynav::RTTFBuffer;
+
+  auto node = rclcpp_lifecycle::LifecycleNode::make_shared("test_empty_pc2_handler_node");
+  auto tf_buffer = RTTFBuffer::getInstance(node->get_clock());
+
+  auto cb_group = node->create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive, false);
+  rclcpp::executors::SingleThreadedExecutor exe;
+  exe.add_node(node->get_node_base_interface());
+  exe.add_callback_group(cb_group, node->get_node_base_interface());
+
+  node->declare_parameter("cloud1.topic", "/test_empty_pc2");
+  node->declare_parameter("cloud1.type", "sensor_msgs/msg/PointCloud2");
+  node->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_CONFIGURE);
+  node->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_ACTIVATE);
+  ASSERT_EQ(
+    node->get_current_state().id(),
+    lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE);
+
+  auto handler = std::make_shared<easynav::PointPerceptionHandler>();
+  handler->initialize(node, cb_group, "cloud1");
+
+  auto pub = node->create_publisher<sensor_msgs::msg::PointCloud2>(
+    "/test_empty_pc2", rclcpp::SensorDataQoS().reliable());
+  pub->on_activate();
+
+  auto publish_and_read = [&](const sensor_msgs::msg::PointCloud2 & msg) {
+      pub->publish(msg);
+      const auto start = node->now();
+      while (node->now() - start < 100ms) {
+        exe.spin_some();
+      }
+      auto nav_state = std::make_shared<easynav::NavState>();
+      EXPECT_TRUE(handler->cycle_rt(nav_state)) << "new data";
+      return nav_state->get_ptr<easynav::PointPerception>("cloud1");
+    };
+
+  // First a cloud with points, then one with none: the last one replaces them.
+  pcl::PointCloud<pcl::PointXYZ> cloud;
+  cloud.points.push_back(pcl::PointXYZ{1.0, 2.0, 3.0});
+  cloud.width = 1;
+  cloud.height = 1;
+  sensor_msgs::msg::PointCloud2 with_points;
+  pcl::toROSMsg(cloud, with_points);
+  with_points.header.frame_id = "sensor";
+  with_points.header.stamp = node->now();
+  auto seen = publish_and_read(with_points);
+  ASSERT_NE(seen, nullptr);
+  EXPECT_EQ(seen->data.size(), 1u);
+
+  // Fields declared but no points (width 0, no data), as a publisher of "nothing in view" sends.
+  sensor_msgs::msg::PointCloud2 empty = with_points;
+  empty.width = 0;
+  empty.row_step = 0;
+  empty.data.clear();
+  empty.header.stamp = node->now();
+  seen = publish_and_read(empty);
+  ASSERT_NE(seen, nullptr);
+  EXPECT_TRUE(seen->valid);
+  EXPECT_TRUE(seen->data.empty());
+  EXPECT_EQ(seen->frame_id, "sensor");
+
+  // A message with no fields at all either.
+  sensor_msgs::msg::PointCloud2 bare;
+  bare.header.frame_id = "sensor";
+  bare.header.stamp = node->now();
+  seen = publish_and_read(bare);
+  ASSERT_NE(seen, nullptr);
+  EXPECT_TRUE(seen->data.empty());
+}
+
 TEST_F(PerceptionsTestCase, PointPerceptionHandlerPC2Works)
 {
   using easynav::RTTFBuffer;
