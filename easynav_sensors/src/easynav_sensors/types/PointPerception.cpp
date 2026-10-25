@@ -112,7 +112,10 @@ void PointPerceptionHandler::on_initialize()
       [this, clock_type](const sensor_msgs::msg::PointCloud2::SharedPtr msg)
       {
         pcl::PointCloud<pcl::PointXYZ> pending_cloud;
-        pcl::fromROSMsg(*msg, pending_cloud);
+        // An empty cloud (nothing seen) is a valid perception: pcl::fromROSMsg aborts on it.
+        if (static_cast<uint64_t>(msg->width) * msg->height > 0 && !msg->data.empty()) {
+          pcl::fromROSMsg(*msg, pending_cloud);
+        }
         perception_data_->set_pending_cloud(
           std::move(pending_cloud),
           std::string(msg->header.frame_id),
