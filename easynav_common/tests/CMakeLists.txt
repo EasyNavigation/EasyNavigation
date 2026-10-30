@@ -18,3 +18,8 @@ target_link_libraries(transform_listener_tests
   ${PROJECT_NAME}
   ${tf2_msgs_TARGETS}
 )
+
+ament_add_gtest(rttfbuffer_tests rttfbuffer_tests.cpp)
+target_link_libraries(rttfbuffer_tests
+  ${PROJECT_NAME}
+)
