@@ -18,6 +18,7 @@
 #include <cmath>
 #include <thread>
 #include <chrono>
+#include <string>
 
 #include "gtest/gtest.h"
 #include "tf2_ros/transform_listener.hpp"
@@ -839,6 +840,90 @@ TEST(PerceptionsOpsViewTests, CollapseEager_NonOwningView_Ignored)
 
   EXPECT_FLOAT_EQ(perception->data[0].z, 0.9f);
   EXPECT_FLOAT_EQ(perception->data[1].z, 1.3f);
+}
+
+// fuse(exact_time): a stamp slightly ahead of the latest TF is extrapolated by RTTFBuffer;
+// without exact time, the latest TF is used whatever the perception stamp.
+class FuseExactTimeTest : public ::testing::Test
+{
+protected:
+  void SetUp() override
+  {
+    clock_type_ = tf_ctx_.node()->now().get_clock_type();
+    // ext_odom -> ext_sensor moving along x at 1 m/s, 50 Hz, from t0 to t0 + 1 s.
+    for (int i = 0; i <= 50; ++i) {
+      geometry_msgs::msg::TransformStamped tf;
+      tf.header.stamp = at(i * 0.02);
+      tf.header.frame_id = "ext_odom";
+      tf.child_frame_id = "ext_sensor";
+      tf.transform.translation.x = i * 0.02;
+      tf.transform.rotation.w = 1.0;
+      tf_ctx_.buffer()->setTransform(tf, "default_authority", false);
+    }
+  }
+
+  rclcpp::Time at(double offset) const
+  {
+    return rclcpp::Time(static_cast<int64_t>(std::llround((t0_ + offset) * 1e9)), clock_type_);
+  }
+
+  easynav::PointPerception perception_at(double offset) const
+  {
+    easynav::PointPerception p;
+    p.valid = true;
+    p.frame_id = "ext_sensor";
+    p.stamp = at(offset);
+    p.data.emplace_back(0.0f, 0.0f, 0.0f);
+    return p;
+  }
+
+  TfTestContext tf_ctx_;
+  rcl_clock_type_t clock_type_ {RCL_ROS_TIME};
+  const double t0_ {500.0};
+};
+
+TEST_F(FuseExactTimeTest, DefaultMaxIs50ms)
+{
+  EXPECT_EQ(tf_ctx_.buffer()->get_max_future_extrapolation().count(), 50'000'000);
+}
+
+TEST_F(FuseExactTimeTest, InsideHistoryUsesExactTime)
+{
+  auto p = perception_at(0.51);
+  easynav::PointPerceptionsOpsView view(p);
+  rclcpp::Time stamp;
+  view.fuse("ext_odom", stamp, true);
+  const auto cloud = view.as_points();
+  ASSERT_EQ(cloud.size(), 1u);
+  EXPECT_NEAR(cloud[0].x, 0.51, 1e-5);
+  EXPECT_EQ(stamp, at(0.51));
+}
+
+TEST_F(FuseExactTimeTest, SlightlyAheadIsExtrapolated)
+{
+  for (double ahead : {0.001, 0.01, 0.03, 0.05}) {
+    SCOPED_TRACE(ahead);
+    auto p = perception_at(1.0 + ahead);
+    easynav::PointPerceptionsOpsView view(p);
+    rclcpp::Time stamp;
+    view.fuse("ext_odom", stamp, true);
+    const auto cloud = view.as_points();
+    ASSERT_EQ(cloud.size(), 1u);
+    EXPECT_NEAR(cloud[0].x, 1.0 + ahead, 1e-5);  // Not the stale 1.0.
+    EXPECT_EQ(stamp, at(1.0 + ahead));
+  }
+}
+
+TEST_F(FuseExactTimeTest, NotExactTimeUsesLatestTF)
+{
+  auto p = perception_at(1.5);
+  easynav::PointPerceptionsOpsView view(p);
+  rclcpp::Time stamp;
+  view.fuse("ext_odom", stamp, false);
+  const auto cloud = view.as_points();
+  ASSERT_EQ(cloud.size(), 1u);
+  EXPECT_NEAR(cloud[0].x, 1.0, 1e-5);
+  EXPECT_EQ(stamp, at(1.0));
 }
 
 TEST_F(PerceptionsOpsTest, FilterPostFuse_Lazy_AppliesInTargetFrame)
