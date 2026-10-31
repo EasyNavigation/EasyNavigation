@@ -389,16 +389,19 @@ ControllerNode::stop_robot()
   geometry_msgs::msg::TwistStamped cmd;
   cmd.header.frame_id = RTTFBuffer::getInstance()->get_tf_info().robot_frame;
 
-  // Brake within the deceleration limits, so the robot does not stop dead...
-  const auto deadline = std::chrono::steady_clock::now() +
-    std::chrono::duration<double>(smoother_.time_to_stop() + kStopMargin);
-  while (!smoother_.reached(geometry_msgs::msg::Twist()) &&
-    std::chrono::steady_clock::now() < deadline)
-  {
-    cmd.header.stamp = this->now();
-    cmd.twist = smoother_.step(geometry_msgs::msg::Twist(), kStopPeriod);
-    publish(cmd);
-    std::this_thread::sleep_for(std::chrono::duration<double>(kStopPeriod));
+  // Brake within the deceleration limits, so the robot does not stop dead (invalid limits,
+  // as after a failed configure, give no ramp)...
+  if (invalid_robot_limits(get_robot_limits()).empty()) {
+    const auto deadline = std::chrono::steady_clock::now() +
+      std::chrono::duration<double>(smoother_.time_to_stop() + kStopMargin);
+    while (!smoother_.reached(geometry_msgs::msg::Twist()) &&
+      std::chrono::steady_clock::now() < deadline)
+    {
+      cmd.header.stamp = this->now();
+      cmd.twist = smoother_.step(geometry_msgs::msg::Twist(), kStopPeriod);
+      publish(cmd);
+      std::this_thread::sleep_for(std::chrono::duration<double>(kStopPeriod));
+    }
   }
 
   // ...and whatever happened, the last command sent is an exact zero.
