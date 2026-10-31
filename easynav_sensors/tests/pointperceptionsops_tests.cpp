@@ -926,6 +926,140 @@ TEST_F(FuseExactTimeTest, NotExactTimeUsesLatestTF)
   EXPECT_EQ(stamp, at(1.0));
 }
 
+// A perception whose transform fails in fuse() is left out: its points are not in the target
+// frame (before, they came out untransformed, in the sensor frame).
+class FuseWithoutTfTest : public FuseExactTimeTest
+{
+protected:
+  easynav::PointPerception in_frame(const std::string & frame, double offset, float x) const
+  {
+    auto p = perception_at(offset);
+    p.frame_id = frame;
+    p.data.clear();
+    p.data.emplace_back(x, 0.0f, 0.0f);
+    return p;
+  }
+};
+
+TEST_F(FuseWithoutTfTest, UnknownFrameIsLeftOut)
+{
+  auto p = in_frame("ext_ghost", 0.5, 0.3f);
+  easynav::PointPerceptionsOpsView view(p);
+  view.fuse("ext_odom");
+  EXPECT_TRUE(view.as_points().empty());
+}
+
+TEST_F(FuseWithoutTfTest, MixedKeepsOnlyTransformed)
+{
+  auto ok = std::make_shared<easynav::PointPerception>(in_frame("ext_sensor", 0.5, 0.0f));
+  auto ghost = std::make_shared<easynav::PointPerception>(in_frame("ext_ghost", 0.5, 7.0f));
+  easynav::PointPerceptions perceptions {ok, ghost};
+  easynav::PointPerceptionsOpsView view(perceptions);
+  const auto cloud = view.fuse("ext_odom").as_points();
+  ASSERT_EQ(cloud.size(), 1u);
+  EXPECT_NEAR(cloud[0].x, 1.0, 1e-5);  // ext_sensor's latest TF: x = 1.0
+}
+
+TEST_F(FuseWithoutTfTest, AlreadyInTargetFrameKeptAsIs)
+{
+  auto in_target = std::make_shared<easynav::PointPerception>(in_frame("ext_odom", 0.5, 2.5f));
+  auto ghost = std::make_shared<easynav::PointPerception>(in_frame("ext_ghost", 0.5, 7.0f));
+  easynav::PointPerceptions perceptions {in_target, ghost};
+  easynav::PointPerceptionsOpsView view(perceptions);
+  const auto cloud = view.fuse("ext_odom").as_points();
+  ASSERT_EQ(cloud.size(), 1u);
+  EXPECT_FLOAT_EQ(cloud[0].x, 2.5f);
+}
+
+TEST_F(FuseWithoutTfTest, EagerFilterLeavesItOut)
+{
+  auto p = in_frame("ext_ghost", 0.5, 0.3f);
+  easynav::PointPerceptionsOpsView view(p);
+  view.fuse("ext_odom").filter({-10.0, NAN, NAN}, {10.0, NAN, NAN}, false);
+  EXPECT_TRUE(view.as_points().empty());
+}
+
+TEST_F(FuseWithoutTfTest, LazyFilterLeavesItOut)
+{
+  auto p = in_frame("ext_ghost", 0.5, 0.3f);
+  easynav::PointPerceptionsOpsView view(p);
+  view.fuse("ext_odom").filter({-10.0, NAN, NAN}, {10.0, NAN, NAN});
+  EXPECT_TRUE(view.as_points().empty());
+}
+
+TEST_F(FuseWithoutTfTest, DoubleFuseLikeNavMapObstacleFilter)
+{
+  // fuse(robot) -> filter in robot frame -> fuse(map): the ghost never reaches the map.
+  auto ok = std::make_shared<easynav::PointPerception>(in_frame("ext_sensor", 0.5, 0.2f));
+  auto ghost = std::make_shared<easynav::PointPerception>(in_frame("ext_ghost", 0.5, 0.2f));
+  easynav::PointPerceptions perceptions {ok, ghost};
+  easynav::PointPerceptionsOpsView view(perceptions);
+  const auto cloud = view.fuse("ext_sensor")
+    .filter({-3.0, -3.0, NAN}, {3.0, 3.0, 1.2}, false)
+    .fuse("ext_odom")
+    .as_points();
+  ASSERT_EQ(cloud.size(), 1u);
+  EXPECT_NEAR(cloud[0].x, 1.2, 1e-5);
+}
+
+TEST_F(FuseWithoutTfTest, LaterFuseRecovers)
+{
+  auto p = in_frame("ext_late", 0.5, 0.3f);
+  easynav::PointPerceptionsOpsView view(p);
+  EXPECT_TRUE(view.fuse("ext_odom").as_points().empty());
+
+  geometry_msgs::msg::TransformStamped tf;
+  tf.header.stamp = at(0.5);
+  tf.header.frame_id = "ext_odom";
+  tf.child_frame_id = "ext_late";
+  tf.transform.translation.x = 2.0;
+  tf.transform.rotation.w = 1.0;
+  tf_ctx_.buffer()->setTransform(tf, "default_authority", true);
+
+  const auto cloud = view.fuse("ext_odom").as_points();
+  ASSERT_EQ(cloud.size(), 1u);
+  EXPECT_NEAR(cloud[0].x, 2.3, 1e-5);
+}
+
+TEST_F(FuseWithoutTfTest, TooFarAheadIsLeftOut)
+{
+  // Beyond the 50 ms extrapolation the exact-time lookup fails.
+  for (double ahead : {0.06, 0.2, 5.0}) {
+    SCOPED_TRACE(ahead);
+    auto p = perception_at(1.0 + ahead);
+    easynav::PointPerceptionsOpsView view(p);
+    view.fuse("ext_odom", true);
+    EXPECT_TRUE(view.as_points().empty());
+  }
+}
+
+TEST_F(FuseWithoutTfTest, MixedAheadKeepsOnlyUsable)
+{
+  auto ok = std::make_shared<easynav::PointPerception>(perception_at(1.02));
+  auto late = std::make_shared<easynav::PointPerception>(perception_at(1.5));
+  easynav::PointPerceptions perceptions {ok, late};
+  easynav::PointPerceptionsOpsView view(perceptions);
+  rclcpp::Time stamp;
+  const auto cloud = view.fuse("ext_odom", stamp, true).as_points();
+  ASSERT_EQ(cloud.size(), 1u);
+  EXPECT_NEAR(cloud[0].x, 1.02, 1e-5);
+  EXPECT_EQ(stamp, at(1.02));
+}
+
+TEST_F(FuseWithoutTfTest, AddAfterFuseKeepsItsPoints)
+{
+  // add() after fuse(): the new points are taken as they are, as before.
+  auto p = in_frame("ext_ghost", 0.5, 0.3f);
+  easynav::PointPerceptionsOpsView view(p);
+  view.fuse("ext_odom");
+  pcl::PointCloud<pcl::PointXYZ> extra;
+  extra.push_back(pcl::PointXYZ(4.0f, 0.0f, 0.0f));
+  view.add(extra, "ext_odom", at(0.5));
+  const auto cloud = view.as_points();
+  ASSERT_EQ(cloud.size(), 1u);
+  EXPECT_FLOAT_EQ(cloud[0].x, 4.0f);
+}
+
 TEST_F(PerceptionsOpsTest, FilterPostFuse_Lazy_AppliesInTargetFrame)
 {
   TfTestContext tf_ctx;

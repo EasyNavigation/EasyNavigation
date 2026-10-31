@@ -212,6 +212,7 @@ PointPerceptionsOpsView::PointPerceptionsOpsView(const PointPerceptions & percep
   indices_.resize(n);
   tf_transforms_.resize(n);
   tf_valid_.assign(n, false);
+  tf_failed_.assign(n, false);
 
   for (std::size_t i = 0; i < n; ++i) {
     auto & pptr = perceptions_[i];
@@ -234,6 +235,7 @@ PointPerceptionsOpsView::PointPerceptionsOpsView(const PointPerception & percept
   indices_.resize(n);
   tf_transforms_.resize(n);
   tf_valid_.assign(n, false);
+  tf_failed_.assign(n, false);
 
   auto & pptr = owned_->front();
   if (pptr && pptr->valid && !pptr->data.empty()) {
@@ -251,6 +253,7 @@ PointPerceptionsOpsView::PointPerceptionsOpsView(PointPerceptions && perceptions
   indices_.resize(n);
   tf_transforms_.resize(n);
   tf_valid_.assign(n, false);
+  tf_failed_.assign(n, false);
 
   for (std::size_t i = 0; i < n; ++i) {
     auto & pptr = perceptions_[i];
@@ -318,8 +321,10 @@ PointPerceptionsOpsView::filter(
     const auto & pptr = perceptions_[i];
     auto & idx_list = indices_[i].indices;
 
-    if (!pptr || !pptr->valid || pptr->data.empty() || idx_list.empty()) {
-      idx_list.clear();
+    if (!pptr || !pptr->valid || pptr->data.empty() || idx_list.empty() ||
+      (has_tf_array && tf_failed_[i]))
+    {
+      idx_list.clear();  // Without its transform the bounds cannot be checked: left out
       continue;
     }
 
@@ -503,6 +508,9 @@ PointPerceptionsOpsView::as_points() const
     if (!pptr || !pptr->valid || pptr->data.empty() || idx_list.empty()) {
       continue;
     }
+    if (has_tf_array && tf_failed_[i]) {
+      continue;  // Its points are not in the target frame
+    }
 
     const auto & cloud = pptr->data;
     const bool apply_tf = has_tf_array && tf_valid_[i];
@@ -610,6 +618,7 @@ PointPerceptionsOpsView::fuse(
   if (tf_valid_.size() != n) {
     tf_valid_.assign(n, false);
   }
+  tf_failed_.assign(n, false);
 
   auto tf_buffer = easynav::RTTFBuffer::getInstance();
 
@@ -666,6 +675,7 @@ PointPerceptionsOpsView::fuse(
           logger, steady_clock, 2000, "TF lookup failed in fuse(): %s", ex.what());
       }
       tf_valid_[i] = false;
+      tf_failed_[i] = true;
     }
   }
 
@@ -702,6 +712,7 @@ PointPerceptionsOpsView::add(
 
   tf_transforms_.push_back(tf2::Transform::getIdentity());
   tf_valid_.push_back(false);
+  tf_failed_.push_back(false);
 
   return *this;
 }

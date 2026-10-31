@@ -511,6 +511,9 @@ public:
   /// \param exact_time If \c true, TF lookups use the exact timestamp of each perception;
   ///        if \c false (default), the most recent available transform is used.
   /// \return Reference to \c *this to allow chaining.
+  ///
+  /// A perception whose transform cannot be obtained is left out of filter() and as_points()
+  /// until a later fuse() gets it: its points are not in \p target_frame.
   PointPerceptionsOpsView & fuse(const std::string & target_frame, bool exact_time = false);
 
   /// \brief Configures fusion of all perceptions into a common frame, returning the effective
@@ -577,6 +580,8 @@ private:
   std::vector<tf2::Transform> tf_transforms_;
   /// True if corresponding transform is valid.
   std::vector<bool> tf_valid_;
+  /// True if the last fuse() could not get the perception's transform: it is left out.
+  std::vector<bool> tf_failed_;
 
   // Lazy collapse state
   bool collapse_x_ {false};                    ///< Collapse X dimension if true.
