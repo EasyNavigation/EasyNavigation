@@ -1,0 +1,7 @@
+<map id="RTTFBufferTest" name="RTTFBufferTest">
+<area shape="rect" id="Node000001" title=" " alt="" coords="30,117,145,143"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,13,53,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="46,50,83,115,78,118,41,53"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="77,5,218,46"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="131,61,97,118,92,115,126,58"/>
+</map>

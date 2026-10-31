@@ -134,10 +134,24 @@ Collaboration diagram for RTTFBuffer:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a06325cbea75269e012ebd1c859744804" id="r_a06325cbea75269e012ebd1c859744804"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a06325cbea75269e012ebd1c859744804">canTransform</a> (const std::string &amp;target_frame, const std::string &amp;source_frame, const tf2::TimePoint &amp;time, const tf2::Duration timeout, std::string *errstr=nullptr) const override</td></tr>
+<tr class="memitem:aaa2eeaab4d95e4d84c7da8e62badf867" id="r_aaa2eeaab4d95e4d84c7da8e62badf867"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#aaa2eeaab4d95e4d84c7da8e62badf867">canTransform</a> (const std::string &amp;target_frame, const std::string &amp;source_frame, const tf2::TimePoint &amp;time, std::string *error_msg=nullptr) const override</td></tr>
+<tr class="memitem:afda4f305545b9d956c220ce75972f0fd" id="r_afda4f305545b9d956c220ce75972f0fd"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#afda4f305545b9d956c220ce75972f0fd">canTransform</a> (const std::string &amp;target_frame, const tf2::TimePoint &amp;target_time, const std::string &amp;source_frame, const tf2::TimePoint &amp;source_time, const std::string &amp;fixed_frame, const tf2::Duration timeout, std::string *errstr=nullptr) const override</td></tr>
+<tr class="memitem:a5dbe46183c48d9b91abc58b2e4691d14" id="r_a5dbe46183c48d9b91abc58b2e4691d14"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a5dbe46183c48d9b91abc58b2e4691d14">canTransform</a> (const std::string &amp;target_frame, const tf2::TimePoint &amp;target_time, const std::string &amp;source_frame, const tf2::TimePoint &amp;source_time, const std::string &amp;fixed_frame, std::string *error_msg=nullptr) const override</td></tr>
+<tr class="memitem:affe8b8feef23b5a49876e94658249ede" id="r_affe8b8feef23b5a49876e94658249ede"><td class="memItemLeft">tf2::Duration&#160;</td><td class="memItemRight"><a class="el" href="#affe8b8feef23b5a49876e94658249ede">get_extrapolation_window</a> () const</td></tr>
+<tr class="memitem:ab8ba4dc73f1708a3cd71aa9361495c01" id="r_ab8ba4dc73f1708a3cd71aa9361495c01"><td class="memItemLeft">tf2::Duration&#160;</td><td class="memItemRight"><a class="el" href="#ab8ba4dc73f1708a3cd71aa9361495c01">get_max_future_extrapolation</a> () const</td></tr>
 <tr class="memitem:aa388b98eef124b87a50ea81e6cad9400" id="r_aa388b98eef124b87a50ea81e6cad9400"><td class="memItemLeft"><a class="el" href="structeasynav_1_1TFInfo.html">TFInfo</a>&#160;</td><td class="memItemRight"><a class="el" href="#aa388b98eef124b87a50ea81e6cad9400">get_tf_info</a> () const</td></tr>
 <tr class="memdesc:aa388b98eef124b87a50ea81e6cad9400"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a snapshot of the current <a class="el" href="structeasynav_1_1TFInfo.html" title="Aggregated TF configuration used across EasyNav.">TFInfo</a>.  <br /></td></tr>
+<tr class="memitem:a99221c86186d7af025a6adb482ddaafc" id="r_a99221c86186d7af025a6adb482ddaafc"><td class="memItemLeft">geometry_msgs::msg::TransformStamped&#160;</td><td class="memItemRight"><a class="el" href="#a99221c86186d7af025a6adb482ddaafc">lookupTransform</a> (const std::string &amp;target_frame, const std::string &amp;source_frame, const tf2::TimePoint &amp;time) const override</td></tr>
+<tr class="memitem:a9eefeba773352486056cc8c632e54730" id="r_a9eefeba773352486056cc8c632e54730"><td class="memItemLeft">geometry_msgs::msg::TransformStamped&#160;</td><td class="memItemRight"><a class="el" href="#a9eefeba773352486056cc8c632e54730">lookupTransform</a> (const std::string &amp;target_frame, const std::string &amp;source_frame, const tf2::TimePoint &amp;time, const tf2::Duration timeout) const override</td></tr>
+<tr class="memitem:aecfc493b3f55e830b11bd60581ebd1d6" id="r_aecfc493b3f55e830b11bd60581ebd1d6"><td class="memItemLeft">geometry_msgs::msg::TransformStamped&#160;</td><td class="memItemRight"><a class="el" href="#aecfc493b3f55e830b11bd60581ebd1d6">lookupTransform</a> (const std::string &amp;target_frame, const tf2::TimePoint &amp;target_time, const std::string &amp;source_frame, const tf2::TimePoint &amp;source_time, const std::string &amp;fixed_frame) const override</td></tr>
+<tr class="memitem:a75fcccf7de073997a5274cc68dce0f13" id="r_a75fcccf7de073997a5274cc68dce0f13"><td class="memItemLeft">geometry_msgs::msg::TransformStamped&#160;</td><td class="memItemRight"><a class="el" href="#a75fcccf7de073997a5274cc68dce0f13">lookupTransform</a> (const std::string &amp;target_frame, const tf2::TimePoint &amp;target_time, const std::string &amp;source_frame, const tf2::TimePoint &amp;source_time, const std::string &amp;fixed_frame, const tf2::Duration timeout) const override</td></tr>
 <tr class="memitem:aa7ef3a0d2cb5503016dd47f8877364fc" id="r_aa7ef3a0d2cb5503016dd47f8877364fc"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#aa7ef3a0d2cb5503016dd47f8877364fc">RTTFBuffer</a> ()</td></tr>
 <tr class="memitem:afaceb31b09807d360fb2b8e91ec6a929" id="r_afaceb31b09807d360fb2b8e91ec6a929"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#afaceb31b09807d360fb2b8e91ec6a929">RTTFBuffer</a> (const rclcpp::Clock::SharedPtr &amp;clock)</td></tr>
+<tr class="memitem:a4151e447dece1a3b7bc7bcd3069a6161" id="r_a4151e447dece1a3b7bc7bcd3069a6161"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a4151e447dece1a3b7bc7bcd3069a6161">set_extrapolation_window</a> (const tf2::Duration &amp;window)</td></tr>
+<tr class="memdesc:a4151e447dece1a3b7bc7bcd3069a6161"><td class="mdescLeft">&#160;</td><td class="mdescRight">History span used to estimate the twist (must be &gt; 0).  <br /></td></tr>
+<tr class="memitem:ae3e5f09ec227f9c47718362e0add553a" id="r_ae3e5f09ec227f9c47718362e0add553a"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ae3e5f09ec227f9c47718362e0add553a">set_max_future_extrapolation</a> (const tf2::Duration &amp;max_extrapolation)</td></tr>
+<tr class="memdesc:ae3e5f09ec227f9c47718362e0add553a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Max time ahead of the latest TF that lookups may extrapolate (0 disables).  <br /></td></tr>
 <tr class="memitem:aec2d485de46b2ee03a386945c6bd5bd3" id="r_aec2d485de46b2ee03a386945c6bd5bd3"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#aec2d485de46b2ee03a386945c6bd5bd3">set_tf_info</a> (const <a class="el" href="structeasynav_1_1TFInfo.html">TFInfo</a> &amp;tf_info)</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-inherited" class="groupheader"><a id="inherited" name="inherited"></a>
@@ -154,7 +168,8 @@ Additional Inherited Members</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Provides functionality for <a class="el" href="classeasynav_1_1RTTFBuffer.html" title="Provides functionality for RTTFBuffer.">RTTFBuffer</a>. </p>
-<p>It also provides the <a class="el" href="structeasynav_1_1TFInfo.html" title="Aggregated TF configuration used across EasyNav.">TFInfo</a> with the frames convention used across EasyNav. </p>
+<p>It also provides the <a class="el" href="structeasynav_1_1TFInfo.html" title="Aggregated TF configuration used across EasyNav.">TFInfo</a> with the frames convention used across EasyNav.</p>
+<p>Optionally extrapolates into the future: a lookup up to <span class="tt">max_future_extrapolation</span> ahead of the latest available transform is answered by integrating the chain's constant twist estimated over the last <span class="tt">extrapolation_window</span>. Only runs when tf2 itself fails with a future extrapolation; 50 ms by default, 0 disables it. </p>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="afaceb31b09807d360fb2b8e91ec6a929" name="afaceb31b09807d360fb2b8e91ec6a929"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afaceb31b09807d360fb2b8e91ec6a929">&#9670;&#160;</a></span>RTTFBuffer() <span class="overload">[1/2]</span></h2>
@@ -199,6 +214,226 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a id="a06325cbea75269e012ebd1c859744804" name="a06325cbea75269e012ebd1c859744804"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a06325cbea75269e012ebd1c859744804">&#9670;&#160;</a></span>canTransform() <span class="overload">[1/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool canTransform </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>target_frame</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>source_frame</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const tf2::TimePoint &amp;</td>          <td class="paramname"><span class="paramname"><em>time</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const tf2::Duration</td>          <td class="paramname"><span class="paramname"><em>timeout</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string *</td>          <td class="paramname"><span class="paramname"><em>errstr</em></span><span class="paramdefsep"> = </span><span class="paramdefval">nullptr</span>&#160;) const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel override">override</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aaa2eeaab4d95e4d84c7da8e62badf867" name="aaa2eeaab4d95e4d84c7da8e62badf867"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaa2eeaab4d95e4d84c7da8e62badf867">&#9670;&#160;</a></span>canTransform() <span class="overload">[2/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool canTransform </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>target_frame</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>source_frame</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const tf2::TimePoint &amp;</td>          <td class="paramname"><span class="paramname"><em>time</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string *</td>          <td class="paramname"><span class="paramname"><em>error_msg</em></span><span class="paramdefsep"> = </span><span class="paramdefval">nullptr</span>&#160;) const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel override">override</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="afda4f305545b9d956c220ce75972f0fd" name="afda4f305545b9d956c220ce75972f0fd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afda4f305545b9d956c220ce75972f0fd">&#9670;&#160;</a></span>canTransform() <span class="overload">[3/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool canTransform </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>target_frame</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const tf2::TimePoint &amp;</td>          <td class="paramname"><span class="paramname"><em>target_time</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>source_frame</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const tf2::TimePoint &amp;</td>          <td class="paramname"><span class="paramname"><em>source_time</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>fixed_frame</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const tf2::Duration</td>          <td class="paramname"><span class="paramname"><em>timeout</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string *</td>          <td class="paramname"><span class="paramname"><em>errstr</em></span><span class="paramdefsep"> = </span><span class="paramdefval">nullptr</span>&#160;) const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel override">override</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5dbe46183c48d9b91abc58b2e4691d14" name="a5dbe46183c48d9b91abc58b2e4691d14"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5dbe46183c48d9b91abc58b2e4691d14">&#9670;&#160;</a></span>canTransform() <span class="overload">[4/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool canTransform </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>target_frame</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const tf2::TimePoint &amp;</td>          <td class="paramname"><span class="paramname"><em>target_time</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>source_frame</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const tf2::TimePoint &amp;</td>          <td class="paramname"><span class="paramname"><em>source_time</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>fixed_frame</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string *</td>          <td class="paramname"><span class="paramname"><em>error_msg</em></span><span class="paramdefsep"> = </span><span class="paramdefval">nullptr</span>&#160;) const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel override">override</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="affe8b8feef23b5a49876e94658249ede" name="affe8b8feef23b5a49876e94658249ede"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#affe8b8feef23b5a49876e94658249ede">&#9670;&#160;</a></span>get_extrapolation_window()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">tf2::Duration get_extrapolation_window </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab8ba4dc73f1708a3cd71aa9361495c01" name="ab8ba4dc73f1708a3cd71aa9361495c01"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab8ba4dc73f1708a3cd71aa9361495c01">&#9670;&#160;</a></span>get_max_future_extrapolation()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">tf2::Duration get_max_future_extrapolation </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="aa388b98eef124b87a50ea81e6cad9400" name="aa388b98eef124b87a50ea81e6cad9400"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa388b98eef124b87a50ea81e6cad9400">&#9670;&#160;</a></span>get_tf_info()</h2>
 
@@ -216,6 +451,210 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Returns a snapshot of the current <a class="el" href="structeasynav_1_1TFInfo.html" title="Aggregated TF configuration used across EasyNav.">TFInfo</a>. </p>
 <p>Returned by value (copy taken while <span class="tt">tf_info_mutex_</span> is held): this is read continuously from both the RT and non-RT threads while <span class="tt"><a class="el" href="#aec2d485de46b2ee03a386945c6bd5bd3">set_tf_info()</a></span> can be called from either during a reconfigure, so a returned reference into <span class="tt">tf_info_</span> would be exposed to a concurrent unsynchronized write (torn/dangling strings). </p>
+
+</div>
+</div>
+<a id="a99221c86186d7af025a6adb482ddaafc" name="a99221c86186d7af025a6adb482ddaafc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a99221c86186d7af025a6adb482ddaafc">&#9670;&#160;</a></span>lookupTransform() <span class="overload">[1/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">geometry_msgs::msg::TransformStamped lookupTransform </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>target_frame</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>source_frame</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const tf2::TimePoint &amp;</td>          <td class="paramname"><span class="paramname"><em>time</em></span>&#160;) const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel override">override</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9eefeba773352486056cc8c632e54730" name="a9eefeba773352486056cc8c632e54730"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9eefeba773352486056cc8c632e54730">&#9670;&#160;</a></span>lookupTransform() <span class="overload">[2/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">geometry_msgs::msg::TransformStamped lookupTransform </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>target_frame</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>source_frame</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const tf2::TimePoint &amp;</td>          <td class="paramname"><span class="paramname"><em>time</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const tf2::Duration</td>          <td class="paramname"><span class="paramname"><em>timeout</em></span>&#160;) const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel override">override</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aecfc493b3f55e830b11bd60581ebd1d6" name="aecfc493b3f55e830b11bd60581ebd1d6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aecfc493b3f55e830b11bd60581ebd1d6">&#9670;&#160;</a></span>lookupTransform() <span class="overload">[3/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">geometry_msgs::msg::TransformStamped lookupTransform </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>target_frame</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const tf2::TimePoint &amp;</td>          <td class="paramname"><span class="paramname"><em>target_time</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>source_frame</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const tf2::TimePoint &amp;</td>          <td class="paramname"><span class="paramname"><em>source_time</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>fixed_frame</em></span>&#160;) const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel override">override</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a75fcccf7de073997a5274cc68dce0f13" name="a75fcccf7de073997a5274cc68dce0f13"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a75fcccf7de073997a5274cc68dce0f13">&#9670;&#160;</a></span>lookupTransform() <span class="overload">[4/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">geometry_msgs::msg::TransformStamped lookupTransform </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>target_frame</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const tf2::TimePoint &amp;</td>          <td class="paramname"><span class="paramname"><em>target_time</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>source_frame</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const tf2::TimePoint &amp;</td>          <td class="paramname"><span class="paramname"><em>source_time</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>fixed_frame</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const tf2::Duration</td>          <td class="paramname"><span class="paramname"><em>timeout</em></span>&#160;) const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel override">override</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4151e447dece1a3b7bc7bcd3069a6161" name="a4151e447dece1a3b7bc7bcd3069a6161"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4151e447dece1a3b7bc7bcd3069a6161">&#9670;&#160;</a></span>set_extrapolation_window()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void set_extrapolation_window </td>
+          <td>(</td>
+          <td class="paramtype">const tf2::Duration &amp;</td>          <td class="paramname"><span class="paramname"><em>window</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>History span used to estimate the twist (must be &gt; 0). </p>
+
+</div>
+</div>
+<a id="ae3e5f09ec227f9c47718362e0add553a" name="ae3e5f09ec227f9c47718362e0add553a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae3e5f09ec227f9c47718362e0add553a">&#9670;&#160;</a></span>set_max_future_extrapolation()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void set_max_future_extrapolation </td>
+          <td>(</td>
+          <td class="paramtype">const tf2::Duration &amp;</td>          <td class="paramname"><span class="paramname"><em>max_extrapolation</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Max time ahead of the latest TF that lookups may extrapolate (0 disables). </p>
 
 </div>
 </div>

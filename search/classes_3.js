@@ -7,5 +7,6 @@ var searchData=
   ['faultymapsmanager_4',['FaultyMapsManager',['../classeasynav_1_1FaultyMapsManager.html',1,'easynav']]],
   ['faultymapsmanagertest_5',['FaultyMapsManagerTest',['../classFaultyMapsManagerTest.html',1,'']]],
   ['faultyplanner_6',['FaultyPlanner',['../classeasynav_1_1FaultyPlanner.html',1,'easynav']]],
-  ['faultyplannertest_7',['FaultyPlannerTest',['../classFaultyPlannerTest.html',1,'']]]
+  ['faultyplannertest_7',['FaultyPlannerTest',['../classFaultyPlannerTest.html',1,'']]],
+  ['fuseexacttimetest_8',['FuseExactTimeTest',['../classFuseExactTimeTest.html',1,'']]]
 ];
