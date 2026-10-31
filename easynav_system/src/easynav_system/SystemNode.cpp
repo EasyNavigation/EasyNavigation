@@ -15,6 +15,7 @@
 /// \file
 /// \brief Implementation of the SystemNode class.
 
+#include <algorithm>
 #include <cmath>
 #include <set>
 #include <string>
@@ -76,6 +77,10 @@ SystemNode::SystemNode(const rclcpp::NodeOptions & options)
   declare_parameter<std::string>("odom_frame", tf_info.odom_frame);
   declare_parameter<std::string>("map_frame", tf_info.map_frame);
   declare_parameter<std::string>("world_frame", tf_info.world_frame);
+  // TF lookups may extrapolate this far (s) beyond the latest TF; 0 disables it.
+  declare_parameter("tf_max_future_extrapolation", 0.05);
+  // History (s) used to estimate the twist when extrapolating.
+  declare_parameter("tf_extrapolation_window", 0.05);
 
   const RobotGeometry geometry;
   declare_parameter("robot_geometry.radius", geometry.radius);
@@ -138,6 +143,18 @@ SystemNode::on_configure(const rclcpp_lifecycle::State & state)
   get_parameter("tf_prefix", tf_info.tf_prefix);
 
   RTTFBuffer::getInstance()->set_tf_info(tf_info);
+
+  const double max_extrapolation = get_parameter("tf_max_future_extrapolation").as_double();
+  const double extrapolation_window = get_parameter("tf_extrapolation_window").as_double();
+  RTTFBuffer::getInstance()->set_max_future_extrapolation(
+    tf2::durationFromSec(std::max(0.0, max_extrapolation)));
+  RTTFBuffer::getInstance()->set_extrapolation_window(
+    tf2::durationFromSec(extrapolation_window));
+  if (max_extrapolation > 0.0) {
+    RCLCPP_INFO(
+      get_logger(), "TF future extrapolation up to %.3f s (twist window %.3f s)",
+      max_extrapolation, RTTFBuffer::getInstance()->get_extrapolation_window().count() * 1e-9);
+  }
   RCLCPP_INFO(
     get_logger(),
     "EasyNav configured with TFInfo: prefix='%s', map='%s', odom='%s', robot='%s', "

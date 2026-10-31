@@ -633,35 +633,11 @@ PointPerceptionsOpsView::fuse(
     }
 
     try {
-      bool used_fallback_latest_tf = false;
       const auto query_time = exact_time ? tf2_ros::fromMsg(pptr->stamp) : tf2::TimePointZero;
+      // RTTFBuffer extrapolates a stamp slightly ahead of the latest TF; beyond that, drop it.
+      const auto tf_msg = tf_buffer->lookupTransform(target_frame_, pptr->frame_id, query_time);
 
-      geometry_msgs::msg::TransformStamped tf_msg;
-      try {
-        tf_msg = tf_buffer->lookupTransform(
-          target_frame_, pptr->frame_id,
-          query_time);
-      } catch (const tf2::TransformException & ex) {
-        // Common in RT loops: exact-time request is a few ms ahead of the latest TF.
-        // Fall back to latest TF rather than dropping the perception.
-        if (exact_time) {
-          const std::string what = ex.what();
-          if (what.find("extrapolation") != std::string::npos &&
-            what.find("future") != std::string::npos)
-          {
-            tf_msg = tf_buffer->lookupTransform(
-              target_frame_, pptr->frame_id,
-              tf2::TimePointZero);
-            used_fallback_latest_tf = true;
-          } else {
-            throw;
-          }
-        } else {
-          throw;
-        }
-      }
-
-      if (exact_time && !used_fallback_latest_tf) {
+      if (exact_time) {
         update_latest_stamp(pptr->stamp);
       } else {
         update_latest_stamp(rclcpp::Time(tf_msg.header.stamp, pptr->stamp.get_clock_type()));
