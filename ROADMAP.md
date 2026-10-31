@@ -82,7 +82,7 @@ Carried over:
 
 Proposed:
 
-- [ ] **RD041:** Release **EasyNav 0.5** (recovery system, velocity pipeline, safety) for **Jazzy**, **Kilted** and **Lyrical**, and port the recovery system to **Humble**
+- [x] **RD041:** Release **EasyNav 0.5** (recovery system, velocity pipeline, safety) for **Jazzy**, **Kilted** and **Lyrical**, and port the recovery system to **Humble**
 - [ ] **RD042:** Fault-injection **simulation scenarios** with `ros2_fault_injection` (sensor and TF drops and delays)
 - [ ] **RD043:** No middleware calls in the real-time cycle: `RTTFBuffer::publish()` and debug publications moved out of `update_rt()`
 - [ ] **RD044:** **Timing campaign** per release: worst-case execution time per cycle and plugin, under load, on reference hardware
