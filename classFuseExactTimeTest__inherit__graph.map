@@ -1,5 +1,7 @@
 <map id="FuseExactTimeTest" name="FuseExactTimeTest">
 <area shape="rect" id="Node000001" title=" " alt="" coords="5,79,143,105"/>
+<area shape="rect" id="Node000003" href="$classFuseWithoutTfTest.html" title=" " alt="" coords="8,153,140,178"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="77,120,77,152,71,152,71,120"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="50,5,98,31"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="77,46,77,79,71,79,71,46"/>
 </map>

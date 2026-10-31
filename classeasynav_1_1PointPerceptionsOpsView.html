@@ -494,7 +494,8 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Reference to <code>*this</code> to allow chaining. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Reference to <code>*this</code> to allow chaining.</dd></dl>
+<p>A perception whose transform cannot be obtained is left out of <a class="el" href="#aea26f51c08e637df3671eba56902a54a" title="Filters all point clouds by axis-aligned bounds.">filter()</a> and <a class="el" href="#a805d236592ccedb4d00c893bbf797bcd" title="Retrieves all selected points across perceptions as a single concatenated cloud.">as_points()</a> until a later <a class="el" href="#a5f528e4eb6e67d91b3c56711a314fc85" title="Configures fusion of all perceptions into a common frame.">fuse()</a> gets it: its points are not in <code class="param">target_frame</code>. </p>
 
 </div>
 </div>
