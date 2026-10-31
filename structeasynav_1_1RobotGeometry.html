@@ -97,6 +97,7 @@ document.addEventListener('DOMContentLoaded', codefold.init);
 <div id="doc-content">
 <div class="header">
   <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="structeasynav_1_1RobotGeometry-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">RobotGeometry Struct Reference</div></div>
@@ -112,14 +113,23 @@ Collaboration diagram for RobotGeometry:</div>
 <div class="dyncontent">
 <div class="center"><img src="structeasynav_1_1RobotGeometry__coll__graph.png" border="0" usemap="#aRobotGeometry_coll__map" loading="lazy" alt="Collaboration graph"/></div>
 <map name="aRobotGeometry_coll__map" id="aRobotGeometry_coll__map">
-<area shape="rect" title="The robot&#39;s shape, shared by everything that needs it." alt="" coords="5,143,117,168"/>
-<area shape="rect" title=" " alt="" coords="31,5,91,31"/>
-<area shape="poly" title=" " alt="" coords="64,46,64,142,58,142,58,46"/>
+<area shape="rect" title="The robot&#39;s shape, shared by everything that needs it." alt="" coords="49,158,160,183"/>
+<area shape="rect" title=" " alt="" coords="5,13,65,38"/>
+<area shape="poly" title=" " alt="" coords="33,54,33,93,38,113,46,132,58,145,73,155,70,159,54,149,41,135,32,115,28,94,28,54"/>
+<area shape="rect" title=" " alt="" coords="88,5,262,46"/>
+<area shape="poly" title=" " alt="" coords="173,62,165,98,148,135,125,159,121,155,143,132,159,97,168,61"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a5d502e8ac948c1037e0dd6f0bd16bd85" id="r_a5d502e8ac948c1037e0dd6f0bd16bd85"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a5d502e8ac948c1037e0dd6f0bd16bd85">RobotGeometry</a> ()=default</td></tr>
+<tr class="memitem:ac829246698908bd525dad87a4782cb15" id="r_ac829246698908bd525dad87a4782cb15"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#ac829246698908bd525dad87a4782cb15">RobotGeometry</a> (double radius, double inscribed_radius, double height, std::vector&lt; <a class="el" href="structeasynav_1_1FootprintPoint.html">FootprintPoint</a> &gt; footprint={})</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
+<tr class="memitem:a2b5e04dff4951cb8bc060b4ffb1e21a4" id="r_a2b5e04dff4951cb8bc060b4ffb1e21a4"><td class="memItemLeft">std::vector&lt; <a class="el" href="structeasynav_1_1FootprintPoint.html">FootprintPoint</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a2b5e04dff4951cb8bc060b4ffb1e21a4">footprint</a></td></tr>
+<tr class="memdesc:a2b5e04dff4951cb8bc060b4ffb1e21a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Polygon of the robot (robot frame, in order around it).  <br /></td></tr>
 <tr class="memitem:a89f6abd564014faeff7cd20c340a9c7d" id="r_a89f6abd564014faeff7cd20c340a9c7d"><td class="memItemLeft">double&#160;</td><td class="memItemRight"><a class="el" href="#a89f6abd564014faeff7cd20c340a9c7d">height</a> {0.5}</td></tr>
 <tr class="memdesc:a89f6abd564014faeff7cd20c340a9c7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Top of the robot, above the robot frame (m).  <br /></td></tr>
 <tr class="memitem:a26cbd571c6dba5794f10b3f31fc1637d" id="r_a26cbd571c6dba5794f10b3f31fc1637d"><td class="memItemLeft">double&#160;</td><td class="memItemRight"><a class="el" href="#a26cbd571c6dba5794f10b3f31fc1637d">inscribed_radius</a> {0.3}</td></tr>
@@ -130,7 +140,81 @@ Public Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The robot's shape, shared by everything that needs it. </p>
 <p>Configured once, in <a class="el" href="classeasynav_1_1SystemNode.html" title="ROS 2 lifecycle node coordinating all Easy Navigation components.">SystemNode</a> ("robot_geometry.*" parameters), and read with <a class="el" href="namespaceeasynav.html#a60356f07b901b23327436276a7c57883" title="The robot&#39;s geometry (&quot;system_node.robot_geometry.*&quot;).">get_robot_geometry()</a> (<a class="el" href="RobotGeometry_8hpp.html" title="RobotGeometryRegistry, which shares the robot&#39;s geometry, and get_robot_geometry().">easynav_common/RobotGeometry.hpp</a>). </p>
-</div><a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
+</div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a5d502e8ac948c1037e0dd6f0bd16bd85" name="a5d502e8ac948c1037e0dd6f0bd16bd85"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5d502e8ac948c1037e0dd6f0bd16bd85">&#9670;&#160;</a></span>RobotGeometry() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structRobotGeometry.html">RobotGeometry</a> </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel default">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac829246698908bd525dad87a4782cb15" name="ac829246698908bd525dad87a4782cb15"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac829246698908bd525dad87a4782cb15">&#9670;&#160;</a></span>RobotGeometry() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structRobotGeometry.html">RobotGeometry</a> </td>
+          <td>(</td>
+          <td class="paramtype">double</td>          <td class="paramname"><span class="paramname"><em>radius</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double</td>          <td class="paramname"><span class="paramname"><em>inscribed_radius</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double</td>          <td class="paramname"><span class="paramname"><em>height</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="structeasynav_1_1FootprintPoint.html">FootprintPoint</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>footprint</em></span><span class="paramdefsep"> = </span><span class="paramdefval">{}</span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
+<a id="a2b5e04dff4951cb8bc060b4ffb1e21a4" name="a2b5e04dff4951cb8bc060b4ffb1e21a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b5e04dff4951cb8bc060b4ffb1e21a4">&#9670;&#160;</a></span>footprint</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;<a class="el" href="structeasynav_1_1FootprintPoint.html">FootprintPoint</a>&gt; footprint</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Polygon of the robot (robot frame, in order around it). </p>
+<p>Empty: a circle of <code class="param">radius</code>. When given, <code class="param">radius</code> contains it and <code class="param">inscribed_radius</code> fits inside it. </p>
+
+</div>
+</div>
 <a id="a89f6abd564014faeff7cd20c340a9c7d" name="a89f6abd564014faeff7cd20c340a9c7d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a89f6abd564014faeff7cd20c340a9c7d">&#9670;&#160;</a></span>height</h2>
 

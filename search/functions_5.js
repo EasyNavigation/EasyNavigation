@@ -6,7 +6,11 @@ var searchData=
   ['filter_3',['filter',['../classeasynav_1_1PointPerceptionsOpsView.html#aea26f51c08e637df3671eba56902a54a',1,'easynav::PointPerceptionsOpsView']]],
   ['find_4',['find',['../classeasynav_1_1testing_1_1LogCapture.html#aeecf85888e0a07f6eefa35d29f79ea6e',1,'easynav::testing::LogCapture::find()'],['../classLogCapture.html#aeecf85888e0a07f6eefa35d29f79ea6e',1,'LogCapture::find()']]],
   ['finished_5',['finished',['../classSystemActionsTest.html#abfe11b2f0982fcc143be53a6e233ea36',1,'SystemActionsTest']]],
-  ['freeze_6',['freeze',['../classeasynav_1_1safety_1_1ParameterFreezer.html#ac27c1611849069228109ee45629a2b70',1,'easynav::safety::ParameterFreezer']]],
-  ['full_7',['full',['../classeasynav_1_1CircularBuffer.html#adcca6ae0a0952049b1e0c8dddaa42044',1,'easynav::CircularBuffer']]],
-  ['fuse_8',['fuse',['../classeasynav_1_1PointPerceptionsOpsView.html#a5f528e4eb6e67d91b3c56711a314fc85',1,'easynav::PointPerceptionsOpsView::fuse(const std::string &amp;target_frame, bool exact_time=false)'],['../classeasynav_1_1PointPerceptionsOpsView.html#a3db0346625ad7fb7c2fba73578020d56',1,'easynav::PointPerceptionsOpsView::fuse(const std::string &amp;target_frame, rclcpp::Time &amp;stamp, bool exact_time=false)']]]
+  ['footprint_5fborder_5fdistance_6',['footprint_border_distance',['../namespaceeasynav.html#a30d702ec860f4225993b71ac93615c45',1,'easynav']]],
+  ['footprint_5fcontains_7',['footprint_contains',['../namespaceeasynav.html#acb01d853dbf6eae14f8d6fc8f8efc54f',1,'easynav']]],
+  ['footprint_5finscribed_5fradius_8',['footprint_inscribed_radius',['../namespaceeasynav.html#a42476caeb618e564171b227df4b409ab',1,'easynav']]],
+  ['footprint_5fradius_9',['footprint_radius',['../namespaceeasynav.html#a20c61c3234c2c2a9843705a2bbfb6d80',1,'easynav']]],
+  ['freeze_10',['freeze',['../classeasynav_1_1safety_1_1ParameterFreezer.html#ac27c1611849069228109ee45629a2b70',1,'easynav::safety::ParameterFreezer']]],
+  ['full_11',['full',['../classeasynav_1_1CircularBuffer.html#adcca6ae0a0952049b1e0c8dddaa42044',1,'easynav::CircularBuffer']]],
+  ['fuse_12',['fuse',['../classeasynav_1_1PointPerceptionsOpsView.html#a5f528e4eb6e67d91b3c56711a314fc85',1,'easynav::PointPerceptionsOpsView::fuse(const std::string &amp;target_frame, bool exact_time=false)'],['../classeasynav_1_1PointPerceptionsOpsView.html#a3db0346625ad7fb7c2fba73578020d56',1,'easynav::PointPerceptionsOpsView::fuse(const std::string &amp;target_frame, rclcpp::Time &amp;stamp, bool exact_time=false)']]]
 ];

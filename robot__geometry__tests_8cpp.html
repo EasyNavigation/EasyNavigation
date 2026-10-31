@@ -105,7 +105,8 @@ document.addEventListener('DOMContentLoaded', codefold.init);
 
 <p>Tests for get_robot_geometry(): the system's geometry and deprecated parameters.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;memory&gt;</code><br />
+<div class="textblock"><code>#include &lt;cmath&gt;</code><br />
+<code>#include &lt;memory&gt;</code><br />
 <code>#include &lt;set&gt;</code><br />
 <code>#include &lt;string&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
@@ -119,50 +120,59 @@ Include dependency graph for robot_geometry_tests.cpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="robot__geometry__tests_8cpp__incl.png" border="0" usemap="#aeasynav__common_2tests_2robot__geometry__tests_8cpp" loading="lazy" alt=""/></div>
 <map name="aeasynav__common_2tests_2robot__geometry__tests_8cpp" id="aeasynav__common_2tests_2robot__geometry__tests_8cpp">
-<area shape="rect" title="Tests for get_robot_geometry(): the system&#39;s geometry and deprecated parameters." alt="" coords="858,5,1032,46"/>
-<area shape="rect" title=" " alt="" coords="159,102,227,127"/>
-<area shape="poly" title=" " alt="" coords="858,31,736,36,583,47,414,66,246,97,237,99,236,94,244,91,413,61,582,41,736,30,858,26"/>
-<area shape="rect" title=" " alt="" coords="5,190,45,216"/>
-<area shape="poly" title=" " alt="" coords="857,33,719,41,557,53,405,72,343,83,297,96,280,105,268,115,257,126,240,137,192,155,151,163,110,170,58,186,57,181,109,165,150,157,190,149,237,132,253,122,265,112,277,101,295,92,342,78,404,66,557,48,719,35,857,28"/>
-<area shape="rect" title=" " alt="" coords="576,271,629,297"/>
-<area shape="poly" title=" " alt="" coords="858,29,739,31,606,41,543,49,486,61,441,77,409,96,384,126,373,157,375,188,392,222,403,231,419,239,463,255,561,274,560,280,461,260,417,244,400,235,388,225,370,190,367,156,380,123,406,92,439,72,485,56,542,44,605,35,739,26,857,23"/>
-<area shape="rect" title=" " alt="" coords="1028,190,1086,216"/>
-<area shape="poly" title=" " alt="" coords="960,45,1043,175,1039,178,955,48"/>
-<area shape="rect" title=" " alt="" coords="1233,102,1326,127"/>
-<area shape="poly" title=" " alt="" coords="1033,44,1222,91,1230,94,1229,99,1220,97,1032,49"/>
-<area shape="rect" title=" " alt="" coords="885,190,1005,216"/>
-<area shape="poly" title=" " alt="" coords="948,46,948,174,942,174,942,46"/>
-<area shape="rect" title=" " alt="" coords="1351,94,1512,135"/>
-<area shape="poly" title=" " alt="" coords="1033,38,1336,91,1336,96,1032,44"/>
-<area shape="rect" href="RobotGeometry_8hpp.html" title="RobotGeometryRegistry, which shares the robot&#39;s geometry, and get_robot_geometry()." alt="" coords="420,102,664,127"/>
-<area shape="poly" title=" " alt="" coords="858,48,615,100,613,95,857,43"/>
-<area shape="rect" href="LogCapture_8hpp.html" title="LogCapture: records the log messages emitted while it lives (for tests)." alt="" coords="1039,94,1208,135"/>
-<area shape="poly" title=" " alt="" coords="987,44,1071,85,1069,89,984,49"/>
-<area shape="poly" title=" " alt="" coords="420,130,218,154,125,169,58,185,56,186,55,181,56,180,123,163,217,148,420,124"/>
-<area shape="poly" title=" " alt="" coords="552,126,579,182,600,255,595,257,575,184,547,129"/>
-<area shape="poly" title=" " alt="" coords="608,125,874,180,886,183,885,188,872,185,607,130"/>
-<area shape="rect" title=" " alt="" coords="337,271,393,297"/>
-<area shape="poly" title=" " alt="" coords="486,130,436,151,412,166,392,184,382,201,375,219,368,256,363,256,370,218,377,198,388,181,409,161,433,146,484,125"/>
-<area shape="rect" href="Parameters_8hpp.html" title="Parameter helpers for plugins that may be initialized several times on the same node." alt="" coords="640,190,861,216"/>
-<area shape="poly" title=" " alt="" coords="573,125,708,181,706,186,571,130"/>
-<area shape="rect" href="Singleton_8hpp.html" title=" " alt="" coords="69,190,277,216"/>
-<area shape="poly" title=" " alt="" coords="491,130,240,189,239,184,490,125"/>
-<area shape="rect" href="types_2RobotGeometry_8hpp.html" title="Declaration of RobotGeometry and LegacyRobotGeometryNames." alt="" coords="403,183,564,223"/>
-<area shape="poly" title=" " alt="" coords="536,129,507,172,503,169,532,126"/>
-<area shape="poly" title=" " alt="" coords="729,219,639,266,637,261,727,214"/>
-<area shape="poly" title=" " alt="" coords="204,214,323,263,321,268,202,219"/>
-<area shape="rect" title=" " alt="" coords="147,271,199,297"/>
-<area shape="poly" title=" " alt="" coords="176,216,176,255,170,255,170,216"/>
-<area shape="poly" title=" " alt="" coords="514,222,573,260,570,265,512,226"/>
-<area shape="poly" title=" " alt="" coords="1138,134,1147,154,1154,179,1155,203,1144,225,1117,239,1068,250,927,267,769,278,645,284,644,279,769,273,926,262,1067,245,1116,234,1140,221,1150,202,1149,179,1142,156,1133,136"/>
-<area shape="poly" title=" " alt="" coords="1111,137,1078,179,1073,176,1106,134"/>
-<area shape="poly" title=" " alt="" coords="1128,135,1124,181,1116,205,1100,226,1007,238,807,255,409,283,409,277,807,249,1007,233,1097,221,1111,203,1119,180,1123,135"/>
-<area shape="rect" title=" " alt="" coords="1212,190,1276,216"/>
-<area shape="poly" title=" " alt="" coords="1152,133,1216,179,1213,183,1149,137"/>
-<area shape="rect" title=" " alt="" coords="1300,190,1356,216"/>
-<area shape="poly" title=" " alt="" coords="1175,133,1289,180,1290,181,1288,186,1287,185,1173,138"/>
-<area shape="rect" title=" " alt="" coords="1380,190,1491,216"/>
-<area shape="poly" title=" " alt="" coords="1196,133,1368,180,1379,183,1377,188,1367,185,1195,138"/>
+<area shape="rect" title="Tests for get_robot_geometry(): the system&#39;s geometry and deprecated parameters." alt="" coords="497,5,671,46"/>
+<area shape="rect" title=" " alt="" coords="60,271,118,297"/>
+<area shape="poly" title=" " alt="" coords="496,34,423,41,338,53,249,71,162,97,75,125,43,146,14,184,8,203,14,222,30,244,52,261,49,265,27,248,9,225,3,203,9,181,39,142,72,121,160,91,247,66,337,47,422,35,496,29"/>
+<area shape="rect" title=" " alt="" coords="173,102,240,127"/>
+<area shape="poly" title=" " alt="" coords="497,44,383,66,259,97,252,99,251,94,258,91,382,61,496,39"/>
+<area shape="rect" title=" " alt="" coords="24,190,63,216"/>
+<area shape="poly" title=" " alt="" coords="497,38,398,58,346,75,297,96,284,106,276,116,267,127,253,137,208,156,168,164,128,171,77,186,75,181,126,166,168,159,206,151,250,132,263,123,272,112,280,102,294,92,344,70,397,53,496,33"/>
+<area shape="rect" title=" " alt="" coords="552,271,605,297"/>
+<area shape="poly" title=" " alt="" coords="632,44,815,122,897,159,935,181,944,203,942,214,935,225,913,242,880,255,794,272,700,281,621,285,621,280,700,276,794,267,879,249,911,237,931,222,937,212,939,204,931,184,894,163,813,126,630,49"/>
+<area shape="rect" title=" " alt="" coords="1020,271,1078,297"/>
+<area shape="poly" title=" " alt="" coords="672,25,771,29,879,40,930,49,975,60,1011,74,1036,92,1050,111,1059,131,1067,176,1065,220,1059,257,1054,256,1060,220,1061,176,1054,133,1045,113,1033,96,1009,79,973,65,929,54,879,45,771,35,671,30"/>
+<area shape="rect" title=" " alt="" coords="634,102,728,127"/>
+<area shape="poly" title=" " alt="" coords="608,45,658,89,655,93,604,49"/>
+<area shape="rect" title=" " alt="" coords="88,190,207,216"/>
+<area shape="poly" title=" " alt="" coords="497,48,426,68,354,96,326,116,297,137,244,164,194,187,191,182,242,159,294,132,323,111,352,92,424,63,496,43"/>
+<area shape="rect" title=" " alt="" coords="860,94,1022,135"/>
+<area shape="poly" title=" " alt="" coords="666,44,846,87,845,93,665,49"/>
+<area shape="rect" href="RobotGeometry_8hpp.html" title="RobotGeometryRegistry, which shares the robot&#39;s geometry, and get_robot_geometry()." alt="" coords="366,102,610,127"/>
+<area shape="poly" title=" " alt="" coords="564,49,514,93,510,89,560,45"/>
+<area shape="rect" href="LogCapture_8hpp.html" title="LogCapture: records the log messages emitted while it lives (for tests)." alt="" coords="1098,183,1267,223"/>
+<area shape="poly" title=" " alt="" coords="672,29,777,37,895,50,1003,68,1047,79,1080,92,1105,108,1128,127,1163,168,1159,172,1124,131,1102,112,1077,96,1045,84,1002,73,894,55,777,43,671,35"/>
+<area shape="poly" title=" " alt="" coords="387,130,214,155,134,170,77,185,76,186,74,181,75,180,133,165,213,150,386,125"/>
+<area shape="poly" title=" " alt="" coords="481,129,468,148,457,172,452,198,453,210,458,222,474,240,494,254,538,272,536,277,491,259,470,244,454,225,448,212,446,198,452,170,463,145,476,126"/>
+<area shape="poly" title=" " alt="" coords="439,130,219,185,208,188,206,183,218,180,437,125"/>
+<area shape="rect" title=" " alt="" coords="930,271,987,297"/>
+<area shape="poly" title=" " alt="" coords="573,125,934,180,948,197,956,217,962,255,957,256,951,218,943,200,932,185,572,130"/>
+<area shape="rect" href="Parameters_8hpp.html" title="Parameter helpers for plugins that may be initialized several times on the same node." alt="" coords="468,190,689,216"/>
+<area shape="poly" title=" " alt="" coords="502,126,557,177,553,181,499,130"/>
+<area shape="rect" href="Singleton_8hpp.html" title=" " alt="" coords="713,190,921,216"/>
+<area shape="poly" title=" " alt="" coords="535,125,757,183,755,188,534,130"/>
+<area shape="rect" href="types_2RobotGeometry_8hpp.html" title="Declaration of RobotGeometry and LegacyRobotGeometryNames." alt="" coords="231,183,392,223"/>
+<area shape="poly" title=" " alt="" coords="464,130,366,178,364,173,462,125"/>
+<area shape="poly" title=" " alt="" coords="581,216,581,255,576,255,576,216"/>
+<area shape="poly" title=" " alt="" coords="840,214,925,261,922,266,837,219"/>
+<area shape="rect" title=" " alt="" coords="419,271,471,297"/>
+<area shape="poly" title=" " alt="" coords="760,219,486,277,485,272,759,214"/>
+<area shape="poly" title=" " alt="" coords="257,226,133,270,131,265,255,221"/>
+<area shape="poly" title=" " alt="" coords="379,221,538,268,536,273,378,226"/>
+<area shape="poly" title=" " alt="" coords="393,213,456,221,609,234,728,241,847,249,999,269,1006,270,1005,275,998,274,846,254,728,246,608,239,456,226,393,218"/>
+<area shape="poly" title=" " alt="" coords="346,222,413,261,410,265,344,226"/>
+<area shape="rect" title=" " alt="" coords="215,271,289,297"/>
+<area shape="poly" title=" " alt="" coords="299,225,272,260,268,257,295,222"/>
+<area shape="rect" title=" " alt="" coords="314,271,366,297"/>
+<area shape="poly" title=" " alt="" coords="321,223,333,256,328,257,316,225"/>
+<area shape="poly" title=" " alt="" coords="1098,218,621,280,620,275,1097,213"/>
+<area shape="poly" title=" " alt="" coords="1151,226,1084,265,1081,261,1148,222"/>
+<area shape="poly" title=" " alt="" coords="1127,226,1002,270,1000,265,1126,221"/>
+<area shape="rect" title=" " alt="" coords="1237,271,1301,297"/>
+<area shape="poly" title=" " alt="" coords="1206,222,1246,259,1243,263,1202,226"/>
+<area shape="rect" title=" " alt="" coords="1325,271,1381,297"/>
+<area shape="poly" title=" " alt="" coords="1226,222,1314,262,1312,267,1224,226"/>
+<area shape="rect" title=" " alt="" coords="1101,271,1213,297"/>
+<area shape="poly" title=" " alt="" coords="1179,225,1168,257,1163,255,1174,223"/>
 </map>
 </div>
 </div><table class="memberdecls">
@@ -176,6 +186,10 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a845a770212602ecf41b85fbcbac1f4ac" id="r_a845a770212602ecf41b85fbcbac1f4ac"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a845a770212602ecf41b85fbcbac1f4ac">TEST</a> (FootprintTest, ANonConvexFootprint)</td></tr>
+<tr class="memitem:adec5fd017fb73b0f5455424a79a39aa7" id="r_adec5fd017fb73b0f5455424a79a39aa7"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#adec5fd017fb73b0f5455424a79a39aa7">TEST</a> (FootprintTest, InsideOutsideAndDistanceToTheBorder)</td></tr>
+<tr class="memitem:a8d3d044420cbe68c78b90a1737e08778" id="r_a8d3d044420cbe68c78b90a1737e08778"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a8d3d044420cbe68c78b90a1737e08778">TEST</a> (FootprintTest, RadiiOfARectangle)</td></tr>
+<tr class="memitem:a6b3a472b3d26f2cf3e5b5866bb5c7cc4" id="r_a6b3a472b3d26f2cf3e5b5866bb5c7cc4"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a6b3a472b3d26f2cf3e5b5866bb5c7cc4">TEST</a> (FootprintTest, RobotFrameOutsideTheFootprintHasNoInscribedCircle)</td></tr>
 <tr class="memitem:aff5c549deebbc81676b54e4b13b07c43" id="r_aff5c549deebbc81676b54e4b13b07c43"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#aff5c549deebbc81676b54e4b13b07c43">TEST_F</a> (<a class="el" href="classRobotGeometryTest.html">RobotGeometryTest</a>, ConfiguredGeometryTakesPrecedence)</td></tr>
 <tr class="memitem:ae542cee1ea9ee0a1f394b8df93f36093" id="r_ae542cee1ea9ee0a1f394b8df93f36093"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#ae542cee1ea9ee0a1f394b8df93f36093">TEST_F</a> (<a class="el" href="classRobotGeometryTest.html">RobotGeometryTest</a>, DefaultsWithoutAnyConfiguration)</td></tr>
 <tr class="memitem:a4b8c86568231983d735bc002c09a2171" id="r_a4b8c86568231983d735bc002c09a2171"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a4b8c86568231983d735bc002c09a2171">TEST_F</a> (<a class="el" href="classRobotGeometryTest.html">RobotGeometryTest</a>, DeprecatedParameterDeclaredByAPreviousInstance)</td></tr>
@@ -195,6 +209,90 @@ Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Tests for get_robot_geometry(): the system's geometry and deprecated parameters. </p>
 </div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
+<a id="a845a770212602ecf41b85fbcbac1f4ac" name="a845a770212602ecf41b85fbcbac1f4ac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a845a770212602ecf41b85fbcbac1f4ac">&#9670;&#160;</a></span>TEST() <span class="overload">[1/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TEST </td>
+          <td>(</td>
+          <td class="paramtype">FootprintTest</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ANonConvexFootprint</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="adec5fd017fb73b0f5455424a79a39aa7" name="adec5fd017fb73b0f5455424a79a39aa7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adec5fd017fb73b0f5455424a79a39aa7">&#9670;&#160;</a></span>TEST() <span class="overload">[2/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TEST </td>
+          <td>(</td>
+          <td class="paramtype">FootprintTest</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">InsideOutsideAndDistanceToTheBorder</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8d3d044420cbe68c78b90a1737e08778" name="a8d3d044420cbe68c78b90a1737e08778"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8d3d044420cbe68c78b90a1737e08778">&#9670;&#160;</a></span>TEST() <span class="overload">[3/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TEST </td>
+          <td>(</td>
+          <td class="paramtype">FootprintTest</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">RadiiOfARectangle</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6b3a472b3d26f2cf3e5b5866bb5c7cc4" name="a6b3a472b3d26f2cf3e5b5866bb5c7cc4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6b3a472b3d26f2cf3e5b5866bb5c7cc4">&#9670;&#160;</a></span>TEST() <span class="overload">[4/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TEST </td>
+          <td>(</td>
+          <td class="paramtype">FootprintTest</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">RobotFrameOutsideTheFootprintHasNoInscribedCircle</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="aff5c549deebbc81676b54e4b13b07c43" name="aff5c549deebbc81676b54e4b13b07c43"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aff5c549deebbc81676b54e4b13b07c43">&#9670;&#160;</a></span>TEST_F() <span class="overload">[1/15]</span></h2>
 

@@ -1,0 +1,5 @@
+<map id="FootprintPoint" name="FootprintPoint">
+<area shape="rect" id="Node000001" title="A vertex of the robot&#39;s footprint, in the robot frame (m)." alt="" coords="5,122,108,148"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="27,5,86,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="59,47,59,122,54,122,54,47"/>
+</map>

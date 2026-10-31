@@ -8,6 +8,7 @@ var searchData=
   ['faultymapsmanagertest_5',['FaultyMapsManagerTest',['../classFaultyMapsManagerTest.html',1,'']]],
   ['faultyplanner_6',['FaultyPlanner',['../classeasynav_1_1FaultyPlanner.html',1,'easynav']]],
   ['faultyplannertest_7',['FaultyPlannerTest',['../classFaultyPlannerTest.html',1,'']]],
-  ['fuseexacttimetest_8',['FuseExactTimeTest',['../classFuseExactTimeTest.html',1,'']]],
-  ['fusewithouttftest_9',['FuseWithoutTfTest',['../classFuseWithoutTfTest.html',1,'']]]
+  ['footprintpoint_8',['FootprintPoint',['../structeasynav_1_1FootprintPoint.html',1,'easynav']]],
+  ['fuseexacttimetest_9',['FuseExactTimeTest',['../classFuseExactTimeTest.html',1,'']]],
+  ['fusewithouttftest_10',['FuseWithoutTfTest',['../classFuseWithoutTfTest.html',1,'']]]
 ];

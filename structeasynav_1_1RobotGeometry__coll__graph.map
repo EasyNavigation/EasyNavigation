@@ -1,5 +1,7 @@
 <map id="RobotGeometry" name="RobotGeometry">
-<area shape="rect" id="Node000001" title="The robot&#39;s shape, shared by everything that needs it." alt="" coords="5,143,117,168"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="31,5,91,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="64,46,64,142,58,142,58,46"/>
+<area shape="rect" id="Node000001" title="The robot&#39;s shape, shared by everything that needs it." alt="" coords="49,158,160,183"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,13,65,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="33,54,33,93,38,113,46,132,58,145,73,155,70,159,54,149,41,135,32,115,28,94,28,54"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="88,5,262,46"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="173,62,165,98,148,135,125,159,121,155,143,132,159,97,168,61"/>
 </map>
