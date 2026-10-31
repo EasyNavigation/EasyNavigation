@@ -86,6 +86,8 @@ SystemNode::SystemNode(const rclcpp::NodeOptions & options)
   declare_parameter("robot_geometry.radius", geometry.radius);
   declare_parameter("robot_geometry.inscribed_radius", geometry.inscribed_radius);
   declare_parameter("robot_geometry.height", geometry.height);
+  // Polygon of the robot, [x1, y1, x2, y2, ...] in the robot frame; empty: a circle.
+  declare_parameter("robot_geometry.footprint", std::vector<double>{});
 
   safety_.declare_parameters(*this);
 
@@ -221,6 +223,31 @@ SystemNode::check_system_parameters()
   check(
     "robot_geometry.inscribed_radius", value("robot_geometry.inscribed_radius") >= 0.0, ">= 0");
   check("robot_geometry.height", value("robot_geometry.height") >= 0.0, ">= 0");
+  const auto footprint = get_parameter("robot_geometry.footprint").as_double_array();
+  const bool finite = std::all_of(
+    footprint.begin(), footprint.end(), [](double v) {return std::isfinite(v);});
+  if (!finite || footprint.size() % 2 != 0 || (!footprint.empty() && footprint.size() < 6)) {
+    errors.push_back(
+      "robot_geometry.footprint (" + std::to_string(footprint.size()) +
+      " values: empty, or x, y of 3 or more vertices)");
+  } else if (!footprint.empty()) {
+    std::vector<FootprintPoint> polygon;
+    for (size_t i = 0; i + 1 < footprint.size(); i += 2) {
+      polygon.push_back({footprint[i], footprint[i + 1]});
+    }
+    // A smaller radius may be on purpose (planning margins), but whatever uses it may let
+    // the corners touch: the footprint itself is exact.
+    const double radius = value("robot_geometry.radius");
+    const auto & overrides = get_node_parameters_interface()->get_parameter_overrides();
+    const bool radius_given = overrides.count("robot_geometry.radius") > 0 ||
+      radius != RobotGeometry{}.radius;
+    if (radius_given && radius < footprint_radius(polygon) - 1e-9) {
+      RCLCPP_WARN(
+        get_logger(), "robot_geometry.radius = %.3f does not contain robot_geometry.footprint "
+        "(%.3f): what uses the radius may let its corners touch obstacles", radius,
+        footprint_radius(polygon));
+    }
+  }
 
   for (const auto & error : errors) {
     RCLCPP_ERROR(get_logger(), "Invalid parameter: %s", error.c_str());
@@ -385,14 +412,29 @@ SystemNode::configure_robot_geometry()
       configured.insert(field);
     }
   }
-  if (configured.count("inscribed_radius") == 0) {
+  const auto footprint = get_parameter("robot_geometry.footprint").as_double_array();
+  for (size_t i = 0; i + 1 < footprint.size(); i += 2) {
+    geometry.footprint.push_back({footprint[i], footprint[i + 1]});
+  }
+  if (!geometry.footprint.empty()) {
+    configured.insert("footprint");
+    // The radii follow from the footprint, unless given.
+    if (configured.count("radius") == 0) {
+      geometry.radius = footprint_radius(geometry.footprint);
+    }
+    if (configured.count("inscribed_radius") == 0) {
+      geometry.inscribed_radius = footprint_inscribed_radius(geometry.footprint);
+    }
+  } else if (configured.count("inscribed_radius") == 0) {
     geometry.inscribed_radius = geometry.radius;  // A round robot, unless told otherwise
   }
 
   RobotGeometryRegistry::getInstance()->set_geometry(geometry, configured);
   RCLCPP_INFO(
-    get_logger(), "Robot geometry: radius=%.3f, inscribed_radius=%.3f, height=%.3f",
-    geometry.radius, geometry.inscribed_radius, geometry.height);
+    get_logger(), "Robot geometry: radius=%.3f, inscribed_radius=%.3f, height=%.3f, %s",
+    geometry.radius, geometry.inscribed_radius, geometry.height,
+    geometry.footprint.empty() ? "round" :
+    (std::to_string(geometry.footprint.size()) + "-vertex footprint").c_str());
 }
 
 void

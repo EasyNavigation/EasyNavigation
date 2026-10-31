@@ -68,9 +68,17 @@ inflation, planners, recovery...). Plugins read it with
 
 | Name | Type | Default | Description |
 |---|---|---:|---|
-| `robot_geometry.radius` | `double` | `0.3` | Circumscribed radius: smallest circle containing the robot (m). |
-| `robot_geometry.inscribed_radius` | `double` | `radius` | Largest circle inside the robot (m). |
+| `robot_geometry.radius` | `double` | `0.3` (or from `footprint`) | Circumscribed radius: smallest circle containing the robot (m). |
+| `robot_geometry.inscribed_radius` | `double` | `radius` (or from `footprint`) | Largest circle inside the robot (m). |
 | `robot_geometry.height` | `double` | `0.5` | Top of the robot, above the robot frame (m). |
+| `robot_geometry.footprint` | `double[]` | `[]` | The robot's polygon, `[x1, y1, x2, y2, ...]` in the robot frame (3 or more vertices, in order around it). Empty: a circle of `radius`. |
+
+Without a footprint the robot is a circle. With one, the radii not configured follow from it (the
+farthest vertex, and the nearest side to the robot frame). Components that only know radii (costmap
+inflation, point-based planners, the collision reflex) keep using them, so configured radii may stay
+planning margins; components that check the footprint (MPPI) use the polygon, turned with the
+robot. A configured `radius` that does not contain the footprint is accepted with a warning: what uses
+it may let the corners touch obstacles.
 
 A component's former geometry parameter (e.g. an inflation filter's `inscribed_radius`) still applies, with a
 deprecation warning, where `robot_geometry` does not configure that field; `robot_geometry` takes

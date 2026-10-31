@@ -15,6 +15,7 @@
 /// \file
 /// \brief Tests for get_robot_geometry(): the system's geometry and deprecated parameters.
 
+#include <cmath>
 #include <memory>
 #include <set>
 #include <string>
@@ -223,4 +224,50 @@ TEST_F(RobotGeometryTest, WarningsAreWarnings)
   easynav::get_robot_geometry(*n, legacy_);
   EXPECT_EQ(log.count({"is deprecated"}, RCUTILS_LOG_SEVERITY_WARN), 1u);
   EXPECT_EQ(log.count({"is deprecated"}, -1), 1u) << "only as a warning";
+}
+
+// Footprint helpers.
+
+TEST(FootprintTest, RadiiOfARectangle)
+{
+  const std::vector<easynav::FootprintPoint> rect {{0.4, 0.2}, {-0.4, 0.2}, {-0.4, -0.2},
+    {0.4, -0.2}};
+  EXPECT_DOUBLE_EQ(easynav::footprint_radius(rect), std::hypot(0.4, 0.2));
+  EXPECT_DOUBLE_EQ(easynav::footprint_inscribed_radius(rect), 0.2);
+}
+
+TEST(FootprintTest, InsideOutsideAndDistanceToTheBorder)
+{
+  // Clockwise or counterclockwise, the same.
+  for (const auto & rect : std::vector<std::vector<easynav::FootprintPoint>>{
+    {{0.4, 0.2}, {-0.4, 0.2}, {-0.4, -0.2}, {0.4, -0.2}},
+    {{0.4, -0.2}, {-0.4, -0.2}, {-0.4, 0.2}, {0.4, 0.2}}})
+  {
+    EXPECT_TRUE(easynav::footprint_contains(rect, 0.0, 0.0));
+    EXPECT_TRUE(easynav::footprint_contains(rect, 0.39, 0.19));
+    EXPECT_FALSE(easynav::footprint_contains(rect, 0.41, 0.0));
+    EXPECT_FALSE(easynav::footprint_contains(rect, 0.0, -0.21));
+    EXPECT_NEAR(easynav::footprint_border_distance(rect, 0.0, 0.0), 0.2, 1e-12);
+    EXPECT_NEAR(easynav::footprint_border_distance(rect, 0.7, 0.0), 0.3, 1e-12);
+    EXPECT_NEAR(easynav::footprint_border_distance(rect, 0.7, 0.6), 0.5, 1e-12) << "corner";
+  }
+}
+
+TEST(FootprintTest, ANonConvexFootprint)
+{
+  // An L: the notch is outside.
+  const std::vector<easynav::FootprintPoint> l {{0.5, -0.2}, {0.5, 0.0}, {0.0, 0.0},
+    {0.0, 0.4}, {-0.3, 0.4}, {-0.3, -0.2}};
+  EXPECT_TRUE(easynav::footprint_contains(l, 0.3, -0.1));
+  EXPECT_FALSE(easynav::footprint_contains(l, 0.3, 0.2));
+  EXPECT_TRUE(easynav::footprint_contains(l, -0.1, 0.3));
+  EXPECT_NEAR(easynav::footprint_border_distance(l, 0.3, 0.2), 0.2, 1e-12);
+}
+
+TEST(FootprintTest, RobotFrameOutsideTheFootprintHasNoInscribedCircle)
+{
+  const std::vector<easynav::FootprintPoint> ahead {{1.0, 0.2}, {0.5, 0.2}, {0.5, -0.2},
+    {1.0, -0.2}};
+  EXPECT_DOUBLE_EQ(easynav::footprint_inscribed_radius(ahead), 0.0);
+  EXPECT_DOUBLE_EQ(easynav::footprint_inscribed_radius({}), 0.0);
 }
