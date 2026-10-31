@@ -65,6 +65,9 @@ std::vector<std::pair<std::string, double RobotLimits::*>> limit_fields()
     {"max_linear_decel", &RobotLimits::max_linear_decel},
     {"max_angular_acc", &RobotLimits::max_angular_acc},
     {"max_angular_decel", &RobotLimits::max_angular_decel},
+    {"max_lateral_vel", &RobotLimits::max_lateral_vel},
+    {"max_lateral_acc", &RobotLimits::max_lateral_acc},
+    {"max_lateral_decel", &RobotLimits::max_lateral_decel},
   };
 }
 }  // namespace
@@ -352,6 +355,8 @@ ControllerNode::read_parameters()
       configured.insert(field);
     }
   }
+  default_lateral_limits(
+    limits, [&configured](const std::string & field) {return configured.count(field) > 0;});
   get_parameter("use_cmd_vel_stamped", use_cmd_vel_stamped_);
 
   {

@@ -69,6 +69,11 @@ ControllerMethodBase::get_robot_limits(const LegacyRobotLimitNames & legacy)
   apply(legacy.max_angular_decel, "max_angular_decel", limits.max_angular_decel);
 
   if (provider) {
+    // A deprecated linear limit applies to the lateral one too, unless that is configured.
+    default_lateral_limits(
+      limits, [provider](const std::string & field) {
+        return provider->is_robot_limit_configured(field);
+      });
     provider->set_robot_limits(limits);  // What the smoother enforces too.
   }
   return limits;

@@ -48,7 +48,8 @@ VelocitySmoother::clamp(const geometry_msgs::msg::Twist & target) const
 {
   geometry_msgs::msg::Twist clamped;
   clamped.linear.x = std::clamp(target.linear.x, limits_.min_linear_vel, limits_.max_linear_vel);
-  clamped.linear.y = std::clamp(target.linear.y, -limits_.max_linear_vel, limits_.max_linear_vel);
+  clamped.linear.y =
+    std::clamp(target.linear.y, -limits_.max_lateral_vel, limits_.max_lateral_vel);
   clamped.angular.z =
     std::clamp(target.angular.z, -limits_.max_angular_vel, limits_.max_angular_vel);
   return clamped;
@@ -63,7 +64,7 @@ VelocitySmoother::step(const geometry_msgs::msg::Twist & target, double dt)
   current_.linear.x = step_axis(
     current_.linear.x, goal.linear.x, limits_.max_linear_acc, limits_.max_linear_decel, dt);
   current_.linear.y = step_axis(
-    current_.linear.y, goal.linear.y, limits_.max_linear_acc, limits_.max_linear_decel, dt);
+    current_.linear.y, goal.linear.y, limits_.max_lateral_acc, limits_.max_lateral_decel, dt);
   current_.angular.z = step_axis(
     current_.angular.z, goal.angular.z, limits_.max_angular_acc, limits_.max_angular_decel, dt);
   return current_;
@@ -90,10 +91,10 @@ VelocitySmoother::reached(const geometry_msgs::msg::Twist & target) const
 double
 VelocitySmoother::time_to_stop() const
 {
-  const double linear = std::hypot(current_.linear.x, current_.linear.y);
   return std::max(
-    linear / std::max(limits_.max_linear_decel, kEpsilon),
-    std::abs(current_.angular.z) / std::max(limits_.max_angular_decel, kEpsilon));
+    {std::abs(current_.linear.x) / std::max(limits_.max_linear_decel, kEpsilon),
+      std::abs(current_.linear.y) / std::max(limits_.max_lateral_decel, kEpsilon),
+      std::abs(current_.angular.z) / std::max(limits_.max_angular_decel, kEpsilon)});
 }
 
 }  // namespace easynav

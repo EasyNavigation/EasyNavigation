@@ -358,6 +358,65 @@ TEST_F(ControllerNodeVelocityTest, KnowsWhichLimitsWereConfigured)
   EXPECT_DOUBLE_EQ(node->get_robot_limits().max_linear_decel, 3.0);
 }
 
+TEST_F(ControllerNodeVelocityTest, LateralLimitsDefaultToTheLinearOnes)
+{
+  auto node = std::make_shared<easynav::ControllerNode>(limits_options());
+  const auto limits = node->get_robot_limits();
+  EXPECT_DOUBLE_EQ(limits.max_lateral_vel, 1.0);
+  EXPECT_DOUBLE_EQ(limits.max_lateral_acc, 2.0);
+  EXPECT_DOUBLE_EQ(limits.max_lateral_decel, 4.0);
+  EXPECT_FALSE(node->is_robot_limit_configured("max_lateral_vel"));
+}
+
+TEST_F(ControllerNodeVelocityTest, ConfiguredLateralLimitsAreTheirOwn)
+{
+  auto node = std::make_shared<easynav::ControllerNode>(
+    limits_options(
+  {
+    {"robot_limits.max_lateral_vel", 0.3},
+    {"robot_limits.max_lateral_decel", easynav::RobotLimits{}.max_lateral_decel},
+  }));
+  LimitsReadingController controller;
+  controller.initialize(node, "lateral_reader");
+  const auto limits = controller.get_robot_limits();
+  EXPECT_DOUBLE_EQ(limits.max_lateral_vel, 0.3);
+  EXPECT_DOUBLE_EQ(limits.max_lateral_acc, 2.0) << "not configured: max_linear_acc";
+  EXPECT_DOUBLE_EQ(limits.max_lateral_decel, easynav::RobotLimits{}.max_lateral_decel) <<
+    "given, even if default";
+  EXPECT_DOUBLE_EQ(node->get_robot_limits().max_lateral_vel, 0.3);
+
+  // Zero: a robot that cannot move sideways.
+  auto diff = std::make_shared<easynav::ControllerNode>(
+    limits_options({{"robot_limits.max_lateral_vel", 0.0}}));
+  diff->trigger_transition(Transition::TRANSITION_CONFIGURE);
+  EXPECT_EQ(diff->get_current_state().id(), State::PRIMARY_STATE_INACTIVE);
+  EXPECT_DOUBLE_EQ(diff->get_robot_limits().max_lateral_vel, 0.0);
+}
+
+TEST_F(ControllerNodeVelocityTest, InvalidLateralLimitsFailToConfigure)
+{
+  for (const auto & [name, value] : std::vector<std::pair<std::string, double>>{
+    {"robot_limits.max_lateral_vel", -0.1},
+    {"robot_limits.max_lateral_acc", 0.0},
+    {"robot_limits.max_lateral_decel", std::nan("")}})
+  {
+    auto node = std::make_shared<easynav::ControllerNode>(limits_options({{name, value}}));
+    node->trigger_transition(Transition::TRANSITION_CONFIGURE);
+    EXPECT_EQ(node->get_current_state().id(), State::PRIMARY_STATE_UNCONFIGURED) << name;
+  }
+}
+
+TEST_F(ControllerNodeVelocityTest, SafelyLimitedSpeedLimitsTheLateralVelocityToo)
+{
+  easynav::RobotLimits limits;
+  limits.max_lateral_vel = 0.8;
+  easynav::SafetyChannelState state;
+  state.max_linear_vel = 0.25;
+  EXPECT_DOUBLE_EQ(easynav::limited_by(limits, state).max_lateral_vel, 0.25);
+  state.max_linear_vel = 2.0;
+  EXPECT_DOUBLE_EQ(easynav::limited_by(limits, state).max_lateral_vel, 0.8);
+}
+
 TEST_F(ControllerNodeVelocityTest, ReconfigureRestoresTheConfiguredLimits)
 {
   // Limits changed by set_robot_limits() (e.g. deprecated values) last until the next configure.
@@ -399,6 +458,24 @@ TEST_F(ControllerNodeVelocityTest, DeprecatedLimitsApplyWhenRobotLimitsAreNotCon
   // The node enforces the same limits (smoother).
   EXPECT_DOUBLE_EQ(node->get_robot_limits().max_linear_vel, 0.8);
   EXPECT_DOUBLE_EQ(node->get_robot_limits().max_linear_acc, 1.5);
+}
+
+TEST_F(ControllerNodeVelocityTest, DeprecatedLinearLimitsReachTheUnconfiguredLateralOnes)
+{
+  auto node = std::make_shared<easynav::ControllerNode>(
+    rclcpp::NodeOptions().parameter_overrides(
+  {
+    {"ctrl.old_max_speed", 0.8},
+    {"ctrl.old_max_acc", 1.5},
+    {"robot_limits.max_lateral_acc", 0.2},
+  }));
+  LimitsReadingController controller;
+  controller.initialize(node, "ctrl");
+
+  const auto limits = controller.get_robot_limits(kLegacy);
+  EXPECT_DOUBLE_EQ(limits.max_lateral_vel, 0.8);
+  EXPECT_DOUBLE_EQ(limits.max_lateral_acc, 0.2) << "configured: kept";
+  EXPECT_DOUBLE_EQ(node->get_robot_limits().max_lateral_vel, 0.8);
 }
 
 TEST_F(ControllerNodeVelocityTest, RobotLimitsTakePrecedenceOverDeprecatedOnes)

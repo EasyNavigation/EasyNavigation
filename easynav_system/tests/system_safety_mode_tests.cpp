@@ -311,7 +311,7 @@ TEST_F(SystemSafetyModeTest, InvalidRobotLimitsFailToConfigureAndLeaveNothingCon
 
 TEST_F(SystemSafetyModeTest, RobotLimitsMayNotExceedTheSafetyLimitsWhenGiven)
 {
-  // Defaults: max_linear_vel 0.5, min_linear_vel -0.2, max_angular_vel 1.0.
+  // Defaults: max_linear_vel 0.5 (max_lateral_vel too), min_linear_vel -0.2, max_angular_vel 1.0.
   struct Case
   {
     std::vector<std::string> params;
@@ -322,6 +322,8 @@ TEST_F(SystemSafetyModeTest, RobotLimitsMayNotExceedTheSafetyLimitsWhenGiven)
     {{"safety.plc_limits.max_linear_vel:=0.5"}, true},  // Equal: fine
     {{"safety.plc_limits.max_linear_vel:=0.6", "robot_limits.min_linear_vel:=-0.7"}, false},
     {{"safety.plc_limits.max_linear_vel:=0.6", "robot_limits.min_linear_vel:=-0.6"}, true},
+    {{"safety.plc_limits.max_linear_vel:=0.6", "robot_limits.max_lateral_vel:=0.7"}, false},
+    {{"safety.plc_limits.max_linear_vel:=0.6", "robot_limits.max_lateral_vel:=0.6"}, true},
     {{"safety.plc_limits.max_angular_vel:=0.9"}, false},
     {{"safety.plc_limits.max_angular_vel:=1.0"}, true},
     {{"safety.plc_limits.max_linear_vel:=0.0", "safety.plc_limits.max_angular_vel:=0.0"}, true},

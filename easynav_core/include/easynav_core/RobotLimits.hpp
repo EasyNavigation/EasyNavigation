@@ -42,7 +42,22 @@ struct RobotLimits
   double max_linear_decel {1.0};   ///< Linear deceleration, slowing down (m/s^2, > 0).
   double max_angular_acc {1.0};    ///< Angular acceleration, speeding up (rad/s^2, > 0).
   double max_angular_decel {2.0};  ///< Angular deceleration, slowing down (rad/s^2, > 0).
+  /// Holonomic robots: lateral (linear.y) velocity, either direction (m/s, >= 0). Not
+  /// configured: max_linear_vel.
+  double max_lateral_vel {0.5};
+  double max_lateral_acc {0.5};    ///< Lateral acceleration (m/s^2, > 0). Or max_linear_acc.
+  double max_lateral_decel {1.0};  ///< Lateral deceleration (m/s^2, > 0). Or max_linear_decel.
 };
+
+/// @brief The lateral limits that are not configured (\p configured(field) is false) take the
+/// linear ones: holonomic robots move sideways as fast as forward unless told otherwise.
+template<typename IsConfigured>
+void default_lateral_limits(RobotLimits & limits, IsConfigured configured)
+{
+  if (!configured("max_lateral_vel")) {limits.max_lateral_vel = limits.max_linear_vel;}
+  if (!configured("max_lateral_acc")) {limits.max_lateral_acc = limits.max_linear_acc;}
+  if (!configured("max_lateral_decel")) {limits.max_lateral_decel = limits.max_linear_decel;}
+}
 
 /// @brief Why \p limits are invalid (non-finite, or out of the range of each field), or "".
 inline std::string invalid_robot_limits(const RobotLimits & limits)
@@ -60,6 +75,9 @@ inline std::string invalid_robot_limits(const RobotLimits & limits)
     {"max_linear_decel", limits.max_linear_decel, limits.max_linear_decel > 0.0},
     {"max_angular_acc", limits.max_angular_acc, limits.max_angular_acc > 0.0},
     {"max_angular_decel", limits.max_angular_decel, limits.max_angular_decel > 0.0},
+    {"max_lateral_vel", limits.max_lateral_vel, limits.max_lateral_vel >= 0.0},
+    {"max_lateral_acc", limits.max_lateral_acc, limits.max_lateral_acc > 0.0},
+    {"max_lateral_decel", limits.max_lateral_decel, limits.max_lateral_decel > 0.0},
   };
   for (const auto & field : fields) {
     if (!std::isfinite(field.value) || !field.valid) {
