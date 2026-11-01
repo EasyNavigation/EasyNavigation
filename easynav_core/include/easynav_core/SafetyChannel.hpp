@@ -57,6 +57,7 @@ inline RobotLimits limited_by(RobotLimits limits, const SafetyChannelState & sta
   limits.max_linear_vel = std::min(limits.max_linear_vel, state.max_linear_vel);
   limits.min_linear_vel = std::max(limits.min_linear_vel, -state.max_linear_vel);
   limits.max_lateral_vel = std::min(limits.max_lateral_vel, state.max_linear_vel);
+  limits.max_vertical_vel = std::min(limits.max_vertical_vel, state.max_linear_vel);
   limits.max_angular_vel = std::min(limits.max_angular_vel, state.max_angular_vel);
   return limits;
 }

@@ -68,6 +68,10 @@ std::vector<std::pair<std::string, double RobotLimits::*>> limit_fields()
     {"max_lateral_vel", &RobotLimits::max_lateral_vel},
     {"max_lateral_acc", &RobotLimits::max_lateral_acc},
     {"max_lateral_decel", &RobotLimits::max_lateral_decel},
+    {"max_vertical_vel", &RobotLimits::max_vertical_vel},
+    {"max_vertical_acc", &RobotLimits::max_vertical_acc},
+    {"max_vertical_decel", &RobotLimits::max_vertical_decel},
+    {"min_turning_radius", &RobotLimits::min_turning_radius},
   };
 }
 }  // namespace

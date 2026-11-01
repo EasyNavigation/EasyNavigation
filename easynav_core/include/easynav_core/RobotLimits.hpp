@@ -47,6 +47,14 @@ struct RobotLimits
   double max_lateral_vel {0.5};
   double max_lateral_acc {0.5};    ///< Lateral acceleration (m/s^2, > 0). Or max_linear_acc.
   double max_lateral_decel {1.0};  ///< Lateral deceleration (m/s^2, > 0). Or max_linear_decel.
+  /// Aerial robots: vertical (linear.z) velocity, either direction (m/s, >= 0). 0: the robot
+  /// does not move vertically.
+  double max_vertical_vel {0.0};
+  double max_vertical_acc {0.5};    ///< Vertical acceleration (m/s^2, > 0).
+  double max_vertical_decel {1.0};  ///< Vertical deceleration (m/s^2, > 0).
+  /// Ackermann robots: smallest turning radius (m, >= 0), so |angular.z| <= |linear.x| / radius.
+  /// 0: no limit (the robot turns in place).
+  double min_turning_radius {0.0};
 };
 
 /// @brief The lateral limits that are not configured (\p configured(field) is false) take the
@@ -78,11 +86,15 @@ inline std::string invalid_robot_limits(const RobotLimits & limits)
     {"max_lateral_vel", limits.max_lateral_vel, limits.max_lateral_vel >= 0.0},
     {"max_lateral_acc", limits.max_lateral_acc, limits.max_lateral_acc > 0.0},
     {"max_lateral_decel", limits.max_lateral_decel, limits.max_lateral_decel > 0.0},
+    {"max_vertical_vel", limits.max_vertical_vel, limits.max_vertical_vel >= 0.0},
+    {"max_vertical_acc", limits.max_vertical_acc, limits.max_vertical_acc > 0.0},
+    {"max_vertical_decel", limits.max_vertical_decel, limits.max_vertical_decel > 0.0},
+    {"min_turning_radius", limits.min_turning_radius, limits.min_turning_radius >= 0.0},
   };
   for (const auto & field : fields) {
     if (!std::isfinite(field.value) || !field.valid) {
       return std::string("robot_limits.") + field.name + " = " + std::to_string(field.value) +
-             " (velocities: max >= 0, min <= 0; accelerations > 0)";
+             " (velocities: max >= 0, min <= 0; accelerations > 0; radius >= 0)";
     }
   }
   return "";
