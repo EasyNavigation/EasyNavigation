@@ -16,6 +16,7 @@
 #include <algorithm>
 #include <sstream>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "easynav_system/GoalManager.hpp"
@@ -1992,6 +1993,87 @@ TEST_F(GoalManagerInfoTest, MissionCancelledBeforeAnyCycleEndsIdle)
   EXPECT_EQ(infos_.back().status, kIdle);
   EXPECT_EQ(count(kActive), 0);
   EXPECT_EQ(count(kIdle), 1);
+}
+
+// The goals revision changes once per change of the goals, whatever their stamps.
+TEST_F(GoalManagerInfoTest, GoalsRevisionIgnoresStamps)
+{
+  const uint64_t idle = gm_server_->get_goals_revision();
+  spin_for(200ms);
+  EXPECT_EQ(gm_server_->get_goals_revision(), idle) << "idle cycles change nothing";
+
+  const auto now = client_node_->now();
+  const std::vector<std::pair<std::string, rclcpp::Time>> stamps = {
+    {"a day ahead", now + rclcpp::Duration::from_seconds(86400.0)},
+    {"zero", rclcpp::Time(0, 0, now.get_clock_type())},
+    {"in the past", now - rclcpp::Duration::from_seconds(1.0)}};
+  double x = 0.0;
+  for (const auto & [name, stamp] : stamps) {
+    x += 1.0;
+    gm_client_->reset();
+    nav_msgs::msg::Goals goals;
+    goals.header.frame_id = "map";
+    goals.header.stamp = stamp;
+    goals.goals = {goal_at(x + 100.0, 0.0)};
+    goals.goals.front().header.stamp = stamp;
+    const uint64_t before = gm_server_->get_goals_revision();
+    gm_client_->send_goals(goals);
+    spin_for(300ms);
+    ASSERT_EQ(gm_server_->get_state(), easynav::GoalManager::State::ACTIVE) << name;
+    const uint64_t accepted = gm_server_->get_goals_revision();
+    EXPECT_NE(accepted, before) << name;
+    spin_for(300ms);
+    EXPECT_EQ(gm_server_->get_goals_revision(), accepted) << name << ": steady while navigating";
+
+    gm_client_->cancel();
+    spin_for(300ms);
+    ASSERT_EQ(gm_server_->get_state(), easynav::GoalManager::State::IDLE) << name;
+    const uint64_t cancelled = gm_server_->get_goals_revision();
+    EXPECT_NE(cancelled, accepted) << name << ": a cancel changes the goals";
+    spin_for(300ms);
+    EXPECT_EQ(gm_server_->get_goals_revision(), cancelled) << name << ": steady when idle";
+  }
+}
+
+TEST_F(GoalManagerInfoTest, GoalsRevisionFollowsWaypoints)
+{
+  nav_msgs::msg::Goals goals;
+  goals.header.frame_id = "map";
+  goals.goals = {goal_at(1.0, 0.0), goal_at(2.0, 0.0)};
+  gm_client_->send_goals(goals);
+  spin_for(300ms);
+  const uint64_t accepted = gm_server_->get_goals_revision();
+
+  // First goal reached: the next one is a new target
+  set_robot(1.0, 0.0);
+  spin_for(300ms);
+  ASSERT_EQ(gm_server_->get_state(), easynav::GoalManager::State::ACTIVE);
+  const uint64_t next = gm_server_->get_goals_revision();
+  EXPECT_NE(next, accepted);
+  spin_for(300ms);
+  EXPECT_EQ(gm_server_->get_goals_revision(), next);
+
+  // Last goal reached: no goals
+  set_robot(2.0, 0.0);
+  spin_for(300ms);
+  ASSERT_EQ(gm_server_->get_state(), easynav::GoalManager::State::IDLE);
+  const uint64_t done = gm_server_->get_goals_revision();
+  EXPECT_NE(done, next);
+  spin_for(300ms);
+  EXPECT_EQ(gm_server_->get_goals_revision(), done);
+}
+
+TEST_F(GoalManagerInfoTest, GoalsRevisionChangesOnFailure)
+{
+  gm_client_->send_goal(goal_at(100.0, 0.0));
+  spin_for(300ms);
+  const uint64_t accepted = gm_server_->get_goals_revision();
+  gm_server_->set_failed("no way");
+  spin_for(300ms);
+  const uint64_t failed = gm_server_->get_goals_revision();
+  EXPECT_NE(failed, accepted);
+  spin_for(300ms);
+  EXPECT_EQ(gm_server_->get_goals_revision(), failed);
 }
 
 // Height tolerance: readable default that ignores height, and a configured one that does not.

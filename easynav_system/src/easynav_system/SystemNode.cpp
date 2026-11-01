@@ -758,10 +758,12 @@ SystemNode::system_cycle()
   maps_manager_node_->cycle(nav_state_);
   goal_manager_->update(*nav_state_);
 
-  rclcpp::Time planner_ts = planner_node_->get_last_execution_ts();
-  rclcpp::Time goals_ts(goal_manager_->get_goals().header.stamp, planner_ts.get_clock_type());
+  // New goals force a plan; their stamps come from the client's clock, so they are not used
+  const uint64_t goals_revision = goal_manager_->get_goals_revision();
+  const bool new_goals = goals_revision != planned_goals_revision_;
+  planned_goals_revision_ = goals_revision;
 
-  planner_node_->cycle(nav_state_, planner_ts < goals_ts);
+  planner_node_->cycle(nav_state_, new_goals);
 
   // Last: the recovery system diagnoses what the cycle above just produced.
   recovery_node_->cycle(nav_state_);

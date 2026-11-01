@@ -19,6 +19,7 @@
 #define EASYNAV_SYSTEM__GOALMANAGER_HPP_
 
 #include <atomic>
+#include <cstdint>
 #include <memory>
 #include <string>
 
@@ -84,6 +85,12 @@ public:
    * @return Goals message.
    */
   [[nodiscard]] inline nav_msgs::msg::Goals get_goals() const {return goals_;}
+
+  /**
+   * @brief Revision of the goals: it changes whenever they do (new request, goal reached,
+   * cancel, end of the mission), whatever their stamps.
+   */
+  [[nodiscard]] inline uint64_t get_goals_revision() const {return goals_revision_;}
 
   /**
    * @brief Get current internal goal state.
@@ -160,6 +167,9 @@ private:
 
   /// @brief Currently active goals.
   nav_msgs::msg::Goals goals_;
+
+  /// @brief Incremented on every change of goals_ (see get_goals_revision()).
+  uint64_t goals_revision_ {0};
 
   /// @brief Publisher for goal control responses.
   rclcpp::Publisher<easynav_interfaces::msg::NavigationControl>::SharedPtr control_pub_;

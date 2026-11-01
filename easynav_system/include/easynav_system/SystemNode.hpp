@@ -20,6 +20,7 @@
 #define EASYNAV_SYSTEM__SYSTEMNODE_HPP_
 
 #include <atomic>
+#include <cstdint>
 #include <chrono>
 #include <map>
 #include <mutex>
@@ -294,6 +295,9 @@ private:
 
   /// @brief Goal manager.
   GoalManager::SharedPtr goal_manager_;
+
+  /// @brief Goals revision the planner was last forced for.
+  uint64_t planned_goals_revision_ {0};
 
 
   /// @brief Publisher for nav_state as string.
