@@ -256,6 +256,8 @@ void
 SafetySupervisor::on_activate()
 {
   rt_monitor_.reset();
+  last_late_log_.reset();
+  late_cycles_logged_ = 0;
   last_heartbeat_.reset();
   last_safety_report_.reset();
   last_pose_stale_.reset();
@@ -266,7 +268,7 @@ bool
 SafetySupervisor::cycle_rt(NavState & nav_state, RtMonitor::Clock::time_point now)
 {
   const auto status = rt_monitor_.cycle_started(now);
-  report_rt_status(nav_state, status);
+  report_rt_status(nav_state, status, now);
 
   if (heartbeat_pub_ &&
     (!last_heartbeat_ ||
@@ -296,13 +298,34 @@ SafetySupervisor::cycle_rt(NavState & nav_state, RtMonitor::Clock::time_point no
 }
 
 void
-SafetySupervisor::report_rt_status(NavState & nav_state, RtMonitor::Status status)
+SafetySupervisor::report_rt_status(
+  NavState & nav_state, RtMonitor::Status status, RtMonitor::Clock::time_point now)
 {
   using diagnostic_msgs::msg::DiagnosticStatus;
+  // Single late cycles are only counted in the log, at most every kLateLogPeriod
+  if (status == RtMonitor::Status::LATE &&
+    (!last_late_log_ || now - *last_late_log_ >= kLateLogPeriod))
+  {
+    std::ostringstream late;
+    if (last_late_log_) {
+      late << (rt_monitor_.late_cycles() - late_cycles_logged_) <<
+        " real-time cycles started late in the last " <<
+        std::chrono::duration_cast<std::chrono::seconds>(now - *last_late_log_).count() <<
+        " s, the last one ";
+    } else {
+      late << "A real-time cycle started late: ";
+    }
+    late << rt_monitor_.last_period() * 1e3 << " ms after the previous one";
+    RCLCPP_WARN(logger_, "%s", late.str().c_str());
+    last_late_log_ = now;
+    late_cycles_logged_ = rt_monitor_.late_cycles();
+  }
+
   // Nothing to report until something goes wrong; then, only changes.
   if (last_rt_report_ ? *last_rt_report_ == status : status == RtMonitor::Status::OK) {
     return;
   }
+  const bool was_error = last_rt_report_ == RtMonitor::Status::ERROR;
   last_rt_report_ = status;
 
   std::ostringstream message;
@@ -311,13 +334,14 @@ SafetySupervisor::report_rt_status(NavState & nav_state, RtMonitor::Status statu
     case RtMonitor::Status::OK:
       diagnostic.level = DiagnosticStatus::OK;
       message << "Real-time cycles on time";
-      RCLCPP_INFO(logger_, "%s", message.str().c_str());
+      if (was_error) {
+        RCLCPP_INFO(logger_, "%s again", message.str().c_str());
+      }
       break;
     case RtMonitor::Status::LATE:
       diagnostic.level = DiagnosticStatus::WARN;
       message << "A real-time cycle started late: " << rt_monitor_.last_period() * 1e3 <<
         " ms after the previous one";
-      RCLCPP_WARN_THROTTLE(logger_, *clock_, 5000, "%s", message.str().c_str());
       break;
     case RtMonitor::Status::ERROR:
       message << rt_monitor_.consecutive_late_cycles() <<

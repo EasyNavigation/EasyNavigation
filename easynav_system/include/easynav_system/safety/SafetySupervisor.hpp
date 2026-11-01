@@ -19,6 +19,8 @@
 #define EASYNAV_SYSTEM__SAFETY__SAFETYSUPERVISOR_HPP_
 
 #include <atomic>
+#include <chrono>
+#include <cstdint>
 #include <mutex>
 #include <optional>
 #include <string>
@@ -130,8 +132,10 @@ private:
   /// @brief Not a lifecycle publisher: it publishes on configure, while still inactive.
   rclcpp::Publisher<std_msgs::msg::String>::SharedPtr configuration_pub_;
 
-  /// @brief Updates "diagnostics.rt_cycle" when the RT monitor's status changes.
-  void report_rt_status(NavState & nav_state, RtMonitor::Status status);
+  /// @brief Updates "diagnostics.rt_cycle" when the RT monitor's status changes, and logs: late
+  /// cycles counted every kLateLogPeriod, ERROR when it starts, and its end.
+  void report_rt_status(
+    NavState & nav_state, RtMonitor::Status status, RtMonitor::Clock::time_point now);
 
   /// @brief Checks the age of "robot_pose" at \p now; reports and, in safety mode, inhibits motion.
   void check_pose_age(NavState & nav_state, const rclcpp::Time & now);
@@ -146,6 +150,9 @@ private:
   RtMonitor rt_monitor_;
   double max_period_factor_ {2.0};
   std::optional<RtMonitor::Status> last_rt_report_;
+  static constexpr std::chrono::seconds kLateLogPeriod {5};
+  std::optional<RtMonitor::Clock::time_point> last_late_log_;
+  uint64_t late_cycles_logged_ {0};
   std::string hardware_id_ {"system_node"};
   std::string failure_;
   rclcpp::Clock::SharedPtr clock_;
