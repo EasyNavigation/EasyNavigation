@@ -171,6 +171,7 @@ GoalManager::accept_request(
   RCLCPP_DEBUG(node->get_logger(), "Accepted navigation request");
 
   goals_ = msg.goals;
+  ++goals_revision_;
   goals_synced_empty_ = false;
   paused_ = false;
 
@@ -250,6 +251,7 @@ GoalManager::control_callback(easynav_interfaces::msg::NavigationControl::Unique
         } else {
           RCLCPP_DEBUG(node->get_logger(), "Navigation cancelation accepted");
           goals_.goals.clear();
+          ++goals_revision_;
           response.status_message = "Goal cancelled";
           response.type = easynav_interfaces::msg::NavigationControl::CANCELLED;
           response.nav_current_user_id = current_client_id_;
@@ -310,6 +312,7 @@ GoalManager::set_preempted()
   if (!node) {return;}
 
   goals_.goals.clear();
+  ++goals_revision_;
 
   easynav_interfaces::msg::NavigationControl response;
   response = *last_control_;
@@ -331,6 +334,7 @@ GoalManager::set_finished()
 
   state_ = State::IDLE;
   goals_ = nav_msgs::msg::Goals();
+  ++goals_revision_;
   paused_ = false;
 
   easynav_interfaces::msg::NavigationControl response;
@@ -368,6 +372,7 @@ GoalManager::set_error(const std::string & reason)
 
   state_ = State::IDLE;
   goals_ = nav_msgs::msg::Goals();
+  ++goals_revision_;
   paused_ = false;
 
   easynav_interfaces::msg::NavigationControl response;
@@ -390,6 +395,7 @@ GoalManager::set_failed(const std::string & reason)
 
   state_ = State::IDLE;
   goals_ = nav_msgs::msg::Goals();
+  ++goals_revision_;
   paused_ = false;
 
   easynav_interfaces::msg::NavigationControl response;
@@ -441,6 +447,7 @@ GoalManager::update(NavState & nav_state)
     publish_final_info();
     if (!goals_synced_empty_) {
       goals_ = nav_msgs::msg::Goals();
+      ++goals_revision_;
       nav_state.set("goals", goals_);
       goals_synced_empty_ = true;
     }
@@ -563,6 +570,7 @@ GoalManager::check_goals(
 
   if (std::fabs(angle_diff) <= goal_tolerance.yaw) {
     goals_.goals.erase(goals_.goals.begin());
+    ++goals_revision_;
   }
 }
 
