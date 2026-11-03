@@ -417,6 +417,101 @@ TEST_F(ControllerNodeVelocityTest, SafelyLimitedSpeedLimitsTheLateralVelocityToo
   EXPECT_DOUBLE_EQ(easynav::limited_by(limits, state).max_lateral_vel, 0.8);
 }
 
+TEST_F(ControllerNodeVelocityTest, VerticalLimitsAndTurningRadiusDefaultToNone)
+{
+  auto node = std::make_shared<easynav::ControllerNode>(limits_options());
+  const auto limits = node->get_robot_limits();
+  EXPECT_DOUBLE_EQ(limits.max_vertical_vel, 0.0) << "a ground robot does not move vertically";
+  EXPECT_DOUBLE_EQ(limits.min_turning_radius, 0.0) << "it turns in place";
+  EXPECT_FALSE(node->is_robot_limit_configured("max_vertical_vel"));
+  EXPECT_FALSE(node->is_robot_limit_configured("min_turning_radius"));
+}
+
+TEST_F(ControllerNodeVelocityTest, ConfiguredVerticalLimitsAndTurningRadiusReachThePlugins)
+{
+  auto node = std::make_shared<easynav::ControllerNode>(
+    limits_options(
+  {
+    {"robot_limits.max_vertical_vel", 1.5},
+    {"robot_limits.max_vertical_acc", 0.8},
+    {"robot_limits.max_vertical_decel", 1.2},
+    {"robot_limits.min_turning_radius", 4.5},
+  }));
+  node->trigger_transition(Transition::TRANSITION_CONFIGURE);
+  ASSERT_EQ(node->get_current_state().id(), State::PRIMARY_STATE_INACTIVE);
+  LimitsReadingController controller;
+  controller.initialize(node, "vertical_reader");
+  const auto limits = controller.get_robot_limits();
+  EXPECT_DOUBLE_EQ(limits.max_vertical_vel, 1.5);
+  EXPECT_DOUBLE_EQ(limits.max_vertical_acc, 0.8);
+  EXPECT_DOUBLE_EQ(limits.max_vertical_decel, 1.2);
+  EXPECT_DOUBLE_EQ(limits.min_turning_radius, 4.5);
+  EXPECT_TRUE(node->is_robot_limit_configured("min_turning_radius"));
+}
+
+TEST_F(ControllerNodeVelocityTest, InvalidVerticalLimitsOrTurningRadiusFailToConfigure)
+{
+  for (const auto & [name, value] : std::vector<std::pair<std::string, double>>{
+    {"robot_limits.max_vertical_vel", -0.1},
+    {"robot_limits.max_vertical_acc", 0.0},
+    {"robot_limits.max_vertical_decel", -1.0},
+    {"robot_limits.max_vertical_vel", std::nan("")},
+    {"robot_limits.min_turning_radius", -2.0},
+    {"robot_limits.min_turning_radius", std::numeric_limits<double>::infinity()}})
+  {
+    auto node = std::make_shared<easynav::ControllerNode>(limits_options({{name, value}}));
+    node->trigger_transition(Transition::TRANSITION_CONFIGURE);
+    EXPECT_EQ(node->get_current_state().id(), State::PRIMARY_STATE_UNCONFIGURED) <<
+      name << " = " << value;
+  }
+}
+
+TEST_F(ControllerNodeVelocityTest, SafelyLimitedSpeedLimitsTheVerticalVelocityToo)
+{
+  easynav::RobotLimits limits;
+  limits.max_vertical_vel = 1.5;
+  easynav::SafetyChannelState state;
+  state.max_linear_vel = 0.25;
+  EXPECT_DOUBLE_EQ(easynav::limited_by(limits, state).max_vertical_vel, 0.25);
+  state.max_linear_vel = 2.0;
+  EXPECT_DOUBLE_EQ(easynav::limited_by(limits, state).max_vertical_vel, 1.5);
+  limits.max_vertical_vel = 0.0;
+  EXPECT_DOUBLE_EQ(easynav::limited_by(limits, state).max_vertical_vel, 0.0);
+}
+
+TEST_F(ControllerNodeVelocityTest, PublishesTheVerticalVelocityWithinItsLimits)
+{
+  make_active_node(
+  {
+    {"robot_limits.max_vertical_vel", 0.6},
+    {"robot_limits.max_vertical_acc", 1.0},
+  });
+  std::vector<geometry_msgs::msg::TwistStamped> twists;
+  auto sub = listener_->create_subscription<geometry_msgs::msg::TwistStamped>(
+    "cmd_vel_stamped", 1000,
+    [&twists](geometry_msgs::msg::TwistStamped::UniquePtr msg) {twists.push_back(*msg);});
+  spin_for(100ms);
+
+  auto up = cmd(0.0);
+  up.twist.linear.z = 2.0;
+  for (int i = 0; i < 100; ++i) {
+    easynav::velocity_command::propose(*nav_state_, easynav::VelocitySource::CONTROLLER, up);
+    node_->publish_cmd_vel_rt(nav_state_);
+    rclcpp::sleep_for(10ms);
+    exe_->spin_some();
+  }
+  spin_for(100ms);
+  ASSERT_GT(twists.size(), 10u);
+  EXPECT_NEAR(twists.back().twist.linear.z, 0.6, 1e-9) << "max_vertical_vel";
+  for (size_t i = 1; i < twists.size(); ++i) {
+    const double dt = (rclcpp::Time(twists[i].header.stamp) -
+      rclcpp::Time(twists[i - 1].header.stamp)).seconds();
+    EXPECT_LE(
+      twists[i].twist.linear.z - twists[i - 1].twist.linear.z, 1.0 * dt + kTolerance) <<
+      "max_vertical_acc, step " << i;
+  }
+}
+
 TEST_F(ControllerNodeVelocityTest, ReconfigureRestoresTheConfiguredLimits)
 {
   // Limits changed by set_robot_limits() (e.g. deprecated values) last until the next configure.

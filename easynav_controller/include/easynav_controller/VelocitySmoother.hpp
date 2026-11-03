@@ -31,7 +31,7 @@ namespace easynav
  *
  * Each step clamps the target to the velocity limits and moves the current command towards it
  * by at most acceleration * dt (speeding up) or deceleration * dt (slowing down), per axis
- * (linear x and y, angular z). A change of direction stops at zero first. So a command never
+ * (linear x, y and z, angular z). A change of direction stops at zero first. So a command never
  * jumps, e.g. from full speed to zero, which would make the robot brake harder than it can.
  */
 class VelocitySmoother

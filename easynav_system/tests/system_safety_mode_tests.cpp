@@ -324,6 +324,8 @@ TEST_F(SystemSafetyModeTest, RobotLimitsMayNotExceedTheSafetyLimitsWhenGiven)
     {{"safety.plc_limits.max_linear_vel:=0.6", "robot_limits.min_linear_vel:=-0.6"}, true},
     {{"safety.plc_limits.max_linear_vel:=0.6", "robot_limits.max_lateral_vel:=0.7"}, false},
     {{"safety.plc_limits.max_linear_vel:=0.6", "robot_limits.max_lateral_vel:=0.6"}, true},
+    {{"safety.plc_limits.max_linear_vel:=0.6", "robot_limits.max_vertical_vel:=0.7"}, false},
+    {{"safety.plc_limits.max_linear_vel:=0.6", "robot_limits.max_vertical_vel:=0.6"}, true},
     {{"safety.plc_limits.max_angular_vel:=0.9"}, false},
     {{"safety.plc_limits.max_angular_vel:=1.0"}, true},
     {{"safety.plc_limits.max_linear_vel:=0.0", "safety.plc_limits.max_angular_vel:=0.0"}, true},
