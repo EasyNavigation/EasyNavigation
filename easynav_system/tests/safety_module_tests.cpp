@@ -22,6 +22,8 @@
 #include <algorithm>
 #include <chrono>
 #include <cmath>
+#include <cstdarg>
+#include <cstdio>
 #include <cstdlib>
 #include <filesystem>
 #include <fstream>
@@ -36,6 +38,7 @@
 #include "gtest/gtest.h"
 
 #include "rclcpp/rclcpp.hpp"
+#include "rcutils/logging.h"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 #include "nav_msgs/msg/odometry.hpp"
 #include "std_msgs/msg/string.hpp"
@@ -666,6 +669,31 @@ std::optional<diagnostic_msgs::msg::DiagnosticStatus> rt_diagnostic(
   return nav_state.get_safe<diagnostic_msgs::msg::DiagnosticStatus>("diagnostics.rt_cycle");
 }
 
+// What system_node logs, captured by rt_logs_handler
+std::vector<std::pair<int, std::string>> g_rt_logs;
+
+void rt_logs_handler(
+  const rcutils_log_location_t *, int severity, const char * name, rcutils_time_point_value_t,
+  const char * format, va_list * args)
+{
+  char msg[512];
+  va_list copy;
+  va_copy(copy, *args);
+  std::vsnprintf(msg, sizeof(msg), format, copy);
+  va_end(copy);
+  if (name && std::string(name) == "system_node") {
+    g_rt_logs.emplace_back(severity, msg);
+  }
+}
+
+int count_logs(int severity, const std::string & text)
+{
+  return static_cast<int>(std::count_if(
+           g_rt_logs.begin(), g_rt_logs.end(), [&](const auto & log) {
+             return log.first == severity && log.second.find(text) != std::string::npos;
+           }));
+}
+
 }  // namespace
 
 TEST_F(SafetyModuleTest, HeartbeatAndRtMonitorParametersAreChecked)
@@ -765,6 +793,79 @@ TEST_F(SafetyModuleTest, NoHeartbeatIfItsPeriodIsZero)
   easynav::NavState nav_state;
   supervisor.on_activate();
   EXPECT_TRUE(supervisor.cycle_rt(nav_state, RtClock::now()));
+}
+
+// Single late cycles are counted in the log every 5 s, not logged one by one, and the cycles
+// being on time again is only logged after an ERROR.
+TEST_F(SafetyModuleTest, RtLogsDoNotFollowEverySingleLateCycle)
+{
+  // 200 Hz, late if more than 10 ms after the previous cycle; 3 in a row are an ERROR.
+  easynav::safety::SafetySupervisor supervisor;
+  auto n = system({{"safety.rt_monitor.max_late_cycles", 3}}, supervisor);
+  ASSERT_TRUE(supervisor.check_system(*n));
+  easynav::NavState nav_state;
+  supervisor.on_activate();
+  const auto handler = rcutils_logging_get_output_handler();
+  rcutils_logging_set_output_handler(rt_logs_handler);
+  g_rt_logs.clear();
+  constexpr int kWarn = RCUTILS_LOG_SEVERITY_WARN;
+  constexpr int kInfo = RCUTILS_LOG_SEVERITY_INFO;
+
+  auto t = RtClock::now();
+  for (int i = 0; i < 10; ++i, t += 5ms) {
+    supervisor.cycle_rt(nav_state, t);
+  }
+  EXPECT_TRUE(g_rt_logs.empty()) << "nothing to log while all is fine";
+
+  // 20 single late cycles, each followed by one on time, within 1 s
+  for (int i = 0; i < 20; ++i) {
+    supervisor.cycle_rt(nav_state, t += 30ms);
+    supervisor.cycle_rt(nav_state, t += 5ms);
+  }
+  EXPECT_EQ(count_logs(kWarn, "A real-time cycle started late"), 1) << "only the first one";
+  EXPECT_EQ(count_logs(kInfo, "on time"), 0) << "no ERROR to recover from";
+  EXPECT_EQ(g_rt_logs.size(), 1u);
+
+  // 6 s later, another one: the ones since the last log are counted
+  t += 6s;
+  supervisor.cycle_rt(nav_state, t);
+  supervisor.cycle_rt(nav_state, t += 30ms);
+  EXPECT_EQ(count_logs(kWarn, "20 real-time cycles started late in the last 6 s"), 1);
+  EXPECT_EQ(g_rt_logs.size(), 2u);
+
+  // 3 in a row: the ERROR is logged when it starts, and its end
+  supervisor.cycle_rt(nav_state, t += 5ms);
+  for (int i = 0; i < 5; ++i) {
+    supervisor.cycle_rt(nav_state, t += 30ms);
+  }
+  EXPECT_EQ(count_logs(kWarn, "in a row"), 1);
+  supervisor.cycle_rt(nav_state, t += 5ms);
+  EXPECT_EQ(count_logs(kInfo, "Real-time cycles on time again"), 1);
+
+  // Single late cycles again: still not one by one, and no recovery logged
+  const auto before = g_rt_logs.size();
+  for (int i = 0; i < 10; ++i) {
+    supervisor.cycle_rt(nav_state, t += 30ms);
+    supervisor.cycle_rt(nav_state, t += 5ms);
+  }
+  EXPECT_EQ(g_rt_logs.size(), before);
+  EXPECT_EQ(count_logs(kInfo, "on time"), 1);
+
+  // The diagnostic still follows every change
+  using diagnostic_msgs::msg::DiagnosticStatus;
+  ASSERT_TRUE(rt_diagnostic(nav_state));
+  EXPECT_EQ(rt_diagnostic(nav_state)->level, DiagnosticStatus::OK);
+  supervisor.cycle_rt(nav_state, t += 30ms);
+  EXPECT_EQ(rt_diagnostic(nav_state)->level, DiagnosticStatus::WARN);
+
+  // Activated again: starts over, the first late cycle is logged
+  supervisor.on_activate();
+  g_rt_logs.clear();
+  supervisor.cycle_rt(nav_state, t += 5ms);
+  supervisor.cycle_rt(nav_state, t += 30ms);
+  EXPECT_EQ(count_logs(kWarn, "A real-time cycle started late"), 1);
+
+  rcutils_logging_set_output_handler(handler);
 }
 
 TEST_F(SafetyModuleTest, RtDiagnosticFollowsTheMonitorOutsideSafetyMode)
