@@ -659,15 +659,20 @@ same file, so the component's existing `<package>_plugins.xml` simply grows two 
 
 The pattern is implemented today in `easynav_costmap_localizer`, alongside `AMCLLocalizer`:
 
-- **`AmclConvergenceEvaluator`** reads the fixed key `"localizer.amcl.covariance_trace"`
-  (written by `AMCLLocalizer` itself, from both its RT and non-RT cycles) and, once the trace of
-  the pose covariance rises above `covariance_threshold`, publishes an `ERROR` diagnostic with
-  `hardware_id = "localizer.amcl"` — a signal only the localizer's own author could reasonably
-  compute.
+- **`AmclConvergenceEvaluator`** reads the fixed keys `"localizer.amcl.covariance_trace"`,
+  `"localizer.amcl.match_score"` and `"localizer.amcl.quality_ratio"` (written by `AMCLLocalizer`
+  itself, from both its RT and non-RT cycles) and publishes an `ERROR` diagnostic with
+  `hardware_id = "localizer.amcl"` once the trace of the pose covariance rises above
+  `covariance_threshold`, or the scans stop matching the map for `debounce_duration` — signals
+  only the localizer's own author could reasonably compute.
 - **`AmclRelocalizeMitigation`** matches that same `hardware_id`, takes control
-  (`requires_control() == true`) and rotates the robot in place at `rotation_speed` while
-  re-checking the same covariance trace, until it drops back under threshold or `timeout` elapses
-  (in which case it gives up with `FAILED`).
+  (`requires_control() == true`) to hold the robot still, and resets AMCL's pose (on
+  `initialpose`, with RViz2's covariance) to where the robot was when it got lost: up to
+  `attempts` times, the next ones up to `max_offset` m from it, each with `attempt_timeout` s to
+  converge by the evaluator's criteria. It gives up with `FAILED` when none does, and resets
+  nothing if AMCL has already converged when it starts. After each initial pose, `AMCLLocalizer`
+  spreads its reseeds more for a while (`reset_refine_time`), so that the cloud refines the pose
+  with the robot standing still.
 
 `DiagnosticRecoveryManager` needs no knowledge of AMCL at all: it only sees one more loaded mitigation
 declaring `can_handle()` for a particular `hardware_id`, arbitrated with the same priority and
@@ -702,7 +707,7 @@ domain-agnostic while allowing arbitrarily deep, component-specific knowledge at
 | `HumanAssistanceRecovery` | 1 — Movement (`requires_control`) | Generic catch-all: stops and waits for a human to resolve the underlying condition (the "ack" is physical — the diagnostic returning to `OK`); optional `timeout` before giving up | Any `ERROR` diagnostic except the `hardware_id`s in `ignored_hardware_ids` (default `["ros_graph"]`: a miswired graph goes straight to `CancelMissionRecovery`) — meant to be configured with low priority so more specific mitigations are tried first |
 | `CancelMissionRecovery` | 1 — Mission (does not take control) | Cancels the active mission via `GoalManager::set_error()`; always returns `FAILED`, never `SUCCEEDED` | Any `ERROR` diagnostic — the last rung of the ladder |
 | `ShutdownRecovery` | 1 — System (`requires_control`) | Holds the robot with zero `cmd_vel`, cancels the active mission (if any) and requests EasyNav to terminate: `SystemNode` leaves `Active` through the lifecycle error path (`Deactivating` → `ErrorProcessing` → `Finalized`) and the process exits with code 1, printing the offending diagnostics | `ERROR` diagnostics whose `hardware_id` is in `handled_hardware_ids` (default `["ros_graph"]`) |
-| `AmclRelocalizeMitigation` | 1 — Movement, component-specialized (`requires_control`) | Rotates in place at `rotation_speed` until the AMCL covariance trace drops back under threshold, or `timeout` | `hardware_id == "localizer.amcl"` |
+| `AmclRelocalizeMitigation` | 1 — Movement, component-specialized (`requires_control`) | Holds the robot and resets AMCL's pose to where it got lost, then up to `max_offset` m from it, `attempts` times with `attempt_timeout` s each, until AMCL converges | `hardware_id == "localizer.amcl"` |
 
 ### 5.12 Worked example: a person crosses at speed
 
@@ -812,8 +817,8 @@ recovery_node:
       #             human_assistance = 1000; cancel_mission = 2000
 ```
 
-With this configuration, a lost localization escalates as: `amcl_relocalize` (rotates for up to
-5 s) → excluded on failure → `human_assistance` (stops and waits up to 10 s) → excluded on
+With this configuration, a lost localization escalates as: `amcl_relocalize` (up to 5 pose
+resets of 5 s) → excluded on failure → `human_assistance` (stops and waits up to 10 s) → excluded on
 timeout → `cancel_mission` (cancels the mission, reporting which diagnostics were still in
 `ERROR`). In parallel, `retreat` and `advance` independently handle their own diagnostics
 (proximity and stuck-controller) without interfering with that escalation. A miswired ROS graph
