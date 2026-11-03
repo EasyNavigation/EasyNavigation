@@ -129,12 +129,19 @@ Functions</h2></td></tr>
 <tr class="memitem:a968282b0859fadea841e0c14ca62fd56" id="r_a968282b0859fadea841e0c14ca62fd56"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a968282b0859fadea841e0c14ca62fd56">TEST</a> (VelocitySmootherTest, ChangingDirectionStopsAtZeroFirst)</td></tr>
 <tr class="memitem:ad23ad0e6b266e711b86bb268cbeb8776" id="r_ad23ad0e6b266e711b86bb268cbeb8776"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#ad23ad0e6b266e711b86bb268cbeb8776">TEST</a> (VelocitySmootherTest, ClampsToTheVelocityLimits)</td></tr>
 <tr class="memitem:aa7ea6700fa0524542087f7fad5ae4696" id="r_aa7ea6700fa0524542087f7fad5ae4696"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#aa7ea6700fa0524542087f7fad5ae4696">TEST</a> (VelocitySmootherTest, LateralUsesItsOwnLimits)</td></tr>
+<tr class="memitem:a806237f4cc5e7aae8a075e9dda30336f" id="r_a806237f4cc5e7aae8a075e9dda30336f"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a806237f4cc5e7aae8a075e9dda30336f">TEST</a> (VelocitySmootherTest, NoTurningRadiusLetsTheRobotTurnInPlace)</td></tr>
+<tr class="memitem:aa17d38dcac9d8334869eec1de5677365" id="r_aa17d38dcac9d8334869eec1de5677365"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#aa17d38dcac9d8334869eec1de5677365">TEST</a> (VelocitySmootherTest, NoVerticalLimitKeepsAGroundRobotOnTheGround)</td></tr>
+<tr class="memitem:acfb9abedb655cc53d4c1e42af12f856f" id="r_acfb9abedb655cc53d4c1e42af12f856f"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#acfb9abedb655cc53d4c1e42af12f856f">TEST</a> (VelocitySmootherTest, ResetKeepsTheVerticalVelocity)</td></tr>
 <tr class="memitem:a5015f0a0011fa5387d2a9c560250aa27" id="r_a5015f0a0011fa5387d2a9c560250aa27"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a5015f0a0011fa5387d2a9c560250aa27">TEST</a> (VelocitySmootherTest, TimeToStopIsTheSlowestAxis)</td></tr>
+<tr class="memitem:a41d198aff4a513ce5b8a456670119448" id="r_a41d198aff4a513ce5b8a456670119448"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a41d198aff4a513ce5b8a456670119448">TEST</a> (VelocitySmootherTest, TurningRadiusBoundsTheTargetCurvature)</td></tr>
+<tr class="memitem:a927b7c096705e1380e81537b400c234e" id="r_a927b7c096705e1380e81537b400c234e"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a927b7c096705e1380e81537b400c234e">TEST</a> (VelocitySmootherTest, TurningRadiusHoldsWhileTheSpeedRamps)</td></tr>
+<tr class="memitem:a9e24cdb9f4a10876b91fa22c7723c1e8" id="r_a9e24cdb9f4a10876b91fa22c7723c1e8"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a9e24cdb9f4a10876b91fa22c7723c1e8">TEST</a> (VelocitySmootherTest, VerticalUsesItsOwnLimits)</td></tr>
 <tr class="memitem:aa587aa262aa3e0bcc9c38ebeee326107" id="r_aa587aa262aa3e0bcc9c38ebeee326107"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#aa587aa262aa3e0bcc9c38ebeee326107">TEST</a> (VelocitySmootherTest, ZeroLateralLimitKeepsANonHolonomicRobotFromSlipping)</td></tr>
+<tr class="memitem:aab3769682a31cbf3853364c57b3e6f11" id="r_aab3769682a31cbf3853364c57b3e6f11"><td class="memItemLeft">geometry_msgs::msg::Twist&#160;</td><td class="memItemRight"><a class="el" href="#aab3769682a31cbf3853364c57b3e6f11">vertical</a> (double vz)</td></tr>
 </table>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
 <a id="aa7cc6c2284296df8d254665dc1a8a80a" name="aa7cc6c2284296df8d254665dc1a8a80a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa7cc6c2284296df8d254665dc1a8a80a">&#9670;&#160;</a></span>TEST() <span class="overload">[1/7]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aa7cc6c2284296df8d254665dc1a8a80a">&#9670;&#160;</a></span>TEST() <span class="overload">[1/13]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -155,7 +162,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="a4f4d3d49b731b722ebb2f90e7fb95d7f" name="a4f4d3d49b731b722ebb2f90e7fb95d7f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4f4d3d49b731b722ebb2f90e7fb95d7f">&#9670;&#160;</a></span>TEST() <span class="overload">[2/7]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a4f4d3d49b731b722ebb2f90e7fb95d7f">&#9670;&#160;</a></span>TEST() <span class="overload">[2/13]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -176,7 +183,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="a968282b0859fadea841e0c14ca62fd56" name="a968282b0859fadea841e0c14ca62fd56"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a968282b0859fadea841e0c14ca62fd56">&#9670;&#160;</a></span>TEST() <span class="overload">[3/7]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a968282b0859fadea841e0c14ca62fd56">&#9670;&#160;</a></span>TEST() <span class="overload">[3/13]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -197,7 +204,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="ad23ad0e6b266e711b86bb268cbeb8776" name="ad23ad0e6b266e711b86bb268cbeb8776"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad23ad0e6b266e711b86bb268cbeb8776">&#9670;&#160;</a></span>TEST() <span class="overload">[4/7]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ad23ad0e6b266e711b86bb268cbeb8776">&#9670;&#160;</a></span>TEST() <span class="overload">[4/13]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -218,7 +225,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="aa7ea6700fa0524542087f7fad5ae4696" name="aa7ea6700fa0524542087f7fad5ae4696"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa7ea6700fa0524542087f7fad5ae4696">&#9670;&#160;</a></span>TEST() <span class="overload">[5/7]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aa7ea6700fa0524542087f7fad5ae4696">&#9670;&#160;</a></span>TEST() <span class="overload">[5/13]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -238,8 +245,71 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a806237f4cc5e7aae8a075e9dda30336f" name="a806237f4cc5e7aae8a075e9dda30336f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a806237f4cc5e7aae8a075e9dda30336f">&#9670;&#160;</a></span>TEST() <span class="overload">[6/13]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TEST </td>
+          <td>(</td>
+          <td class="paramtype">VelocitySmootherTest</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">NoTurningRadiusLetsTheRobotTurnInPlace</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa17d38dcac9d8334869eec1de5677365" name="aa17d38dcac9d8334869eec1de5677365"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa17d38dcac9d8334869eec1de5677365">&#9670;&#160;</a></span>TEST() <span class="overload">[7/13]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TEST </td>
+          <td>(</td>
+          <td class="paramtype">VelocitySmootherTest</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">NoVerticalLimitKeepsAGroundRobotOnTheGround</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="acfb9abedb655cc53d4c1e42af12f856f" name="acfb9abedb655cc53d4c1e42af12f856f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acfb9abedb655cc53d4c1e42af12f856f">&#9670;&#160;</a></span>TEST() <span class="overload">[8/13]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TEST </td>
+          <td>(</td>
+          <td class="paramtype">VelocitySmootherTest</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ResetKeepsTheVerticalVelocity</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a5015f0a0011fa5387d2a9c560250aa27" name="a5015f0a0011fa5387d2a9c560250aa27"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5015f0a0011fa5387d2a9c560250aa27">&#9670;&#160;</a></span>TEST() <span class="overload">[6/7]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a5015f0a0011fa5387d2a9c560250aa27">&#9670;&#160;</a></span>TEST() <span class="overload">[9/13]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -259,8 +329,71 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a41d198aff4a513ce5b8a456670119448" name="a41d198aff4a513ce5b8a456670119448"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a41d198aff4a513ce5b8a456670119448">&#9670;&#160;</a></span>TEST() <span class="overload">[10/13]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TEST </td>
+          <td>(</td>
+          <td class="paramtype">VelocitySmootherTest</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">TurningRadiusBoundsTheTargetCurvature</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a927b7c096705e1380e81537b400c234e" name="a927b7c096705e1380e81537b400c234e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a927b7c096705e1380e81537b400c234e">&#9670;&#160;</a></span>TEST() <span class="overload">[11/13]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TEST </td>
+          <td>(</td>
+          <td class="paramtype">VelocitySmootherTest</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">TurningRadiusHoldsWhileTheSpeedRamps</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9e24cdb9f4a10876b91fa22c7723c1e8" name="a9e24cdb9f4a10876b91fa22c7723c1e8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9e24cdb9f4a10876b91fa22c7723c1e8">&#9670;&#160;</a></span>TEST() <span class="overload">[12/13]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TEST </td>
+          <td>(</td>
+          <td class="paramtype">VelocitySmootherTest</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">VerticalUsesItsOwnLimits</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="aa587aa262aa3e0bcc9c38ebeee326107" name="aa587aa262aa3e0bcc9c38ebeee326107"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa587aa262aa3e0bcc9c38ebeee326107">&#9670;&#160;</a></span>TEST() <span class="overload">[7/7]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aa587aa262aa3e0bcc9c38ebeee326107">&#9670;&#160;</a></span>TEST() <span class="overload">[13/13]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -274,6 +407,23 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">ZeroLateralLimitKeepsANonHolonomicRobotFromSlipping</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aab3769682a31cbf3853364c57b3e6f11" name="aab3769682a31cbf3853364c57b3e6f11"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aab3769682a31cbf3853364c57b3e6f11">&#9670;&#160;</a></span>vertical()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">geometry_msgs::msg::Twist vertical </td>
+          <td>(</td>
+          <td class="paramtype">double</td>          <td class="paramname"><span class="paramname"><em>vz</em></span></td><td>)</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
